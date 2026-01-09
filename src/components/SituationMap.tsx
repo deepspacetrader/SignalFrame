@@ -22,10 +22,23 @@ const sentimentColors: Record<string, string> = {
     'very-positive': '#10b981'
 }
 
+const resolveSentiment = (s: string) => {
+    const sentiment = String(s || 'neutral').toLowerCase().trim()
+    const mapping: Record<string, string> = {
+        '1': 'extremely-negative', '2': 'very-negative', '3': 'negative', '4': 'somewhat-negative',
+        '5': 'neutral', '6': 'interesting', '7': 'positive', '8': 'very-positive',
+        'tension': 'negative', 'conflict': 'extremely-negative'
+    }
+    return mapping[sentiment] || sentiment
+}
+
+
 // Custom marker factory based on category and sentiment
 const createCustomIcon = (point: MapPoint) => {
     const color = categoryColors[point.category] || '#94a3b8'
-    const outline = sentimentColors[point.sentiment] || sentimentColors.neutral
+    const sentiment = resolveSentiment(point.sentiment)
+    const outline = sentimentColors[sentiment] || sentimentColors.neutral
+
 
     return L.divIcon({
         className: 'custom-map-pin',
@@ -33,7 +46,7 @@ const createCustomIcon = (point: MapPoint) => {
       <div style="
         width: 20px; 
         height: 20px; 
-        background-color: ${color}; 
+        background-color: ${outline}; 
         border: 3px solid ${outline}; 
         border-radius: 50%;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -95,21 +108,46 @@ export function SituationMap() {
                             icon={createCustomIcon(point)}
                         >
                             <Popup className="custom-popup">
-                                <div className="p-1">
-                                    <h4 className="font-bold text-slate-900 leading-tight mb-1">{point.title}</h4>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                                <div className="p-1.5 max-w-[200px]">
+                                    <h4 className="font-bold text-slate-900 text-sm leading-tight mb-0.5">{point.title}</h4>
+                                    <div className="flex items-center gap-1.5 mb-1.5">
+                                        <span
+                                            className="text-[8px] font-bold px-1 py-0.5 rounded"
+                                            style={{
+                                                color: (sentimentColors as any)[resolveSentiment(point.sentiment)] || '#64748b',
+                                                backgroundColor: `${(sentimentColors as any)[resolveSentiment(point.sentiment)] || '#64748b'}20`
+                                            }}
+                                        >
+                                            {resolveSentiment(point.sentiment).replace('-', ' ').toUpperCase()}
+                                        </span>
+                                        <span className="text-[8px] uppercase text-slate-400 tracking-wider">
                                             {point.category}
                                         </span>
-                                        <span
-                                            className="text-[10px] font-bold"
-                                            style={{ color: (sentimentColors as any)[point.sentiment] || '#64748b' }}
-                                        >
-                                            {String(point.sentiment || 'neutral').replace('-', ' ').toUpperCase()}
-                                        </span>
                                     </div>
+                                    {point.description && (
+                                        <p className="text-[10px] text-slate-600 leading-snug mb-1.5">
+                                            {point.description}
+                                        </p>
+                                    )}
+                                    {point.sourceLink && (
+                                        <a
+                                            href={point.sourceLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[9px] text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
+                                        >
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                <polyline points="15 3 21 3 21 9"></polyline>
+                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                            </svg>
+                                            Read article
+                                        </a>
+                                    )}
                                 </div>
                             </Popup>
+
+
                         </Marker>
                     ))}
                 </MapContainer>

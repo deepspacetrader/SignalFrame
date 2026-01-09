@@ -14,9 +14,7 @@ export function ChatPanel() {
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+
 
     const generateSystemContext = () => {
         return `You are an elite intelligence analyst assistant. 
@@ -110,8 +108,8 @@ export function ChatPanel() {
                 {messages.map((m, i) => (
                     <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] rounded-xl p-3 text-sm ${m.role === 'user'
-                                ? 'bg-accent-primary/20 border border-accent-primary/20 text-white rounded-tr-none'
-                                : 'bg-white/5 border border-white/5 text-slate-200 rounded-tl-none'
+                            ? 'bg-accent-primary/20 border border-accent-primary/20 text-white rounded-tr-none'
+                            : 'bg-white/5 border border-white/5 text-slate-200 rounded-tl-none'
                             }`}>
                             {formatMessage(m.content)}
                         </div>

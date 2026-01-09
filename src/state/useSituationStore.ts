@@ -31,7 +31,11 @@ export interface MapPoint {
   title: string;
   sentiment: Sentiment | 'positive' | 'neutral' | 'negative';
   category: 'Tech / AI' | 'Financial' | 'Conflicts' | 'Geopolitical';
+  description?: string;
+  sourceLink?: string;
 }
+
+
 
 export interface ForeignRelation {
   id: string;

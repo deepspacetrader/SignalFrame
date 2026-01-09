@@ -1,21 +1,26 @@
 import { useSituationStore } from '../state/useSituationStore'
 
 const getSentimentColor = (sentiment: string) => {
-  switch (sentiment) {
-    case 'extremely-negative': return 'var(--crit-bright-red)';
-    case 'very-negative': return 'var(--crit-red)';
-    case 'negative': return 'var(--crit-orange)';
-    case 'somewhat-negative': return 'var(--crit-yellow)';
-    case 'neutral': return 'var(--crit-gray)';
-    case 'interesting': return 'var(--crit-blue)';
-    case 'positive': return 'var(--crit-green)';
-    case 'very-positive': return 'var(--crit-bright-green)';
-    default: return 'var(--crit-gray)';
+  const s = sentiment.trim().toLowerCase()
+  const mapping: Record<string, string> = {
+    '1': 'extremely-negative', '2': 'very-negative', '3': 'negative', '4': 'somewhat-negative',
+    '5': 'neutral', '6': 'interesting', '7': 'positive', '8': 'very-positive'
   }
+  const resolved = mapping[s] || s
+
+  if (resolved.includes('extremely-negative')) return 'var(--crit-bright-red)';
+  if (resolved.includes('very-negative')) return 'var(--crit-red)';
+  if (resolved.includes('negative')) return 'var(--crit-orange)';
+  if (resolved.includes('somewhat-negative')) return 'var(--crit-yellow)';
+  if (resolved.includes('neutral')) return 'var(--crit-gray)';
+  if (resolved.includes('interesting')) return 'var(--crit-blue)';
+  if (resolved.includes('positive')) return 'var(--crit-green)';
+  if (resolved.includes('very-positive')) return 'var(--crit-bright-green)';
+  return 'var(--crit-gray)';
 }
 
 export function InsightPanel() {
-  const { insights, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
+  const { insights, feeds, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
   const isLoading = isProcessingSection.insights && !isProcessing;
 
   return (
@@ -38,19 +43,24 @@ export function InsightPanel() {
           Hidden Insights
         </h2>
 
-        {insights.length > 0 && !isProcessing && (
+        {feeds.length > 0 && !isProcessing && (
           <button
             onClick={() => refreshSection('insights')}
-            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
+            className="text-[0.6rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100 flex items-center gap-2"
           >
-            Regenerate
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M23 4v6h-6"></path>
+              <path d="M1 20v-6h6"></path>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            {insights.length > 0 ? 'Regenerate' : 'Analyze'}
           </button>
         )}
       </div>
 
       {isProcessing && insights.length === 0 ? (
         <ul className="space-y-4 opacity-50">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => <li key={i} className="loading-skeleton h-20 bg-white/5 animate-pulse rounded-lg"></li>)}
+          {[1, 2, 3, 4, 5].map(i => <li key={i} className="loading-skeleton h-20 bg-white/5 animate-pulse rounded-lg"></li>)}
         </ul>
       ) : (
         <ul className="space-y-4">
@@ -75,12 +85,17 @@ export function InsightPanel() {
                     </p>
                   </>
                 ) : (
-                  <p className="text-sm text-text-primary leading-snug">{insight.text}</p>
+                  <p className="text-sm text-text-primary leading-snug font-medium opacity-90">{insight.text}</p>
                 )}
               </li>
             )
           })}
-          {!isProcessing && insights.length === 0 && <p className="text-text-secondary italic px-4">Waiting for analysis...</p>}
+          {!isProcessing && insights.length === 0 && (
+            <div className="text-center py-8 opacity-40">
+              <p className="text-xs uppercase tracking-widest font-bold mb-2">No Insights Detected</p>
+              <p className="text-[10px] italic">Scan feeds to identify hidden trends.</p>
+            </div>
+          )}
         </ul>
       )}
     </section>

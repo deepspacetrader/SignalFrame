@@ -163,40 +163,47 @@ export default function App() {
       <main className="grid grid-cols-12 gap-8">
         <LoadingOverlay />
 
-
-        {/* Center/Right Column: Map & Analysis */}
+        {/* Map Section */}
         <div className="col-span-12 lg:col-span-12 space-y-8">
           <SituationMap />
 
           <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Narrative Summary */}
             <NarrativeSummary />
+
+            {/* Signal List */}
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
               <SignalList />
             </div>
+
+            {/* Insight Panel */}
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
               <InsightPanel />
             </div>
           </div>
 
           <div className="w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
-              <ForeignRelationsPanel />
-            </div>
-          </div>
-
-          {/* Deep Intelligence Section */}
-          <div className="w-full">
             <h2 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-4 flex items-center gap-2">
               <span className="w-8 h-[1px] bg-accent-primary"></span>
               Deep Intelligence Suite
               <span className="w-full h-[1px] bg-white/5"></span>
             </h2>
+
+            {/* Interactive Panels */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <ChatPanel />
               <PredictionsPanel />
             </div>
           </div>
 
+          {/* Foreign Relations Section */}
+          <div className="w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
+              <ForeignRelationsPanel />
+            </div>
+          </div>
+
+          {/* Source Feed Section */}
           <div className="w-full">
             <SourceFeedList />
           </div>

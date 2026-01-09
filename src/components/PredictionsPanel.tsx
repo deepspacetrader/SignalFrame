@@ -18,6 +18,7 @@ interface PredictionHistoryItem {
 export function PredictionsPanel() {
     const { narrative, signals, insights, aiConfig } = useSituationStore();
     const [topic, setTopic] = useState('');
+    const [viewingItem, setViewingItem] = useState<{ topic: string, date: string } | null>(null);
     const [predictions, setPredictions] = useState<Predictions | null>(null);
     const [history, setHistory] = useState<PredictionHistoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -67,10 +68,12 @@ export function PredictionsPanel() {
                 longTerm: parsed.longTerm || "No prediction generated."
             };
 
-            const newItem = { topic, date: new Date().toLocaleDateString(), data: newPrediction };
+            const dateStr = new Date().toLocaleDateString();
+            const newItem = { topic, date: dateStr, data: newPrediction };
             const newHistory = [newItem, ...history];
 
             setPredictions(newPrediction);
+            setViewingItem({ topic, date: dateStr });
             setHistory(newHistory);
 
             // Persist
@@ -85,9 +88,15 @@ export function PredictionsPanel() {
 
     const removeHistoryItem = async (e: React.MouseEvent, index: number) => {
         e.stopPropagation();
+        const itemToRemove = history[index];
         const newHistory = history.filter((_, i) => i !== index);
         setHistory(newHistory);
         await StorageService.saveGlobal('prediction_history', newHistory);
+
+        if (viewingItem && viewingItem.topic === itemToRemove.topic && viewingItem.date === itemToRemove.date) {
+            setViewingItem(null);
+            setPredictions(null);
+        }
     };
 
     return (
@@ -128,21 +137,32 @@ export function PredictionsPanel() {
                 </button>
             </div>
 
-            {predictions && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500">
-                    {[
-                        { label: 'Short Term (1-7 Days)', data: predictions.shortTerm, color: 'text-emerald-400', border: 'border-emerald-500/20' },
-                        { label: 'Medium Term (1-6 Months)', data: predictions.mediumTerm, color: 'text-amber-400', border: 'border-amber-500/20' },
-                        { label: 'Long Term (1-3 Years)', data: predictions.longTerm, color: 'text-rose-400', border: 'border-rose-500/20' }
-                    ].map(p => (
-                        <div key={p.label} className={`bg-white/5 rounded-xl p-5 border ${p.border} relative overflow-hidden group hover:bg-white/10 transition-colors`}>
-                            <h4 className={`text-xs font-bold uppercase tracking-widest mb-3 ${p.color} border-b border-white/5 pb-2`}>{p.label}</h4>
-                            <p className="text-sm text-slate-300 leading-relaxed font-mono">{p.data}</p>
-                            <div className={`absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity`}>
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+            {predictions && viewingItem && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
+                    <div className="flex items-center gap-3 px-1">
+                        <div className="h-4 w-[2px] bg-accent-primary"></div>
+                        <h4 className="text-sm font-mono text-white flex items-center gap-2">
+                            <span className="text-accent-primary font-bold uppercase tracking-widest text-[10px]">Projection:</span>
+                            {viewingItem.topic}
+                            <span className="text-[10px] text-text-secondary opacity-50 ml-2">({viewingItem.date})</span>
+                        </h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                            { label: 'Short Term (1-7 Days)', data: predictions.shortTerm, color: 'text-emerald-400', border: 'border-emerald-500/20' },
+                            { label: 'Medium Term (1-6 Months)', data: predictions.mediumTerm, color: 'text-amber-400', border: 'border-amber-500/20' },
+                            { label: 'Long Term (1-3 Years)', data: predictions.longTerm, color: 'text-rose-400', border: 'border-rose-500/20' }
+                        ].map(p => (
+                            <div key={p.label} className={`bg-white/5 rounded-xl p-5 border ${p.border} relative overflow-hidden group hover:bg-white/10 transition-colors`}>
+                                <h4 className={`text-xs font-bold uppercase tracking-widest mb-3 ${p.color} border-b border-white/5 pb-2`}>{p.label}</h4>
+                                <p className="text-sm text-slate-300 leading-relaxed font-mono">{p.data}</p>
+                                <div className={`absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity`}>
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             )}
 
@@ -153,7 +173,10 @@ export function PredictionsPanel() {
                         {history.map((h, i) => (
                             <div key={i} className="group relative flex-shrink-0">
                                 <button
-                                    onClick={() => setPredictions(h.data)}
+                                    onClick={() => {
+                                        setPredictions(h.data);
+                                        setViewingItem({ topic: h.topic, date: h.date });
+                                    }}
                                     className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-slate-400 transition-colors text-left min-w-[120px]"
                                 >
                                     <span className="text-white font-bold block mb-1 truncate max-w-[100px]">{h.topic}</span>

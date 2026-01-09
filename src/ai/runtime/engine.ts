@@ -13,6 +13,18 @@ const CATEGORY_MAP: Record<string, string> = {
   'relations': 'relation trackers'
 };
 
+const SENTIMENT_GUIDELINES = `
+- extremely-negative: Active conflict, major human rights violations, total market collapse, or massive loss of life, disasters, wars.
+- very-negative: Significant escalations in tension, religious/political crackdowns, or major economic downturns, riots.
+- negative: General negative news, minor diplomatic friction, or unfavorable economic indicators, protests.
+- somewhat-negative: Emerging concerns or slight escalations in regional tension, civil unrest.
+- neutral: Raw data points, scheduled events, or shifts without immediate clear impact.
+- interesting: Unpredictable or unusual developments that aren't clearly good or bad.
+- positive: Diplomatic resolutions, medical breakthroughs, signs of economic recovery, justice being served.
+- very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress, fall of a dictator.
+`;
+
+
 export async function processSituation(
   feeds: RawSignal[],
   foreignRelations: ForeignRelation[] = [],
@@ -94,48 +106,58 @@ FOCUS ON: Sudden escalations, policy reversals, surprise outcomes, and breaks in
 Return a JSON array of objects: [{"text": "PUNCHY_SIGNAL (MAX 15 WORDS)", "sentiment": "..."}].
 
 SENTIMENT GUIDELINES:
-- extremely-negative: Active conflict, major human rights violations, total market collapse, or massive loss of life, disasters, wars.
-- very-negative: Significant escalations in tension, religious/political crackdowns, or major economic downturns, riots.
-- negative: General negative news, minor diplomatic friction, or unfavorable economic indicators, protests.
-- somewhat-negative: Emerging concerns or slight escalations in regional tension, civil unrest.
-- neutral: Raw data points, scheduled events, or shifts without immediate clear impact.
-- interesting: Unpredictable or unusual developments that aren't clearly good or bad.
-- positive: Diplomatic resolutions, medical breakthroughs, signs of economic recovery, justice being served.
-- very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress, fall of a dictator.
+${SENTIMENT_GUIDELINES}
 
 Feeds:
 ${context}`;
+
 }
 
 function generateInsightsPrompt(context: string) {
   return `Identify up to 10 hidden trends and "reading between the lines" implications.
 Return a JSON array of objects: [{"text": "TREND | IMPLICATION", "sentiment": "..."}].
 
-Use the SENTIMENT GUIDELINES as defined for signals.
+SENTIMENT GUIDELINES:
+${SENTIMENT_GUIDELINES}
 
 Feeds:
 ${context}`;
+
 }
 
 function generateMapPointsPrompt(context: string) {
-  return `Extract up to 10 geographical locations with sentiment.
-Return a JSON array of objects with id, lat, lng, title, sentiment, category.
+  return `Extract up to 10 geographical locations with sentiment from the news feeds.
+Return a JSON array: [{"lat": ..., "lng": ..., "title": "CITY/REGION", "sentiment": "...", "category": "...", "description": "ONE LINE MAX", "sourceLink": "URL"}]
 
-Use the SENTIMENT GUIDELINES scale for each location.
+GUIDELINES:
+- "title": Short location name (e.g. "Kyiv", "Taiwan Strait", "Silicon Valley")
+- "description": ONE short sentence (max 80 chars) explaining the event. Be punchy and direct.
+- "sourceLink": Include the original news article URL from the feed if available. If not available, leave empty string.
+- "category": One of "Tech / AI", "Financial", "Conflicts", "Geopolitical"
+
+SENTIMENT GUIDELINES:
+${SENTIMENT_GUIDELINES}
 
 Feeds:
 ${context}`;
+
+
 }
 
 function generateRelationsPrompt(context: string, relations: ForeignRelation[]) {
-  return `Update status/sentiment for these trackers:
-${relations.map(r => `- ${r.countryA} vs ${r.countryB}`).join('\n')}
+  return `Update status/sentiment for these geopolitical trackers:
+${relations.map(r => `- ${r.countryA} vs ${r.countryB} (Topic: ${r.topic})`).join('\n')}
 
 Return JSON array: [{"countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]
 
-Use the SENTIMENT GUIDELINES scale for each foreign relationship tracker.
+The "status" field MUST be a brief (1-2 sentence) analysis explaining the current state AND the "why" based on the news feeds. Avoid one-word answers. It is critical that this is a detailed explanation.
+
+SENTIMENT GUIDELINES (Use these EXACT strings for the sentiment field):
+${SENTIMENT_GUIDELINES}
+
 Feeds:
 ${context}`;
+
 }
 
 function parseJsonArray(text: string): any[] {
@@ -194,32 +216,74 @@ function finalizeInsights(raw: any[]) {
   return raw.map(i => {
     if (typeof i === 'string') return { text: i, sentiment: DEFAULT_SENTIMENT };
     const text = i.text || (i.trend && i.impact ? `${i.trend} | ${i.impact}` : JSON.stringify(i));
-    const sentiment = (i.sentiment || DEFAULT_SENTIMENT).toLowerCase();
+    let sentiment = String(i.sentiment || DEFAULT_SENTIMENT).toLowerCase();
+
+    // Mapping for numeric or common string sentiments
+    const sentimentMap: Record<string, string> = {
+      '1': 'extremely-negative', '2': 'very-negative', '3': 'negative', '4': 'somewhat-negative',
+      '5': 'neutral', '6': 'interesting', '7': 'positive', '8': 'very-positive'
+    };
+    if (sentimentMap[sentiment]) sentiment = sentimentMap[sentiment];
+
     return { text, sentiment: sentiment as any };
-  }).filter(i => i.text.includes('|') && i.text.length > 15);
+  }).filter(i => i.text.length > 10); // Relaxed: No longer requiring '|' if it's long enough
 }
 
+
 function finalizeMapPoints(raw: any[]) {
-  return raw.map((p, idx) => ({
-    id: `map-${idx}`,
-    lat: Number(p.lat) || 0,
-    lng: Number(p.lng) || 0,
-    title: p.title || 'Event',
-    sentiment: p.sentiment || 'neutral',
-    category: p.category || 'Geopolitical'
-  }));
+  return raw.map((p, idx) => {
+    // Truncate description to max 100 chars for compact popups
+    let desc = String(p.description || '').trim();
+    if (desc.length > 100) desc = desc.substring(0, 97) + '...';
+
+    return {
+      id: `map-${idx}`,
+      lat: Number(p.lat) || 0,
+      lng: Number(p.lng) || 0,
+      title: p.title || 'Event',
+      sentiment: p.sentiment || 'neutral',
+      category: p.category || 'Geopolitical',
+      description: desc,
+      sourceLink: p.sourceLink || p.source_link || p.link || ''
+    };
+  });
 }
+
+
 
 function finalizeRelations(raw: any[], relations: ForeignRelation[]) {
   return relations.map(rel => {
     const update = raw.find(r => (r.countryA === rel.countryA && r.countryB === rel.countryB) || (r.countryA === rel.countryB && r.countryB === rel.countryA));
-    return update ? {
+    if (!update) return rel;
+
+    let sentiment = String(update.sentiment || rel.sentiment).toLowerCase();
+
+    // Fallback for numeric or common string sentiments
+    const sentimentMap: Record<string, string> = {
+      '1': 'extremely-negative',
+      '2': 'very-negative',
+      '3': 'negative',
+      '4': 'somewhat-negative',
+      '5': 'neutral',
+      '6': 'interesting',
+      '7': 'positive',
+      '8': 'very-positive',
+      'tension': 'negative',
+      'conflict': 'extremely-negative'
+    };
+
+    if (sentimentMap[sentiment]) {
+      sentiment = sentimentMap[sentiment];
+    }
+
+    return {
       ...rel,
       status: String(update.status || rel.status),
-      sentiment: String(update.sentiment || rel.sentiment) as any,
+      sentiment: sentiment as any,
       lastUpdate: new Date().toISOString()
-    } : rel;
+    };
   });
+
 }
 
 function handleProcessError(error: any) {

@@ -19,18 +19,38 @@ export function ForeignRelationsPanel() {
 
     // Helper to get sentiment color
     const getSentimentColor = (sentiment: string) => {
-        switch (sentiment) {
-            case 'extremely-negative': return { color: 'var(--crit-bright-red)', borderColor: 'rgba(255, 31, 31, 0.3)', backgroundColor: 'rgba(255, 31, 31, 0.1)' }
-            case 'very-negative': return { color: 'var(--crit-red)', borderColor: 'rgba(239, 68, 68, 0.3)', backgroundColor: 'rgba(239, 68, 68, 0.1)' }
-            case 'negative': return { color: 'var(--crit-orange)', borderColor: 'rgba(249, 115, 22, 0.3)', backgroundColor: 'rgba(249, 115, 22, 0.1)' }
-            case 'somewhat-negative': return { color: 'var(--crit-yellow)', borderColor: 'rgba(250, 204, 21, 0.3)', backgroundColor: 'rgba(250, 204, 21, 0.1)' }
-            case 'neutral': return { color: 'var(--crit-gray)', borderColor: 'rgba(148, 163, 184, 0.3)', backgroundColor: 'rgba(148, 163, 184, 0.1)' }
-            case 'interesting': return { color: 'var(--crit-blue)', borderColor: 'rgba(59, 130, 246, 0.3)', backgroundColor: 'rgba(59, 130, 246, 0.1)' }
-            case 'positive': return { color: 'var(--crit-green)', borderColor: 'rgba(34, 197, 94, 0.3)', backgroundColor: 'rgba(34, 197, 94, 0.1)' }
-            case 'very-positive': return { color: 'var(--crit-bright-green)', borderColor: 'rgba(16, 185, 129, 0.3)', backgroundColor: 'rgba(16, 185, 129, 0.1)' }
-            default: return { color: 'var(--crit-gray)', borderColor: 'rgba(148, 163, 184, 0.2)', backgroundColor: 'rgba(148, 163, 184, 0.05)' }
-        }
+        const s = sentiment.trim().toLowerCase()
+
+        // Define mapping for numeric or legacy strings
+        const sentimentMap: Record<string, string> = {
+            '1': 'extremely-negative',
+            '2': 'very-negative',
+            '3': 'negative',
+            '4': 'somewhat-negative',
+            '5': 'neutral',
+            '6': 'interesting',
+            '7': 'positive',
+            '8': 'very-positive',
+            'tension': 'negative',
+            'conflict': 'extremely-negative'
+        };
+
+        const resolved = sentimentMap[s] || s;
+
+        if (resolved.includes('extremely-negative')) return { color: '#ff1f1f', borderColor: 'rgba(255, 31, 31, 0.4)', backgroundColor: 'rgba(255, 31, 31, 0.15)', text: 'EXTREMELY NEGATIVE' }
+        if (resolved.includes('very-negative')) return { color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.4)', backgroundColor: 'rgba(239, 68, 68, 0.15)', text: 'VERY NEGATIVE' }
+        if (resolved.includes('negative')) return { color: '#f97316', borderColor: 'rgba(249, 115, 22, 0.4)', backgroundColor: 'rgba(249, 115, 22, 0.15)', text: 'NEGATIVE' }
+        if (resolved.includes('somewhat-negative')) return { color: '#facc15', borderColor: 'rgba(250, 204, 21, 0.4)', backgroundColor: 'rgba(250, 204, 21, 0.15)', text: 'SOMEWHAT NEGATIVE' }
+        if (resolved.includes('neutral')) return { color: '#94a3b8', borderColor: 'rgba(148, 163, 184, 0.4)', backgroundColor: 'rgba(148, 163, 184, 0.15)', text: 'NEUTRAL' }
+        if (resolved.includes('interesting')) return { color: '#3b82f6', borderColor: 'rgba(59, 130, 246, 0.4)', backgroundColor: 'rgba(59, 130, 246, 0.15)', text: 'INTERESTING' }
+        if (resolved.includes('very-positive')) return { color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.4)', backgroundColor: 'rgba(16, 185, 129, 0.15)', text: 'VERY POSITIVE' }
+        if (resolved.includes('positive')) return { color: '#22c55e', borderColor: 'rgba(34, 197, 94, 0.4)', backgroundColor: 'rgba(34, 197, 94, 0.15)', text: 'POSITIVE' }
+
+        // Fallback for unexpected strings or numbers
+        return { color: 'var(--crit-gray)', borderColor: 'rgba(148, 163, 184, 0.2)', backgroundColor: 'rgba(148, 163, 184, 0.05)', text: resolved.toUpperCase() }
     }
+
+
 
     return (
         <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 ${isLoading ? 'section-loading' : ''}`}>
@@ -58,7 +78,7 @@ export function ForeignRelationsPanel() {
                             onClick={() => refreshSection('relations')}
                             className="text-[0.65rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg border bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
                         >
-                            Sync
+                            Update
                         </button>
                     )}
                     <button
@@ -105,47 +125,62 @@ export function ForeignRelationsPanel() {
                 </div>
             )}
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {foreignRelations.map((rel) => (
-                    <div key={rel.id} className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 p-4 rounded-lg transition-all">
-                        <div className="flex justify-between items-start mb-2">
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm font-bold text-white">{rel.countryA}</span>
-                                <span className="text-text-secondary text-xs">↔</span>
-                                <span className="text-sm font-bold text-white">{rel.countryB}</span>
+                    <div key={rel.id} className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 p-4 rounded-xl transition-all flex flex-col justify-between h-full">
+                        <div>
+                            <div className="flex justify-between items-start mb-3">
+                                <div className="flex flex-col gap-0.5">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-sm font-bold text-white tracking-tight">{rel.countryA}</span>
+                                        <span className="text-text-secondary text-[10px] opacity-40">VS</span>
+                                        <span className="text-sm font-bold text-white tracking-tight">{rel.countryB}</span>
+                                    </div>
+                                    <p className="text-[10px] font-mono font-bold text-purple-400 uppercase tracking-wider opacity-80">{rel.topic}</p>
+                                </div>
+                                {(() => {
+                                    const style = getSentimentColor(String(rel.sentiment || 'neutral'));
+                                    return (
+                                        <span
+                                            className="text-[8px] px-2 py-1 rounded-md border uppercase font-bold tracking-[0.05em] shrink-0 whitespace-nowrap"
+                                            style={{ color: style.color, borderColor: style.borderColor, backgroundColor: style.backgroundColor }}
+                                        >
+                                            {style.text}
+                                        </span>
+                                    );
+                                })()}
+
                             </div>
-                            <span
-                                className="text-[10px] px-2 py-0.5 rounded border uppercase font-bold tracking-wider"
-                                style={getSentimentColor(String(rel.sentiment || 'neutral'))}
-                            >
-                                {String(rel.sentiment || 'neutral').replace('-', ' ')}
-                            </span>
-                        </div>
 
-                        <p className="text-xs font-mono text-purple-400 mb-2 uppercase tracking-wide opacity-80">{rel.topic}</p>
+                            <div className="relative min-h-[3rem]">
+                                {isProcessing ? (
+                                    <div className="space-y-2">
+                                        <div className="h-3 w-full bg-white/5 animate-pulse rounded"></div>
+                                        <div className="h-3 w-[80%] bg-white/5 animate-pulse rounded"></div>
+                                    </div>
+                                ) : (
+                                    <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2.5 mt-1">
+                                        <p className="text-[11px] text-text-secondary leading-normal line-clamp-4 group-hover:line-clamp-none transition-all duration-300">
+                                            {rel.status}
+                                        </p>
+                                    </div>
+                                )}
 
-                        <div className="relative">
-                            {isProcessing ? (
-                                <div className="h-10 w-full bg-white/5 animate-pulse rounded"></div>
-                            ) : (
-                                <p className="text-sm text-text-secondary leading-relaxed">
-                                    {rel.status}
-                                </p>
-                            )}
+                            </div>
                         </div>
 
                         <button
                             onClick={() => removeRelation(rel.id)}
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-text-secondary hover:text-red-400 transition-all p-1"
+                            className="absolute -top-1 -right-1 w-5 h-5 bg-red-500/80 hover:bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 border border-white/20"
                             title="Remove Tracker"
                         >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <span className="text-sm leading-none font-bold">&times;</span>
                         </button>
                     </div>
                 ))}
 
                 {foreignRelations.length === 0 && (
-                    <div className="text-center py-8 text-text-secondary italic text-sm border border-dashed border-white/10 rounded-lg">
+                    <div className="col-span-full text-center py-12 text-text-secondary italic text-sm border border-dashed border-white/10 rounded-xl">
                         No active relation trackers. Add one above.
                     </div>
                 )}
