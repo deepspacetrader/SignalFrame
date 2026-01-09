@@ -6,6 +6,7 @@ export function AISettings() {
     const { aiConfig, availableModels, updateAiConfig, fetchAvailableModels } = useSituationStore()
     const [isOpen, setIsOpen] = useState(false)
     const [tempConfig, setTempConfig] = useState(aiConfig)
+    const [copied, setCopied] = useState(false)
 
     useEffect(() => {
         if (isOpen) {
@@ -13,7 +14,19 @@ export function AISettings() {
         }
     }, [isOpen, fetchAvailableModels]);
 
-    const isModelInstalled = availableModels.length === 0 || availableModels.includes(tempConfig.model);
+    const isModelInstalled = availableModels.length === 0 || availableModels.some(m => {
+        const normalizedInput = tempConfig.model.toLowerCase().trim();
+        const normalizedModel = m.toLowerCase();
+        return normalizedModel === normalizedInput ||
+            normalizedModel === `${normalizedInput}:latest` ||
+            normalizedModel.split(':')[0] === normalizedInput;
+    });
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(`ollama pull ${tempConfig.model}`);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    }
 
     const handleSave = () => {
         updateAiConfig(tempConfig);
@@ -24,7 +37,7 @@ export function AISettings() {
         return (
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 z-50 p-3 bg-bg-card backdrop-blur-xl border border-white/10 rounded-full shadow-2xl hover:border-accent-primary/50 transition-all group"
+                className="bottom-6 right-6 z-50 p-3 bg-bg-card backdrop-blur-xl border border-white/10 rounded-full shadow-2xl hover:border-accent-primary/50 transition-all group"
             >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary group-hover:text-accent-primary group-hover:rotate-45 transition-all">
                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
@@ -58,9 +71,42 @@ export function AISettings() {
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
                                     Model not detected locally
                                 </p>
-                                <code className="block bg-black/40 p-2 rounded text-[10px] text-white font-mono select-all cursor-pointer hover:bg-black/60 transition-all">
-                                    ollama pull {tempConfig.model}
-                                </code>
+                                <div className="space-y-2">
+                                    <p className="text-[10px] text-text-secondary uppercase font-bold">Try pulling it:</p>
+                                    <div className="relative group/copy">
+                                        <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-white font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                            ollama pull {tempConfig.model}
+                                        </code>
+                                        <button
+                                            onClick={handleCopy}
+                                            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent-primary transition-colors p-1.5 bg-bg-card/50 rounded-md"
+                                            title="Copy to clipboard"
+                                        >
+                                            {copied ? (
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="text-accent-secondary animate-in zoom-in duration-300"><polyline points="20 6 9 17 4 12" /></svg>
+                                            ) : (
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                                            )}
+                                        </button>
+                                    </div>
+
+                                    {availableModels.length > 0 && (
+                                        <>
+                                            <p className="text-[10px] text-text-secondary uppercase font-bold pt-2">Or select active model:</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {availableModels.slice(0, 5).map(m => (
+                                                    <button
+                                                        key={m}
+                                                        onClick={() => setTempConfig({ ...tempConfig, model: m })}
+                                                        className="text-[9px] bg-white/5 hover:bg-accent-primary/20 border border-white/10 rounded px-2 py-1 text-text-primary transition-all"
+                                                    >
+                                                        {m}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>

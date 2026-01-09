@@ -115,4 +115,15 @@ export class OllamaService {
             return [];
         }
     }
+
+    static async getRunningModels(): Promise<any[]> {
+        try {
+            const response = await fetch(`${this.baseUrl}/ps`);
+            const data = await response.json();
+            return data.models || [];
+        } catch (error) {
+            console.error('Failed to get running models:', error);
+            return [];
+        }
+    }
 }

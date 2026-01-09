@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { processSituation, processSingleSection } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
+import { StorageService } from '../services/db'
 
 export interface Signal {
   text: string;
@@ -33,7 +34,15 @@ export interface AiConfig {
   numPredict: number;
 }
 
+export interface RunningModel {
+  name: string;
+  size: number;
+  size_vram: number;
+}
+
 export interface SituationState {
+  currentDate: string; // YYYY-MM-DD
+  availableDates: string[];
   narrative: string;
   signals: Signal[];
   insights: string[];
@@ -51,15 +60,15 @@ export interface SituationState {
   };
   aiConfig: AiConfig;
   availableModels: string[];
+  runningModels: RunningModel[];
   lastUpdated: Date | null;
 }
 
-const CORE_KEY = 'signal_frame_analysis';
-const FEED_KEY = 'signal_frame_feeds';
-const RELATIONS_KEY = 'signal_frame_relations';
-const LEGACY_KEY = 'signal_frame_state';
+const getTodayStr = () => new Date().toISOString().split('T')[0];
 
 const defaultState: SituationState = {
+  currentDate: getTodayStr(),
+  availableDates: [],
   narrative: '',
   signals: [],
   insights: [],
@@ -81,38 +90,35 @@ const defaultState: SituationState = {
     numPredict: 15000
   },
   availableModels: [],
+  runningModels: [],
   lastUpdated: null
 };
 
 let globalState: SituationState = { ...defaultState };
-
-// Re-hydrate starting immediately
-const savedCore = localStorage.getItem(CORE_KEY);
-const savedFeeds = localStorage.getItem(FEED_KEY);
-const savedRelations = localStorage.getItem(RELATIONS_KEY);
-
-if (savedCore) try { Object.assign(globalState, JSON.parse(savedCore)); } catch (e) { }
-if (savedFeeds) try { globalState.feeds = JSON.parse(savedFeeds); } catch (e) { }
-if (savedRelations) try { globalState.foreignRelations = JSON.parse(savedRelations); } catch (e) { }
-
-// Reset volatiles
-globalState.isProcessing = false;
-globalState.processingStatus = 'Idle';
-globalState.isProcessingSection = { ...defaultState.isProcessingSection };
-
-// Fix date object after JSON.parse
-if (globalState.lastUpdated) {
-  globalState.lastUpdated = new Date(globalState.lastUpdated);
-}
-
 const listeners = new Set<(state: SituationState) => void>();
 
 function emit() {
-  const { feeds, foreignRelations, isProcessing, processingStatus, isProcessingSection, availableModels, ...core } = globalState;
-  localStorage.setItem(CORE_KEY, JSON.stringify(core));
-  localStorage.setItem(FEED_KEY, JSON.stringify(feeds));
-  localStorage.setItem(RELATIONS_KEY, JSON.stringify(foreignRelations));
-  listeners.forEach(l => l(globalState));
+  // Save snapshot to DB
+  StorageService.saveAnalysis(globalState.currentDate, {
+    narrative: globalState.narrative,
+    signals: globalState.signals,
+    insights: globalState.insights,
+    feeds: globalState.feeds,
+    mapPoints: globalState.mapPoints,
+    foreignRelations: globalState.foreignRelations,
+    lastUpdated: globalState.lastUpdated
+  });
+
+  // Save AI Config and Global relations list (Definitions) separately
+  StorageService.saveGlobal('ai_config', globalState.aiConfig);
+  StorageService.saveGlobal('relation_defs', globalState.foreignRelations.map(r => ({
+    id: r.id,
+    countryA: r.countryA,
+    countryB: r.countryB,
+    topic: r.topic
+  })));
+
+  listeners.forEach(l => l({ ...globalState }));
 }
 
 export function useSituationStore() {
@@ -120,7 +126,76 @@ export function useSituationStore() {
 
   useEffect(() => {
     listeners.add(setState);
-    return () => { listeners.delete(setState); };
+    // Initial Load - Ensure we don't leak async logic into raw state
+    const init = async () => {
+      const today = getTodayStr();
+      const [analysis, config, defs, dates] = await Promise.all([
+        StorageService.getAnalysis(today),
+        StorageService.getGlobal('ai_config'),
+        StorageService.getGlobal('relation_defs'),
+        StorageService.getAllDates()
+      ]);
+
+      if (config) globalState.aiConfig = config;
+      globalState.availableDates = dates.length > 0 ? dates : [today];
+      globalState.currentDate = today;
+
+      if (analysis) {
+        Object.assign(globalState, analysis);
+        if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
+      } else if (defs) {
+        globalState.foreignRelations = defs.map((d: any) => ({
+          ...d,
+          status: 'Awaiting discovery...',
+          sentiment: 'neutral',
+          lastUpdate: new Date().toISOString()
+        }));
+      }
+
+      emit();
+      fetchRunningModels();
+    };
+    init();
+
+    // Poll for running models
+    const poll = setInterval(() => {
+      fetchRunningModels();
+    }, 5000);
+
+    return () => {
+      listeners.delete(setState);
+      clearInterval(poll);
+    };
+  }, []);
+
+  const loadDate = useCallback(async (dateStr: string) => {
+    if (globalState.isProcessing) return;
+
+    globalState.currentDate = dateStr;
+    const analysis = await StorageService.getAnalysis(dateStr);
+
+    if (analysis) {
+      Object.assign(globalState, analysis);
+      if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
+    } else {
+      globalState.narrative = '';
+      globalState.signals = [];
+      globalState.insights = [];
+      globalState.feeds = [];
+      globalState.mapPoints = [];
+      globalState.lastUpdated = null;
+
+      const defs = await StorageService.getGlobal('relation_defs');
+      if (defs) {
+        globalState.foreignRelations = defs.map((d: any) => ({
+          ...d,
+          status: 'No data for this date.',
+          sentiment: 'neutral',
+          lastUpdate: new Date().toISOString()
+        }));
+      }
+    }
+    emit();
   }, []);
 
   const refresh = useCallback(async () => {
@@ -129,7 +204,7 @@ export function useSituationStore() {
     globalState = {
       ...globalState,
       isProcessing: true,
-      processingStatus: 'Initializing...',
+      processingStatus: 'Initializing Intelligence Network...',
       isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true }
     };
     emit();
@@ -159,6 +234,10 @@ export function useSituationStore() {
         isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false },
         lastUpdated: new Date()
       };
+
+      const dates = await StorageService.getAllDates();
+      globalState.availableDates = dates;
+
       emit();
     } catch (error) {
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
@@ -230,6 +309,16 @@ export function useSituationStore() {
     emit();
   }, []);
 
+  const fetchRunningModels = useCallback(async () => {
+    try {
+      const { OllamaService } = await import('../ai/runtime/ollama');
+      const models = await OllamaService.getRunningModels();
+      globalState = { ...globalState, runningModels: models };
+      // Note: We don't call emit() here to avoid saving volatile ps data to DB
+      listeners.forEach(l => l({ ...globalState }));
+    } catch (e) { }
+  }, []);
+
   return {
     ...state,
     refresh,
@@ -237,6 +326,8 @@ export function useSituationStore() {
     addRelation,
     removeRelation,
     fetchAvailableModels,
-    updateAiConfig
+    updateAiConfig,
+    fetchRunningModels,
+    loadDate
   };
 }

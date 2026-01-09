@@ -37,10 +37,10 @@ export async function processSituation(
       narrative = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
     }
 
-    onProgress?.(`Identifying ${CATEGORY_MAP.signals}...`);
+    onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
     const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context), 'json', options);
 
-    onProgress?.(`Extracting ${CATEGORY_MAP.insights}...`);
+    onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
     const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context), 'json', options);
 
     onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
