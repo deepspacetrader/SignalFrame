@@ -105,6 +105,89 @@ export class OllamaService {
         }
     }
 
+    static async chat(
+        model: string,
+        messages: { role: string; content: string }[],
+        onChunk: (text: string) => void,
+        options: OllamaOptions = {}
+    ): Promise<void> {
+        const url = `${this.baseUrl}/chat`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model,
+                    messages,
+                    stream: true,
+                    options: {
+                        num_ctx: options.num_ctx || 25000,
+                        num_predict: options.num_predict || 15000,
+                    }
+                }),
+            });
+
+            if (!response.ok) throw new Error(`Ollama chat stream error: ${response.statusText}`);
+            if (!response.body) throw new Error('Ollama chat stream body is null');
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                    if (!line.trim()) continue;
+                    try {
+                        const json = JSON.parse(line);
+                        // Chat response format: { model, created_at, message: { role, content }, done }
+                        if (json.message && json.message.content) {
+                            onChunk(json.message.content);
+                        }
+                        if (json.done) break;
+                    } catch (e) {
+                        // Handle partial JSON lines if necessary
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Ollama Chat Error:', error);
+            throw error;
+        }
+    }
+
+    static async embeddings(
+        model: string,
+        prompt: string,
+        options: OllamaOptions = {}
+    ): Promise<number[]> {
+        const url = `${this.baseUrl}/embeddings`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model,
+                    prompt,
+                    options: {
+                        num_ctx: options.num_ctx || 25000,
+                    }
+                }),
+            });
+
+            if (!response.ok) throw new Error(`Ollama embeddings error: ${response.statusText}`);
+            const data = await response.json();
+            return data.embedding;
+        } catch (error) {
+            console.error('Ollama Embeddings Error:', error);
+            throw error;
+        }
+    }
+
     static async listModels(): Promise<string[]> {
         try {
             const response = await fetch(`${this.baseUrl}/tags`);

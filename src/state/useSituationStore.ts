@@ -79,7 +79,13 @@ export interface SituationState {
   lastUpdated: Date | null;
 }
 
-const getTodayStr = () => new Date().toISOString().split('T')[0];
+const getTodayStr = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const defaultState: SituationState = {
   currentDate: getTodayStr(),
@@ -112,9 +118,22 @@ const defaultState: SituationState = {
 let globalState: SituationState = { ...defaultState };
 const listeners = new Set<(state: SituationState) => void>();
 
-function emit() {
+/**
+ * Notifies all listeners of state changes without persisting to DB.
+ */
+function notify() {
+  listeners.forEach(l => l({ ...globalState }));
+}
+
+/**
+ * Persists current snapshot and global settings to DB.
+ */
+async function persist() {
+  // Only persist if we have a valid date
+  if (!globalState.currentDate) return;
+
   // Save snapshot to DB
-  StorageService.saveAnalysis(globalState.currentDate, {
+  await StorageService.saveAnalysis(globalState.currentDate, {
     narrative: globalState.narrative,
     signals: globalState.signals,
     insights: globalState.insights,
@@ -125,15 +144,13 @@ function emit() {
   });
 
   // Save AI Config and Global relations list (Definitions) separately
-  StorageService.saveGlobal('ai_config', globalState.aiConfig);
-  StorageService.saveGlobal('relation_defs', globalState.foreignRelations.map(r => ({
+  await StorageService.saveGlobal('ai_config', globalState.aiConfig);
+  await StorageService.saveGlobal('relation_defs', globalState.foreignRelations.map(r => ({
     id: r.id,
     countryA: r.countryA,
     countryB: r.countryB,
     topic: r.topic
   })));
-
-  listeners.forEach(l => l({ ...globalState }));
 }
 
 export function useSituationStore() {
@@ -167,7 +184,7 @@ export function useSituationStore() {
         }));
       }
 
-      emit();
+      notify();
       fetchRunningModels();
     };
     init();
@@ -186,12 +203,30 @@ export function useSituationStore() {
   const loadDate = useCallback(async (dateStr: string) => {
     if (globalState.isProcessing) return;
 
+    // Cache current relation defs to prevent overwriting them with historical snapshots
+    const currentDefs = await StorageService.getGlobal('relation_defs');
+
     globalState.currentDate = dateStr;
     const analysis = await StorageService.getAnalysis(dateStr);
 
     if (analysis) {
       Object.assign(globalState, analysis);
       if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
+      // Ensure we keep the latest relation definitions even when viewing history
+      // (The snapshot contains statuses, but the set of tracked relations should be global)
+      if (currentDefs) {
+        // Merge: keep status/sentiment from history if it exists, but ensure all current defs are present
+        const historicalRelations = globalState.foreignRelations;
+        globalState.foreignRelations = currentDefs.map((def: any) => {
+          const historical = historicalRelations.find(h => h.id === def.id);
+          return historical ? { ...def, status: historical.status, sentiment: historical.sentiment, lastUpdate: historical.lastUpdate } : {
+            ...def,
+            status: 'No data for this date.',
+            sentiment: 'neutral',
+            lastUpdate: new Date().toISOString()
+          };
+        });
+      }
     } else {
       globalState.narrative = '';
       globalState.signals = [];
@@ -200,9 +235,8 @@ export function useSituationStore() {
       globalState.mapPoints = [];
       globalState.lastUpdated = null;
 
-      const defs = await StorageService.getGlobal('relation_defs');
-      if (defs) {
-        globalState.foreignRelations = defs.map((d: any) => ({
+      if (currentDefs) {
+        globalState.foreignRelations = currentDefs.map((d: any) => ({
           ...d,
           status: 'No data for this date.',
           sentiment: 'neutral',
@@ -210,7 +244,8 @@ export function useSituationStore() {
         }));
       }
     }
-    emit();
+    notify();
+    // We do NOT call persist() here because loading historical data should not overwrite anything.
   }, []);
 
   const refresh = useCallback(async () => {
@@ -222,21 +257,21 @@ export function useSituationStore() {
       processingStatus: 'Initializing Intelligence Network...',
       isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true }
     };
-    emit();
+    notify();
 
     try {
-      const newsFeeds = await fetchLatestFeeds()
+      const newsFeeds = await fetchLatestFeeds(globalState.currentDate)
       const result = await processSituation(
         newsFeeds,
         globalState.foreignRelations,
         globalState.aiConfig,
         (status) => {
           globalState = { ...globalState, processingStatus: status };
-          emit();
+          notify();
         },
         (chunk) => {
           globalState = { ...globalState, narrative: chunk };
-          emit();
+          notify();
         }
       );
 
@@ -253,10 +288,11 @@ export function useSituationStore() {
       const dates = await StorageService.getAllDates();
       globalState.availableDates = dates;
 
-      emit();
+      notify();
+      persist();
     } catch (error) {
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
-      emit();
+      notify();
     }
   }, []);
 
@@ -267,7 +303,7 @@ export function useSituationStore() {
       ...globalState,
       isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: true }
     };
-    emit();
+    notify();
 
     try {
       const result = await processSingleSection(
@@ -277,7 +313,7 @@ export function useSituationStore() {
         globalState.aiConfig,
         sectionId === 'narrative' ? (chunk) => {
           globalState = { ...globalState, narrative: chunk };
-          emit();
+          notify();
         } : undefined
       );
 
@@ -286,10 +322,11 @@ export function useSituationStore() {
         ...result,
         isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false }
       };
-      emit();
+      notify();
+      persist();
     } catch (error) {
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false } };
-      emit();
+      notify();
     }
   }, []);
 
@@ -302,12 +339,14 @@ export function useSituationStore() {
       lastUpdate: new Date().toISOString()
     };
     globalState = { ...globalState, foreignRelations: [...globalState.foreignRelations, newRel] };
-    emit();
+    notify();
+    persist();
   }, []);
 
   const removeRelation = useCallback((id: string) => {
     globalState = { ...globalState, foreignRelations: globalState.foreignRelations.filter(r => r.id !== id) };
-    emit();
+    notify();
+    persist();
   }, []);
 
   const fetchAvailableModels = useCallback(async () => {
@@ -315,13 +354,14 @@ export function useSituationStore() {
       const { OllamaService } = await import('../ai/runtime/ollama');
       const models = await OllamaService.listModels();
       globalState = { ...globalState, availableModels: models };
-      emit();
+      notify();
     } catch (e) { }
   }, []);
 
   const updateAiConfig = useCallback((config: Partial<AiConfig>) => {
     globalState = { ...globalState, aiConfig: { ...globalState.aiConfig, ...config } };
-    emit();
+    notify();
+    persist();
   }, []);
 
   const fetchRunningModels = useCallback(async () => {

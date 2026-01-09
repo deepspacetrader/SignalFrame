@@ -76,25 +76,32 @@ function generateContext(feeds: RawSignal[]) {
 function generateNarrativePrompt(context: string) {
   return `Analyze these news feeds and provide a short but comprehensive Situation Briefing. 
 Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing.
-Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any additional text and especially do not include any emdashes or other additional formatting. Just text.
+Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any additional text and especially do not include any em dashes or other additional formatting. Just text.
 
 Feeds:
 ${context}`;
 }
 
 function generateSignalsPrompt(context: string) {
-  return `Identify up to 10 most significant "delta" changes or escalations.
-Return a JSON array of objects: [{"text": "...", "sentiment": "..."}].
+  return `Act as a senior intelligence officer. Filter and SYNTHESIZE the following news feeds to identify the 5-8 most critical "delta" signals. 
+
+A signal is NOT just a headline; it is a shift in state, a pivot point, or a significant escalation.
+DEDUPLICATE: If multiple sources report on the same event, synthesize them into ONE high-level signal with the most critical takeaway.
+
+IGNORE: Routine updates, scheduled meetings without outcomes, and low-impact noise.
+FOCUS ON: Sudden escalations, policy reversals, surprise outcomes, and breaks in historical patterns.
+
+Return a JSON array of objects: [{"text": "PUNCHY_SIGNAL (MAX 15 WORDS)", "sentiment": "..."}].
 
 SENTIMENT GUIDELINES:
-- extremely-negative: Active conflict, major human rights violations, total market collapse, or massive loss of life, disasters.
-- very-negative: Significant escalations in tension, religious/political crackdowns, or major economic downturns.
-- negative: General negative news, minor diplomatic friction, or unfavorable economic indicators.
-- somewhat-negative: Emerging concerns or slight escalations in regional tension.
+- extremely-negative: Active conflict, major human rights violations, total market collapse, or massive loss of life, disasters, wars.
+- very-negative: Significant escalations in tension, religious/political crackdowns, or major economic downturns, riots.
+- negative: General negative news, minor diplomatic friction, or unfavorable economic indicators, protests.
+- somewhat-negative: Emerging concerns or slight escalations in regional tension, civil unrest.
 - neutral: Raw data points, scheduled events, or shifts without immediate clear impact.
 - interesting: Unpredictable or unusual developments that aren't clearly good or bad.
-- positive: Diplomatic resolutions, medical breakthroughs, signs of economic recovery.
-- very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress.
+- positive: Diplomatic resolutions, medical breakthroughs, signs of economic recovery, justice being served.
+- very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress, fall of a dictator.
 
 Feeds:
 ${context}`;

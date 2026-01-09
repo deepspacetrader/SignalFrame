@@ -47,21 +47,25 @@ export function SignalList() {
       </div>
 
       {isProcessing && signals.length === 0 ? (
-        <ul className="space-y-3 opacity-50">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => <li key={i} className="loading-skeleton h-12 bg-white/5 animate-pulse rounded-lg"></li>)}
-        </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => <div key={i} className="loading-skeleton h-12 bg-white/5 animate-pulse rounded-lg"></div>)}
+        </div>
       ) : (
-        <ul className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
           {signals.map((signal, idx) => (
-            <li key={idx}
+            <div key={idx}
               className="bg-white/5 border-l-4 p-4 rounded-r-lg text-text-secondary transition-colors hover:text-text-primary"
               style={{ borderColor: getSentimentColor(signal.sentiment) }}
             >
               {signal.text}
-            </li>
+            </div>
           ))}
-          {!isProcessing && signals.length === 0 && <p className="text-text-secondary italic">No signals detected.</p>}
-        </ul>
+          {!isProcessing && signals.length === 0 && (
+            <div className="col-span-full py-8 text-center border2 border-dashed border-white/5 rounded-xl">
+              <p className="text-text-secondary italic">No critical signals identified in this period.</p>
+            </div>
+          )}
+        </div>
       )}
     </section>
   )

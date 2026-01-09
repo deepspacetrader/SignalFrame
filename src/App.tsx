@@ -8,13 +8,23 @@ import { SituationMap } from './components/SituationMap'
 import { ForeignRelationsPanel } from './components/ForeignRelationsPanel'
 import { LoadingOverlay } from './components/LoadingOverlay'
 import { AISettings } from './components/AISettings'
+import { ChatPanel } from './components/ChatPanel'
+import { PredictionsPanel } from './components/PredictionsPanel'
 import { useSituationStore } from './state/useSituationStore'
 import { DEFAULT_MODEL } from './ai/runtime/engine'
 
 export default function App() {
   const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels } = useSituationStore()
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const getLocalTodayStr = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayStr = getLocalTodayStr();
   const isToday = currentDate === todayStr;
 
   const handlePrevDay = () => {
@@ -22,10 +32,14 @@ export default function App() {
     if (currentIndex > 0) {
       loadDate(availableDates[currentIndex - 1]);
     } else {
-      // Fallback: just go back one calendar day if no data index found or at start of index
-      const d = new Date(currentDate);
-      d.setDate(d.getDate() - 1);
-      loadDate(d.toISOString().split('T')[0]);
+      // Fallback: just go back one calendar day
+      const [y, m, d] = currentDate.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      date.setDate(date.getDate() - 1);
+      const prevY = date.getFullYear();
+      const prevM = String(date.getMonth() + 1).padStart(2, '0');
+      const prevD = String(date.getDate()).padStart(2, '0');
+      loadDate(`${prevY}-${prevM}-${prevD}`);
     }
   };
 
@@ -35,9 +49,13 @@ export default function App() {
     if (currentIndex !== -1 && currentIndex < availableDates.length - 1) {
       loadDate(availableDates[currentIndex + 1]);
     } else {
-      const d = new Date(currentDate);
-      d.setDate(d.getDate() + 1);
-      const nextStr = d.toISOString().split('T')[0];
+      const [y, m, d] = currentDate.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      date.setDate(date.getDate() + 1);
+      const nextY = date.getFullYear();
+      const nextM = String(date.getMonth() + 1).padStart(2, '0');
+      const nextD = String(date.getDate()).padStart(2, '0');
+      const nextStr = `${nextY}-${nextM}-${nextD}`;
       loadDate(nextStr > todayStr ? todayStr : nextStr);
     }
   };
@@ -97,12 +115,12 @@ export default function App() {
 
           <button
             onClick={() => refresh()}
-            disabled={isProcessing || !isToday}
+            disabled={isProcessing}
             className={`group relative overflow-hidden font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] 
-              ${!isToday ? 'bg-white/5 text-text-secondary cursor-not-allowed border border-white/10' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
+              ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.3)]' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
           >
             <span className="flex items-center gap-2">
-              {!isToday ? 'LOCKED (HISTORICAL VIEW)' : (isProcessing ? 'SCANNING...' : 'SCAN WITH AI')}
+              {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}
               <svg className={`transition-transform duration-700 ${isProcessing ? 'animate-spin' : 'group-hover:rotate-12'}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
               </svg>
@@ -150,25 +168,41 @@ export default function App() {
         <div className="col-span-12 lg:col-span-12 space-y-8">
           <SituationMap />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-4">
             <NarrativeSummary />
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
               <SignalList />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
               <InsightPanel />
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-12">
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-8">
+
+          <div className="w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
               <ForeignRelationsPanel />
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-12">
+          {/* Deep Intelligence Section */}
+          <div className="w-full">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-4 flex items-center gap-2">
+              <span className="w-8 h-[1px] bg-accent-primary"></span>
+              Deep Intelligence Suite
+              <span className="w-full h-[1px] bg-white/5"></span>
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <ChatPanel />
+              <PredictionsPanel />
+            </div>
+          </div>
+
+          <div className="w-full">
             <SourceFeedList />
           </div>
 
         </div>
-      </main >
+      </main>
 
       <footer className="mt-16 py-8 border-t border-white/10 text-center flex justify-between items-center text-text-secondary px-4">
         <p className="text-[0.65rem] uppercase tracking-widest font-bold">

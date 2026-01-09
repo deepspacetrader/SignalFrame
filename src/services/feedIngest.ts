@@ -26,21 +26,45 @@ const FEEDS = [
     { url: 'https://www.reutersagency.com/feed/?best-topics=world-news&post_type=best', category: 'Conflicts', source: 'Reuters' }
 ];
 
-export async function fetchLatestFeeds(): Promise<RawSignal[]> {
-    console.log('Fetching latest feeds from across the web...');
+export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]> {
+    const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+    const isToday = !targetDate || targetDate === todayStr;
+
+    console.log(`Fetching ${isToday ? 'latest' : 'historical'} feeds for ${targetDate || 'Today'}...`);
 
     const allSignals: RawSignal[] = [];
+    const activeFeeds = [...FEEDS];
+
+    // If historical, add a targeted Google News Search to ensure we find data for that specific day
+    if (!isToday && targetDate) {
+        const [y, m, d] = targetDate.split('-').map(Number);
+        const date = new Date(y, m - 1, d);
+        date.setDate(date.getDate() + 1);
+
+        const nextY = date.getFullYear();
+        const nextM = String(date.getMonth() + 1).padStart(2, '0');
+        const nextD = String(date.getDate()).padStart(2, '0');
+        const nextDayStr = `${nextY}-${nextM}-${nextD}`;
+
+        activeFeeds.push({
+            url: `https://news.google.com/rss/search?q=after:${targetDate}+before:${nextDayStr}&hl=en-US&gl=US&ceid=US:en`,
+            category: 'Geopolitical',
+            source: 'Google News Archive'
+        });
+    }
 
     // Fetch in parallel
-    const feedPromises = FEEDS.map(async (feed) => {
+    const feedPromises = activeFeeds.map(async (feed) => {
         try {
             // Using rss2json to bypass CORS and get clean JSON
+            // Note: count parameter removed as it causes 422 Unprocessable Entity on free tier
             const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
             const response = await fetch(proxyUrl);
             const data = await response.json();
 
             if (data.status === 'ok' && data.items) {
-                return data.items.slice(0, 5).map((item: any) => ({
+                // Return all items, we'll filter by date after aggregation
+                return data.items.map((item: any) => ({
                     id: item.guid || item.link,
                     source: feed.source,
                     timestamp: item.pubDate.includes('UTC') || item.pubDate.includes('Z') ? item.pubDate : `${item.pubDate} UTC`,
@@ -58,6 +82,16 @@ export async function fetchLatestFeeds(): Promise<RawSignal[]> {
     const results = await Promise.all(feedPromises);
     results.forEach(signals => allSignals.push(...signals));
 
-    console.log(`Ingested ${allSignals.length} raw news items.`);
-    return allSignals.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    // Filter by date if a specific target date was requested
+    const filteredSignals = targetDate
+        ? allSignals.filter(s => {
+            try {
+                const signalDate = new Date(s.timestamp).toLocaleDateString('en-CA');
+                return signalDate === targetDate;
+            } catch (e) { return false; }
+        })
+        : allSignals;
+
+    console.log(`Ingested ${filteredSignals.length} signals for ${targetDate || 'Today'}.`);
+    return filteredSignals.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
