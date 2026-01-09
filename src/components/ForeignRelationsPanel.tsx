@@ -20,10 +20,15 @@ export function ForeignRelationsPanel() {
     // Helper to get sentiment color
     const getSentimentColor = (sentiment: string) => {
         switch (sentiment) {
-            case 'tension': return 'text-red-500 border-red-500/50 bg-red-500/10'
-            case 'negative': return 'text-orange-500 border-orange-500/50 bg-orange-500/10'
-            case 'positive': return 'text-green-500 border-green-500/50 bg-green-500/10'
-            default: return 'text-slate-400 border-slate-500/30 bg-slate-500/5'
+            case 'extremely-negative': return { color: 'var(--crit-bright-red)', borderColor: 'rgba(255, 31, 31, 0.3)', backgroundColor: 'rgba(255, 31, 31, 0.1)' }
+            case 'very-negative': return { color: 'var(--crit-red)', borderColor: 'rgba(239, 68, 68, 0.3)', backgroundColor: 'rgba(239, 68, 68, 0.1)' }
+            case 'negative': return { color: 'var(--crit-orange)', borderColor: 'rgba(249, 115, 22, 0.3)', backgroundColor: 'rgba(249, 115, 22, 0.1)' }
+            case 'somewhat-negative': return { color: 'var(--crit-yellow)', borderColor: 'rgba(250, 204, 21, 0.3)', backgroundColor: 'rgba(250, 204, 21, 0.1)' }
+            case 'neutral': return { color: 'var(--crit-gray)', borderColor: 'rgba(148, 163, 184, 0.3)', backgroundColor: 'rgba(148, 163, 184, 0.1)' }
+            case 'interesting': return { color: 'var(--crit-blue)', borderColor: 'rgba(59, 130, 246, 0.3)', backgroundColor: 'rgba(59, 130, 246, 0.1)' }
+            case 'positive': return { color: 'var(--crit-green)', borderColor: 'rgba(34, 197, 94, 0.3)', backgroundColor: 'rgba(34, 197, 94, 0.1)' }
+            case 'very-positive': return { color: 'var(--crit-bright-green)', borderColor: 'rgba(16, 185, 129, 0.3)', backgroundColor: 'rgba(16, 185, 129, 0.1)' }
+            default: return { color: 'var(--crit-gray)', borderColor: 'rgba(148, 163, 184, 0.2)', backgroundColor: 'rgba(148, 163, 184, 0.05)' }
         }
     }
 
@@ -109,8 +114,11 @@ export function ForeignRelationsPanel() {
                                 <span className="text-text-secondary text-xs">↔</span>
                                 <span className="text-sm font-bold text-white">{rel.countryB}</span>
                             </div>
-                            <span className={`text-[10px] px-2 py-0.5 rounded border uppercase font-bold tracking-wider ${getSentimentColor(rel.sentiment)}`}>
-                                {rel.sentiment}
+                            <span
+                                className="text-[10px] px-2 py-0.5 rounded border uppercase font-bold tracking-wider"
+                                style={getSentimentColor(String(rel.sentiment || 'neutral'))}
+                            >
+                                {String(rel.sentiment || 'neutral').replace('-', ' ')}
                             </span>
                         </div>
 

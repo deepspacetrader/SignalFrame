@@ -1,5 +1,19 @@
 import { useSituationStore } from '../state/useSituationStore'
 
+const getSentimentColor = (sentiment: string) => {
+  switch (sentiment) {
+    case 'extremely-negative': return 'var(--crit-bright-red)';
+    case 'very-negative': return 'var(--crit-red)';
+    case 'negative': return 'var(--crit-orange)';
+    case 'somewhat-negative': return 'var(--crit-yellow)';
+    case 'neutral': return 'var(--crit-gray)';
+    case 'interesting': return 'var(--crit-blue)';
+    case 'positive': return 'var(--crit-green)';
+    case 'very-positive': return 'var(--crit-bright-green)';
+    default: return 'var(--crit-gray)';
+  }
+}
+
 export function InsightPanel() {
   const { insights, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
   const isLoading = isProcessingSection.insights && !isProcessing;
@@ -41,15 +55,19 @@ export function InsightPanel() {
       ) : (
         <ul className="space-y-4">
           {insights.map((insight, idx) => {
-            const parts = insight.split('|').map(s => s.trim())
+            const parts = insight.text.split('|').map(s => s.trim())
             const trend = parts[0]
             const implication = parts[1]
+            const color = getSentimentColor(insight.sentiment)
 
             return (
-              <li key={`${idx}-${insight.substring(0, 10)}`} className="bg-accent-secondary/5 border-l-4 border-accent-secondary p-4 rounded-r-lg group transition-all hover:bg-accent-secondary/10">
+              <li key={`${idx}-${insight.text.substring(0, 10)}`}
+                className="bg-white/5 border-l-4 p-4 rounded-r-lg group transition-all hover:bg-white/10"
+                style={{ borderLeftColor: color }}
+              >
                 {implication ? (
                   <>
-                    <p className="text-[0.65rem] uppercase tracking-widest font-bold text-accent-secondary mb-1 opacity-80">
+                    <p className="text-[0.65rem] uppercase tracking-widest font-bold mb-1 opacity-80" style={{ color: color }}>
                       {trend.replace(/^Trend:\s*/i, '')}
                     </p>
                     <p className="text-sm text-text-primary leading-snug">
@@ -57,7 +75,7 @@ export function InsightPanel() {
                     </p>
                   </>
                 ) : (
-                  <p className="text-sm text-text-primary leading-snug">{insight}</p>
+                  <p className="text-sm text-text-primary leading-snug">{insight.text}</p>
                 )}
               </li>
             )

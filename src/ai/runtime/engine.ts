@@ -74,23 +74,61 @@ function generateContext(feeds: RawSignal[]) {
 }
 
 function generateNarrativePrompt(context: string) {
-  return `Analyze these news feeds. Provide a concise, 2-3 sentence situational awareness briefing. Focus on the single most important global shift.\n\nFeeds:\n${context}`;
+  return `Analyze these news feeds and provide a short but comprehensive Situation Briefing. 
+Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing.
+Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any additional text and especially do not include any emdashes or other additional formatting. Just text.
+
+Feeds:
+${context}`;
 }
 
 function generateSignalsPrompt(context: string) {
-  return `Identify up to 10 most significant "delta" changes or escalations.\nReturn a JSON array of strings.\nFeeds:\n${context}`;
+  return `Identify up to 10 most significant "delta" changes or escalations.
+Return a JSON array of objects: [{"text": "...", "sentiment": "..."}].
+
+SENTIMENT GUIDELINES:
+- extremely-negative: Active conflict, major human rights violations, total market collapse, or massive loss of life, disasters.
+- very-negative: Significant escalations in tension, religious/political crackdowns, or major economic downturns.
+- negative: General negative news, minor diplomatic friction, or unfavorable economic indicators.
+- somewhat-negative: Emerging concerns or slight escalations in regional tension.
+- neutral: Raw data points, scheduled events, or shifts without immediate clear impact.
+- interesting: Unpredictable or unusual developments that aren't clearly good or bad.
+- positive: Diplomatic resolutions, medical breakthroughs, signs of economic recovery.
+- very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress.
+
+Feeds:
+${context}`;
 }
 
 function generateInsightsPrompt(context: string) {
-  return `Identify up to 10 hidden trends and implications.\nReturn a JSON array of strings in format "TREND | IMPLICATION".\nFeeds:\n${context}`;
+  return `Identify up to 10 hidden trends and "reading between the lines" implications.
+Return a JSON array of objects: [{"text": "TREND | IMPLICATION", "sentiment": "..."}].
+
+Use the SENTIMENT GUIDELINES as defined for signals.
+
+Feeds:
+${context}`;
 }
 
 function generateMapPointsPrompt(context: string) {
-  return `Extract up to 10 geographical locations with sentiment.\nReturn a JSON array of objects with id, lat, lng, title, sentiment, category.\nFeeds:\n${context}`;
+  return `Extract up to 10 geographical locations with sentiment.
+Return a JSON array of objects with id, lat, lng, title, sentiment, category.
+
+Use the SENTIMENT GUIDELINES scale for each location.
+
+Feeds:
+${context}`;
 }
 
 function generateRelationsPrompt(context: string, relations: ForeignRelation[]) {
-  return `Update status/sentiment for these trackers:\n${relations.map(r => `- ${r.countryA} vs ${r.countryB}`).join('\n')}\n\nReturn JSON array: [{"countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]\nFeeds:\n${context}`;
+  return `Update status/sentiment for these trackers:
+${relations.map(r => `- ${r.countryA} vs ${r.countryB}`).join('\n')}
+
+Return JSON array: [{"countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]
+
+Use the SENTIMENT GUIDELINES scale for each foreign relationship tracker.
+Feeds:
+${context}`;
 }
 
 function parseJsonArray(text: string): any[] {
@@ -128,18 +166,30 @@ function finalizeNarrative(narrative: string) {
   return narrative.trim().replace(/^(Briefing|Analysis|Summary):/i, '').trim();
 }
 
+const DEFAULT_SENTIMENT: any = 'neutral';
+
 function finalizeSignals(raw: any[]) {
   return raw.map(s => {
-    if (typeof s === 'string') return { text: s, level: 'medium' };
-    return { text: String(s.text || s.content || s.event || JSON.stringify(s)), level: (s.level || 'medium').toLowerCase() as any };
+    if (typeof s === 'string') return { text: s, sentiment: DEFAULT_SENTIMENT };
+    const text = String(s.text || s.content || s.event || JSON.stringify(s));
+    const sentiment = (s.sentiment || s.level || DEFAULT_SENTIMENT).toLowerCase();
+
+    // Legacy mapping if AI uses old levels
+    if (sentiment === 'high') return { text, sentiment: 'extremely-negative' };
+    if (sentiment === 'medium') return { text, sentiment: 'negative' };
+    if (sentiment === 'low') return { text, sentiment: 'neutral' };
+
+    return { text, sentiment: sentiment as any };
   });
 }
 
 function finalizeInsights(raw: any[]) {
-  return raw.flatMap(i => {
-    let text = typeof i === 'string' ? i : (i.trend && i.impact ? `${i.trend} | ${i.impact}` : JSON.stringify(i));
-    return [text];
-  }).filter(t => t.includes('|') && t.length > 15);
+  return raw.map(i => {
+    if (typeof i === 'string') return { text: i, sentiment: DEFAULT_SENTIMENT };
+    const text = i.text || (i.trend && i.impact ? `${i.trend} | ${i.impact}` : JSON.stringify(i));
+    const sentiment = (i.sentiment || DEFAULT_SENTIMENT).toLowerCase();
+    return { text, sentiment: sentiment as any };
+  }).filter(i => i.text.includes('|') && i.text.length > 15);
 }
 
 function finalizeMapPoints(raw: any[]) {
@@ -156,7 +206,12 @@ function finalizeMapPoints(raw: any[]) {
 function finalizeRelations(raw: any[], relations: ForeignRelation[]) {
   return relations.map(rel => {
     const update = raw.find(r => (r.countryA === rel.countryA && r.countryB === rel.countryB) || (r.countryA === rel.countryB && r.countryB === rel.countryA));
-    return update ? { ...rel, status: update.status || rel.status, sentiment: update.sentiment || rel.sentiment, lastUpdate: new Date().toISOString() } : rel;
+    return update ? {
+      ...rel,
+      status: String(update.status || rel.status),
+      sentiment: String(update.sentiment || rel.sentiment) as any,
+      lastUpdate: new Date().toISOString()
+    } : rel;
   });
 }
 

@@ -4,9 +4,24 @@ import { processSituation, processSingleSection } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
 
+export type Sentiment =
+  | 'extremely-negative'
+  | 'very-negative'
+  | 'negative'
+  | 'somewhat-negative'
+  | 'neutral'
+  | 'interesting'
+  | 'positive'
+  | 'very-positive';
+
 export interface Signal {
   text: string;
-  level: 'low' | 'medium' | 'high';
+  sentiment: Sentiment;
+}
+
+export interface Insight {
+  text: string;
+  sentiment: Sentiment;
 }
 
 export interface MapPoint {
@@ -14,7 +29,7 @@ export interface MapPoint {
   lat: number;
   lng: number;
   title: string;
-  sentiment: 'positive' | 'neutral' | 'negative';
+  sentiment: Sentiment | 'positive' | 'neutral' | 'negative';
   category: 'Tech / AI' | 'Financial' | 'Conflicts' | 'Geopolitical';
 }
 
@@ -24,7 +39,7 @@ export interface ForeignRelation {
   countryB: string;
   topic: string;
   status: string;
-  sentiment: 'positive' | 'neutral' | 'negative' | 'tension';
+  sentiment: Sentiment | 'positive' | 'neutral' | 'negative' | 'tension';
   lastUpdate: string;
 }
 
@@ -45,7 +60,7 @@ export interface SituationState {
   availableDates: string[];
   narrative: string;
   signals: Signal[];
-  insights: string[];
+  insights: Insight[];
   feeds: RawSignal[];
   mapPoints: MapPoint[];
   foreignRelations: ForeignRelation[];

@@ -4,23 +4,28 @@ import L from 'leaflet'
 import { useSituationStore, MapPoint } from '../state/useSituationStore'
 import 'leaflet/dist/leaflet.css'
 
+const categoryColors: Record<string, string> = {
+    'Tech / AI': '#3b82f6',
+    'Financial': '#ec4899',
+    'Conflicts': '#eab308',
+    'Geopolitical': '#94a3b8'
+}
+
+const sentimentColors: Record<string, string> = {
+    'extremely-negative': '#ff1f1f',
+    'very-negative': '#ef4444',
+    'negative': '#f97316',
+    'somewhat-negative': '#facc15',
+    'neutral': '#64748b',
+    'interesting': '#3b82f6',
+    'positive': '#22c55e',
+    'very-positive': '#10b981'
+}
+
 // Custom marker factory based on category and sentiment
 const createCustomIcon = (point: MapPoint) => {
-    const categoryColors: Record<string, string> = {
-        'Tech / AI': '#3b82f6', // Blue
-        'Financial': '#ec4899', // Pink (Tailwind pink-500)
-        'Conflicts': '#eab308', // Yellow (Tailwind yellow-500)
-        'Geopolitical': '#94a3b8' // Gray (Tailwind slate-400)
-    }
-
-    const sentimentColors: Record<string, string> = {
-        'positive': '#22c55e', // Green
-        'neutral': '#64748b', // Gray
-        'negative': '#ef4444' // Red
-    }
-
     const color = categoryColors[point.category] || '#94a3b8'
-    const outline = sentimentColors[point.sentiment] || '#64748b'
+    const outline = sentimentColors[point.sentiment] || sentimentColors.neutral
 
     return L.divIcon({
         className: 'custom-map-pin',
@@ -96,10 +101,11 @@ export function SituationMap() {
                                         <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
                                             {point.category}
                                         </span>
-                                        <span className={`text-[10px] font-bold ${point.sentiment === 'positive' ? 'text-green-600' :
-                                            point.sentiment === 'negative' ? 'text-red-600' : 'text-slate-500'
-                                            }`}>
-                                            {point.sentiment.toUpperCase()}
+                                        <span
+                                            className="text-[10px] font-bold"
+                                            style={{ color: (sentimentColors as any)[point.sentiment] || '#64748b' }}
+                                        >
+                                            {String(point.sentiment || 'neutral').replace('-', ' ').toUpperCase()}
                                         </span>
                                     </div>
                                 </div>

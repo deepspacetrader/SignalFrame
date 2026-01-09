@@ -1,5 +1,19 @@
 import { useSituationStore } from '../state/useSituationStore'
 
+const getSentimentColor = (sentiment: string) => {
+  switch (sentiment) {
+    case 'extremely-negative': return 'var(--crit-bright-red)';
+    case 'very-negative': return 'var(--crit-red)';
+    case 'negative': return 'var(--crit-orange)';
+    case 'somewhat-negative': return 'var(--crit-yellow)';
+    case 'neutral': return 'var(--crit-gray)';
+    case 'interesting': return 'var(--crit-blue)';
+    case 'positive': return 'var(--crit-green)';
+    case 'very-positive': return 'var(--crit-bright-green)';
+    default: return 'var(--crit-gray)';
+  }
+}
+
 export function SignalList() {
   const { signals, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
   const isLoading = isProcessingSection.signals && !isProcessing;
@@ -39,9 +53,10 @@ export function SignalList() {
       ) : (
         <ul className="space-y-3">
           {signals.map((signal, idx) => (
-            <li key={idx} className={`bg-white/5 border-l-4 p-4 rounded-r-lg text-text-secondary transition-colors hover:text-text-primary ${signal.level === 'high' ? 'border-accent-alert' :
-              signal.level === 'medium' ? 'border-accent-primary' : 'border-accent-secondary'
-              }`}>
+            <li key={idx}
+              className="bg-white/5 border-l-4 p-4 rounded-r-lg text-text-secondary transition-colors hover:text-text-primary"
+              style={{ borderColor: getSentimentColor(signal.sentiment) }}
+            >
               {signal.text}
             </li>
           ))}
