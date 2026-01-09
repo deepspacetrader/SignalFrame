@@ -51,6 +51,7 @@ export interface AiConfig {
   model: string;
   numCtx: number;
   numPredict: number;
+  enableThinking: boolean; // Enable thinking/reasoning trace for supported models
 }
 
 export interface RunningModel {
@@ -68,6 +69,7 @@ export interface SituationState {
   feeds: RawSignal[];
   mapPoints: MapPoint[];
   foreignRelations: ForeignRelation[];
+  thinkingTrace: string; // AI's reasoning trace for narrative generation
   isProcessing: boolean;
   processingStatus: string;
   isProcessingSection: {
@@ -109,10 +111,12 @@ const defaultState: SituationState = {
     map: false,
     relations: false
   },
+  thinkingTrace: '',
   aiConfig: {
     model: 'llama3.2',
     numCtx: 25000,
-    numPredict: 15000
+    numPredict: 15000,
+    enableThinking: false
   },
   availableModels: [],
   runningModels: [],
@@ -259,6 +263,7 @@ export function useSituationStore() {
       ...globalState,
       isProcessing: true,
       processingStatus: 'Initializing Intelligence Network...',
+      thinkingTrace: '', // Reset thinking trace on new scan
       isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true }
     };
     notify();
@@ -275,6 +280,10 @@ export function useSituationStore() {
         },
         (chunk) => {
           globalState = { ...globalState, narrative: chunk };
+          notify();
+        },
+        (thinkingChunk) => {
+          globalState = { ...globalState, thinkingTrace: thinkingChunk };
           notify();
         }
       );

@@ -64,6 +64,16 @@ h1 {
     margin-bottom: 2rem;
 }
 
+header {
+    z-index: 20;
+    position: relative;
+}
+
+main {
+    z-index: 1;
+    position: relative;
+}
+
 section {
     background: var(--bg-card);
     backdrop-filter: blur(12px);

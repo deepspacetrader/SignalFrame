@@ -30,7 +30,8 @@ export async function processSituation(
   foreignRelations: ForeignRelation[] = [],
   aiConfig: AiConfig,
   onProgress?: (status: string) => void,
-  onNarrativeChunk?: (chunk: string) => void
+  onNarrativeChunk?: (chunk: string) => void,
+  onThinkingChunk?: (chunk: string) => void
 ) {
   const context = generateContext(feeds);
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
@@ -40,7 +41,25 @@ export async function processSituation(
     const narrativePrompt = generateNarrativePrompt(context);
 
     let narrative = '';
-    if (onNarrativeChunk) {
+    let thinkingTrace = '';
+
+    if (aiConfig.enableThinking) {
+      // Use thinking-enabled streaming for narrative
+      onProgress?.(`Deep reasoning (thinking mode)...`);
+      await OllamaService.streamGenerateWithThinking(
+        aiConfig.model,
+        narrativePrompt,
+        (thinkChunk) => {
+          thinkingTrace += thinkChunk;
+          onThinkingChunk?.(thinkingTrace);
+        },
+        (contentChunk) => {
+          narrative += contentChunk;
+          onNarrativeChunk?.(narrative);
+        },
+        options
+      );
+    } else if (onNarrativeChunk) {
       await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
         narrative += chunk;
         onNarrativeChunk(narrative);
@@ -63,6 +82,7 @@ export async function processSituation(
 
     return {
       narrative: finalizeNarrative(narrative),
+      thinkingTrace: thinkingTrace.trim(),
       signals: finalizeSignals(parseJsonArray(signalsRaw)),
       insights: finalizeInsights(parseJsonArray(insightsRaw)),
       mapPoints: finalizeMapPoints(parseJsonArray(mapPointsRaw)),
@@ -72,6 +92,7 @@ export async function processSituation(
     return handleProcessError(error);
   }
 }
+
 
 function generateContext(feeds: RawSignal[]) {
   const grouped = feeds.reduce((acc, f) => {
@@ -288,7 +309,7 @@ function finalizeRelations(raw: any[], relations: ForeignRelation[]) {
 
 function handleProcessError(error: any) {
   console.error('AI Error:', error);
-  return { narrative: "Engine error.", signals: [], insights: [], mapPoints: [], foreignRelations: [] };
+  return { narrative: "Engine error.", thinkingTrace: '', signals: [], insights: [], mapPoints: [], foreignRelations: [] };
 }
 
 export async function processSingleSection(

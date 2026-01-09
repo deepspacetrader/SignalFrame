@@ -49,7 +49,7 @@ export function AISettings() {
 
     return (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-bg-darker/80 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative">
+            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative top-40">
                 <h3 className="text-2xl font-display font-bold text-white mb-6 flex items-center gap-3">
                     <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
                     AI Engine Parameters
@@ -131,6 +131,44 @@ export function AISettings() {
                             />
                         </div>
                     </div>
+
+                    {/* Thinking Mode Toggle */}
+                    <div className="p-4 bg-accent-secondary/10 border border-accent-secondary/20 rounded-xl">
+                        <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                                <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-accent-secondary mb-1">
+                                    Enable Thinking Mode
+                                </label>
+                                <p className="text-[10px] text-text-secondary leading-relaxed">
+                                    Uses chain-of-thought reasoning for deeper analysis.
+                                    Requires a thinking-capable model (deepseek-r1, qwen3, gpt-oss).
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setTempConfig({ ...tempConfig, enableThinking: !tempConfig.enableThinking })}
+                                className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.enableThinking
+                                    ? 'bg-accent-secondary'
+                                    : 'bg-white/10 border border-white/20'
+                                    }`}
+                            >
+                                <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.enableThinking ? 'left-8' : 'left-1'
+                                    }`}></div>
+                            </button>
+                        </div>
+                        {tempConfig.enableThinking && (
+                            <div className="mt-3 pt-3 border-t border-accent-secondary/20">
+                                <p className="text-[9px] text-accent-secondary/80 flex items-center gap-2">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="16" x2="12" y2="12" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                    </svg>
+                                    AI reasoning trace will appear in the Narrative section
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
 
                     <div className="pt-4 flex gap-3">
                         <button

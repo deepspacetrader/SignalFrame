@@ -64,14 +64,34 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
 
             if (data.status === 'ok' && data.items) {
                 // Return all items, we'll filter by date after aggregation
-                return data.items.map((item: any) => ({
-                    id: item.guid || item.link,
-                    source: feed.source,
-                    timestamp: item.pubDate.includes('UTC') || item.pubDate.includes('Z') ? item.pubDate : `${item.pubDate} UTC`,
-                    content: `${item.title}. ${item.description?.substring(0, 150) || ''}`,
-                    category: feed.category,
-                    link: item.link
-                }));
+                return data.items.map((item: any) => {
+                    // Extract and clean description - strip HTML tags for cleaner AI input
+                    const rawDesc = item.description || '';
+                    const cleanDesc = rawDesc
+                        .replace(/<[^>]*>/g, ' ')  // Remove HTML tags
+                        .replace(/&nbsp;/g, ' ')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&quot;/g, '"')
+                        .replace(/&#39;/g, "'")
+                        .replace(/\s+/g, ' ')      // Normalize whitespace
+                        .trim();
+
+                    // Use full description (up to 1500 chars) for much richer context
+                    const description = cleanDesc.length > 1500
+                        ? cleanDesc.substring(0, 1500) + '...'
+                        : cleanDesc;
+
+                    return {
+                        id: item.guid || item.link,
+                        source: feed.source,
+                        timestamp: item.pubDate.includes('UTC') || item.pubDate.includes('Z') ? item.pubDate : `${item.pubDate} UTC`,
+                        content: description ? `${item.title}. ${description}` : item.title,
+                        category: feed.category,
+                        link: item.link
+                    };
+                });
             }
         } catch (error) {
             console.warn(`Failed to fetch feed ${feed.source}:`, error);
