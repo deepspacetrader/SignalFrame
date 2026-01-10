@@ -119,7 +119,7 @@ function generateSignalsPrompt(context: string) {
   return `Act as a senior intelligence officer. Filter and SYNTHESIZE the following news feeds to identify the 5-8 most critical "delta" signals. 
 
 A signal is NOT just a headline; it is a shift in state, a pivot point, or a significant escalation.
-DEDUPLICATE: If multiple sources report on the same event, synthesize them into ONE high-level signal with the most critical takeaway.
+DEDUPLICATE: If multiple sources report on the same event, synthesize them into ONE high-level signal with the most critical takeaway. DO NOT repeat yourself.
 
 IGNORE: Routine updates, scheduled meetings without outcomes, and low-impact noise.
 FOCUS ON: Sudden escalations, policy reversals, surprise outcomes, and breaks in historical patterns.

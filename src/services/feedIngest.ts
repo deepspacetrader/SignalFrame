@@ -1,4 +1,11 @@
 
+export interface TrendNewsItem {
+    title: string;
+    url: string;
+    source: string;
+    picture?: string;
+}
+
 export interface RawSignal {
     id: string;
     source: string;
@@ -6,6 +13,11 @@ export interface RawSignal {
     content: string;
     category: string;
     link?: string;
+    // Google Trends specific fields
+    approxTraffic?: string;
+    picture?: string;
+    pictureSource?: string;
+    relatedNews?: TrendNewsItem[];
 }
 
 const FEEDS = [
@@ -23,7 +35,11 @@ const FEEDS = [
 
     // Conflicts
     { url: 'https://www.aljazeera.com/xml/rss/all.xml', category: 'Conflicts', source: 'Al Jazeera' },
-    { url: 'https://www.reutersagency.com/feed/?best-topics=world-news&post_type=best', category: 'Conflicts', source: 'Reuters' }
+    { url: 'https://www.reutersagency.com/feed/?best-topics=world-news&post_type=best', category: 'Conflicts', source: 'Reuters' },
+
+    // Trends
+    { url: 'https://trends.google.com/trending/rss?geo=CA', category: 'Trends', source: 'Google Trends Canada' },
+    { url: 'https://trends.google.com/trending/rss?geo=US', category: 'Trends', source: 'Google Trends USA' },
 ];
 
 export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]> {
@@ -56,7 +72,62 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     // Fetch in parallel
     const feedPromises = activeFeeds.map(async (feed) => {
         try {
-            // Using rss2json to bypass CORS and get clean JSON
+            // Check if this is a Google Trends feed - requires special parsing
+            const isGoogleTrends = feed.url.includes('trends.google.com/trending/rss');
+
+            if (isGoogleTrends) {
+                // Use allorigins as CORS proxy to get raw XML
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(feed.url)}`;
+                const response = await fetch(proxyUrl);
+                const xmlText = await response.text();
+
+                // Parse the XML
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                const items = xmlDoc.querySelectorAll('item');
+
+                return Array.from(items).map((item) => {
+                    const title = item.querySelector('title')?.textContent || '';
+                    const pubDate = item.querySelector('pubDate')?.textContent || '';
+                    const link = item.querySelector('link')?.textContent || '';
+
+                    // Extract ht: namespace elements
+                    const approxTraffic = item.getElementsByTagName('ht:approx_traffic')[0]?.textContent || '';
+                    const picture = item.getElementsByTagName('ht:picture')[0]?.textContent || '';
+                    const pictureSource = item.getElementsByTagName('ht:picture_source')[0]?.textContent || '';
+
+                    // Extract related news items
+                    const newsItems = item.getElementsByTagName('ht:news_item');
+                    const relatedNews: TrendNewsItem[] = Array.from(newsItems).map((newsItem) => ({
+                        title: newsItem.getElementsByTagName('ht:news_item_title')[0]?.textContent || '',
+                        url: newsItem.getElementsByTagName('ht:news_item_url')[0]?.textContent || '',
+                        source: newsItem.getElementsByTagName('ht:news_item_source')[0]?.textContent || '',
+                        picture: newsItem.getElementsByTagName('ht:news_item_picture')[0]?.textContent || ''
+                    })).filter(n => n.title && n.url);
+
+                    // Build a richer content string from related news
+                    const newsContext = relatedNews.slice(0, 3).map(n => n.title).join('. ');
+                    const content = newsContext ? `${title}: ${newsContext}` : title;
+
+                    // Generate Google search link for the trending term
+                    const searchLink = `https://www.google.com/search?q=${encodeURIComponent(title)}`;
+
+                    return {
+                        id: `trend-${title}-${pubDate}`,
+                        source: feed.source,
+                        timestamp: pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate}`,
+                        content,
+                        category: feed.category,
+                        link: searchLink,
+                        approxTraffic,
+                        picture,
+                        pictureSource,
+                        relatedNews
+                    };
+                });
+            }
+
+            // Regular RSS feed - use rss2json
             // Note: count parameter removed as it causes 422 Unprocessable Entity on free tier
             const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
             const response = await fetch(proxyUrl);

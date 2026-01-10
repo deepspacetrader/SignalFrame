@@ -1,5 +1,186 @@
 
+import { useState, useRef, useEffect } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
+import { RawSignal } from '../services/feedIngest'
+
+interface TrendTooltipProps {
+    item: RawSignal;
+}
+
+function TrendTooltip({ item }: TrendTooltipProps) {
+    if (!item.relatedNews || item.relatedNews.length === 0) return null;
+
+    return (
+        <div className="absolute z-50 top-full top-0 ml-3 w-80 bg-[#1a1a2e]/100 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl shadow-black/60 overflow-hidden">
+            {/* Arrow pointer */}
+            <div className="absolute left-0 top-4 -translate-x-full">
+                <div className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-white/20"></div>
+            </div>
+
+            {/* Header with traffic info */}
+            <div className="px-4 py-3 border-b border-white/10 bg-gradient-to-r from-accent-primary/20 to-transparent">
+                <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-accent-primary uppercase tracking-wider">
+                        🔥 Related Stories
+                    </span>
+                    {item.approxTraffic && (
+                        <span className="text-[0.65rem] px-2 py-0.5 bg-accent-secondary/20 text-accent-secondary rounded-full font-medium">
+                            {item.approxTraffic} searches
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            {/* Related news list */}
+            <div className="p-2 space-y-1 max-h-80 overflow-y-auto">
+                {item.relatedNews.map((news, idx) => (
+                    <a
+                        key={idx}
+                        href={news.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all group/news border border-transparent hover:border-accent-primary/30"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {news.picture && (
+                            <img
+                                src={news.picture}
+                                alt=""
+                                className="w-12 h-12 rounded-lg object-cover flex-shrink-0 opacity-80 group-hover/news:opacity-100 transition-opacity"
+                            />
+                        )}
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm text-text-primary group-hover/news:text-accent-primary transition-colors line-clamp-2 leading-snug">
+                                {news.title}
+                            </p>
+                            <span className="text-[0.6rem] text-accent-secondary mt-1 block font-semibold uppercase">
+                                {news.source}
+                            </span>
+                        </div>
+                        <svg className="w-3.5 h-3.5 text-accent-primary opacity-0 group-hover/news:opacity-100 transition-opacity flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                ))}
+            </div>
+
+            {/* Footer */}
+            <div className="px-3 py-2 border-t border-white/10 bg-white/[0.02]">
+                <span className="text-[0.6rem] text-text-secondary">
+                    Click trend to Google search • Click article to read
+                </span>
+            </div>
+        </div>
+    );
+}
+
+function FeedItem({ item }: { item: RawSignal }) {
+    const [showTooltip, setShowTooltip] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isTrend = item.category === 'Trends' && item.relatedNews && item.relatedNews.length > 0;
+
+    // For trends, get just the trend term (before the colon)
+    const displayTitle = isTrend
+        ? item.content.split(':')[0].trim()
+        : item.content.split('. ')[0];
+
+    // Handle mouse events on the entire container (item + tooltip)
+    const handleMouseEnter = () => {
+        if (isTrend) setShowTooltip(true);
+    };
+
+    const handleMouseLeave = (e: React.MouseEvent) => {
+        if (!isTrend) return;
+        // Check if we're still within the container
+        const container = containerRef.current;
+        if (container) {
+            const rect = container.getBoundingClientRect();
+            const { clientX, clientY } = e;
+            // Add some padding for the tooltip on the right
+            if (clientX >= rect.left && clientX <= rect.right + 340 &&
+                clientY >= rect.top && clientY <= rect.bottom) {
+                return; // Still within bounds, don't close
+            }
+        }
+        setShowTooltip(false);
+    };
+
+    return (
+        <div
+            ref={containerRef}
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`group block bg-white/[0.03] hover:bg-white/[0.08] border p-3 rounded-lg transition-all ${showTooltip ? 'border-accent-primary/40 bg-white/[0.06] ring-1 ring-accent-primary/20' : 'border-white/5'
+                    }`}
+            >
+                <div className="flex justify-between items-start gap-4">
+                    <div className="flex-1 flex items-start gap-3">
+                        {/* Thumbnail for trends */}
+                        {isTrend && item.picture && (
+                            <img
+                                src={item.picture}
+                                alt=""
+                                className="w-10 h-10 rounded-lg object-cover flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity"
+                            />
+                        )}
+                        <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 leading-snug">
+                                    {displayTitle}
+                                </p>
+                                {/* Traffic badge for trends */}
+                                {isTrend && item.approxTraffic && (
+                                    <span className="text-[0.55rem] px-1.5 py-0.5 bg-accent-primary/20 text-accent-primary rounded-full font-medium whitespace-nowrap flex-shrink-0">
+                                        {item.approxTraffic}
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="text-[0.65rem] font-bold text-accent-secondary uppercase tracking-tight">
+                                    {item.source}
+                                </span>
+                                <span className="text-[0.6rem] text-text-secondary">
+                                    {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}
+                                </span>
+                                {isTrend && (
+                                    <span className="text-[0.55rem] text-accent-primary/80 flex items-center gap-1">
+                                        <span className="inline-block w-1 h-1 rounded-full bg-accent-primary animate-pulse"></span>
+                                        {item.relatedNews?.length} articles
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    {/* {isTrend ? (
+                        <svg className="text-accent-primary opacity-50 group-hover:opacity-100 transition-opacity mt-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    ) : (
+                        <svg className="opacity-0 group-hover:opacity-50 transition-opacity mt-1 flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    )} */}
+                </div>
+            </a>
+
+            {/* Side tooltip for trends */}
+            {showTooltip && isTrend && (
+                <TrendTooltip item={item} />
+            )}
+        </div>
+    );
+}
 
 export function SourceFeedList() {
     const { feeds, isProcessing } = useSituationStore()
@@ -34,38 +215,19 @@ export function SourceFeedList() {
                             <span className="w-1.5 h-1.5 rounded-full bg-accent-primary"></span>
                             {category}
                         </h3>
-                        <div className="grid grid-cols-1 gap-3">
-                            {items.map((item) => (
-                                <a
-                                    key={item.id}
-                                    href={item.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group block bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 p-3 rounded-lg transition-all"
-                                >
-                                    <div className="flex justify-between items-start gap-4">
-                                        <div className="flex-1">
-                                            <p className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 leading-snug">
-                                                {item.content.split('. ')[0]}
-                                            </p>
-                                            <div className="flex items-center gap-2 mt-2">
-                                                <span className="text-[0.65rem] font-bold text-accent-secondary uppercase tracking-tight">
-                                                    {item.source}
-                                                </span>
-                                                <span className="text-[0.6rem] text-text-secondary">
-                                                    {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <svg className="opacity-0 group-hover:opacity-50 transition-opacity mt-1 flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                            <polyline points="15 3 21 3 21 9"></polyline>
-                                            <line x1="10" y1="14" x2="21" y2="3"></line>
-                                        </svg>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
+                        {category === 'Trends' ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {items.map((item) => (
+                                    <FeedItem key={item.id} item={item} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 gap-3">
+                                {items.map((item) => (
+                                    <FeedItem key={item.id} item={item} />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
