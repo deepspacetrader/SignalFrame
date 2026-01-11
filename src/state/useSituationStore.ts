@@ -1,6 +1,6 @@
 
 import { useState, useCallback, useEffect } from 'react'
-import { processSituation, processSingleSection } from '../ai/runtime/engine'
+import { processSituation, processSingleSection, processBigPicture } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
 
@@ -47,6 +47,17 @@ export interface ForeignRelation {
   lastUpdate: string;
 }
 
+export interface BigPictureData {
+  summary: string;
+  timeline: {
+    date: string;
+    title: string;
+    summary: string;
+    sentiment: Sentiment;
+  }[];
+  lastUpdated: string;
+}
+
 export interface AiConfig {
   model: string;
   numCtx: number;
@@ -78,7 +89,9 @@ export interface SituationState {
     insights: boolean;
     map: boolean;
     relations: boolean;
+    bigPicture: boolean;
   };
+  bigPicture: BigPictureData | null;
   aiConfig: AiConfig;
   availableModels: string[];
   runningModels: RunningModel[];
@@ -109,8 +122,10 @@ const defaultState: SituationState = {
     signals: false,
     insights: false,
     map: false,
-    relations: false
+    relations: false,
+    bigPicture: false
   },
+  bigPicture: null,
   thinkingTrace: '',
   aiConfig: {
     model: 'llama3.2',
@@ -148,7 +163,8 @@ async function persist() {
     feeds: globalState.feeds,
     mapPoints: globalState.mapPoints,
     foreignRelations: globalState.foreignRelations,
-    lastUpdated: globalState.lastUpdated
+    lastUpdated: globalState.lastUpdated,
+    bigPicture: globalState.bigPicture
   });
 
   // Save AI Config and Global relations list (Definitions) separately
@@ -264,7 +280,7 @@ export function useSituationStore() {
       isProcessing: true,
       processingStatus: 'Initializing Intelligence Network...',
       thinkingTrace: '', // Reset thinking trace on new scan
-      isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true }
+      isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true, bigPicture: false }
     };
     notify();
 
@@ -274,7 +290,8 @@ export function useSituationStore() {
         newsFeeds,
         globalState.foreignRelations,
         globalState.aiConfig,
-        (status) => {
+        globalState.bigPicture,
+        (status: string) => {
           globalState = { ...globalState, processingStatus: status };
           notify();
         },
@@ -294,7 +311,7 @@ export function useSituationStore() {
         feeds: newsFeeds,
         isProcessing: false,
         processingStatus: 'Scan Complete',
-        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false },
+        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false },
         lastUpdated: new Date()
       };
 
@@ -305,6 +322,33 @@ export function useSituationStore() {
       persist();
     } catch (error) {
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
+      notify();
+    }
+  }, []);
+
+  const refreshFeeds = useCallback(async () => {
+    if (globalState.isProcessing) return;
+
+    globalState = {
+      ...globalState,
+      isProcessing: true,
+      processingStatus: 'Updating Feeds...',
+    };
+    notify();
+
+    try {
+      const newsFeeds = await fetchLatestFeeds(globalState.currentDate);
+      globalState = {
+        ...globalState,
+        feeds: newsFeeds,
+        isProcessing: false,
+        processingStatus: 'Feed Update Complete',
+        lastUpdated: new Date()
+      };
+      notify();
+      persist();
+    } catch (error) {
+      globalState = { ...globalState, isProcessing: false, processingStatus: 'Feed Update Failed' };
       notify();
     }
   }, []);
@@ -324,10 +368,17 @@ export function useSituationStore() {
         globalState.feeds,
         globalState.foreignRelations,
         globalState.aiConfig,
-        sectionId === 'narrative' ? (chunk) => {
+        sectionId === 'narrative' ? (chunk: string) => {
           globalState = { ...globalState, narrative: chunk };
           notify();
-        } : undefined
+        } : undefined,
+        // Pass extra context for deep analysis (especially for relations)
+        {
+          narrative: globalState.narrative,
+          signals: globalState.signals,
+          insights: globalState.insights,
+          bigPicture: globalState.bigPicture
+        }
       );
 
       globalState = {
@@ -339,6 +390,57 @@ export function useSituationStore() {
       persist();
     } catch (error) {
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false } };
+      notify();
+    }
+  }, []);
+
+  const generateBigPicture = useCallback(async () => {
+    if (globalState.isProcessing || globalState.isProcessingSection.bigPicture) return;
+
+    globalState = {
+      ...globalState,
+      isProcessingSection: { ...globalState.isProcessingSection, bigPicture: true }
+    };
+    notify();
+
+    try {
+      const dates = await StorageService.getAllDates();
+      const historyItems = await Promise.all(
+        dates.map(async (date) => {
+          const analysis = await StorageService.getAnalysis(date);
+          return {
+            date,
+            narrative: analysis?.narrative || '',
+            signals: analysis?.signals || [],
+            insights: analysis?.insights || []
+          };
+        })
+      );
+
+      // Filter out days with no data
+      const validHistory = historyItems.filter(h => h.narrative.length > 0);
+
+      const result = await processBigPicture(
+        validHistory,
+        globalState.aiConfig,
+        (chunk) => {
+          // Optional: Stream the summary part if we want
+        }
+      );
+
+      globalState = {
+        ...globalState,
+        bigPicture: {
+          ...result,
+          lastUpdated: new Date().toISOString()
+        },
+        isProcessingSection: { ...globalState.isProcessingSection, bigPicture: false }
+      };
+      notify();
+      persist(); // We might want to save this separately, but persisting to global state works for now if we add it to persist logic
+    } catch (error) {
+      console.error(error);
+      globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, bigPicture: false } };
       notify();
     }
   }, []);
@@ -390,7 +492,9 @@ export function useSituationStore() {
   return {
     ...state,
     refresh,
+    refreshFeeds,
     refreshSection,
+    generateBigPicture,
     addRelation,
     removeRelation,
     fetchAvailableModels,

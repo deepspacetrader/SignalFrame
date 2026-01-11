@@ -20,26 +20,126 @@ export interface RawSignal {
     relatedNews?: TrendNewsItem[];
 }
 
+// Multiple CORS proxy options for fallback reliability
+const CORS_PROXIES = [
+    (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    (url: string) => `https://cors.eu.org/${url}`,
+];
+
+// RSS to JSON conversion proxies with fallbacks
+const RSS_TO_JSON_PROXIES = [
+    (url: string) => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`,
+    // Fallback: Use CORS proxy + local parsing
+    null, // Signals to use raw XML parsing instead
+];
+
+// Fetch with proxy fallback - tries multiple proxies until one works
+async function fetchWithFallback(url: string, isXml: boolean = false): Promise<Response> {
+    let lastError: Error | null = null;
+
+    for (const proxyFn of CORS_PROXIES) {
+        try {
+            const proxyUrl = proxyFn(url);
+            const response = await fetch(proxyUrl, {
+                signal: AbortSignal.timeout(10000) // 10 second timeout
+            });
+            if (response.ok) {
+                return response;
+            }
+        } catch (error) {
+            lastError = error as Error;
+            console.warn(`Proxy failed for ${url}, trying next...`);
+        }
+    }
+
+    throw lastError || new Error(`All proxies failed for ${url}`);
+}
+
+// Fetch RSS feed with JSON conversion fallback
+async function fetchRssFeed(feedUrl: string): Promise<any> {
+    // Try RSS-to-JSON service first
+    try {
+        const proxyUrl = RSS_TO_JSON_PROXIES[0]!(feedUrl);
+        const response = await fetch(proxyUrl, {
+            signal: AbortSignal.timeout(10000)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.status === 'ok' && data.items) {
+                return data;
+            }
+        }
+    } catch (error) {
+        console.warn(`RSS2JSON failed for ${feedUrl}, falling back to raw XML parsing...`);
+    }
+
+    // Fallback: Fetch raw XML and parse locally
+    const response = await fetchWithFallback(feedUrl, true);
+    const xmlText = await response.text();
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+    const items = xmlDoc.querySelectorAll('item');
+
+    return {
+        status: 'ok',
+        items: Array.from(items).map(item => {
+            const description = item.querySelector('description')?.textContent || '';
+
+            // Extract image from media:content, enclosure, or description
+            let picture = '';
+            const mediaContent = item.getElementsByTagName('media:content')[0];
+            const enclosure = item.querySelector('enclosure');
+
+            if (mediaContent && mediaContent.getAttribute('url')) {
+                picture = mediaContent.getAttribute('url') || '';
+            } else if (enclosure && enclosure.getAttribute('type')?.startsWith('image') && enclosure.getAttribute('url')) {
+                picture = enclosure.getAttribute('url') || '';
+            } else if (description) {
+                const imgMatch = description.match(/<img[^>]+src="([^">]+)"/);
+                if (imgMatch) {
+                    picture = imgMatch[1];
+                }
+            }
+
+            return {
+                title: item.querySelector('title')?.textContent || '',
+                link: item.querySelector('link')?.textContent || '',
+                description: description,
+                pubDate: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
+                guid: item.querySelector('guid')?.textContent || item.querySelector('link')?.textContent || '',
+                enclosure: { link: picture } // Mock RSS2JSON structure for consistency
+            };
+        })
+    };
+}
+
 const FEEDS = [
-    // Tech / AI
-    { url: 'https://techcrunch.com/feed/', category: 'Tech / AI', source: 'TechCrunch' },
-    { url: 'https://www.theverge.com/rss/index.xml', category: 'Tech / AI', source: 'The Verge' },
+    // World / Geopolitical
+    { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', category: 'World', source: 'BBC World' },
+    { url: 'https://www.theguardian.com/world/rss', category: 'World', source: 'The Guardian' },
+    { url: 'https://www.aljazeera.com/xml/rss/all.xml', category: 'World', source: 'Al Jazeera' },
+    { url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', category: 'World', source: 'NY Times World' },
 
-    // World Geopolitical
-    { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', category: 'Geopolitical', source: 'BBC World' },
-    { url: 'https://www.theguardian.com/world/rss', category: 'Geopolitical', source: 'The Guardian' },
+    // Business / Financial
+    { url: 'https://search.cnbc.com/rs/search/view.xml?partnerId=2000&keywords=finance', category: 'Business', source: 'CNBC' },
+    { url: 'https://feeds.content.dowjones.io/public/rss/mw_topstories', category: 'Business', source: 'MarketWatch' },
+    { url: 'https://www.economist.com/finance-and-economics/rss.xml', category: 'Business', source: 'The Economist' },
 
-    // Financial
-    { url: 'https://search.cnbc.com/rs/search/view.xml?partnerId=2000&keywords=finance', category: 'Financial', source: 'CNBC' },
-    { url: 'https://feeds.content.dowjones.io/public/rss/mw_topstories', category: 'Financial', source: 'MarketWatch' },
+    // Technology
+    { url: 'https://techcrunch.com/feed/', category: 'Technology', source: 'TechCrunch' },
+    { url: 'https://www.theverge.com/rss/index.xml', category: 'Technology', source: 'The Verge' },
+    { url: 'https://arstechnica.com/feed/', category: 'Technology', source: 'Ars Technica' },
 
-    // Conflicts
-    { url: 'https://www.aljazeera.com/xml/rss/all.xml', category: 'Conflicts', source: 'Al Jazeera' },
-    { url: 'https://www.reutersagency.com/feed/?best-topics=world-news&post_type=best', category: 'Conflicts', source: 'Reuters' },
+    // Science
+    { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Science.xml', category: 'Science', source: 'NY Times Science' },
+    { url: 'http://feeds.bbci.co.uk/news/science_and_environment/rss.xml', category: 'Science', source: 'BBC Science' },
 
-    // Trends
-    { url: 'https://trends.google.com/trending/rss?geo=CA', category: 'Trends', source: 'Google Trends Canada' },
-    { url: 'https://trends.google.com/trending/rss?geo=US', category: 'Trends', source: 'Google Trends USA' },
+    // Health
+    { url: 'http://feeds.bbci.co.uk/news/health/rss.xml', category: 'Health', source: 'BBC Health' },
+    { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml', category: 'Health', source: 'NY Times Health' },
 ];
 
 export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]> {
@@ -76,9 +176,9 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
             const isGoogleTrends = feed.url.includes('trends.google.com/trending/rss');
 
             if (isGoogleTrends) {
-                // Use allorigins as CORS proxy to get raw XML
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(feed.url)}`;
-                const response = await fetch(proxyUrl);
+                console.log(`Fetching Google Trends feed for ${feed.source}...`);
+                // Use fetchWithFallback for robust CORS proxy handling
+                const response = await fetchWithFallback(feed.url);
                 const xmlText = await response.text();
 
                 // Parse the XML
@@ -91,10 +191,19 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                     const pubDate = item.querySelector('pubDate')?.textContent || '';
                     const link = item.querySelector('link')?.textContent || '';
 
-                    // Extract ht: namespace elements
-                    const approxTraffic = item.getElementsByTagName('ht:approx_traffic')[0]?.textContent || '';
-                    const picture = item.getElementsByTagName('ht:picture')[0]?.textContent || '';
-                    const pictureSource = item.getElementsByTagName('ht:picture_source')[0]?.textContent || '';
+                    // Extract ht: namespace elements - try with and without namespace explicitly
+                    // helper to get text from potential namespace tags
+                    const getTagText = (tagName: string) => {
+                        const withNs = item.getElementsByTagName(`ht:${tagName}`)[0];
+                        if (withNs) return withNs.textContent || '';
+                        const withoutNs = item.getElementsByTagName(tagName)[0];
+                        if (withoutNs) return withoutNs.textContent || '';
+                        return '';
+                    };
+
+                    const approxTraffic = getTagText('approx_traffic');
+                    const picture = getTagText('picture');
+                    const pictureSource = getTagText('picture_source');
 
                     // Extract related news items
                     const newsItems = item.getElementsByTagName('ht:news_item');
@@ -127,11 +236,8 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                 });
             }
 
-            // Regular RSS feed - use rss2json
-            // Note: count parameter removed as it causes 422 Unprocessable Entity on free tier
-            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
-            const response = await fetch(proxyUrl);
-            const data = await response.json();
+            // Regular RSS feed - use fetchRssFeed with fallback support
+            const data = await fetchRssFeed(feed.url);
 
             if (data.status === 'ok' && data.items) {
                 // Return all items, we'll filter by date after aggregation
@@ -154,13 +260,21 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                         ? cleanDesc.substring(0, 1500) + '...'
                         : cleanDesc;
 
+                    // Handle missing pubDate gracefully
+                    const pubDate = item.pubDate || new Date().toISOString();
+                    const timestamp = pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate} UTC`;
+
+                    // Attempt to find image
+                    const picture = item.enclosure?.link || item.thumbnail || '';
+
                     return {
                         id: item.guid || item.link,
                         source: feed.source,
-                        timestamp: item.pubDate.includes('UTC') || item.pubDate.includes('Z') ? item.pubDate : `${item.pubDate} UTC`,
+                        timestamp,
                         content: description ? `${item.title}. ${description}` : item.title,
                         category: feed.category,
-                        link: item.link
+                        link: item.link,
+                        picture // Include the extracted picture
                     };
                 });
             }

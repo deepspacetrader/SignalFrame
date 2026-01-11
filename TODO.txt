@@ -1,0 +1,9 @@
+1. Fix bug with missing Google Trends data. I only see one data point on the map but there's plenty of data from feeds, current narrative, key signals, hidden insights, future trajectory analysis, the big picture, foreign relations. They're all in context in text format but not in the map data.
+
+2. Improve UI for Secure Comm Link chat with the AI. Context usage should be updated as the chat goes on back and forth between user and AI. The remaining tokens length is an important metric so it needs to be frequently updates and always displayed since its running on local hardware with hard limits to context length. Also add buttons for Yesterday (to include all of context data from yesterday), and another button for All Time (both yesterday and today buttons are disabled by default). The All Time button is a premium feature and is always disabled. (TBD: API integration with 3rd party AI service with access to expansive context length and or database storage? Not sure how to solve for this....yet. Would prefer to have a diy self hosted solution if possible.)
+
+3. Show placeholder basic space for image for rss feed item if there is no thumbnail to keep the grid layout looking good.
+
+4. Still not seeing anything for Google Trends. Maybe that feed is broken but there's no error message in the console.
+
+5. Ensure a responsive design for all components. Currently the header is not looking good on mobile. Same with the Future Trajectory Analysis section the input field and button should be single column for mobile. Two columns for medium and larger.

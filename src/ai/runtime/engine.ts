@@ -10,7 +10,8 @@ const CATEGORY_MAP: Record<string, string> = {
   'signals': 'delta signals',
   'insights': 'hidden insights',
   'map': 'map coordinates',
-  'relations': 'relation trackers'
+  'relations': 'relation trackers',
+  'bigPicture': 'grand strategy analysis'
 };
 
 const SENTIMENT_GUIDELINES = `
@@ -29,6 +30,7 @@ export async function processSituation(
   feeds: RawSignal[],
   foreignRelations: ForeignRelation[] = [],
   aiConfig: AiConfig,
+  bigPicture: any = null,
   onProgress?: (status: string) => void,
   onNarrativeChunk?: (chunk: string) => void,
   onThinkingChunk?: (chunk: string) => void
@@ -70,20 +72,22 @@ export async function processSituation(
 
     onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
     const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context), 'json', options);
+    const parsedSignals = finalizeSignals(parseJsonArray(signalsRaw));
+    const signalsText = parsedSignals.map(s => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
 
     onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
-    const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context), 'json', options);
+    const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, signalsText), 'json', options);
 
     onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
-    const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context), 'json', options);
+    const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText), 'json', options);
 
     onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
-    const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations), 'json', options);
+    const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture), 'json', options);
 
     return {
       narrative: finalizeNarrative(narrative),
       thinkingTrace: thinkingTrace.trim(),
-      signals: finalizeSignals(parseJsonArray(signalsRaw)),
+      signals: parsedSignals,
       insights: finalizeInsights(parseJsonArray(insightsRaw)),
       mapPoints: finalizeMapPoints(parseJsonArray(mapPointsRaw)),
       foreignRelations: finalizeRelations(parseJsonArray(relationsRaw), foreignRelations)
@@ -91,6 +95,60 @@ export async function processSituation(
   } catch (error) {
     return handleProcessError(error);
   }
+}
+
+export async function processBigPicture(
+  history: any[],
+  aiConfig: AiConfig,
+  onStream?: (chunk: string) => void
+) {
+  const context = history.map(h => `DATE: ${h.date}\nSUMMARY: ${h.narrative}\nSIGNALS: ${h.signals.length} detected.\nINSIGHTS: ${h.insights.length} detected.`).join('\n\n');
+  const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+
+  // 1. Generate Timeline Summary
+  const timelinePrompt = `
+Analyze the provided history of daily briefings.
+Generate a JSON array representing a timeline of the most significant shifts or events.
+Array format: [{"date": "YYYY-MM-DD", "title": "Headlines", "summary": "One sentence summary", "sentiment": "..."}]
+
+SENTIMENT GUIDELINES:
+${SENTIMENT_GUIDELINES}
+
+HISTORY:
+${context}
+`;
+  const timelineRaw = await OllamaService.generate(aiConfig.model, timelinePrompt, 'json', options);
+
+  // 2. Generate Grand Narrative
+  const narrativePrompt = `
+Based on the following historical data of daily briefings, write a "Grand Narrative" that explains the overall trajectory of world events.
+Focus on the connections between days, the escalation of tensions, or the resolution of conflicts.
+This should be a high-level strategic overview, not a day-by-day recount.
+Identify the "Meta-Narrative" - what is the big story happening underneath the noise?
+
+HISTORY:
+${context}
+`;
+
+  let summary = '';
+  if (onStream) {
+    await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
+      summary += chunk;
+      onStream(chunk);
+    }, options);
+  } else {
+    summary = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
+  }
+
+  return {
+    summary: finalizeNarrative(summary),
+    timeline: parseJsonArray(timelineRaw).map((t: any) => ({
+      date: t.date || 'Unknown',
+      title: t.title || 'Event',
+      summary: t.summary || '',
+      sentiment: (t.sentiment || 'neutral').toLowerCase()
+    }))
+  };
 }
 
 
@@ -117,14 +175,12 @@ ${context}`;
 
 function generateSignalsPrompt(context: string) {
   return `Act as a senior intelligence officer. Filter and SYNTHESIZE the following news feeds to identify the 5-8 most critical "delta" signals. 
-
-A signal is NOT just a headline; it is a shift in state, a pivot point, or a significant escalation.
-DEDUPLICATE: If multiple sources report on the same event, synthesize them into ONE high-level signal with the most critical takeaway. DO NOT repeat yourself.
-
-IGNORE: Routine updates, scheduled meetings without outcomes, and low-impact noise.
-FOCUS ON: Sudden escalations, policy reversals, surprise outcomes, and breaks in historical patterns.
-
-Return a JSON array of objects: [{"text": "PUNCHY_SIGNAL (MAX 15 WORDS)", "sentiment": "..."}].
+1. A signal is NOT just a headline; it is a shift in state, a pivot point, or a significant escalation.
+2. DEDUPLICATE: If multiple sources report on the same event, synthesize them into ONE high-level signal with the most critical takeaway. DO NOT repeat yourself.
+3. IGNORE: Routine updates, scheduled meetings without outcomes, and low-impact noise.
+4. FOCUS ON: Sudden escalations, policy reversals, surprise outcomes, and breaks in historical patterns.
+5. EXCLUDE: Sports scores/updates, celebrity gossip, movie release, and hyper-local crime stories (unless there are mass casualties).
+6. Return a JSON array of objects: [{"text": "PUNCHY_SIGNAL (MAX 15 WORDS)", "sentiment": "..."}].
 
 SENTIMENT GUIDELINES:
 ${SENTIMENT_GUIDELINES}
@@ -134,9 +190,21 @@ ${context}`;
 
 }
 
-function generateInsightsPrompt(context: string) {
-  return `Identify up to 10 hidden trends and "reading between the lines" implications.
-Return a JSON array of objects: [{"text": "TREND | IMPLICATION", "sentiment": "..."}].
+function generateInsightsPrompt(context: string, signalsContext: string = '') {
+  return `Analyze the Key Signals and News Feeds to generate up to 8 "Hidden Insights".
+  
+Use this strict definition for Insights:
+- Focus: Explaining past or current phenomena, identifying root causes and patterns.
+- Time Orientation: Primarily backward-looking (diagnostic/descriptive).
+- Goal: Answer "Why did this happen?" or "What does this mean?"
+- Exclude: Do NOT generate predictions or future forecasts.
+
+Format: "OBSERVATION/PATTERN | ROOT CAUSE ANALYSIS"
+
+Return a JSON array of objects: [{"text": "PATTERN | CAUSE", "sentiment": "..."}].
+
+KEY SIGNALS:
+${signalsContext}
 
 SENTIMENT GUIDELINES:
 ${SENTIMENT_GUIDELINES}
@@ -146,37 +214,62 @@ ${context}`;
 
 }
 
-function generateMapPointsPrompt(context: string) {
-  return `Extract up to 10 geographical locations with sentiment from the news feeds.
+function generateMapPointsPrompt(context: string, signalsContext: string = '') {
+  return `Generate geographical map coordinates for the Key Signals listed below.
+CRITICAL: You MUST attempt to generate a map point for EVERY Key Signal provided.
+If a specific city/location is not mentioned, deduce the most relevant country or region (e.g. use the capital city).
+
 Return a JSON array: [{"lat": ..., "lng": ..., "title": "CITY/REGION", "sentiment": "...", "category": "...", "description": "ONE LINE MAX", "sourceLink": "URL"}]
 
 GUIDELINES:
 - "title": Short location name (e.g. "Kyiv", "Taiwan Strait", "Silicon Valley")
-- "description": ONE short sentence (max 80 chars) explaining the event. Be punchy and direct.
+- "description": Use the text of the Key Signal as the description, or a shortened version of it.
 - "sourceLink": Include the original news article URL from the feed if available. If not available, leave empty string.
 - "category": One of "Tech / AI", "Financial", "Conflicts", "Geopolitical"
+
+KEY SIGNALS TO PLOT:
+${signalsContext}
 
 SENTIMENT GUIDELINES:
 ${SENTIMENT_GUIDELINES}
 
-Feeds:
+Feeds (for reference/coordinates):
 ${context}`;
-
 
 }
 
-function generateRelationsPrompt(context: string, relations: ForeignRelation[]) {
-  return `Update status/sentiment for these geopolitical trackers:
-${relations.map(r => `- ${r.countryA} vs ${r.countryB} (Topic: ${r.topic})`).join('\n')}
+function generateRelationsPrompt(
+  context: string,
+  relations: ForeignRelation[],
+  narrative: string = '',
+  signals: any[] = [],
+  insights: any[] = [],
+  bigPicture: any = null
+) {
+  let deepContext = `### INTELLIGENCE CONTEXT\n`;
+  if (narrative) deepContext += `CURRENT SITUATION NARRATIVE:\n${narrative}\n\n`;
+  if (signals && signals.length) deepContext += `KEY SIGNALS:\n${signals.map(s => `- ${s.text} (${s.sentiment})`).join('\n')}\n\n`;
+  if (insights && insights.length) deepContext += `HIDDEN INSIGHTS:\n${insights.map(i => `- ${i.text}`).join('\n')}\n\n`;
+  if (bigPicture) deepContext += `THE BIG PICTURE (STRATEGIC OVERVIEW):\n${bigPicture.summary}\n\n`;
 
-Return JSON array: [{"countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]
+  return `Act as a geopolitical analyst. Update status/sentiment for these geopolitical trackers using the provided Intelligence Context and News Feeds.
+CRITICAL: You MUST return a JSON object for EVERY SINGLE TRACKER in the EXACT ORDER they are listed below.
 
-The "status" field MUST be a brief (1-2 sentence) analysis explaining the current state AND the "why" based on the news feeds. Avoid one-word answers. It is critical that this is a detailed explanation.
+TRACKERS:
+${relations.map((r, i) => `${i + 1}. ID: "${r.id}" | ${r.countryA} vs ${r.countryB} (Topic: ${r.topic})`).join('\n')}
+
+If the provided data does not contain specific information about a pair, you MUST still return it with:
+- "status": "No new developments found in current scan."
+- "sentiment": "neutral"
+
+Return JSON array: [{"id": "...", "countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]
 
 SENTIMENT GUIDELINES (Use these EXACT strings for the sentiment field):
 ${SENTIMENT_GUIDELINES}
 
-Feeds:
+${deepContext}
+
+RAW FEEDS:
 ${context}`;
 
 }
@@ -274,7 +367,17 @@ function finalizeMapPoints(raw: any[]) {
 
 function finalizeRelations(raw: any[], relations: ForeignRelation[]) {
   return relations.map(rel => {
-    const update = raw.find(r => (r.countryA === rel.countryA && r.countryB === rel.countryB) || (r.countryA === rel.countryB && r.countryB === rel.countryA));
+    // 1. Try matching by exact ID
+    let update = raw.find(r => r.id === rel.id);
+
+    // 2. Fallback: Try matching by Country A & B (Case insensitive)
+    if (!update) {
+      update = raw.find(r =>
+        (r.countryA?.toLowerCase() === rel.countryA.toLowerCase() && r.countryB?.toLowerCase() === rel.countryB.toLowerCase()) ||
+        (r.countryA?.toLowerCase() === rel.countryB.toLowerCase() && r.countryB?.toLowerCase() === rel.countryA.toLowerCase())
+      );
+    }
+
     if (!update) return rel;
 
     let sentiment = String(update.sentiment || rel.sentiment).toLowerCase();
@@ -317,7 +420,8 @@ export async function processSingleSection(
   feeds: RawSignal[],
   foreignRelations: ForeignRelation[] = [],
   aiConfig: AiConfig,
-  onStream?: (text: string) => void
+  onStream?: (text: string) => void,
+  extraContext: any = {}
 ) {
   const context = generateContext(feeds);
   const opt = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
@@ -333,7 +437,20 @@ export async function processSingleSection(
     return { narrative: finalizeNarrative(narrative) };
   }
 
-  const prompts: any = { signals: generateSignalsPrompt(context), insights: generateInsightsPrompt(context), map: generateMapPointsPrompt(context), relations: generateRelationsPrompt(context, foreignRelations) };
+  const prompts: any = {
+    signals: generateSignalsPrompt(context),
+    insights: generateInsightsPrompt(context), // Note: Single section update for insights might lack signals context if we don't pass it. Assuming partial update is rare or handled elsewhere.
+    map: generateMapPointsPrompt(context),
+    relations: generateRelationsPrompt(
+      context,
+      foreignRelations,
+      extraContext.narrative || '',
+      extraContext.signals || [],
+      extraContext.insights || [],
+      extraContext.bigPicture || null
+    )
+  };
+
   const res = await OllamaService.generate(aiConfig.model, prompts[sectionId], 'json', opt);
 
   if (sectionId === 'signals') return { signals: finalizeSignals(parseJsonArray(res)) };
@@ -341,5 +458,6 @@ export async function processSingleSection(
   if (sectionId === 'map') return { mapPoints: finalizeMapPoints(parseJsonArray(res)) };
   if (sectionId === 'relations') return { foreignRelations: finalizeRelations(parseJsonArray(res), foreignRelations) };
 
-  return processSituation(feeds, foreignRelations, aiConfig);
+  // Fallback to full process if unknown section (shouldn't happen)
+  return processSituation(feeds, foreignRelations, aiConfig, extraContext.bigPicture);
 }

@@ -11,7 +11,7 @@ function TrendTooltip({ item }: TrendTooltipProps) {
     if (!item.relatedNews || item.relatedNews.length === 0) return null;
 
     return (
-        <div className="absolute z-50 top-full top-0 ml-3 w-80 bg-[#1a1a2e]/100 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl shadow-black/60 overflow-hidden">
+        <div className="absolute z-50 top-0 ml-3 w-80 bg-[#1a1a2e]/100 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl shadow-black/60 overflow-hidden">
             {/* Arrow pointer */}
             <div className="absolute left-0 top-4 -translate-x-full">
                 <div className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-white/20"></div>
@@ -76,10 +76,10 @@ function TrendTooltip({ item }: TrendTooltipProps) {
     );
 }
 
-function FeedItem({ item }: { item: RawSignal }) {
-    const [showTooltip, setShowTooltip] = useState(false);
+function FeedItem({ item, activeTooltipId, onSetActiveTooltip }: { item: RawSignal, activeTooltipId: string | null, onSetActiveTooltip: (id: string | null) => void }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const isTrend = item.category === 'Trends' && item.relatedNews && item.relatedNews.length > 0;
+    const showTooltip = isTrend && activeTooltipId === item.id;
 
     // For trends, get just the trend term (before the colon)
     const displayTitle = isTrend
@@ -88,7 +88,7 @@ function FeedItem({ item }: { item: RawSignal }) {
 
     // Handle mouse events on the entire container (item + tooltip)
     const handleMouseEnter = () => {
-        if (isTrend) setShowTooltip(true);
+        if (isTrend) onSetActiveTooltip(item.id);
     };
 
     const handleMouseLeave = (e: React.MouseEvent) => {
@@ -104,7 +104,7 @@ function FeedItem({ item }: { item: RawSignal }) {
                 return; // Still within bounds, don't close
             }
         }
-        setShowTooltip(false);
+        onSetActiveTooltip(null);
     };
 
     return (
@@ -123,12 +123,13 @@ function FeedItem({ item }: { item: RawSignal }) {
             >
                 <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 flex items-start gap-3">
-                        {/* Thumbnail for trends */}
-                        {isTrend && item.picture && (
+                        {/* Thumbnail for all feeds if available */}
+                        {item.picture && (
                             <img
                                 src={item.picture}
                                 alt=""
                                 className="w-10 h-10 rounded-lg object-cover flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity"
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
                             />
                         )}
                         <div className="flex-1">
@@ -159,18 +160,6 @@ function FeedItem({ item }: { item: RawSignal }) {
                             </div>
                         </div>
                     </div>
-                    {/* {isTrend ? (
-                        <svg className="text-accent-primary opacity-50 group-hover:opacity-100 transition-opacity mt-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.3-4.3"></path>
-                        </svg>
-                    ) : (
-                        <svg className="opacity-0 group-hover:opacity-50 transition-opacity mt-1 flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                    )} */}
                 </div>
             </a>
 
@@ -183,7 +172,8 @@ function FeedItem({ item }: { item: RawSignal }) {
 }
 
 export function SourceFeedList() {
-    const { feeds, isProcessing } = useSituationStore()
+    const { feeds, isProcessing, refreshFeeds } = useSituationStore()
+    const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
 
     // Group feeds by category
     const categories = feeds.reduce((acc, feed) => {
@@ -206,6 +196,19 @@ export function SourceFeedList() {
                     <circle cx="5" cy="19" r="1"></circle>
                 </svg>
                 Raw Intelligence Feeds
+                <button
+                    onClick={() => refreshFeeds()}
+                    disabled={isProcessing}
+                    className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-medium text-text-secondary hover:text-text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <svg className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                        <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                        <path d="M16 21h5v-5"></path>
+                    </svg>
+                    {isProcessing ? 'Refreshing...' : 'Regenerate'}
+                </button>
             </h2>
 
             <div className="space-y-8">
@@ -218,13 +221,23 @@ export function SourceFeedList() {
                         {category === 'Trends' ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {items.map((item) => (
-                                    <FeedItem key={item.id} item={item} />
+                                    <FeedItem
+                                        key={item.id}
+                                        item={item}
+                                        activeTooltipId={activeTooltipId}
+                                        onSetActiveTooltip={setActiveTooltipId}
+                                    />
                                 ))}
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 gap-3">
                                 {items.map((item) => (
-                                    <FeedItem key={item.id} item={item} />
+                                    <FeedItem
+                                        key={item.id}
+                                        item={item}
+                                        activeTooltipId={activeTooltipId}
+                                        onSetActiveTooltip={setActiveTooltipId}
+                                    />
                                 ))}
                             </div>
                         )}

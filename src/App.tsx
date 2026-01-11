@@ -11,10 +11,11 @@ import { AISettings } from './components/AISettings'
 import { ChatPanel } from './components/ChatPanel'
 import { PredictionsPanel } from './components/PredictionsPanel'
 import { useSituationStore } from './state/useSituationStore'
-import { DEFAULT_MODEL } from './ai/runtime/engine'
+import { BigPictureModal } from './components/BigPictureModal'
 
 export default function App() {
   const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels } = useSituationStore()
+  const [showBigPicture, setShowBigPicture] = useState(false)
 
   const getLocalTodayStr = () => {
     const d = new Date();
@@ -79,6 +80,17 @@ export default function App() {
             <div className="h-10 w-[1px] bg-white/10"></div>
 
             <div className="flex gap-4">
+              {/* Big Picture Button */}
+              <button
+                onClick={() => setShowBigPicture(true)}
+                className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform">
+                  <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                </svg>
+                <span className="text-xs font-bold uppercase tracking-widest">The Big Picture</span>
+              </button>
+
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
                 <p className="text-xs font-mono text-accent-secondary">{isProcessing ? 'SCANNING...' : 'ANALYSIS STANDBY'}</p>
@@ -161,8 +173,6 @@ export default function App() {
       </header>
 
       <main className="grid grid-cols-12 gap-8">
-        <LoadingOverlay />
-
         {/* Map Section */}
         <div className="col-span-12 lg:col-span-12 space-y-8">
           <SituationMap />
@@ -216,6 +226,9 @@ export default function App() {
           © {new Date().getFullYear()} <a href="https://github.com/deepspacetrader" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">DeepSpaceTrader</a> • SignalFrame • Experimental Intelligence Framework
         </p>
       </footer>
+
+      <LoadingOverlay />
+      <BigPictureModal isOpen={showBigPicture} onClose={() => setShowBigPicture(false)} />
     </div >
   )
 }

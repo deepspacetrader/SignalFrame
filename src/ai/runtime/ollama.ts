@@ -76,8 +76,8 @@ export class OllamaService {
                     stream: false,
                     think: true,
                     options: {
-                        num_ctx: options.num_ctx || 25000,
-                        num_predict: options.num_predict || 15000,
+                        num_ctx: options.num_ctx || 32000,
+                        num_predict: options.num_predict || 20000,
                     }
                 }),
             });

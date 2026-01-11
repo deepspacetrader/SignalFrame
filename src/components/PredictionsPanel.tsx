@@ -38,10 +38,13 @@ export function PredictionsPanel() {
         if (!topic.trim() || isLoading) return;
         setIsLoading(true);
 
+        const safeSignals = Array.isArray(signals) ? signals : [];
+        const safeInsights = Array.isArray(insights) ? insights : [];
+
         const context = `
-    NARRATIVE: ${narrative}
-    SIGNALS: ${signals.map(s => s.text).join('; ')}
-    INSIGHTS: ${insights.map(i => i.text).join('; ')}
+    NARRATIVE: ${narrative || "No narrative available."}
+    SIGNALS: ${safeSignals.map(s => s.text).join('; ')}
+    INSIGHTS: ${safeInsights.map(i => i.text).join('; ')}
     `;
 
         const prompt = `
@@ -60,7 +63,26 @@ export function PredictionsPanel() {
 
         try {
             const response = await OllamaService.generate(aiConfig.model, prompt, 'json', { num_ctx: 8192, num_predict: 1024 });
-            const parsed = JSON.parse(response);
+
+            // Clean up potentially malformed JSON (markdown blocks)
+            let jsonStr = response;
+            if (jsonStr.includes('```')) {
+                jsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '');
+            }
+            jsonStr = jsonStr.trim();
+
+            let parsed;
+            try {
+                parsed = JSON.parse(jsonStr);
+            } catch (e) {
+                console.warn("Raw JSON parse failed, attempting loose parse or fallback", jsonStr);
+                // Fallback if model returned plain text despite instructions
+                parsed = {
+                    shortTerm: "Model returned invalid format.",
+                    mediumTerm: "",
+                    longTerm: ""
+                };
+            }
 
             const newPrediction = {
                 shortTerm: parsed.shortTerm || "No prediction generated.",

@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useSituationStore } from '../state/useSituationStore'
 
 export function AISettings() {
@@ -47,9 +48,9 @@ export function AISettings() {
         )
     }
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-bg-darker/80 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative top-40">
+            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative top-0">
                 <h3 className="text-2xl font-display font-bold text-white mb-6 flex items-center gap-3">
                     <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
                     AI Engine Parameters
@@ -189,6 +190,7 @@ export function AISettings() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }

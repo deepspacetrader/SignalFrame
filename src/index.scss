@@ -64,15 +64,15 @@ h1 {
     margin-bottom: 2rem;
 }
 
-header {
-    z-index: 20;
-    position: relative;
-}
+// header {
+//     z-index: 2;
+//     position: relative;
+// }
 
-main {
-    z-index: 1;
-    position: relative;
-}
+// main {
+//     z-index: 1;
+//     position: relative;
+// }
 
 section {
     background: var(--bg-card);
@@ -88,6 +88,10 @@ section {
 section:hover {
     border-color: rgba(255, 255, 255, 0.15);
 }
+
+// .big-picture {
+//     z-index: 101;
+// }
 
 h2 {
     font-size: 1.25rem;
