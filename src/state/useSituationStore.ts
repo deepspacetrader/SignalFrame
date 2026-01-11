@@ -155,7 +155,8 @@ async function persist() {
   // Only persist if we have a valid date
   if (!globalState.currentDate) return;
 
-  // Save snapshot to DB
+  // Save snapshot to DB - EXCLUDING bigPicture which is now global
+  // We construct the object explicitly to avoid sending bigPicture into the daily slot
   await StorageService.saveAnalysis(globalState.currentDate, {
     narrative: globalState.narrative,
     signals: globalState.signals,
@@ -163,12 +164,12 @@ async function persist() {
     feeds: globalState.feeds,
     mapPoints: globalState.mapPoints,
     foreignRelations: globalState.foreignRelations,
-    lastUpdated: globalState.lastUpdated,
-    bigPicture: globalState.bigPicture
+    lastUpdated: globalState.lastUpdated
   });
 
   // Save AI Config and Global relations list (Definitions) separately
   await StorageService.saveGlobal('ai_config', globalState.aiConfig);
+  await StorageService.saveGlobal('bigPicture', globalState.bigPicture); // GLOBAL PERSISTENCE
   await StorageService.saveGlobal('relation_defs', globalState.foreignRelations.map(r => ({
     id: r.id,
     countryA: r.countryA,
@@ -185,27 +186,40 @@ export function useSituationStore() {
     // Initial Load - Ensure we don't leak async logic into raw state
     const init = async () => {
       const today = getTodayStr();
-      const [analysis, config, defs, dates] = await Promise.all([
+      const [analysis, config, defs, dates, savedBigPicture] = await Promise.all([
         StorageService.getAnalysis(today),
         StorageService.getGlobal('ai_config'),
         StorageService.getGlobal('relation_defs'),
-        StorageService.getAllDates()
+        StorageService.getAllDates(),
+        StorageService.getGlobal('bigPicture')
       ]);
 
       if (config) globalState.aiConfig = config;
+      if (savedBigPicture) globalState.bigPicture = savedBigPicture; // Load Global Big Picture
+
       globalState.availableDates = dates.length > 0 ? dates : [today];
       globalState.currentDate = today;
 
       if (analysis) {
+        // Load daily analysis but Preserve Global Big Picture if it exists
+        const bp = globalState.bigPicture;
         Object.assign(globalState, analysis);
+        if (bp) globalState.bigPicture = bp;
+
         if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
       } else if (defs) {
-        globalState.foreignRelations = defs.map((d: any) => ({
-          ...d,
-          status: 'Awaiting discovery...',
-          sentiment: 'neutral',
-          lastUpdate: new Date().toISOString()
-        }));
+        // Hydrate relations from defs if no daily analysis
+        // Try to find last known status for these relations to avoid "No Data" shock
+        const historicalRelations = await getLastKnownRelations();
+        globalState.foreignRelations = defs.map((d: any) => {
+          const history = historicalRelations.find(h => h.id === d.id);
+          return history ? history : {
+            ...d,
+            status: 'Awaiting discovery...',
+            sentiment: 'neutral',
+            lastUpdate: new Date().toISOString()
+          };
+        });
       }
 
       notify();
@@ -224,11 +238,27 @@ export function useSituationStore() {
     };
   }, []);
 
+  // Helper to find the last known state of relations across all history
+  const getLastKnownRelations = async (): Promise<ForeignRelation[]> => {
+    try {
+      const dates = await StorageService.getAllDates();
+      // Iterate backwards
+      for (let i = dates.length - 1; i >= 0; i--) {
+        const data = await StorageService.getAnalysis(dates[i]);
+        if (data && data.foreignRelations && data.foreignRelations.length > 0) {
+          return data.foreignRelations; // Found the most recent snapshot
+        }
+      }
+    } catch (e) { }
+    return [];
+  };
+
   const loadDate = useCallback(async (dateStr: string) => {
     if (globalState.isProcessing) return;
 
     // Cache current relation defs to prevent overwriting them with historical snapshots
     const currentDefs = await StorageService.getGlobal('relation_defs');
+    const currentBigPicture = globalState.bigPicture;
 
     globalState.currentDate = dateStr;
     const analysis = await StorageService.getAnalysis(dateStr);
@@ -236,10 +266,12 @@ export function useSituationStore() {
     if (analysis) {
       Object.assign(globalState, analysis);
       if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
+
+      // RESTORE Global Big Picture if we want it to be truly global
+      if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+
       // Ensure we keep the latest relation definitions even when viewing history
-      // (The snapshot contains statuses, but the set of tracked relations should be global)
       if (currentDefs) {
-        // Merge: keep status/sentiment from history if it exists, but ensure all current defs are present
         const historicalRelations = globalState.foreignRelations;
         globalState.foreignRelations = currentDefs.map((def: any) => {
           const historical = historicalRelations.find(h => h.id === def.id);
@@ -258,6 +290,7 @@ export function useSituationStore() {
       globalState.feeds = [];
       globalState.mapPoints = [];
       globalState.lastUpdated = null;
+      if (currentBigPicture) globalState.bigPicture = currentBigPicture;
 
       if (currentDefs) {
         globalState.foreignRelations = currentDefs.map((d: any) => ({
@@ -275,6 +308,21 @@ export function useSituationStore() {
   const refresh = useCallback(async () => {
     if (globalState.isProcessing) return;
 
+    // Use last known relations for context if current day is empty or just "Awaiting..."
+    let contextRelations = globalState.foreignRelations;
+    if (contextRelations.every(r => r.status === 'No data for this date.' || r.status.includes('Awaiting'))) {
+      const lastKnown = await getLastKnownRelations();
+      if (lastKnown.length > 0) {
+        contextRelations = await StorageService.getGlobal('relation_defs').then(defs => {
+          if (!defs) return lastKnown;
+          return defs.map((d: any) => {
+            const known = lastKnown.find(k => k.id === d.id);
+            return known ? known : d;
+          });
+        });
+      }
+    }
+
     globalState = {
       ...globalState,
       isProcessing: true,
@@ -288,7 +336,7 @@ export function useSituationStore() {
       const newsFeeds = await fetchLatestFeeds(globalState.currentDate)
       const result = await processSituation(
         newsFeeds,
-        globalState.foreignRelations,
+        contextRelations, // Pass enriched relations
         globalState.aiConfig,
         globalState.bigPicture,
         (status: string) => {
@@ -431,13 +479,17 @@ export function useSituationStore() {
       globalState = {
         ...globalState,
         bigPicture: {
-          ...result,
+          summary: result.summary,
+          timeline: result.timeline.map((t: any) => ({
+            ...t,
+            sentiment: (t.sentiment || 'neutral') as Sentiment
+          })),
           lastUpdated: new Date().toISOString()
         },
         isProcessingSection: { ...globalState.isProcessingSection, bigPicture: false }
       };
       notify();
-      persist(); // We might want to save this separately, but persisting to global state works for now if we add it to persist logic
+      persist(); // Saved globally now
     } catch (error) {
       console.error(error);
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, bigPicture: false } };

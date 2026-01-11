@@ -1,5 +1,5 @@
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet'
 import L from 'leaflet'
 import { useSituationStore, MapPoint } from '../state/useSituationStore'
 import 'leaflet/dist/leaflet.css'
@@ -9,6 +9,13 @@ const categoryColors: Record<string, string> = {
     'Financial': '#ec4899',
     'Conflicts': '#eab308',
     'Geopolitical': '#94a3b8'
+}
+
+const categoryIcons: Record<string, string> = {
+    'Tech / AI': '🤖',
+    'Financial': '💲',
+    'Conflicts': '⚔️',
+    'Geopolitical': '🌍'
 }
 
 const sentimentColors: Record<string, string> = {
@@ -38,22 +45,36 @@ const createCustomIcon = (point: MapPoint) => {
     const color = categoryColors[point.category] || '#94a3b8'
     const sentiment = resolveSentiment(point.sentiment)
     const outline = sentimentColors[sentiment] || sentimentColors.neutral
-
+    const iconChar = categoryIcons[point.category] || '📍'
 
     return L.divIcon({
         className: 'custom-map-pin',
         html: `
       <div style="
-        width: 20px; 
-        height: 20px; 
+        width: 24px; 
+        height: 24px; 
         background-color: ${outline}; 
-        border: 3px solid ${outline}; 
+        border: 2px solid white; 
         border-radius: 50%;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      "></div>
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        position: relative;
+      ">
+        <span style="z-index: 2; line-height: 1;">${iconChar}</span>
+         <div style="
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid ${outline};
+            opacity: 0.6;
+         "></div>
+      </div>
     `,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
     })
 }
 
@@ -64,7 +85,7 @@ export function SituationMap() {
     return (
         <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 h-[500px] flex flex-col ${isLoading ? 'section-loading' : ''}`}>
             {isLoading && (
-                <div className="section-loading-overlay rounded-2xl">
+                <div className="section-loading-overlay rounded-2xl z-10">
                     <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
                     <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary text-center px-4">Recalculating Geo-Coordinates...</span>
                 </div>
@@ -90,7 +111,7 @@ export function SituationMap() {
                 )}
             </div>
 
-            <div className="flex-1 rounded-xl overflow-hidden border border-white/5">
+            <div className="flex-1 rounded-xl overflow-hidden border border-white/5 bg-[#0a0c10]">
                 <MapContainer
                     center={[20, 0]}
                     zoom={2}
@@ -104,9 +125,13 @@ export function SituationMap() {
                     {(mapPoints || []).map((point) => (
                         <Marker
                             key={point.id}
-                            position={[point.lat, point.lng]}
+                            position={[point.lat || 0, point.lng || 0]}
                             icon={createCustomIcon(point)}
                         >
+                            <Tooltip direction="top" offset={[0, -12]} opacity={1} className="custom-tooltip">
+                                <span className="font-bold text-xs">{point.title}</span> <span className="text-[10px] opacity-70">({point.category})</span>
+                            </Tooltip>
+
                             <Popup className="custom-popup">
                                 <div className="p-1.5 max-w-[200px]">
                                     <h4 className="font-bold text-slate-900 text-sm leading-tight mb-0.5">{point.title}</h4>
@@ -136,18 +161,11 @@ export function SituationMap() {
                                             rel="noopener noreferrer"
                                             className="text-[9px] text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
                                         >
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                                <polyline points="15 3 21 3 21 9"></polyline>
-                                                <line x1="10" y1="14" x2="21" y2="3"></line>
-                                            </svg>
                                             Read article
                                         </a>
                                     )}
                                 </div>
                             </Popup>
-
-
                         </Marker>
                     ))}
                 </MapContainer>

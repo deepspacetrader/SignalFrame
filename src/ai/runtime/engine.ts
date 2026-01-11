@@ -102,22 +102,39 @@ export async function processBigPicture(
   aiConfig: AiConfig,
   onStream?: (chunk: string) => void
 ) {
-  const context = history.map(h => `DATE: ${h.date}\nSUMMARY: ${h.narrative}\nSIGNALS: ${h.signals.length} detected.\nINSIGHTS: ${h.insights.length} detected.`).join('\n\n');
+  // Construct context for the Grand Narrative
+  const context = history.map(h => `DATE: ${h.date}\nSUMMARY: ${h.narrative}\nSIGNALS: ${h.signals.length} detected.`).join('\n\n');
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
 
-  // 1. Generate Timeline Summary
-  const timelinePrompt = `
-Analyze the provided history of daily briefings.
-Generate a JSON array representing a timeline of the most significant shifts or events.
-Array format: [{"date": "YYYY-MM-DD", "title": "Headlines", "summary": "One sentence summary", "sentiment": "..."}]
+  // 1. Construct Timeline PRECISELY from existing history (Deterministic)
+  const timeline = history.map((h: any) => {
+    // deduce sentiment from signals if available
+    let sentiment = 'neutral';
+    if (h.signals && h.signals.length > 0) {
+      // Simple heuristic: if any signal is negative, the day is negative
+      const neg = h.signals.find((s: any) => s.sentiment.includes('negative'));
+      if (neg) sentiment = neg.sentiment;
+    }
 
-SENTIMENT GUIDELINES:
-${SENTIMENT_GUIDELINES}
+    // formatting title/summary from narrative
+    let title = 'Situation Report';
+    let summaryStr = h.narrative || '';
 
-HISTORY:
-${context}
-`;
-  const timelineRaw = await OllamaService.generate(aiConfig.model, timelinePrompt, 'json', options);
+    // Try to extract a headline if the narrative starts with one
+    const lines = summaryStr.split('\n').filter((l: string) => l.trim().length > 0);
+    if (lines.length > 0) {
+      title = lines[0].replace(/[*#]/g, '').trim();
+      if (title.length > 60) title = title.substring(0, 57) + '...';
+      summaryStr = lines.slice(1).join(' ').substring(0, 200) + '...';
+    }
+
+    return {
+      date: h.date,
+      title: title,
+      summary: summaryStr,
+      sentiment: sentiment
+    };
+  }).sort((a: any, b: any) => a.date.localeCompare(b.date));
 
   // 2. Generate Grand Narrative
   const narrativePrompt = `
@@ -142,12 +159,7 @@ ${context}
 
   return {
     summary: finalizeNarrative(summary),
-    timeline: parseJsonArray(timelineRaw).map((t: any) => ({
-      date: t.date || 'Unknown',
-      title: t.title || 'Event',
-      summary: t.summary || '',
-      sentiment: (t.sentiment || 'neutral').toLowerCase()
-    }))
+    timeline: timeline
   };
 }
 
@@ -218,6 +230,7 @@ function generateMapPointsPrompt(context: string, signalsContext: string = '') {
   return `Generate geographical map coordinates for the Key Signals listed below.
 CRITICAL: You MUST attempt to generate a map point for EVERY Key Signal provided.
 If a specific city/location is not mentioned, deduce the most relevant country or region (e.g. use the capital city).
+ENSURE DIVERSITY: Do not put all points on the same coordinate. Spread them out if they are in the same country.
 
 Return a JSON array: [{"lat": ..., "lng": ..., "title": "CITY/REGION", "sentiment": "...", "category": "...", "description": "ONE LINE MAX", "sourceLink": "URL"}]
 

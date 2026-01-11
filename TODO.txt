@@ -1,0 +1,9 @@
+1. I can see SignalFrameDB has data separated by day under the analysis table, but when I regenerate the big picture it overwrites the timeline data instead of adding to it while maintaining the existing data for previous days.
+
+2. On The Big Picture, the "Grand Strategy Assessment" should perhaps be part of the global table in the database since that can change over time and isn't for a specific day but rather the sum of all days data up to and including today's changes.
+
+3. The SituationMap isn't showing more than one data point. It should show all of the data points for the selected day only (if geographically relevant). Also look to how the map is styled and functions on this tool: https://hipcityreg.github.io/situation-monitor/ and make it more like that where it shows different icons for each category of data point and allows for zooming in and out to see more detail while also allowing for simple hover to reveal more details about the data point.  I'm not so interested in the rest of that app because it seems more like a lot of information that is forced upon the user and leads to them easily being overwhelmed while this app aims to understand the incoming data and provide value to the user in a way that is easy to digest and understand.
+
+4. The Foreign Relations Panel isn't working at all. It should be showing a brief text summary of the user defined topic as constrained by the user defined countries A and B. Seems to always say "No data for this date." because its attempting to only look at selected day's data instead of all historical data in addition to currently selected day's data.
+
+5. Remove Sports, Entertainment, Lifestyle, and Travel categories from Google Trends and all other data source feeds.

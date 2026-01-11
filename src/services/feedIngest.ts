@@ -118,7 +118,7 @@ async function fetchRssFeed(feedUrl: string): Promise<any> {
     };
 }
 
-const FEEDS = [
+const NEWS_FEEDS = [
     // World / Geopolitical
     { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', category: 'World', source: 'BBC World' },
     { url: 'https://www.theguardian.com/world/rss', category: 'World', source: 'The Guardian' },
@@ -142,10 +142,61 @@ const FEEDS = [
     // Health
     { url: 'http://feeds.bbci.co.uk/news/health/rss.xml', category: 'Health', source: 'BBC Health' },
     { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml', category: 'Health', source: 'NY Times Health' },
-
-    // Trends
-    { url: 'https://trends.google.com/trending/rss?geo=US', category: 'Trends', source: 'Google Trends' },
 ];
+
+const TRENDS_FEEDS = [
+    // Trends - Grouped under "Trends" category to keep separate from RSS feeds.
+    // Enforcing English (hl=en-US) to avoid foreign sports results.
+
+    // USA
+    { url: 'https://trends.google.com/trending/rss?geo=US&cat=10&hl=en-US', category: 'Trends', source: 'Google Trends (Gov US)' },
+    { url: 'https://trends.google.com/trending/rss?geo=US&cat=3&hl=en-US', category: 'Trends', source: 'Google Trends (Biz US)' },
+    { url: 'https://trends.google.com/trending/rss?geo=US&cat=18&hl=en-US', category: 'Trends', source: 'Google Trends (Tech US)' },
+    { url: 'https://trends.google.com/trending/rss?geo=US&cat=15&hl=en-US', category: 'Trends', source: 'Google Trends (Science US)' },
+    { url: 'https://trends.google.com/trending/rss?geo=US&cat=7&hl=en-US', category: 'Trends', source: 'Google Trends (Health US)' },
+    { url: 'https://trends.google.com/trending/rss?geo=US&cat=14&hl=en-US', category: 'Trends', source: 'Google Trends (Politics US)' },
+
+    // Canada
+    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=10&hl=en-US', category: 'Trends', source: 'Google Trends (Gov CA)' },
+    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=3&hl=en-US', category: 'Trends', source: 'Google Trends (Biz CA)' },
+    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=18&hl=en-US', category: 'Trends', source: 'Google Trends (Tech CA)' },
+    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=15&hl=en-US', category: 'Trends', source: 'Google Trends (Science CA)' },
+    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=7&hl=en-US', category: 'Trends', source: 'Google Trends (Health CA)' },
+    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=14&hl=en-US', category: 'Trends', source: 'Google Trends (Politics CA)' },
+];
+
+// Regex patterns for stricter matching (word boundaries)
+const BLACKLIST_PATTERNS = [
+    // Non English characters
+    /¿/i, /á/i, /é/i, /í/i, /ó/i, /ú/i, /ç/i, /ü/i, /ß/i, /ñ/i, /ä/i, /ö/i, /ü/i, /ø/i, /å/i, /ø/i, /ü/i,
+
+    // Sports
+    /NFL/i, /NBA/i, /MLB/i, /NHL/i, /FIFA/i, /UEFA/i, /vs./i, /FA Cup/i,
+    /\bFootball\b/i, /\bBasketball\b/i, /\bBaseball\b/i, /\bSoccer\b/i,
+    /\bTennis\b/i, /\bGolf\b/i, /\bCricket\b/i, /\bRugby\b/i,
+    /\bF1\b/i, /Formula 1/i, /NASCAR/i, /Olympics/i, /Olympiad/i, /Super Bowl/i, /World Cup/i,
+    /Touchdown/i, /Quarterback/i,
+    // Note: 'Score' and 'Match' are too generic (e.g. "Credit Score", "Match found"), excluding them or being very specific
+    /Playoff/i, /Championship/i,
+
+    // Entertainment / Celebrity
+    /Kardashian/i, /Taylor\s?Swift/i, /Beyonce/i, /Hollywood/i,
+    /\bMovie\b/i, /\bCinema\b/i, /Film Review/i, /Box Office/i,
+    /Celebrity/i, /Gossip/i, /Red Carpet/i, /Grammy/i, /Oscar/i, /Emmy/i,
+    /Reality TV/i, /Sitcom/i, /Netflix Series/i, /Spoiler/i, /Trailer/i,
+
+    // Lifestyle / Travel
+    /Vacation/i, /Resort/i, /\bHotel\b/i, /\bCruise\b/i, /Airline Deals/i, /Travel Guide/i,
+    /\bFashion\b/i, /\bStyle\b/i, /\bBeauty\b/i, /Makeup/i, /Skincare/i,
+    /\bDiet\b/i, /\bRecipe\b/i, /Dating/i, /Horoscope/i, /Astrology/i,
+
+    // Other Noise
+    /Lottery/i, /Powerball/i, /Mega Millions/i
+];
+
+function isBlacklisted(text: string): boolean {
+    return BLACKLIST_PATTERNS.some(pattern => pattern.test(text));
+}
 
 export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]> {
     const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
@@ -154,7 +205,8 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     console.log(`Fetching ${isToday ? 'latest' : 'historical'} feeds for ${targetDate || 'Today'}...`);
 
     const allSignals: RawSignal[] = [];
-    const activeFeeds = [...FEEDS];
+    // const activeFeeds = [...NEWS_FEEDS, ...TRENDS_FEEDS];
+    const activeFeeds = [...NEWS_FEEDS];
 
     // If historical, add a targeted Google News Search to ensure we find data for that specific day
     if (!isToday && targetDate) {
@@ -180,6 +232,7 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
             // Check if this is a Google Trends feed - requires special parsing
             const isGoogleTrends = feed.url.includes('trends.google.com/trending/rss');
 
+
             if (isGoogleTrends) {
                 console.log(`Fetching Google Trends feed for ${feed.source}...`);
                 // Use fetchWithFallback for robust CORS proxy handling
@@ -196,7 +249,6 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                     const pubDate = item.querySelector('pubDate')?.textContent || '';
                     const link = item.querySelector('link')?.textContent || '';
 
-                    // Extract ht: namespace elements - try with and without namespace explicitly
                     // helper to get text from potential namespace tags
                     const getTagText = (tagName: string) => {
                         const withNs = item.getElementsByTagName(`ht:${tagName}`)[0];
@@ -232,6 +284,7 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                         timestamp: pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate}`,
                         content,
                         category: feed.category,
+                        title: title,
                         link: searchLink,
                         approxTraffic,
                         picture,
@@ -278,6 +331,7 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                         timestamp,
                         content: description ? `${item.title}. ${description}` : item.title,
                         category: feed.category,
+                        title: item.title || '',
                         link: item.link,
                         picture // Include the extracted picture
                     };
@@ -292,16 +346,42 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     const results = await Promise.all(feedPromises);
     results.forEach(signals => allSignals.push(...signals));
 
-    // Filter by date if a specific target date was requested
-    const filteredSignals = targetDate
-        ? allSignals.filter(s => {
+    // DEDUPLICATION STEP
+    const seenTrendTopics = new Set<string>();
+    const uniqueSignals: RawSignal[] = [];
+
+    allSignals.forEach(signal => {
+        if (signal.source.includes('Google Trends')) {
+            // Deduplicate trends based on Title (Topic)
+            // Use title if present, fall back to parsing content or just content
+            // We added 'title' property specifically for this purpose in the map above.
+            const topic = signal.title ? signal.title.toLowerCase().trim() : signal.content.toLowerCase().trim();
+
+            if (seenTrendTopics.has(topic)) {
+                return; // Skip duplicate
+            }
+            seenTrendTopics.add(topic);
+        }
+        uniqueSignals.push(signal);
+    });
+
+    // Filter by date AND Blacklist
+    const filteredSignals = uniqueSignals.filter(s => {
+        // 1. Blacklist Check
+        if (isBlacklisted(s.content) || (s.title && isBlacklisted(s.title))) {
+            return false;
+        }
+
+        // 2. Date Check (if targetDate provided)
+        if (targetDate) {
             try {
                 const signalDate = new Date(s.timestamp).toLocaleDateString('en-CA');
                 return signalDate === targetDate;
             } catch (e) { return false; }
-        })
-        : allSignals;
+        }
+        return true;
+    });
 
-    console.log(`Ingested ${filteredSignals.length} signals for ${targetDate || 'Today'}.`);
+    console.log(`Ingested ${filteredSignals.length} signals for ${targetDate || 'Today'}. (Filtered out noise and duplicates)`);
     return filteredSignals.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }

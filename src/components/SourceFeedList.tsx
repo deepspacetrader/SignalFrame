@@ -167,7 +167,7 @@ function FeedItem({ item, activeTooltipId, onSetActiveTooltip }: { item: RawSign
                                         )}
                                     </div>
                                 </div>
-                                <p className="text-xs text-text-secondary line-clamp-3 leading-relaxed">{item.content.replace(item.title || '', '').trim()}</p>
+                                <p className="text-xs text-text-secondary line-clamp-3 leading-relaxed">{item.content.replace(item.title + '.' || '', '')}</p>
                             </div>
                         </div>
                     </div>
@@ -188,16 +188,20 @@ export function SourceFeedList() {
     const { feeds, isProcessing, refreshFeeds } = useSituationStore()
     const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
 
-    // Group feeds by category
-    const categories = feeds.reduce((acc, feed) => {
+    if (!isProcessing && feeds.length === 0) {
+        return null
+    }
+
+    // Split feeds
+    const trendFeeds = feeds.filter(f => f.category === 'Trends');
+    const rssFeeds = feeds.filter(f => f.category !== 'Trends');
+
+    // Group RSS feeds by category
+    const rssCategories = rssFeeds.reduce((acc, feed) => {
         if (!acc[feed.category]) acc[feed.category] = []
         acc[feed.category].push(feed)
         return acc
     }, {} as Record<string, typeof feeds>)
-
-    if (!isProcessing && feeds.length === 0) {
-        return null
-    }
 
     return (
         <section className="bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20">
@@ -208,7 +212,7 @@ export function SourceFeedList() {
                     <path d="M4 4a16 16 0 0 1 16 16"></path>
                     <circle cx="5" cy="19" r="1"></circle>
                 </svg>
-                Raw Intelligence Feeds
+                Data Feeds
                 <button
                     onClick={() => refreshFeeds()}
                     disabled={isProcessing}
@@ -224,15 +228,23 @@ export function SourceFeedList() {
                 </button>
             </h2>
 
-            <div className="space-y-8">
-                {Object.entries(categories).map(([category, items]) => (
-                    <div key={category}>
-                        <h3 className="text-xs uppercase tracking-[0.2em] text-text-secondary mb-4 flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-accent-primary"></span>
-                            {category}
-                        </h3>
-                        {category === 'Trends' ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="flex flex-col lg:flex-row gap-6">
+                {/* LEFT COLUMN: RSS Feeds (Standard) */}
+                <div className="w-full lg:w-2/3 space-y-8 order-1 lg:order-1">
+                    {Object.entries(rssCategories).map(([category, items]) => (
+                        <div key={category}>
+                            <h3 className="text-xs uppercase tracking-[0.2em] text-text-secondary mb-4 flex items-center gap-2">
+                                <span className="w-4 h-4">
+                                    {category === 'World' && "🌍"}
+                                    {category === 'Business' && "💲"}
+                                    {category === 'Technology' && "🤖"}
+                                    {category === 'Health' && "💊"}
+                                    {category === 'Science' && "🔬"}
+                                    {category === 'Politics' && "🏦"}
+                                </span>
+                                {category}
+                            </h3>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                                 {items.map((item) => (
                                     <FeedItem
                                         key={item.id}
@@ -242,9 +254,20 @@ export function SourceFeedList() {
                                     />
                                 ))}
                             </div>
-                        ) : (
-                            <div className="grid grid-cols-1 gap-3">
-                                {items.map((item) => (
+                        </div>
+                    ))}
+                </div>
+
+                {/* RIGHT COLUMN: Google Trends (Sticky/Separate) */}
+                {trendFeeds.length > 0 && (
+                    <div className="w-full lg:w-1/3 order-2 lg:order-2">
+                        <div className="lg:sticky lg:top-6">
+                            <h3 className="text-xs uppercase tracking-[0.2em] text-accent-primary mb-4 flex items-center gap-2">
+                                <span className="w-4 h-4">🗣️</span>
+                                Global Trends
+                            </h3>
+                            <div className="flex flex-col gap-3">
+                                {trendFeeds.map((item) => (
                                     <FeedItem
                                         key={item.id}
                                         item={item}
@@ -253,9 +276,9 @@ export function SourceFeedList() {
                                     />
                                 ))}
                             </div>
-                        )}
+                        </div>
                     </div>
-                ))}
+                )}
             </div>
 
             {isProcessing && (
