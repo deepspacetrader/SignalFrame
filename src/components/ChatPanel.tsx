@@ -23,6 +23,10 @@ export function ChatPanel() {
     const [includeBigPicture, setIncludeBigPicture] = useState(false);
     const [includePredictions, setIncludePredictions] = useState(false);
 
+    // Historical Data
+    const [includeYesterday, setIncludeYesterday] = useState(false);
+    const [yesterdayData, setYesterdayData] = useState<any>(null);
+
     // Load predictions history on mount for context
     useEffect(() => {
         const loadPredictions = async () => {
@@ -39,16 +43,52 @@ export function ChatPanel() {
         loadPredictions();
     }, []);
 
+    // Load Yesterday's data when toggled
+    useEffect(() => {
+        if (includeYesterday && !yesterdayData) {
+            const loadYesterday = async () => {
+                try {
+                    const { StorageService } = await import('../services/db');
+                    // Calculate yesterday's date string roughly (ignoring precise timezone for now, assuming local)
+                    const d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const dateStr = `${y}-${m}-${day}`;
+
+                    const data = await StorageService.getAnalysis(dateStr);
+                    if (data) {
+                        setYesterdayData(data);
+                    } else {
+                        // console.warn("No data found for yesterday", dateStr);
+                        // Optionally set a flag that it's empty
+                    }
+                } catch (e) {
+                    console.error("Failed to load yesterday's data", e);
+                }
+            };
+            loadYesterday();
+        }
+    }, [includeYesterday, yesterdayData]);
+
     const generateSystemContext = () => {
         const parts = [];
         parts.push(`You are an elite intelligence analyst assistant.`);
 
         if (includeNarrative) {
-            parts.push(`CURRENT SITUATION BRIEFING:\n${narrative}`);
+            parts.push(`CURRENT SITUATION BRIEFING (TODAY):\n${narrative}`);
+        }
+
+        if (includeYesterday && yesterdayData) {
+            parts.push(`YESTERDAY'S BRIEFING (${yesterdayData.date}):\n${yesterdayData.narrative}`);
+            if (yesterdayData.signals) {
+                parts.push(`YESTERDAY'S SIGNALS:\n${yesterdayData.signals.map((s: any) => `- ${s.text}`).slice(0, 5).join('\n')}`);
+            }
         }
 
         if (includeSignals) {
-            parts.push(`KEY SIGNALS:\n${signals.map(s => `- ${s.text} (${s.sentiment})`).join('\n')}`);
+            parts.push(`KEY SIGNALS (TODAY):\n${signals.map(s => `- ${s.text} (${s.sentiment})`).join('\n')}`);
         }
 
         if (includeInsights) {
@@ -77,7 +117,10 @@ export function ChatPanel() {
 
     // Calculate Context Usage
     const currentContext = generateSystemContext();
-    const estTokens = Math.ceil(currentContext.length / 4);
+    // Rough estimation: Context + Message History
+    const historyText = messages.map(m => m.content).join(' ');
+    const totalText = currentContext + historyText;
+    const estTokens = Math.ceil(totalText.length / 4);
     const maxTokens = aiConfig.numCtx;
     const usagePercent = Math.min((estTokens / maxTokens) * 100, 100);
     const usageColor = usagePercent > 90 ? 'bg-red-500' : usagePercent > 70 ? 'bg-amber-500' : 'bg-emerald-500';
@@ -89,6 +132,7 @@ export function ChatPanel() {
         setIncludeRelations(enable);
         setIncludeBigPicture(enable);
         setIncludePredictions(enable);
+        if (enable === false) setIncludeYesterday(false);
     };
 
     const handleSend = async () => {
@@ -102,6 +146,7 @@ export function ChatPanel() {
 
         try {
             const contextMsg: Message = { role: 'system', content: generateSystemContext() };
+            // Note: We might need to prune history if it gets too long, but for now we rely on user seeing the progress bar.
             const apiMessages = [contextMsg, ...newHistory];
 
             let assistantContent = '';
@@ -173,6 +218,11 @@ export function ChatPanel() {
                         </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                        <ContextToggle label="Yesterday" active={includeYesterday} onClick={() => setIncludeYesterday(!includeYesterday)} />
+                        <button className="px-3 py-1 rounded-full text-[10px] font-bold uppercase border bg-white/5 border-white/5 text-text-secondary/50 cursor-not-allowed" title="Premium Feature">All-Time</button>
+
+                        <div className="w-[1px] h-6 bg-white/10 mx-1"></div>
+
                         <ContextToggle label="Narrative" active={includeNarrative} onClick={() => setIncludeNarrative(!includeNarrative)} />
                         <ContextToggle label="Signals" active={includeSignals} onClick={() => setIncludeSignals(!includeSignals)} />
                         <ContextToggle label="Insights" active={includeInsights} onClick={() => setIncludeInsights(!includeInsights)} />
@@ -265,8 +315,8 @@ function ContextToggle({ label, active, onClick }: { label: string, active: bool
         <button
             onClick={onClick}
             className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all border ${active
-                    ? 'bg-accent-primary/20 border-accent-primary text-accent-primary shadow-[0_0_10px_rgba(59,130,246,0.2)]'
-                    : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                ? 'bg-accent-primary/20 border-accent-primary text-accent-primary shadow-[0_0_10px_rgba(59,130,246,0.2)]'
+                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
                 }`}
         >
             {label}

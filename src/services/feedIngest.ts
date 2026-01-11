@@ -12,6 +12,8 @@ export interface RawSignal {
     timestamp: string;
     content: string;
     category: string;
+    // Optional display title, falls back to content
+    title?: string;
     link?: string;
     // Google Trends specific fields
     approxTraffic?: string;
@@ -140,6 +142,9 @@ const FEEDS = [
     // Health
     { url: 'http://feeds.bbci.co.uk/news/health/rss.xml', category: 'Health', source: 'BBC Health' },
     { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml', category: 'Health', source: 'NY Times Health' },
+
+    // Trends
+    { url: 'https://trends.google.com/trending/rss?geo=US', category: 'Trends', source: 'Google Trends' },
 ];
 
 export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]> {

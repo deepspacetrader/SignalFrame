@@ -124,14 +124,20 @@ function FeedItem({ item, activeTooltipId, onSetActiveTooltip }: { item: RawSign
                 <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 flex items-start gap-3">
                         {/* Thumbnail for all feeds if available */}
-                        {item.picture && (
+                        {item.picture ?
                             <img
                                 src={item.picture}
                                 alt=""
-                                className="w-10 h-10 rounded-lg object-cover flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity"
+                                className="w-32 h-32 rounded-lg object-cover flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity"
                                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
                             />
-                        )}
+                            : (
+                                <div className="w-32 h-32 rounded-lg object-cover flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+                                    <svg className="text-white/10 w-32 h-32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            )}
                         <div className="flex-1">
                             <div className="flex items-center gap-2">
                                 <p className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 leading-snug">
@@ -144,19 +150,24 @@ function FeedItem({ item, activeTooltipId, onSetActiveTooltip }: { item: RawSign
                                     </span>
                                 )}
                             </div>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-[0.65rem] font-bold text-accent-secondary uppercase tracking-tight">
-                                    {item.source}
-                                </span>
-                                <span className="text-[0.6rem] text-text-secondary">
-                                    {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}
-                                </span>
-                                {isTrend && (
-                                    <span className="text-[0.55rem] text-accent-primary/80 flex items-center gap-1">
-                                        <span className="inline-block w-1 h-1 rounded-full bg-accent-primary animate-pulse"></span>
-                                        {item.relatedNews?.length} articles
-                                    </span>
-                                )}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <span className="text-[0.65rem] font-bold text-accent-secondary uppercase tracking-tight">
+                                            {item.source}
+                                        </span>
+                                        <span className="text-[0.6rem] text-text-secondary">
+                                            {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}
+                                        </span>
+                                        {isTrend && (
+                                            <span className="text-[0.55rem] text-accent-primary/80 flex items-center gap-1">
+                                                <span className="inline-block w-1 h-1 rounded-full bg-accent-primary animate-pulse"></span>
+                                                {item.relatedNews?.length} articles
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                                <p className="text-xs text-text-secondary line-clamp-3 leading-relaxed">{item.content.replace(item.title || '', '').trim()}</p>
                             </div>
                         </div>
                     </div>
@@ -164,10 +175,12 @@ function FeedItem({ item, activeTooltipId, onSetActiveTooltip }: { item: RawSign
             </a>
 
             {/* Side tooltip for trends */}
-            {showTooltip && isTrend && (
-                <TrendTooltip item={item} />
-            )}
-        </div>
+            {
+                showTooltip && isTrend && (
+                    <TrendTooltip item={item} />
+                )
+            }
+        </div >
     );
 }
 
