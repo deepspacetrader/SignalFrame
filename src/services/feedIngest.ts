@@ -1,11 +1,3 @@
-
-export interface TrendNewsItem {
-    title: string;
-    url: string;
-    source: string;
-    picture?: string;
-}
-
 export interface RawSignal {
     id: string;
     source: string;
@@ -15,11 +7,7 @@ export interface RawSignal {
     // Optional display title, falls back to content
     title?: string;
     link?: string;
-    // Google Trends specific fields
-    approxTraffic?: string;
     picture?: string;
-    pictureSource?: string;
-    relatedNews?: TrendNewsItem[];
 }
 
 // Multiple CORS proxy options for fallback reliability
@@ -144,31 +132,10 @@ const NEWS_FEEDS = [
     { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml', category: 'Health', source: 'NY Times Health' },
 ];
 
-const TRENDS_FEEDS = [
-    // Trends - Grouped under "Trends" category to keep separate from RSS feeds.
-    // Enforcing English (hl=en-US) to avoid foreign sports results.
-
-    // USA
-    { url: 'https://trends.google.com/trending/rss?geo=US&cat=10&hl=en-US', category: 'Trends', source: 'Google Trends (Gov US)' },
-    { url: 'https://trends.google.com/trending/rss?geo=US&cat=3&hl=en-US', category: 'Trends', source: 'Google Trends (Biz US)' },
-    { url: 'https://trends.google.com/trending/rss?geo=US&cat=18&hl=en-US', category: 'Trends', source: 'Google Trends (Tech US)' },
-    { url: 'https://trends.google.com/trending/rss?geo=US&cat=15&hl=en-US', category: 'Trends', source: 'Google Trends (Science US)' },
-    { url: 'https://trends.google.com/trending/rss?geo=US&cat=7&hl=en-US', category: 'Trends', source: 'Google Trends (Health US)' },
-    { url: 'https://trends.google.com/trending/rss?geo=US&cat=14&hl=en-US', category: 'Trends', source: 'Google Trends (Politics US)' },
-
-    // Canada
-    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=10&hl=en-US', category: 'Trends', source: 'Google Trends (Gov CA)' },
-    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=3&hl=en-US', category: 'Trends', source: 'Google Trends (Biz CA)' },
-    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=18&hl=en-US', category: 'Trends', source: 'Google Trends (Tech CA)' },
-    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=15&hl=en-US', category: 'Trends', source: 'Google Trends (Science CA)' },
-    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=7&hl=en-US', category: 'Trends', source: 'Google Trends (Health CA)' },
-    { url: 'https://trends.google.com/trending/rss?geo=CA&cat=14&hl=en-US', category: 'Trends', source: 'Google Trends (Politics CA)' },
-];
-
 // Regex patterns for stricter matching (word boundaries)
 const BLACKLIST_PATTERNS = [
     // Non English characters
-    /¿/i, /á/i, /é/i, /í/i, /ó/i, /ú/i, /ç/i, /ü/i, /ß/i, /ñ/i, /ä/i, /ö/i, /ü/i, /ø/i, /å/i, /ø/i, /ü/i,
+    /┬┐/i, /├í/i, /├⌐/i, /├¡/i, /├│/i, /├║/i, /├º/i, /├╝/i, /├ƒ/i, /├▒/i, /├ñ/i, /├╢/i, /├╝/i, /├╕/i, /├Ñ/i, /├╕/i, /├╝/i,
 
     // Sports
     /NFL/i, /NBA/i, /MLB/i, /NHL/i, /FIFA/i, /UEFA/i, /vs./i, /FA Cup/i,
@@ -205,7 +172,6 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     console.log(`Fetching ${isToday ? 'latest' : 'historical'} feeds for ${targetDate || 'Today'}...`);
 
     const allSignals: RawSignal[] = [];
-    // const activeFeeds = [...NEWS_FEEDS, ...TRENDS_FEEDS];
     const activeFeeds = [...NEWS_FEEDS];
 
     // If historical, add a targeted Google News Search to ensure we find data for that specific day
@@ -229,71 +195,6 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     // Fetch in parallel
     const feedPromises = activeFeeds.map(async (feed) => {
         try {
-            // Check if this is a Google Trends feed - requires special parsing
-            const isGoogleTrends = feed.url.includes('trends.google.com/trending/rss');
-
-
-            if (isGoogleTrends) {
-                console.log(`Fetching Google Trends feed for ${feed.source}...`);
-                // Use fetchWithFallback for robust CORS proxy handling
-                const response = await fetchWithFallback(feed.url);
-                const xmlText = await response.text();
-
-                // Parse the XML
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                const items = xmlDoc.querySelectorAll('item');
-
-                return Array.from(items).map((item) => {
-                    const title = item.querySelector('title')?.textContent || '';
-                    const pubDate = item.querySelector('pubDate')?.textContent || '';
-                    const link = item.querySelector('link')?.textContent || '';
-
-                    // helper to get text from potential namespace tags
-                    const getTagText = (tagName: string) => {
-                        const withNs = item.getElementsByTagName(`ht:${tagName}`)[0];
-                        if (withNs) return withNs.textContent || '';
-                        const withoutNs = item.getElementsByTagName(tagName)[0];
-                        if (withoutNs) return withoutNs.textContent || '';
-                        return '';
-                    };
-
-                    const approxTraffic = getTagText('approx_traffic');
-                    const picture = getTagText('picture');
-                    const pictureSource = getTagText('picture_source');
-
-                    // Extract related news items
-                    const newsItems = item.getElementsByTagName('ht:news_item');
-                    const relatedNews: TrendNewsItem[] = Array.from(newsItems).map((newsItem) => ({
-                        title: newsItem.getElementsByTagName('ht:news_item_title')[0]?.textContent || '',
-                        url: newsItem.getElementsByTagName('ht:news_item_url')[0]?.textContent || '',
-                        source: newsItem.getElementsByTagName('ht:news_item_source')[0]?.textContent || '',
-                        picture: newsItem.getElementsByTagName('ht:news_item_picture')[0]?.textContent || ''
-                    })).filter(n => n.title && n.url);
-
-                    // Build a richer content string from related news
-                    const newsContext = relatedNews.slice(0, 3).map(n => n.title).join('. ');
-                    const content = newsContext ? `${title}: ${newsContext}` : title;
-
-                    // Generate Google search link for the trending term
-                    const searchLink = `https://www.google.com/search?q=${encodeURIComponent(title)}`;
-
-                    return {
-                        id: `trend-${title}-${pubDate}`,
-                        source: feed.source,
-                        timestamp: pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate}`,
-                        content,
-                        category: feed.category,
-                        title: title,
-                        link: searchLink,
-                        approxTraffic,
-                        picture,
-                        pictureSource,
-                        relatedNews
-                    };
-                });
-            }
-
             // Regular RSS feed - use fetchRssFeed with fallback support
             const data = await fetchRssFeed(feed.url);
 
@@ -346,27 +247,8 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     const results = await Promise.all(feedPromises);
     results.forEach(signals => allSignals.push(...signals));
 
-    // DEDUPLICATION STEP
-    const seenTrendTopics = new Set<string>();
-    const uniqueSignals: RawSignal[] = [];
-
-    allSignals.forEach(signal => {
-        if (signal.source.includes('Google Trends')) {
-            // Deduplicate trends based on Title (Topic)
-            // Use title if present, fall back to parsing content or just content
-            // We added 'title' property specifically for this purpose in the map above.
-            const topic = signal.title ? signal.title.toLowerCase().trim() : signal.content.toLowerCase().trim();
-
-            if (seenTrendTopics.has(topic)) {
-                return; // Skip duplicate
-            }
-            seenTrendTopics.add(topic);
-        }
-        uniqueSignals.push(signal);
-    });
-
     // Filter by date AND Blacklist
-    const filteredSignals = uniqueSignals.filter(s => {
+    const filteredSignals = allSignals.filter(s => {
         // 1. Blacklist Check
         if (isBlacklisted(s.content) || (s.title && isBlacklisted(s.title))) {
             return false;

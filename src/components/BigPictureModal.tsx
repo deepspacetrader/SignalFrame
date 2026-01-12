@@ -147,7 +147,7 @@ export function BigPictureModal({ isOpen, onClose }: BigPictureModalProps) {
                         <h3 className="text-sm font-bold uppercase text-text-secondary tracking-widest mb-6 sticky top-0 bg-[#0b1019]/90 backdrop-blur py-2 z-10">Temporal Timeline</h3>
 
                         <div className="relative border-l border-white/10 ml-3 space-y-8">
-                            {hasData ? bigPicture.timeline.map((item, idx) => (
+                            {hasData ? [...bigPicture.timeline].reverse().map((item, idx) => (
                                 <div key={idx} className="pl-6 relative group">
                                     <div className={`absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full ${SENTIMENT_COLORS[item.sentiment] || 'bg-gray-500'} ring-4 ring-[#0a0f18] transition-all group-hover:scale-125`}></div>
                                     <div className="mb-1 flex items-center gap-2">
