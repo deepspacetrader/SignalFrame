@@ -1,4 +1,6 @@
+import { useState, useMemo } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
+import { JsonErrorDisplay } from './JsonErrorDisplay'
 
 const getSentimentColor = (sentiment: string) => {
   switch (sentiment) {
@@ -14,9 +16,33 @@ const getSentimentColor = (sentiment: string) => {
   }
 }
 
+const sentimentOrder = {
+  'extremely-negative': 0,
+  'very-negative': 1,
+  'negative': 2,
+  'somewhat-negative': 3,
+  'neutral': 4,
+  'interesting': 5,
+  'positive': 6,
+  'very-positive': 7
+};
+
 export function SignalList() {
-  const { signals, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
+  const { signals, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection } = useSituationStore()
+  const [sortBy, setSortBy] = useState<'none' | 'pos-neg' | 'neg-pos'>('none')
   const isLoading = isProcessingSection.signals && !isProcessing;
+
+  // Memoize sorted signals to prevent recalculation on every render
+  const sortedSignals = useMemo(() => {
+    if (sortBy === 'none') return signals;
+    
+    return [...signals].sort((a, b) => {
+      const orderA = sentimentOrder[a.sentiment as keyof typeof sentimentOrder] ?? 4;
+      const orderB = sentimentOrder[b.sentiment as keyof typeof sentimentOrder] ?? 4;
+      
+      return sortBy === 'pos-neg' ? orderB - orderA : orderA - orderB;
+    });
+  }, [signals, sortBy]);
 
   return (
     <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 ${isLoading ? 'section-loading' : ''}`}>
@@ -36,15 +62,62 @@ export function SignalList() {
           Key Signals
         </h2>
 
-        {signals.length > 0 && !isProcessing && (
-          <button
-            onClick={() => refreshSection('signals')}
-            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-          >
-            Regenerate
-          </button>
-        )}
+        <div className="flex gap-2">
+          {signals.length > 0 && !isProcessing && (
+            <>
+              <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+                <button
+                  onClick={() => setSortBy('none')}
+                  className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
+                    sortBy === 'none' 
+                      ? 'bg-gray-500text-white' 
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  Default
+                </button>
+                <button
+                  onClick={() => setSortBy('pos-neg')}
+                  className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
+                    sortBy === 'pos-neg' 
+                      ? 'bg-accent-secondary text-white' 
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  Positive → Negative
+                </button>
+                <button
+                  onClick={() => setSortBy('neg-pos')}
+                  className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
+                    sortBy === 'neg-pos' 
+                      ? 'bg-red-500 text-white' 
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  Negative → Positive
+                </button>
+              </div>
+              <button
+                onClick={() => refreshSection('signals')}
+                className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
+              >
+                Regenerate
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* JSON Error Display */}
+      {jsonError.hasError && jsonError.sectionId === 'signals' && (
+        <JsonErrorDisplay
+          error={jsonError.error}
+          onRetry={() => retryJsonSection('signals')}
+          onCancel={clearJsonError}
+          countdown={5}
+          isRetrying={isProcessingSection.signals}
+        />
+      )}
 
       {isProcessing && signals.length === 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
@@ -52,7 +125,7 @@ export function SignalList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-          {signals.map((signal, idx) => (
+          {sortedSignals.map((signal, idx) => (
             <div key={idx}
               className="bg-white/5 border-l-4 p-4 rounded-r-lg text-text-secondary transition-colors hover:text-text-primary"
               style={{ borderColor: getSentimentColor(signal.sentiment) }}
@@ -60,7 +133,7 @@ export function SignalList() {
               {signal.text}
             </div>
           ))}
-          {!isProcessing && signals.length === 0 && (
+          {!isProcessing && signals.length === 0 && !jsonError.hasError && (
             <div className="col-span-full py-8 text-center border2 border-dashed border-white/5 rounded-xl">
               <p className="text-text-secondary italic">No critical signals identified in this period.</p>
             </div>

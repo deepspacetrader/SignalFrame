@@ -10,6 +10,91 @@ export interface RawSignal {
     picture?: string;
 }
 
+// Optimize image URLs by adding size parameters for supported services
+function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: number = 128): string {
+    if (!url) return url;
+    
+    try {
+        const urlObj = new URL(url);
+        
+        // BBC iChef (ichef.bbci.co.uk) - supports size parameters
+        if (urlObj.hostname.includes('ichef.bbci.co.uk')) {
+            // Replace /standard/240/ with /standard/128/ or add size parameter
+            if (urlObj.pathname.includes('/standard/')) {
+                return urlObj.pathname.replace(/\/standard\/\d+\//, `/standard/${targetWidth}/`);
+            }
+            // Fallback: add size parameter
+            urlObj.searchParams.set('resize', `${targetWidth}`);
+            return urlObj.toString();
+        }
+        
+        // The Verge platform.theverge.com - supports WordPress-style parameters
+        if (urlObj.hostname.includes('platform.theverge.com')) {
+            urlObj.searchParams.set('w', targetWidth.toString());
+            urlObj.searchParams.set('h', targetHeight.toString());
+            urlObj.searchParams.set('crop', '1');
+            return urlObj.toString();
+        }
+        
+        // Ars Technica (cdn.arstechnica.net) - WordPress style
+        if (urlObj.hostname.includes('cdn.arstechnica.net')) {
+            // Replace -1152x648 with -128x128 or add resize parameters
+            if (urlObj.pathname.includes('-1152x648')) {
+                return urlObj.pathname.replace(/-\d+x\d+/, `-${targetWidth}x${targetHeight}`);
+            }
+            // Fallback: add WordPress parameters
+            urlObj.searchParams.set('w', targetWidth.toString());
+            urlObj.searchParams.set('h', targetHeight.toString());
+            urlObj.searchParams.set('crop', '1');
+            return urlObj.toString();
+        }
+        
+        // NY Times images (static01.nyt.com) - use multithumb
+        if (urlObj.hostname.includes('static01.nyt.com')) {
+            // NY Times supports multithumb parameters
+            urlObj.searchParams.set('w', targetWidth.toString());
+            urlObj.searchParams.set('h', targetHeight.toString());
+            urlObj.searchParams.set('q', '75'); // quality
+            urlObj.searchParams.set('auto', 'webp'); // format
+            return urlObj.toString();
+        }
+        
+        // Guardian images (i.guim.co.uk) - supports width/height parameters
+        if (urlObj.hostname.includes('i.guim.co.uk')) {
+            urlObj.searchParams.set('width', targetWidth.toString());
+            urlObj.searchParams.set('height', targetHeight.toString());
+            urlObj.searchParams.set('quality', '85');
+            return urlObj.toString();
+        }
+        
+        // Al Jazeera images (cdn.aljazeera.net) - try common parameters
+        if (urlObj.hostname.includes('aljazeera.net')) {
+            urlObj.searchParams.set('w', targetWidth.toString());
+            urlObj.searchParams.set('h', targetHeight.toString());
+            return urlObj.toString();
+        }
+        
+        // CNBC/MarketWatch images - try common parameters
+        if (urlObj.hostname.includes('cnbc.com') || urlObj.hostname.includes('marketwatch.com') || urlObj.hostname.includes('wsj.net')) {
+            urlObj.searchParams.set('w', targetWidth.toString());
+            urlObj.searchParams.set('h', targetHeight.toString());
+            return urlObj.toString();
+        }
+        
+        // Economist images
+        if (urlObj.hostname.includes('economist.com')) {
+            urlObj.searchParams.set('w', targetWidth.toString());
+            urlObj.searchParams.set('h', targetHeight.toString());
+            return urlObj.toString();
+        }
+        
+        return urlObj.toString();
+    } catch (e) {
+        // If URL parsing fails, return original
+        return url;
+    }
+}
+
 // Multiple CORS proxy options for fallback reliability
 const CORS_PROXIES = [
     (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -84,13 +169,13 @@ async function fetchRssFeed(feedUrl: string): Promise<any> {
             const enclosure = item.querySelector('enclosure');
 
             if (mediaContent && mediaContent.getAttribute('url')) {
-                picture = mediaContent.getAttribute('url') || '';
+                picture = optimizeImageUrl(mediaContent.getAttribute('url') || '');
             } else if (enclosure && enclosure.getAttribute('type')?.startsWith('image') && enclosure.getAttribute('url')) {
-                picture = enclosure.getAttribute('url') || '';
+                picture = optimizeImageUrl(enclosure.getAttribute('url') || '');
             } else if (description) {
                 const imgMatch = description.match(/<img[^>]+src="([^">]+)"/);
                 if (imgMatch) {
-                    picture = imgMatch[1];
+                    picture = optimizeImageUrl(imgMatch[1]);
                 }
             }
 
@@ -223,8 +308,9 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                     const pubDate = item.pubDate || new Date().toISOString();
                     const timestamp = pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate} UTC`;
 
-                    // Attempt to find image
-                    const picture = item.enclosure?.link || item.thumbnail || '';
+                    // Attempt to find and optimize image
+                    const rawPicture = item.enclosure?.link || item.thumbnail || '';
+                    const picture = optimizeImageUrl(rawPicture);
 
                     return {
                         id: item.guid || item.link,

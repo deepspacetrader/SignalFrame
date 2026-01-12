@@ -2,6 +2,7 @@
 import { OllamaService } from './ollama';
 import { RawSignal } from '../../services/feedIngest';
 import { ForeignRelation, AiConfig } from '../../state/useSituationStore';
+import { StorageService } from '../../services/db';
 
 export const DEFAULT_MODEL = 'llama3.2';
 
@@ -25,6 +26,39 @@ const SENTIMENT_GUIDELINES = `
 - very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress, fall of a dictator.
 `;
 
+
+async function getHistoricalRelationsContext(foreignRelations: ForeignRelation[]): Promise<string> {
+  try {
+    const dates = await StorageService.getAllDates();
+    let historicalContext = '';
+    
+    // Get the last 7 days of historical data for context
+    const recentDates = dates.slice(-7).reverse();
+    
+    for (const date of recentDates) {
+      const analysis = await StorageService.getAnalysis(date);
+      if (analysis && analysis.foreignRelations && analysis.foreignRelations.length > 0) {
+        historicalContext += `DATE: ${date}\n`;
+        analysis.foreignRelations.forEach((rel: any) => {
+          // Only include relations that match current trackers
+          const currentRel = foreignRelations.find(r => 
+            r.id === rel.id || 
+            (r.countryA.toLowerCase() === rel.countryA.toLowerCase() && r.countryB.toLowerCase() === rel.countryB.toLowerCase())
+          );
+          if (currentRel) {
+            historicalContext += `- ${rel.countryA} vs ${rel.countryB} (${rel.topic}): ${rel.status} [${rel.sentiment}]\n`;
+          }
+        });
+        historicalContext += '\n';
+      }
+    }
+    
+    return historicalContext.trim();
+  } catch (error) {
+    console.error('Error getting historical context:', error);
+    return '';
+  }
+}
 
 export async function processSituation(
   feeds: RawSignal[],
@@ -82,7 +116,8 @@ export async function processSituation(
     const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText), 'json', options);
 
     onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
-    const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture), 'json', options);
+    const historicalContext = await getHistoricalRelationsContext(foreignRelations);
+    const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext), 'json', options);
 
     return {
       narrative: finalizeNarrative(narrative),
@@ -121,11 +156,12 @@ export async function processBigPicture(
     let summaryStr = h.narrative || '';
 
     // Try to extract a headline if the narrative starts with one
-    const lines = summaryStr.split('\n').filter((l: string) => l.trim().length > 0);
+    const lines = summaryStr
+      .split("\n")
+      .filter((l: string) => l.trim().length > 0);
     if (lines.length > 0) {
-      title = lines[0].replace(/[*#]/g, '').trim();
-      if (title.length > 60) title = title.substring(0, 57) + '...';
-      summaryStr = lines.slice(1).join(' ').substring(0, 200) + '...';
+      title = lines[0].replace(/[*#]/g, "").trim();
+      summaryStr = lines.slice(1).join(" ");
     }
 
     return {
@@ -257,16 +293,19 @@ function generateRelationsPrompt(
   narrative: string = '',
   signals: any[] = [],
   insights: any[] = [],
-  bigPicture: any = null
+  bigPicture: any = null,
+  historicalContext: string = ''
 ) {
   let deepContext = `### INTELLIGENCE CONTEXT\n`;
   if (narrative) deepContext += `CURRENT SITUATION NARRATIVE:\n${narrative}\n\n`;
   if (signals && signals.length) deepContext += `KEY SIGNALS:\n${signals.map(s => `- ${s.text} (${s.sentiment})`).join('\n')}\n\n`;
   if (insights && insights.length) deepContext += `HIDDEN INSIGHTS:\n${insights.map(i => `- ${i.text}`).join('\n')}\n\n`;
   if (bigPicture) deepContext += `THE BIG PICTURE (STRATEGIC OVERVIEW):\n${bigPicture.summary}\n\n`;
+  if (historicalContext) deepContext += `HISTORICAL CONTEXT (Previous relevant data):\n${historicalContext}\n\n`;
 
-  return `Act as a geopolitical analyst. Update status/sentiment for these geopolitical trackers using the provided Intelligence Context and News Feeds.
+  return `Act as a geopolitical analyst. Update status/sentiment for these geopolitical trackers using the provided Intelligence Context, News Feeds, and Historical Context.
 CRITICAL: You MUST return a JSON object for EVERY SINGLE TRACKER in the EXACT ORDER they are listed below.
+IMPORTANT: Analyze both current and historical data to provide comprehensive briefings. If no current data exists but historical data is relevant, provide a summary based on historical patterns.
 
 TRACKERS:
 ${relations.map((r, i) => `${i + 1}. ID: "${r.id}" | ${r.countryA} vs ${r.countryB} (Topic: ${r.topic})`).join('\n')}
@@ -287,35 +326,88 @@ ${context}`;
 
 }
 
-function parseJsonArray(text: string): any[] {
+interface JsonParseResult {
+  success: boolean;
+  data: any[];
+  error?: string;
+  canRetry: boolean;
+}
+
+function parseJsonArrayWithDetection(text: string): JsonParseResult {
   let cleanText = text.trim();
-  if (!cleanText) return [];
-  if (cleanText.startsWith('[') && !cleanText.endsWith(']')) {
-    let resArr = cleanText;
-    if (resArr.includes('"') && (resArr.split('"').length % 2 === 0)) resArr += '"';
-    if (resArr.includes('{') && (resArr.split('{').length > resArr.split('}').length)) resArr += '}';
-    resArr += ']';
-    try { const parsed = JSON.parse(resArr); if (Array.isArray(parsed)) return parsed.flat(1); } catch (err) { }
+  if (!cleanText) {
+    return { success: false, data: [], error: 'Empty response', canRetry: true };
   }
-  try {
-    let parsed = JSON.parse(cleanText);
-    if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
-      const arrayProp = Object.values(parsed).find(v => Array.isArray(v));
-      if (arrayProp && Array.isArray(arrayProp)) return arrayProp.flat(1);
-      const keys = Object.keys(parsed);
-      if (keys.every(k => k.includes('|') || k.length > 20)) return keys;
-      const values = Object.values(parsed);
-      return values.every(v => typeof v === 'string') && values.length > 1 ? values : [parsed];
+
+  // Try multiple parsing strategies
+  const strategies = [
+    () => {
+      // Strategy 1: Direct JSON parse
+      let parsed = JSON.parse(cleanText);
+      if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+        const arrayProp = Object.values(parsed).find(v => Array.isArray(v));
+        if (arrayProp && Array.isArray(arrayProp)) return arrayProp.flat(1);
+        const keys = Object.keys(parsed);
+        if (keys.every(k => k.includes('|') || k.length > 20)) return keys;
+        const values = Object.values(parsed);
+        return values.every(v => typeof v === 'string') && values.length > 1 ? values : [parsed];
+      }
+      return Array.isArray(parsed) ? parsed.flat(1) : [parsed];
+    },
+    () => {
+      // Strategy 2: Fix incomplete arrays
+      if (cleanText.startsWith('[') && !cleanText.endsWith(']')) {
+        let resArr = cleanText;
+        if (resArr.includes('"') && (resArr.split('"').length % 2 === 0)) resArr += '"';
+        if (resArr.includes('{') && (resArr.split('{').length > resArr.split('}').length)) resArr += '}';
+        resArr += ']';
+        const parsed = JSON.parse(resArr);
+        if (Array.isArray(parsed)) return parsed.flat(1);
+      }
+      throw new Error('Incomplete array fix failed');
+    },
+    () => {
+      // Strategy 3: Extract JSON from text
+      const start = cleanText.indexOf('[');
+      const end = cleanText.lastIndexOf(']');
+      if (start !== -1 && end !== -1 && end > start) {
+        const jsonStr = cleanText.substring(start, end + 1);
+        const parsed = JSON.parse(jsonStr);
+        return parsed.flat(1);
+      }
+      throw new Error('JSON extraction failed');
     }
-    return Array.isArray(parsed) ? parsed.flat(1) : [parsed];
-  } catch (e) {
-    const start = cleanText.indexOf('[');
-    const end = cleanText.lastIndexOf(']');
-    if (start !== -1 && end !== -1) {
-      try { return JSON.parse(cleanText.substring(start, end + 1)).flat(1); } catch (e) { }
+  ];
+
+  let lastError: Error | null = null;
+
+  for (let i = 0; i < strategies.length; i++) {
+    try {
+      const result = strategies[i]();
+      if (Array.isArray(result) && result.length > 0) {
+        return { success: true, data: result, canRetry: false };
+      }
+    } catch (error) {
+      lastError = error as Error;
+      continue;
     }
-    return cleanText.split('\n').map(l => l.replace(/^[-\d.*[\]{}'":\s,]+/, '').replace(/[\]{}'":\s,]+$/, '').trim()).filter(l => l.length > 15).slice(0, 12);
   }
+
+  // All strategies failed - return error object instead of fallback data
+  const errorDetails = lastError?.message || 'Unknown parsing error';
+  const canRetry = !errorDetails.includes('Empty response');
+  
+  return { 
+    success: false, 
+    data: [{ error: `JSON parsing failed: ${errorDetails}` }], // Return error object to be detected by finalize functions
+    error: `JSON parsing failed: ${errorDetails}`, 
+    canRetry 
+  };
+}
+
+function parseJsonArray(text: string): any[] {
+  const result = parseJsonArrayWithDetection(text);
+  return result.success ? result.data : [];
 }
 
 function finalizeNarrative(narrative: string) {
@@ -324,10 +416,116 @@ function finalizeNarrative(narrative: string) {
 
 const DEFAULT_SENTIMENT: any = 'neutral';
 
+function deduplicateSignals(signals: any[]) {
+  const uniqueSignals: any[] = [];
+  const seenTexts = new Set<string>();
+  
+  for (const signal of signals) {
+    // Normalize text for comparison
+    const normalizedText = signal.text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s]/g, '') // Remove punctuation
+      .replace(/\s+/g, ' '); // Normalize whitespace
+    
+    // Check for exact duplicates
+    if (seenTexts.has(normalizedText)) {
+      continue;
+    }
+    
+    // Check for essentially the same signals (high similarity)
+    let isDuplicate = false;
+    for (const existingSignal of uniqueSignals) {
+      const existingNormalized = existingSignal.text
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s]/g, '')
+        .replace(/\s+/g, ' ');
+      
+      // Calculate similarity (simple word overlap)
+      const similarity = calculateTextSimilarity(normalizedText, existingNormalized);
+      
+      // If similarity is high (>0.4) and sentiment is the same, consider it duplicate
+      if (similarity > 0.4 && signal.sentiment === existingSignal.sentiment) {
+        isDuplicate = true;
+        // Keep the longer/more descriptive version
+        if (signal.text.length > existingSignal.text.length) {
+          const index = uniqueSignals.indexOf(existingSignal);
+          uniqueSignals[index] = signal;
+        }
+        break;
+      }
+    }
+    
+    if (!isDuplicate) {
+      uniqueSignals.push(signal);
+      seenTexts.add(normalizedText);
+    }
+  }
+  
+  return uniqueSignals;
+}
+
+function calculateTextSimilarity(text1: string, text2: string): number {
+  const words1 = new Set(text1.split(' ').filter(w => w.length > 1));
+  const words2 = new Set(text2.split(' ').filter(w => w.length > 1));
+  
+  if (words1.size === 0 || words2.size === 0) return 0;
+  
+  const intersection = new Set([...words1].filter(x => words2.has(x)));
+  const union = new Set([...words1, ...words2]);
+  
+  return intersection.size / union.size;
+}
+
 function finalizeSignals(raw: any[]) {
-  return raw.map(s => {
+  // Check if the raw data contains error objects
+  const hasError = raw.some(item => 
+    typeof item === 'object' && 
+    item !== null && 
+    'error' in item && 
+    typeof item.error === 'string'
+  );
+  
+  if (hasError) {
+    // Find the first error and throw it to trigger the error handling
+    const errorItem = raw.find(item => 
+      typeof item === 'object' && 
+      item !== null && 
+      'error' in item
+    );
+    throw new Error(errorItem?.error || 'JSON parsing error in signals');
+  }
+
+  const processedSignals = raw.map(s => {
     if (typeof s === 'string') return { text: s, sentiment: DEFAULT_SENTIMENT };
-    const text = String(s.text || s.content || s.event || JSON.stringify(s));
+    
+    // Extract text from various possible fields
+    let text = '';
+    if (s.text) {
+      text = s.text;
+    } else if (s.content) {
+      text = s.content;
+    } else if (s.event) {
+      text = s.event;
+    } else {
+      // Handle malformed objects like {"34":"text...", "sentiment":"interesting"}
+      const keys = Object.keys(s).filter(k => k !== 'sentiment' && k !== 'level');
+      if (keys.length === 1) {
+        // Single non-sentiment key, use its value
+        const key = keys[0];
+        text = String(s[key]);
+      } else {
+        // Multiple keys, try to find most likely text content
+        const textKey = keys.find(k => 
+          typeof s[k] === 'string' && 
+          s[k].length > 10 && 
+          !k.includes('sentiment') && !k.includes('level')
+        );
+        text = textKey ? String(s[textKey]) : JSON.stringify(s);
+      }
+    }
+    
     const sentiment = (s.sentiment || s.level || DEFAULT_SENTIMENT).toLowerCase();
 
     // Legacy mapping if AI uses old levels
@@ -337,12 +535,57 @@ function finalizeSignals(raw: any[]) {
 
     return { text, sentiment: sentiment as any };
   });
+
+  // Remove duplicates and essentially the same signals
+  return deduplicateSignals(processedSignals);
 }
 
 function finalizeInsights(raw: any[]) {
+  // Check if the raw data contains error objects
+  const hasError = raw.some(item => 
+    typeof item === 'object' && 
+    item !== null && 
+    'error' in item && 
+    typeof item.error === 'string'
+  );
+  
+  if (hasError) {
+    // Find the first error and throw it to trigger the error handling
+    const errorItem = raw.find(item => 
+      typeof item === 'object' && 
+      item !== null && 
+      'error' in item
+    );
+    throw new Error(errorItem?.error || 'JSON parsing error in insights');
+  }
+
   return raw.map(i => {
     if (typeof i === 'string') return { text: i, sentiment: DEFAULT_SENTIMENT };
-    const text = i.text || (i.trend && i.impact ? `${i.trend} | ${i.impact}` : JSON.stringify(i));
+    
+    // Handle malformed objects like {"34":"text...", "sentiment":"interesting"}
+    let text = '';
+    if (i.text) {
+      text = i.text;
+    } else if (i.trend && i.impact) {
+      text = `${i.trend} | ${i.impact}`;
+    } else {
+      // Extract text from malformed objects
+      const keys = Object.keys(i).filter(k => k !== 'sentiment');
+      if (keys.length === 1) {
+        // Single non-sentiment key, use its value
+        const key = keys[0];
+        text = String(i[key]);
+      } else {
+        // Multiple keys, try to find the most likely text content
+        const textKey = keys.find(k => 
+          typeof i[k] === 'string' && 
+          i[k].length > 20 && 
+          !k.includes('sentiment')
+        );
+        text = textKey ? String(i[textKey]) : JSON.stringify(i);
+      }
+    }
+    
     let sentiment = String(i.sentiment || DEFAULT_SENTIMENT).toLowerCase();
 
     // Mapping for numeric or common string sentiments
@@ -358,6 +601,24 @@ function finalizeInsights(raw: any[]) {
 
 
 function finalizeMapPoints(raw: any[]) {
+  // Check if the raw data contains error objects
+  const hasError = raw.some(item => 
+    typeof item === 'object' && 
+    item !== null && 
+    'error' in item && 
+    typeof item.error === 'string'
+  );
+  
+  if (hasError) {
+    // Find the first error and throw it to trigger the error handling
+    const errorItem = raw.find(item => 
+      typeof item === 'object' && 
+      item !== null && 
+      'error' in item
+    );
+    throw new Error(errorItem?.error || 'JSON parsing error in map points');
+  }
+
   return raw.map((p, idx) => {
     // Truncate description to max 100 chars for compact popups
     let desc = String(p.description || '').trim();
@@ -379,6 +640,24 @@ function finalizeMapPoints(raw: any[]) {
 
 
 function finalizeRelations(raw: any[], relations: ForeignRelation[]) {
+  // Check if the raw data contains error objects
+  const hasError = raw.some(item => 
+    typeof item === 'object' && 
+    item !== null && 
+    'error' in item && 
+    typeof item.error === 'string'
+  );
+  
+  if (hasError) {
+    // Find the first error and throw it to trigger the error handling
+    const errorItem = raw.find(item => 
+      typeof item === 'object' && 
+      item !== null && 
+      'error' in item
+    );
+    throw new Error(errorItem?.error || 'JSON parsing error in relations');
+  }
+
   return relations.map(rel => {
     // 1. Try matching by exact ID
     let update = raw.find(r => r.id === rel.id);
@@ -434,7 +713,8 @@ export async function processSingleSection(
   foreignRelations: ForeignRelation[] = [],
   aiConfig: AiConfig,
   onStream?: (text: string) => void,
-  extraContext: any = {}
+  extraContext: any = {},
+  onJsonError?: (error: string, canRetry: boolean) => void
 ) {
   const context = generateContext(feeds);
   const opt = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
@@ -454,22 +734,41 @@ export async function processSingleSection(
     signals: generateSignalsPrompt(context),
     insights: generateInsightsPrompt(context), // Note: Single section update for insights might lack signals context if we don't pass it. Assuming partial update is rare or handled elsewhere.
     map: generateMapPointsPrompt(context),
-    relations: generateRelationsPrompt(
-      context,
-      foreignRelations,
-      extraContext.narrative || '',
-      extraContext.signals || [],
-      extraContext.insights || [],
-      extraContext.bigPicture || null
-    )
+    relations: async () => {
+      const historicalContext = await getHistoricalRelationsContext(foreignRelations);
+      return generateRelationsPrompt(
+        context,
+        foreignRelations,
+        extraContext.narrative || '',
+        extraContext.signals || [],
+        extraContext.insights || [],
+        extraContext.bigPicture || null,
+        historicalContext
+      );
+    }
   };
 
-  const res = await OllamaService.generate(aiConfig.model, prompts[sectionId], 'json', opt);
+  let res;
+  if (sectionId === 'relations') {
+    res = await OllamaService.generate(aiConfig.model, await prompts.relations(), 'json', opt);
+  } else {
+    res = await OllamaService.generate(aiConfig.model, prompts[sectionId], 'json', opt);
+  }
 
-  if (sectionId === 'signals') return { signals: finalizeSignals(parseJsonArray(res)) };
-  if (sectionId === 'insights') return { insights: finalizeInsights(parseJsonArray(res)) };
-  if (sectionId === 'map') return { mapPoints: finalizeMapPoints(parseJsonArray(res)) };
-  if (sectionId === 'relations') return { foreignRelations: finalizeRelations(parseJsonArray(res), foreignRelations) };
+  // Use enhanced JSON parsing with error detection
+  const parseResult = parseJsonArrayWithDetection(res);
+  
+  if (!parseResult.success) {
+    if (onJsonError) {
+      onJsonError(parseResult.error || 'Unknown JSON parsing error', parseResult.canRetry);
+    }
+    throw new Error(parseResult.error);
+  }
+
+  if (sectionId === 'signals') return { signals: finalizeSignals(parseResult.data) };
+  if (sectionId === 'insights') return { insights: finalizeInsights(parseResult.data) };
+  if (sectionId === 'map') return { mapPoints: finalizeMapPoints(parseResult.data) };
+  if (sectionId === 'relations') return { foreignRelations: finalizeRelations(parseResult.data, foreignRelations) };
 
   // Fallback to full process if unknown section (shouldn't happen)
   return processSituation(feeds, foreignRelations, aiConfig, extraContext.bigPicture);
