@@ -28,6 +28,7 @@
 | ----------- | ----------- | ----------- |
 | Heat Map	| Geographic intensity map beyond just points	| High |
 | Trend / Emerging Fringe Sparklines	| Mini charts showing topic momentum over 7 days	| High |
+| Streaming AI Responses	| Whenever user clicks button to regenerate the response from the AI should always be streaming to improve visual feedback	| Low |
 
 
 # Upgrade 5: AI Upgrades
