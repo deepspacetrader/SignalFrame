@@ -1,9 +1,10 @@
 
 import { useState } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
+import { JsonErrorDisplay } from './JsonErrorDisplay'
 
 export function ForeignRelationsPanel() {
-    const { foreignRelations, addRelation, removeRelation, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
+    const { foreignRelations, addRelation, removeRelation, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection } = useSituationStore()
     const [isAdding, setIsAdding] = useState(false)
     const [newRel, setNewRel] = useState({ countryA: '', countryB: '', topic: '' })
 
@@ -123,6 +124,17 @@ export function ForeignRelationsPanel() {
                         Initialize Tracker
                     </button>
                 </div>
+            )}
+
+            {/* JSON Error Display */}
+            {jsonError.hasError && jsonError.sectionId === 'relations' && (
+                <JsonErrorDisplay
+                    error={jsonError.error}
+                    onRetry={() => retryJsonSection('relations')}
+                    onCancel={clearJsonError}
+                    countdown={5}
+                    isRetrying={isProcessingSection.relations}
+                />
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

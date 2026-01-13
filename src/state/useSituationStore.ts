@@ -71,6 +71,14 @@ export interface RunningModel {
   size_vram: number;
 }
 
+export interface JsonErrorState {
+  hasError: boolean;
+  error: string;
+  canRetry: boolean;
+  sectionId: keyof SituationState['isProcessingSection'] | null;
+  retryCount: number;
+}
+
 export interface SituationState {
   currentDate: string; // YYYY-MM-DD
   availableDates: string[];
@@ -96,6 +104,7 @@ export interface SituationState {
   availableModels: string[];
   runningModels: RunningModel[];
   lastUpdated: Date | null;
+  jsonError: JsonErrorState;
 }
 
 const getTodayStr = () => {
@@ -135,7 +144,14 @@ const defaultState: SituationState = {
   },
   availableModels: [],
   runningModels: [],
-  lastUpdated: null
+  lastUpdated: null,
+  jsonError: {
+    hasError: false,
+    error: '',
+    canRetry: false,
+    sectionId: null,
+    retryCount: 0
+  }
 };
 
 let globalState: SituationState = { ...defaultState };
@@ -401,6 +417,34 @@ export function useSituationStore() {
     }
   }, []);
 
+  const setJsonError = useCallback((error: string, sectionId: keyof SituationState['isProcessingSection'], canRetry: boolean) => {
+    globalState = {
+      ...globalState,
+      jsonError: {
+        hasError: true,
+        error,
+        canRetry,
+        sectionId,
+        retryCount: globalState.jsonError.retryCount
+      }
+    };
+    notify();
+  }, []);
+
+  const clearJsonError = useCallback(() => {
+    globalState = {
+      ...globalState,
+      jsonError: {
+        hasError: false,
+        error: '',
+        canRetry: false,
+        sectionId: null,
+        retryCount: 0 // Reset retry count
+      }
+    };
+    notify();
+  }, []);
+
   const refreshSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection']) => {
     if (globalState.isProcessing || globalState.isProcessingSection[sectionId] || globalState.feeds.length === 0) return;
 
@@ -426,6 +470,10 @@ export function useSituationStore() {
           signals: globalState.signals,
           insights: globalState.insights,
           bigPicture: globalState.bigPicture
+        },
+        // JSON error callback
+        (error: string, canRetry: boolean) => {
+          setJsonError(error, sectionId, canRetry);
         }
       );
 
@@ -440,7 +488,7 @@ export function useSituationStore() {
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false } };
       notify();
     }
-  }, []);
+  }, [setJsonError]);
 
   const generateBigPicture = useCallback(async () => {
     if (globalState.isProcessing || globalState.isProcessingSection.bigPicture) return;
@@ -541,6 +589,42 @@ export function useSituationStore() {
     } catch (e) { }
   }, []);
 
+  const retryJsonSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection']) => {
+    // Clear any existing error before retrying
+    clearJsonError();
+
+    globalState = {
+      ...globalState,
+      isProcessingSection: {
+        ...globalState.isProcessingSection,
+        [sectionId]: true
+      }
+    };
+    notify();
+
+    try {
+      await refreshSection(sectionId);
+      // Success - error should already be cleared by clearJsonError() at the start
+    } catch (error) {
+      // If retry fails, set error state again with updated retry count
+      globalState = {
+        ...globalState,
+        jsonError: {
+          hasError: true,
+          error: `Retry failed: ${error}`,
+          canRetry: true,
+          sectionId,
+          retryCount: globalState.jsonError.retryCount + 1
+        },
+        isProcessingSection: {
+          ...globalState.isProcessingSection,
+          [sectionId]: false
+        }
+      };
+      notify();
+    }
+  }, [refreshSection, clearJsonError]);
+
   return {
     ...state,
     refresh,
@@ -552,6 +636,9 @@ export function useSituationStore() {
     fetchAvailableModels,
     updateAiConfig,
     fetchRunningModels,
-    loadDate
+    loadDate,
+    setJsonError,
+    clearJsonError,
+    retryJsonSection
   };
 }

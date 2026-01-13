@@ -2,6 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet'
 import L from 'leaflet'
 import { useSituationStore, MapPoint } from '../state/useSituationStore'
+import { JsonErrorDisplay } from './JsonErrorDisplay'
 import 'leaflet/dist/leaflet.css'
 
 const categoryColors: Record<string, string> = {
@@ -51,35 +52,45 @@ const createCustomIcon = (point: MapPoint) => {
         className: 'custom-map-pin',
         html: `
       <div style="
-        width: 24px; 
-        height: 24px; 
-        background-color: ${outline}; 
-        border: 2px solid white; 
+        width: 32px; 
+        height: 32px; 
+        background: linear-gradient(135deg, ${outline} 0%, ${color} 100%); 
+        border: 3px solid white; 
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 20px ${outline}40;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 16px;
         position: relative;
-      ">
-        <span style="z-index: 2; line-height: 1;">${iconChar}</span>
+        transition: all 0.3s ease;
+        cursor: pointer;
+      " onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+        <span style="z-index: 2; line-height: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">${iconChar}</span>
          <div style="
             position: absolute;
-            inset: -4px;
+            inset: -6px;
             border-radius: 50%;
             border: 2px solid ${outline};
-            opacity: 0.6;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
          "></div>
       </div>
+      <style>
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.1); opacity: 0.4; }
+          100% { transform: scale(1); opacity: 0.8; }
+        }
+      </style>
     `,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
     })
 }
 
 export function SituationMap() {
-    const { mapPoints, isProcessing, isProcessingSection, refreshSection } = useSituationStore()
+    const { mapPoints, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection } = useSituationStore()
     const isLoading = isProcessingSection.map && !isProcessing;
 
     return (
@@ -111,12 +122,25 @@ export function SituationMap() {
                 )}
             </div>
 
+            {/* JSON Error Display */}
+            {jsonError.hasError && jsonError.sectionId === 'map' && (
+                <JsonErrorDisplay
+                    error={jsonError.error}
+                    onRetry={() => retryJsonSection('map')}
+                    onCancel={clearJsonError}
+                    countdown={5}
+                    isRetrying={isProcessingSection.map}
+                />
+            )}
+
             <div className="flex-1 rounded-xl overflow-hidden border border-white/5 bg-[#0a0c10]">
                 <MapContainer
                     center={[20, 0]}
                     zoom={2}
                     style={{ height: '100%', width: '100%', background: '#0a0c10' }}
                     zoomControl={true}
+                    scrollWheelZoom={true}
+                    doubleClickZoom={true}
                 >
                     <TileLayer
                         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -128,16 +152,28 @@ export function SituationMap() {
                             position={[point.lat || 0, point.lng || 0]}
                             icon={createCustomIcon(point)}
                         >
-                            <Tooltip direction="top" offset={[0, -12]} opacity={1} className="custom-tooltip">
-                                <span className="font-bold text-xs">{point.title}</span> <span className="text-[10px] opacity-70">({point.category})</span>
+                            <Tooltip 
+                                direction="top" 
+                                offset={[0, -16]} 
+                                opacity={1} 
+                                className="custom-tooltip"
+                                permanent={false}
+                            >
+                                <div className="text-center">
+                                    <span className="font-bold text-xs block">{point.title}</span>
+                                    <span className="text-[10px] opacity-70">({point.category})</span>
+                                    <span className="text-[9px] block mt-1" style={{ color: sentimentColors[resolveSentiment(point.sentiment)] }}>
+                                        {resolveSentiment(point.sentiment).replace('-', ' ').toUpperCase()}
+                                    </span>
+                                </div>
                             </Tooltip>
 
-                            <Popup className="custom-popup">
-                                <div className="p-1.5 max-w-[200px]">
-                                    <h4 className="font-bold text-slate-900 text-sm leading-tight mb-0.5">{point.title}</h4>
-                                    <div className="flex items-center gap-1.5 mb-1.5">
+                            <Popup className="custom-popup" maxWidth={250}>
+                                <div className="p-3 max-w-[250px]">
+                                    <h4 className="font-bold text-slate-900 text-sm leading-tight mb-2">{point.title}</h4>
+                                    <div className="flex items-center gap-2 mb-3">
                                         <span
-                                            className="text-[8px] font-bold px-1 py-0.5 rounded"
+                                            className="text-[8px] font-bold px-2 py-1 rounded"
                                             style={{
                                                 color: (sentimentColors as any)[resolveSentiment(point.sentiment)] || '#64748b',
                                                 backgroundColor: `${(sentimentColors as any)[resolveSentiment(point.sentiment)] || '#64748b'}20`
@@ -145,12 +181,12 @@ export function SituationMap() {
                                         >
                                             {resolveSentiment(point.sentiment).replace('-', ' ').toUpperCase()}
                                         </span>
-                                        <span className="text-[8px] uppercase text-slate-400 tracking-wider">
+                                        <span className="text-[10px] uppercase text-slate-400 tracking-wider">
                                             {point.category}
                                         </span>
                                     </div>
                                     {point.description && (
-                                        <p className="text-[10px] text-slate-600 leading-snug mb-1.5">
+                                        <p className="text-[11px] text-slate-600 leading-snug mb-3">
                                             {point.description}
                                         </p>
                                     )}
@@ -159,9 +195,9 @@ export function SituationMap() {
                                             href={point.sourceLink}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-[9px] text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
+                                            className="text-[10px] text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
                                         >
-                                            Read article
+                                            Read source →
                                         </a>
                                     )}
                                 </div>
