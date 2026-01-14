@@ -2,9 +2,11 @@
 import { useState } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
+import { formatTime } from '../utils/timeUtils'
+
 
 export function ForeignRelationsPanel() {
-    const { foreignRelations, addRelation, removeRelation, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection } = useSituationStore()
+    const { foreignRelations, addRelation, removeRelation, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection, sectionGenerationTimes } = useSituationStore()
     const [isAdding, setIsAdding] = useState(false)
     const [newRel, setNewRel] = useState({ countryA: '', countryB: '', topic: '' })
 
@@ -75,12 +77,19 @@ export function ForeignRelationsPanel() {
 
                 <div className="flex gap-2">
                     {foreignRelations.length > 0 && !isProcessing && (
-                        <button
-                            onClick={() => refreshSection('relations')}
-                            className="text-[0.65rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg border bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-                        >
-                            Update
-                        </button>
+                        <>
+                            <button
+                                onClick={() => refreshSection('relations')}
+                                className="text-[0.65rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg border bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
+                            >
+                                Update
+                            </button>
+                            {sectionGenerationTimes.relations && (
+                                <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
+                                    {formatTime(sectionGenerationTimes.relations)}
+                                </span>
+                            )}
+                        </>
                     )}
                     <button
                         onClick={() => setIsAdding(!isAdding)}

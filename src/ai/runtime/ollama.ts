@@ -18,8 +18,8 @@ export interface OllamaThinkingResponse {
     thinking?: string;
 }
 
-const DEFAULT_num_ctx = 32000;
-const DEFAULT_num_predict = 25000;
+const DEFAULT_num_ctx = 24000;
+const DEFAULT_num_predict = 16000;
 
 export class OllamaService {
     private static baseUrl = 'http://127.0.0.1:11434/api';
@@ -46,6 +46,8 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
+                        num_gpu: 99,
+                        num_thread: 0
                     }
                 }),
             });
@@ -81,6 +83,8 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
+                        num_gpu: 99,
+                        num_thread: 0
                     }
                 }),
             });
@@ -121,6 +125,8 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
+                        num_gpu: 99,
+                        num_thread: 0
                     }
                 }),
             });
@@ -182,6 +188,8 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
+                        num_gpu: 99,
+                        num_thread: 0
                     }
                 }),
             });
@@ -234,6 +242,8 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
+                        num_gpu: 99,
+                        num_thread: 0
                     }
                 }),
             });
@@ -286,6 +296,9 @@ export class OllamaService {
                     prompt,
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
+                        num_gpu: 99,
+                        num_thread: 0
                     }
                 }),
             });

@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { processSituation, processSingleSection, processBigPicture } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
+import { zzfx } from '../utils/zzfx'
 
 export type Sentiment =
   | 'extremely-negative'
@@ -150,6 +151,8 @@ export interface AiConfig {
   numCtx: number;
   numPredict: number;
   enableThinking: boolean; // Enable thinking/reasoning trace for supported models
+  sentimentProfile?: string; // ID of the sentiment profile to use
+  customSentimentWeights?: Record<string, number>; // Custom sentiment weight overrides
 }
 
 export interface RunningModel {
@@ -158,12 +161,34 @@ export interface RunningModel {
   size_vram: number;
 }
 
+export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'bigPicture';
+
+export interface SectionFailureState {
+  hasFailed: boolean;
+  error: string;
+  failedAt: Date | null;
+  retryCount: number;
+  lastRetryAt: Date | null;
+  nextRetryAt: Date | null;
+  isRetrying: boolean;
+}
+
 export interface JsonErrorState {
   hasError: boolean;
   error: string;
   canRetry: boolean;
   sectionId: keyof SituationState['isProcessingSection'] | null;
   retryCount: number;
+}
+
+export interface SectionFailureState {
+  hasFailed: boolean;
+  error: string;
+  failedAt: Date | null;
+  retryCount: number;
+  lastRetryAt: Date | null;
+  nextRetryAt: Date | null;
+  isRetrying: boolean;
 }
 
 export interface SituationState {
@@ -200,6 +225,9 @@ export interface SituationState {
   isGeneratingDeepDive: boolean;
   rawOutputs: Record<string, string>; // Store raw AI outputs by section
   activeRawOutput: string | null; // Currently displayed raw output section
+  sectionGenerationTimes: Record<string, number>; // Track generation time per section in milliseconds
+  sectionFailures: Record<SectionKey, SectionFailureState>; // Track section failures and retries
+  soundVolume: number; // Master volume for sound effects (0-1)
 }
 
 const getTodayStr = () => {
@@ -266,7 +294,17 @@ const defaultState: SituationState = {
   activeDeepDiveSignalId: null,
   isGeneratingDeepDive: false,
   rawOutputs: {},
-  activeRawOutput: null
+  activeRawOutput: null,
+  sectionGenerationTimes: {},
+  sectionFailures: {
+    narrative: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    signals: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    insights: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    map: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    relations: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    bigPicture: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
+  },
+  soundVolume: 0.5
 };
 
 let globalState: SituationState = { ...defaultState };
@@ -277,6 +315,34 @@ const listeners = new Set<(state: SituationState) => void>();
  */
 function notify() {
   listeners.forEach(l => l({ ...globalState }));
+}
+
+/**
+ * Start timing for a section
+ */
+function startTimer(sectionId: string) {
+  const now = Date.now();
+  (globalState as any).timers = (globalState as any).timers || {};
+  (globalState as any).timers[sectionId] = now;
+}
+
+/**
+ * Stop timing for a section and record the duration
+ */
+function stopTimer(sectionId: string) {
+  const now = Date.now();
+  const startTime = (globalState as any).timers?.[sectionId];
+  if (startTime) {
+    const duration = now - startTime;
+    globalState = {
+      ...globalState,
+      sectionGenerationTimes: {
+        ...globalState.sectionGenerationTimes,
+        [sectionId]: duration
+      }
+    };
+    delete (globalState as any).timers[sectionId];
+  }
 }
 
 /**
@@ -311,6 +377,7 @@ async function persist() {
   await StorageService.saveGlobal('source_credibility', globalState.sourceCredibility);
   await StorageService.saveGlobal('metric_defs', globalState.metricDefs);
   await StorageService.saveGlobal('deep_dive_cache', globalState.deepDiveBySignalId);
+  await StorageService.saveGlobal('sound_volume', globalState.soundVolume);
 }
 
 export function useSituationStore() {
@@ -329,10 +396,11 @@ export function useSituationStore() {
         StorageService.getGlobal('bigPicture')
       ]);
 
-      const [savedCred, savedMetricDefs, savedDeepDives] = await Promise.all([
+      const [savedCred, savedMetricDefs, savedDeepDives, savedSoundVolume] = await Promise.all([
         StorageService.getGlobal('source_credibility'),
         StorageService.getGlobal('metric_defs'),
-        StorageService.getGlobal('deep_dive_cache')
+        StorageService.getGlobal('deep_dive_cache'),
+        StorageService.getGlobal('sound_volume')
       ]);
 
       if (config) globalState.aiConfig = config;
@@ -340,6 +408,9 @@ export function useSituationStore() {
       if (savedCred && typeof savedCred === 'object') globalState.sourceCredibility = savedCred;
       if (savedMetricDefs && Array.isArray(savedMetricDefs)) globalState.metricDefs = savedMetricDefs;
       if (savedDeepDives && typeof savedDeepDives === 'object') globalState.deepDiveBySignalId = savedDeepDives;
+      if (typeof savedSoundVolume === 'number' && savedSoundVolume >= 0 && savedSoundVolume <= 1) {
+        globalState.soundVolume = savedSoundVolume;
+      }
 
       globalState.availableDates = dates.length > 0 ? dates : [today];
       globalState.currentDate = today;
@@ -374,13 +445,13 @@ export function useSituationStore() {
     init();
 
     // Poll for running models
-    const poll = setInterval(() => {
-      fetchRunningModels();
-    }, 5000);
+    // const poll = setInterval(() => {
+    //   fetchRunningModels();
+    // }, 5000);
 
     return () => {
       listeners.delete(setState);
-      clearInterval(poll);
+      // clearInterval(poll);
     };
   }, []);
 
@@ -471,7 +542,7 @@ export function useSituationStore() {
     notify();
   }, []);
 
-  const clearSection = useCallback((sectionId: keyof SituationState['isProcessingSection']) => {
+  const clearSection = useCallback((sectionId: SectionKey) => {
     console.log('Clearing section:', sectionId);
     
     // Clear the specific section data from current state
@@ -499,6 +570,51 @@ export function useSituationStore() {
     globalState = { ...globalState, activeRawOutput: null };
     notify();
   }, []);
+
+  const setSectionFailure = useCallback((sectionId: SectionKey, error: string) => {
+    const now = new Date();
+    const retryDelay = Math.min(1000 * Math.pow(2, globalState.sectionFailures[sectionId].retryCount), 30000); // Max 30 seconds
+    const nextRetryAt = new Date(now.getTime() + retryDelay);
+    
+    globalState = {
+      ...globalState,
+      sectionFailures: {
+        ...globalState.sectionFailures,
+        [sectionId]: {
+          hasFailed: true,
+          error,
+          failedAt: now,
+          retryCount: globalState.sectionFailures[sectionId].retryCount + 1,
+          lastRetryAt: null,
+          nextRetryAt,
+          isRetrying: false
+        }
+      }
+    };
+    notify();
+  }, []);
+
+  const clearSectionFailure = useCallback((sectionId: SectionKey) => {
+    globalState = {
+      ...globalState,
+      sectionFailures: {
+        ...globalState.sectionFailures,
+        [sectionId]: {
+          hasFailed: false,
+          error: '',
+          failedAt: null,
+          retryCount: 0,
+          lastRetryAt: null,
+          nextRetryAt: null,
+          isRetrying: false
+        }
+      }
+    };
+    notify();
+  }, []);
+
+  // Auto-retry mechanism for failed sections - moved after refreshSection definition
+  // This will be defined later after refreshSection is declared
 
   // Helper to find the last known state of relations across all history
   const getLastKnownRelations = async (): Promise<ForeignRelation[]> => {
@@ -595,6 +711,7 @@ export function useSituationStore() {
       thinkingTrace: '', // Reset thinking trace on new scan
       isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true, bigPicture: false }
     };
+    startTimer('full-scan');
     notify();
 
     try {
@@ -640,6 +757,14 @@ export function useSituationStore() {
         lastUpdated: new Date()
       };
 
+      stopTimer('full-scan');
+
+      // Play completion sound effect for full scan
+      if (globalState.soundVolume > 0) {
+        zzfx.setMasterVolume(globalState.soundVolume);
+        zzfx.playCompletion();
+      }
+
       // Store raw outputs if available
       if ((result as any).rawOutputs) {
         const rawOutputs = (result as any).rawOutputs;
@@ -655,6 +780,7 @@ export function useSituationStore() {
       notify();
       persist();
     } catch (error) {
+      stopTimer('full-scan');
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
       notify();
     }
@@ -729,6 +855,7 @@ export function useSituationStore() {
       ...globalState,
       isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: true }
     };
+    startTimer(sectionId);
     notify();
 
     try {
@@ -745,6 +872,7 @@ export function useSituationStore() {
         {
           narrative: globalState.narrative,
           signals: globalState.signals,
+          signalsText: globalState.signals?.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n') || '',
           insights: globalState.insights,
           bigPicture: globalState.bigPicture
         },
@@ -761,6 +889,26 @@ export function useSituationStore() {
         isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false }
       };
 
+      stopTimer(sectionId);
+
+      // Play completion sound effect
+      if (globalState.soundVolume > 0) {
+        zzfx.setMasterVolume(globalState.soundVolume);
+        
+        // Special sound for Signals section
+        if (sectionId === 'signals' && globalState.signals.length > 0) {
+          // Play pings for number of signals (max 5 to avoid being too long)
+          const pingCount = Math.min(globalState.signals.length, 5);
+          if (pingCount > 1) {
+            zzfx.playMultiplePings(pingCount);
+          } else {
+            zzfx.playCompletion();
+          }
+        } else {
+          zzfx.playCompletion();
+        }
+      }
+
       // Store raw outputs if available
       if ((result as any).rawOutputs) {
         const rawOutputs = (result as any).rawOutputs;
@@ -774,7 +922,11 @@ export function useSituationStore() {
       persist();
     } catch (error) {
       console.error('refreshSection error for', sectionId, ':', error);
+      stopTimer(sectionId);
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false } };
+      
+      // Set failure state for this section
+      setSectionFailure(sectionId as SectionKey, String(error));
       notify();
     }
   }, [setJsonError]);
@@ -868,6 +1020,52 @@ export function useSituationStore() {
     persist();
   }, []);
 
+  const retryFailedSection = useCallback(async (sectionId: SectionKey) => {
+    const failure = globalState.sectionFailures[sectionId];
+    if (!failure.hasFailed || failure.isRetrying) return;
+
+    // Update failure state to show we're retrying
+    globalState = {
+      ...globalState,
+      sectionFailures: {
+        ...globalState.sectionFailures,
+        [sectionId]: {
+          ...failure,
+          isRetrying: true,
+          lastRetryAt: new Date()
+        }
+      }
+    };
+    notify();
+
+    try {
+      await refreshSection(sectionId);
+      // Success - clear the failure
+      clearSectionFailure(sectionId);
+    } catch (error) {
+      // Retry failed - update failure state
+      const now = new Date();
+      const retryDelay = Math.min(1000 * Math.pow(2, failure.retryCount + 1), 30000);
+      const nextRetryAt = new Date(now.getTime() + retryDelay);
+      
+      globalState = {
+        ...globalState,
+        sectionFailures: {
+          ...globalState.sectionFailures,
+          [sectionId]: {
+            ...failure,
+            error: `Retry failed: ${error}`,
+            retryCount: failure.retryCount + 1,
+            lastRetryAt: now,
+            nextRetryAt,
+            isRetrying: false
+          }
+        }
+      };
+      notify();
+    }
+  }, [refreshSection, clearSectionFailure]);
+
   const fetchRunningModels = useCallback(async () => {
     try {
       const { OllamaService } = await import('../ai/runtime/ollama');
@@ -914,6 +1112,35 @@ export function useSituationStore() {
     }
   }, [refreshSection, clearJsonError]);
 
+  const setSoundVolume = useCallback((volume: number) => {
+    const clampedVolume = Math.max(0, Math.min(1, volume));
+    globalState = { ...globalState, soundVolume: clampedVolume };
+    notify();
+    persist();
+  }, []);
+
+  // Auto-retry mechanism for failed sections
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      let hasUpdates = false;
+      
+      Object.entries(globalState.sectionFailures).forEach(([sectionId, failure]) => {
+        if (failure.hasFailed && !failure.isRetrying && failure.nextRetryAt && now >= failure.nextRetryAt) {
+          // Time to retry this section
+          retryFailedSection(sectionId as SectionKey);
+          hasUpdates = true;
+        }
+      });
+      
+      if (hasUpdates) {
+        notify();
+      }
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
+  }, [retryFailedSection]);
+
   return {
     ...state,
     refresh,
@@ -938,6 +1165,12 @@ export function useSituationStore() {
     setRawOutput,
     showRawOutput,
     hideRawOutput,
-    clearSection
+    clearSection,
+    setSoundVolume,
+    sectionGenerationTimes: globalState.sectionGenerationTimes,
+    sectionFailures: globalState.sectionFailures,
+    setSectionFailure,
+    clearSectionFailure,
+    retryFailedSection
   };
 }

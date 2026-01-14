@@ -113,6 +113,7 @@ export function SourceFeedList() {
                                 {category === 'Health' && "💊"}
                                 {category === 'Science' && "🔬"}
                                 {category === 'Geopolitical' && "🏛️"}
+                                {category === 'Local' && "🏡"}
                             </span>
                             {category}
                         </h3>

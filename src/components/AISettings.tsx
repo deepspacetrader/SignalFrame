@@ -2,18 +2,24 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useSituationStore } from '../state/useSituationStore'
+import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai/runtime/sentimentEngine'
 
 export function AISettings() {
     const { aiConfig, availableModels, updateAiConfig, fetchAvailableModels } = useSituationStore()
     const [isOpen, setIsOpen] = useState(false)
     const [tempConfig, setTempConfig] = useState(aiConfig)
     const [copied, setCopied] = useState(false)
+    const [isCustomMode, setIsCustomMode] = useState(false)
+    const [customWeights, setCustomWeights] = useState<Record<string, number> | null>(
+        (aiConfig as any).customSentimentWeights || null
+    )
 
     useEffect(() => {
         if (isOpen) {
             fetchAvailableModels();
+            setTempConfig(aiConfig);
         }
-    }, [isOpen, fetchAvailableModels]);
+    }, [isOpen, fetchAvailableModels, aiConfig]);
 
     const isModelInstalled = availableModels.length === 0 || availableModels.some(m => {
         const normalizedInput = tempConfig.model.toLowerCase().trim();
@@ -34,6 +40,40 @@ export function AISettings() {
         setIsOpen(false);
     }
 
+    const handleSentimentProfileChange = (profileId: string) => {
+        setTempConfig({
+            ...tempConfig,
+            sentimentProfile: profileId,
+            customSentimentWeights: undefined
+        });
+        setIsCustomMode(false);
+    }
+
+    const handleCustomWeightChange = (sentiment: string, value: number) => {
+        const newWeights = {
+            ...(customWeights || {}),
+            [sentiment]: value
+        } as Record<string, number>
+        setCustomWeights(newWeights)
+        setTempConfig({
+            ...tempConfig,
+            sentimentProfile: 'custom',
+            customSentimentWeights: newWeights
+        })
+    }
+
+    const resetSentimentToDefaults = () => {
+        setTempConfig({
+            ...tempConfig,
+            sentimentProfile: 'balanced',
+            customSentimentWeights: undefined
+        });
+        setIsCustomMode(false);
+        setCustomWeights(null);
+    }
+
+    const currentSentimentProfile = getSentimentProfile(tempConfig.sentimentProfile || 'balanced')
+
     if (!isOpen) {
         return (
             <button
@@ -50,7 +90,7 @@ export function AISettings() {
 
     return createPortal(
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-bg-darker/80 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-md w-full shadow-2xl relative top-0">
+            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
                 <h3 className="text-2xl font-display font-bold text-white mb-6 flex items-center gap-3">
                     <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
                     AI Engine Parameters
@@ -170,6 +210,125 @@ export function AISettings() {
                         )}
                     </div>
 
+                    {/* Sentiment Analysis Settings */}
+                    <div className="space-y-6">
+                        <h3 className="text-lg font-medium text-text-primary mb-4">Sentiment Analysis Settings</h3>
+
+                        {/* Profile Selection */}
+                        <div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {SENTIMENT_PROFILES.map((profile) => (
+                                    <button
+                                        key={profile.id}
+                                        onClick={() => handleSentimentProfileChange(profile.id)}
+                                        className={`p-4 rounded-lg border transition-all text-left ${
+                                            (tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
+                                                ? 'bg-accent-primary/20 border-accent-primary text-text-primary'
+                                                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                                        }`}
+                                    >
+                                        <div className="font-medium text-sm mb-1">{profile.name}</div>
+                                        <div className="text-xs text-text-tertiary">{profile.description}</div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Current Guidelines */}
+                        <div>
+                            <h4 className="text-sm font-medium text-text-primary mb-3">Current Guidelines</h4>
+                            <div className="bg-black/30 border border-white/10 rounded-lg p-4 max-h-40 overflow-y-auto">
+                                <pre className="text-sm text-text-secondary whitespace-pre-wrap">
+                                    {currentSentimentProfile.guidelines}
+                                </pre>
+                            </div>
+                        </div>
+
+                        {/* Custom Weights */}
+                        <div>
+                            <div className="flex justify-between items-center mb-4">
+                                <h4 className="text-sm font-medium text-text-primary">Custom Weights</h4>
+                                <div className="flex gap-2">
+                                    {!isCustomMode && (
+                                        <button
+                                            onClick={() => {
+                                                setIsCustomMode(true)
+                                                const weightsAsRecord = currentSentimentProfile.weights as any;
+                                                setCustomWeights(weightsAsRecord as Record<string, number>)
+                                                setTempConfig({
+                                                    ...tempConfig,
+                                                    sentimentProfile: 'custom',
+                                                    customSentimentWeights: weightsAsRecord
+                                                })
+                                            }}
+                                            className="px-3 py-1 bg-accent-primary/20 text-accent-primary rounded text-sm hover:bg-accent-primary/30 transition-colors"
+                                        >
+                                            Customize
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={resetSentimentToDefaults}
+                                        className="px-3 py-1 bg-white/10 text-text-secondary rounded text-sm hover:bg-white/20 transition-colors"
+                                    >
+                                        Reset to Default
+                                    </button>
+                                </div>
+                            </div>
+
+                            {isCustomMode && customWeights && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {Object.entries(customWeights).map(([key, value]) => (
+                                        <div key={key} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                                            <label className="text-sm text-text-secondary capitalize min-w-[120px]">
+                                                {key.replace(/([A-Z])/g, ' $1').trim()}
+                                            </label>
+                                            <div className="flex items-center gap-3">
+                                                <input
+                                                    type="range"
+                                                    min="-5"
+                                                    max="5"
+                                                    step="0.5"
+                                                    value={value as number}
+                                                    onChange={(e) => handleCustomWeightChange(key, parseFloat(e.target.value))}
+                                                    className="w-32"
+                                                />
+                                                <span className="text-sm text-text-primary w-12 text-right font-mono">
+                                                    {(value as number) > 0 ? '+' : ''}{value as number}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {!isCustomMode && (
+                                <div className="bg-black/30 border border-white/10 rounded-lg p-4">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        {Object.entries(currentSentimentProfile.weights).map(([key, value]) => (
+                                            <div key={key} className="text-center">
+                                                <div className="text-xs text-text-tertiary capitalize mb-1">
+                                                    {key.replace(/([A-Z])/g, ' $1').trim()}
+                                                </div>
+                                                <div className="text-lg font-mono text-text-primary">
+                                                    {(value as number) > 0 ? '+' : ''}{value as number}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Impact Explanation */}
+                        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                            <h4 className="text-sm font-medium text-blue-300 mb-2">How This Affects Analysis</h4>
+                            <p className="text-xs text-blue-200 leading-relaxed">
+                                Sentiment profiles determine how AI interprets and classifies the emotional tone of news events. 
+                                Different profiles may classify the same event differently based on their weighting system. 
+                                Custom weights allow you to fine-tune analysis according to your specific needs and perspective.
+                            </p>
+                        </div>
+                    </div>
 
                     <div className="pt-4 flex gap-3">
                         <button
@@ -192,5 +351,5 @@ export function AISettings() {
             </div>
         </div>,
         document.body
-    )
+    );
 }

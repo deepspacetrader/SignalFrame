@@ -3,6 +3,7 @@ import { OllamaService } from './ollama';
 import { RawSignal } from '../../services/feedIngest';
 import type { ForeignRelation, AiConfig, DeepDiveData, EvidenceRef, Signal, SituationState } from '../../state/useSituationStore';
 import { StorageService } from '../../services/db';
+import { getSentimentProfile, generateCustomSentimentGuidelines } from './sentimentEngine';
 
 export const DEFAULT_MODEL = 'llama3.2';
 
@@ -152,7 +153,7 @@ export async function processSituation(
 
     onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
     const recentSignals = await getRecentSignalsForNovelty(7);
-    const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals), 'json', options);
+    const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json', options);
     const parsedSignals = applyNoveltyScores(finalizeSignals(parseJsonArray(signalsRaw), feeds), recentSignals);
     const signalsText = parsedSignals.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
 
@@ -499,7 +500,14 @@ function formatSignalsContextForInsights(signalsContext: string): string {
   return lines.slice(0, 12).join('\n');
 }
 
-function generateSignalsPrompt(context: string, feedIndex: any[], recentSignals: string[] = []) {
+function generateSignalsPrompt(context: string, feedIndex: any[], recentSignals: string[] = [], aiConfig?: AiConfig) {
+  // Get custom sentiment guidelines if profile is specified
+  let customGuidelines = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    customGuidelines = generateCustomSentimentGuidelines(profile);
+  }
+
   const prompt = `Act as a senior intelligence officer. Examine the following news feeds and identify 5-8 distinct signals by following these rules:
 1. A signal is NOT just a headline; it is a shift in state, a pivot point, or a significant escalation. It can also be a shift in sentiment or seemingly minor events that could lead towards something much more significant.
 2. DEDUPLICATE: If multiple sources report on the same event, synthesize them into ONE high-level signal with the most critical takeaway. DO NOT repeat yourself.
@@ -551,7 +559,7 @@ Rules:
 - Each signal should cover different topics/events (don't repeat the same Iran story multiple times)
 
 SENTIMENT GUIDELINES:
-${SENTIMENT_GUIDELINES}
+${customGuidelines || SENTIMENT_GUIDELINES}
 
 Feeds:
 ${context}`;
@@ -1056,18 +1064,13 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
 
     const sentiment = (s.sentiment || s.level || DEFAULT_SENTIMENT).toLowerCase();
     
-    // Legacy sentiment mapping for backwards compatibility
-    const legacySentimentMap: Record<string, string> = {
-      'interesting': 'neutral',
-      'positive': 'positive', 
-      'negative': 'negative',
-      'very-positive': 'positive',
-      'very-negative': 'negative',
-      'extremely-positive': 'positive',
-      'extremely-negative': 'negative'
-    };
+    // Validate sentiment is one of the allowed values
+    const allowedSentiments: Set<string> = new Set([
+      'extremely-negative', 'very-negative', 'negative', 'somewhat-negative',
+      'neutral', 'interesting', 'positive', 'very-positive'
+    ]);
     
-    const finalSentiment = legacySentimentMap[sentiment] || sentiment;
+    const finalSentiment = allowedSentiments.has(sentiment) ? sentiment : 'neutral';
 
     const title = s.title ? String(s.title) : undefined;
     const category = normalizeCategory(s.category);
@@ -1190,6 +1193,8 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
 
 
 function finalizeMapPoints(raw: any[], signals: any[] = []) {
+  console.log('Raw map points data:', raw);
+  
   // Check if the raw data contains error objects
   const hasError = raw.some(item => 
     typeof item === 'object' && 
@@ -1199,13 +1204,22 @@ function finalizeMapPoints(raw: any[], signals: any[] = []) {
   );
   
   if (hasError) {
-    // Find the first error and throw it to trigger the error handling
+    // Find the first error and log it
     const errorItem = raw.find(item => 
       typeof item === 'object' && 
       item !== null && 
       'error' in item
     );
-    throw new Error(errorItem?.error || 'JSON parsing error in map points');
+    console.error('AI returned error for map points:', errorItem);
+    
+    // Return empty array instead of throwing to allow the app to continue
+    return [];
+  }
+
+  // Handle case where raw is not an array or is empty
+  if (!Array.isArray(raw) || raw.length === 0) {
+    console.warn('Map points raw data is not an array or is empty:', raw);
+    return [];
   }
 
   const allSignals = Array.isArray(signals) ? signals : [];
@@ -1347,10 +1361,10 @@ export async function processSingleSection(
   const prompts: any = {
     signals: async () => {
       const recentSignals = await getRecentSignalsForNovelty(7);
-      return generateSignalsPrompt(context, feedIndex, recentSignals);
+      return generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig);
     },
     insights: generateInsightsPrompt(context, feedIndex, extraContext.signalsText || ''),
-    map: generateMapPointsPrompt(context),
+    map: generateMapPointsPrompt(context, extraContext.signalsText || ''),
     relations: async () => {
       const historicalContext = await getHistoricalRelationsContext(foreignRelations);
       return generateRelationsPrompt(
@@ -1386,7 +1400,6 @@ export async function processSingleSection(
       // In practice it often biases the model into emitting a single JSON object,
       // which is the exact failure mode we're trying to avoid for signals.
       lastRes = await OllamaService.generate(aiConfig.model, `${basePrompt}${strictSuffix}`, undefined, opt);
-      console.log('Raw AI response for signals:', lastRes);
 
       lastParse = parseJsonArrayWithDetection(lastRes);
       if (!lastParse.success) continue;

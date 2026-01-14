@@ -8,11 +8,15 @@ import { LoadingOverlay } from './components/LoadingOverlay'
 import { AISettings } from './components/AISettings'
 import { ChatPanel } from './components/ChatPanel'
 import { PredictionsPanel } from './components/PredictionsPanel'
+import { VolumeControl } from './components/VolumeControl'
 import { useSituationStore } from './state/useSituationStore'
 import { BigPictureModal } from './components/BigPictureModal'
+import { formatTime } from './utils/timeUtils'
+import { getSentimentProfile } from './ai/runtime/sentimentEngine'
+
 
 export default function App() {
-  const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels } = useSituationStore()
+  const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig } = useSituationStore()
   const [showBigPicture, setShowBigPicture] = useState(false)
 
   const getLocalTodayStr = () => {
@@ -99,6 +103,14 @@ export default function App() {
                 </div>
               )}
 
+              {/* Sentiment Bias Display */}
+              <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 hidden sm:block">
+                <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Sentiment</p>
+                <p className="text-xs font-mono text-accent-primary">
+                  {getSentimentProfile(aiConfig.sentimentProfile || 'balanced').name}
+                </p>
+              </div>
+
               {runningModels && runningModels.length > 0 && (
                 <div className="flex gap-2">
                   {runningModels.map(m => (
@@ -118,7 +130,16 @@ export default function App() {
                 </div>
               )}
 
+              {sectionGenerationTimes['full-scan'] && (
+                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
+                  <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Last Scan</p>
+                  <p className="text-xs font-mono text-accent-secondary">{formatTime(sectionGenerationTimes['full-scan'])}</p>
+                </div>
+              )}
+
               <AISettings />
+              
+              <VolumeControl />
             </div>
           </div>
 
@@ -175,7 +196,7 @@ export default function App() {
       <main className="grid grid-cols-12 gap-8">
         {/* Map Section */}
         <div className="col-span-12 lg:col-span-12 space-y-8">
-          <SituationMap />
+        
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Narrative Summary */}
@@ -212,6 +233,8 @@ export default function App() {
           <div className="w-full">
             <SourceFeedList />
           </div>
+
+  <SituationMap />
 
         </div>
       </main>

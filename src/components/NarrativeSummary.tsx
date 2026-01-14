@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { RawOutputModal } from './RawOutputModal'
+import { formatTime } from '../utils/timeUtils'
+
 
 export function NarrativeSummary() {
   const { 
@@ -13,7 +15,8 @@ export function NarrativeSummary() {
     rawOutputs,
     activeRawOutput,
     showRawOutput,
-    hideRawOutput
+    hideRawOutput,
+    sectionGenerationTimes
   } = useSituationStore()
   const isLoading = isProcessingSection.narrative && !isProcessing;
   const [isThinkingOpen, setIsThinkingOpen] = useState(false);
@@ -51,6 +54,11 @@ export function NarrativeSummary() {
             >
               Regenerate
             </button>
+            {sectionGenerationTimes.narrative && (
+              <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
+                {formatTime(sectionGenerationTimes.narrative)}
+              </span>
+            )}
             {rawOutputs.narrative && (
               <button
                 onClick={() => showRawOutput('narrative')}

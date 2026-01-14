@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
 import { RawOutputModal } from './RawOutputModal'
+import { formatTime } from '../utils/timeUtils'
 
 const getSentimentColor = (sentiment: string) => {
   switch (sentiment) {
@@ -28,6 +29,7 @@ const sentimentOrder = {
   'very-positive': 7
 };
 
+
 export function Signals() {
   const { 
     signals, 
@@ -42,11 +44,18 @@ export function Signals() {
     activeRawOutput,
     showRawOutput,
     hideRawOutput,
-    sourceCredibility
+    sourceCredibility,
+    sectionGenerationTimes,
+    sectionFailures,
+    retryFailedSection,
+    clearSectionFailure
   } = useSituationStore()
   const [sortBy, setSortBy] = useState<'none' | 'pos-neg' | 'neg-pos'>('none')
   const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null)
   const isLoading = isProcessingSection.signals && !isProcessing;
+  const failure = sectionFailures.signals;
+  const hasFailed = failure?.hasFailed;
+  const isRetrying = failure?.isRetrying;
 
 
   const insightsForSignal = useMemo(() => {
@@ -119,7 +128,43 @@ export function Signals() {
 
   return (
     <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 ${isLoading ? 'section-loading' : ''}`}>
-      {isLoading && (
+      {hasFailed && !isLoading && (
+        <div className="section-loading-overlay bg-red-500/10 border-red-500/30">
+          <div className="flex flex-col items-center gap-2">
+            {isRetrying ? (
+              <>
+                <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-[0.6rem] uppercase tracking-widest font-bold text-yellow-400">Retrying...</span>
+                <span className="text-[0.5rem] text-yellow-300/80">Attempt {failure.retryCount + 1}</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-[0.6rem] uppercase tracking-widest font-bold text-red-400">Generation Failed</span>
+                <span className="text-[0.5rem] text-red-300/80 max-w-xs text-center">{failure.error}</span>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => retryFailedSection('signals')}
+                    className="text-[0.55rem] px-2 py-1 bg-blue-500/20 text-blue-400 rounded border border-blue-500/30 hover:bg-blue-500/30 transition-colors"
+                  >
+                    Retry Now
+                  </button>
+                  <button
+                    onClick={() => clearSectionFailure('signals')}
+                    className="text-[0.55rem] px-2 py-1 bg-gray-500/20 text-gray-400 rounded border border-gray-500/30 hover:bg-gray-500/30 transition-colors"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {isLoading && !hasFailed && (
         <div className="section-loading-overlay">
           <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Processing Deltas...</span>
@@ -178,6 +223,11 @@ export function Signals() {
               >
                 Regenerate
               </button>
+              {sectionGenerationTimes.signals && (
+                <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
+                  {formatTime(sectionGenerationTimes.signals)}
+                </span>
+              )}
               {rawOutputs.signals && (
                 <button
                   onClick={() => showRawOutput('signals')}

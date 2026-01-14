@@ -14,6 +14,7 @@ export function ChatPanel() {
     const [isTyping, setIsTyping] = useState(false);
     const [predictions, setPredictions] = useState<any[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
 
     // Context Configuration
     const [includeNarrative, setIncludeNarrative] = useState(true);
@@ -27,7 +28,19 @@ export function ChatPanel() {
     const [includeYesterday, setIncludeYesterday] = useState(false);
     const [yesterdayData, setYesterdayData] = useState<any>(null);
 
-    // Load predictions history on mount for context
+    // Auto-scroll to bottom when AI finishes typing
+    useEffect(() => {
+        if (!isTyping && messages.length > 0) {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [isTyping, messages]);
+
+    // Auto-focus input after AI response
+    useEffect(() => {
+        if (!isTyping && messages.length > 0) {
+            inputRef.current?.focus();
+        }
+    }, [isTyping, messages.length]);
     useEffect(() => {
         const loadPredictions = async () => {
             try {
@@ -133,6 +146,13 @@ export function ChatPanel() {
         setIncludeBigPicture(enable);
         setIncludePredictions(enable);
         if (enable === false) setIncludeYesterday(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
     };
 
     const handleSend = async () => {
@@ -285,14 +305,15 @@ export function ChatPanel() {
 
             <div className="p-4 border-t border-white/5 bg-black/20">
                 <div className="flex gap-2">
-                    <input
-                        type="text"
+                    <textarea
+                        ref={inputRef}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                        onKeyDown={handleKeyDown}
                         placeholder="Type your query..."
-                        className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-accent-primary/50 transition-colors"
+                        className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-accent-primary/50 transition-colors resize-none min-h-[40px] max-h-32"
                         disabled={isTyping}
+                        rows={1}
                     />
                     <button
                         onClick={handleSend}
