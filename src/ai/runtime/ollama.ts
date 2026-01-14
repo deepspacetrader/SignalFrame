@@ -18,8 +18,8 @@ export interface OllamaThinkingResponse {
     thinking?: string;
 }
 
-const DEFAULT_num_ctx = 24000;
-const DEFAULT_num_predict = 16000;
+export const DEFAULT_num_ctx = 8192;
+export const DEFAULT_num_predict = 16384;
 
 export class OllamaService {
     private static baseUrl = 'http://127.0.0.1:11434/api';

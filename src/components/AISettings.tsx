@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useSituationStore } from '../state/useSituationStore'
 import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai/runtime/sentimentEngine'
+import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
 
 export function AISettings() {
     const { aiConfig, availableModels, updateAiConfig, fetchAvailableModels } = useSituationStore()
@@ -10,13 +11,23 @@ export function AISettings() {
     const [tempConfig, setTempConfig] = useState(aiConfig)
     const [copied, setCopied] = useState(false)
     const [isCustomMode, setIsCustomMode] = useState(false)
+    const [ollamaError, setOllamaError] = useState<string | null>(null)
     const [customWeights, setCustomWeights] = useState<Record<string, number> | null>(
         (aiConfig as any).customSentimentWeights || null
     )
 
     useEffect(() => {
         if (isOpen) {
-            fetchAvailableModels();
+            const checkOllamaStatus = async () => {
+                try {
+                    await fetchAvailableModels();
+                    setOllamaError(null);
+                } catch (error) {
+                    setOllamaError('Ollama service is not running or not accessible');
+                }
+            };
+            
+            checkOllamaStatus();
             setTempConfig(aiConfig);
         }
     }, [isOpen, fetchAvailableModels, aiConfig]);
@@ -97,8 +108,76 @@ export function AISettings() {
                 </h3>
 
                 <div className="space-y-6">
+                    {/* Ollama Status Alert */}
+                    {ollamaError && (
+                        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                            <p className="text-sm text-red-400 font-semibold flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                {ollamaError}
+                            </p>
+                            <p className="text-xs text-red-300 mt-2">
+                                Please ensure <a href="https://ollama.com/" target="_blank" rel="noopener noreferrer">Ollama</a> is installed and running on your system
+                            </p>
+                        </div>
+                    )}
+
+                    {/* No Models Available Alert */}
+                    {!ollamaError && availableModels.length === 0 && (
+                        <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                            <p className="text-sm text-yellow-400 font-semibold flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                No AI models detected in Ollama
+                            </p>
+                            <p className="text-xs text-yellow-300 mt-2">
+                                Install models using: <code className="bg-black/40 px-2 py-1 rounded text-xs">ollama pull &lt;model-name&gt;</code>
+                            </p>
+                        </div>
+                    )}
+
                     <div>
-                        <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-2">Target Model</label>
+                        <div className="flex items-center gap-2 mb-2">
+                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Target Model</label>
+                            <div className="group relative">
+                                <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
+                                    <span className="text-[8px] text-accent-primary font-bold">i</span>
+                                </div>
+                                <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
+                                    <p className="text-[11px] text-text-primary leading-relaxed mb-3">
+                                        Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.
+                                    </p>
+                                    <div className="border-t border-white/10 pt-2">
+                                        <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px]">
+                                                <span className="text-text-secondary">8GB VRAM:</span>
+                                                <span className="text-text-primary font-mono">llama3.2:3b, qwen2.5:3b</span>
+                                            </div>
+                                            <div className="flex justify-between text-[10px]">
+                                                <span className="text-text-secondary">12GB VRAM:</span>
+                                                <span className="text-text-primary font-mono">llama3.2:7b, qwen2.5:7b</span>
+                                            </div>
+                                            <div className="flex justify-between text-[10px]">
+                                                <span className="text-text-secondary">16GB VRAM:</span>
+                                                <span className="text-text-primary font-mono">llama3.2:13b, qwen2.5:14b</span>
+                                            </div>
+                                            <div className="flex justify-between text-[10px]">
+                                                <span className="text-text-secondary">24GB+ VRAM:</span>
+                                                <span className="text-text-primary font-mono">llama3.2:70b, qwen2.5:32b</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-bg-darker"></div>
+                                </div>
+                            </div>
+                        </div>
                         <input
                             type="text"
                             value={tempConfig.model}
@@ -110,13 +189,13 @@ export function AISettings() {
                             <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20 rounded-lg">
                                 <p className="text-xs text-accent-alert mb-2 font-semibold flex items-center gap-2">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-                                    Model not detected locally
+                                    AI model not detected locally
                                 </p>
                                 <div className="space-y-2">
                                     <p className="text-[10px] text-text-secondary uppercase font-bold">Try pulling it:</p>
                                     <div className="relative group/copy">
                                         <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-white font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
-                                            ollama pull {tempConfig.model}
+                                            ollama pull modelName:size
                                         </code>
                                         <button
                                             onClick={handleCopy}
@@ -133,7 +212,7 @@ export function AISettings() {
 
                                     {availableModels.length > 0 && (
                                         <>
-                                            <p className="text-[10px] text-text-secondary uppercase font-bold pt-2">Or select active model:</p>
+                                            <p className="text-[10px] text-text-secondary uppercase font-bold pt-2">or select from available Ollama models:</p>
                                             <div className="flex flex-wrap gap-2">
                                                 {availableModels.slice(0, 5).map(m => (
                                                     <button
@@ -154,20 +233,88 @@ export function AISettings() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-2">Context Window (num_ctx)</label>
+                            <div className="flex items-center gap-2 mb-2">
+                                <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Context Window (num_ctx)</label>
+                                <div className="group relative">
+                                    <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
+                                        <span className="text-[8px] text-accent-primary font-bold">i</span>
+                                    </div>
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                        <p className="text-[11px] text-text-primary leading-relaxed mb-3">
+                                            Total tokens model can remember (input + output). Larger values allow longer conversations but use more VRAM.
+                                        </p>
+                                        <div className="border-t border-white/10 pt-2">
+                                            <p className="text-[10px] text-accent-primary font-semibold mb-2">Context Size Recommendations:</p>
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">8GB VRAM:</span>
+                                                    <span className="text-text-primary font-mono">2048 to 4096</span>
+                                                </div>
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">12GB VRAM:</span>
+                                                    <span className="text-text-primary font-mono">4096 to 8192</span>
+                                                </div>
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">16GB VRAM:</span>
+                                                    <span className="text-text-primary font-mono">8192 to 16384</span>
+                                                </div>
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">24GB+ VRAM:</span>
+                                                    <span className="text-text-primary font-mono">16384 to 24000</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-bg-darker"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <input
                                 type="number"
                                 value={tempConfig.numCtx}
-                                onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value) || 4096 })}
+                                onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value) || DEFAULT_num_ctx })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
                             />
                         </div>
                         <div>
-                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-2">Max Predict (num_predict)</label>
+                            <div className="flex items-center gap-2 mb-2">
+                                <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Max Predict (num_predict)</label>
+                                <div className="group relative">
+                                    <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
+                                        <span className="text-[8px] text-accent-primary font-bold">i</span>
+                                    </div>
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                        <p className="text-[11px] text-text-primary leading-relaxed mb-3">
+                                            Maximum tokens in model's response (output only). Higher values allow longer answers but must fit within context window.
+                                        </p>
+                                        <div className="border-t border-white/10 pt-2">
+                                            <p className="text-[10px] text-accent-primary font-semibold mb-2">Prediction Size Recommendations:</p>
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">8GB VRAM:</span>
+                                                    <span className="text-text-primary font-mono">4096 to 8192</span>
+                                                </div>
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">12GB VRAM:</span>
+                                                    <span className="text-text-primary font-mono">8192 to 16384</span>
+                                                </div>
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">16GB VRAM:</span>
+                                                    <span className="text-text-primary font-mono">16384 to 24000</span>
+                                                </div>
+                                                <div className="flex justify-between text-[10px]">
+                                                    <span className="text-text-secondary">24GB+ VRAM:</span>
+                                                    <span className="text-text-primary font-mono">24000 to 32000</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-bg-darker"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <input
                                 type="number"
                                 value={tempConfig.numPredict}
-                                onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value) || 2048 })}
+                                onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value) || DEFAULT_num_predict })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
                             />
                         </div>

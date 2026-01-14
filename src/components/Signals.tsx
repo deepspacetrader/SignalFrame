@@ -3,6 +3,10 @@ import { useSituationStore } from '../state/useSituationStore'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
 import { RawOutputModal } from './RawOutputModal'
 import { formatTime } from '../utils/timeUtils'
+import { SectionCard } from './shared/SectionCard'
+import { SectionHeader } from './shared/SectionHeader'
+import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
+import { SectionBadge } from './shared/SectionBadge'
 
 const getSentimentColor = (sentiment: string) => {
   switch (sentiment) {
@@ -56,6 +60,103 @@ export function Signals() {
   const failure = sectionFailures.signals;
   const hasFailed = failure?.hasFailed;
   const isRetrying = failure?.isRetrying;
+
+  const headerBadges = useMemo(() => {
+    const badges: JSX.Element[] = []
+
+    badges.push(
+      <SectionBadge key="count" tone={signals.length > 0 ? 'neutral' : 'warning'}>
+        {signals.length > 0 ? `${signals.length} signals` : 'No signals'}
+      </SectionBadge>
+    )
+
+    if (sectionGenerationTimes.signals) {
+      badges.push(
+        <SectionBadge key="duration" tone="info">
+          {formatTime(sectionGenerationTimes.signals)}
+        </SectionBadge>
+      )
+    }
+
+    if (hasFailed) {
+      badges.push(
+        <SectionBadge key="failed" tone="warning">
+          Generation Failed
+        </SectionBadge>
+      )
+    } else if (isRetrying) {
+      badges.push(
+        <SectionBadge key="retrying" tone="accent">
+          Retrying...
+        </SectionBadge>
+      )
+    }
+
+    return badges
+  }, [hasFailed, isRetrying, sectionGenerationTimes.signals, signals.length])
+
+  const headerActions = useMemo(() => {
+    const sortControls = signals.length > 0 && !hasFailed && (
+      <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+        <button
+          onClick={() => setSortBy('none')}
+          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
+            sortBy === 'none'
+              ? 'bg-gray-500 text-white'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          Default
+        </button>
+        <button
+          onClick={() => setSortBy('pos-neg')}
+          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
+            sortBy === 'pos-neg'
+              ? 'bg-accent-secondary text-white'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          Positive → Negative
+        </button>
+        <button
+          onClick={() => setSortBy('neg-pos')}
+          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
+            sortBy === 'neg-pos'
+              ? 'bg-red-500 text-white'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          Negative → Positive
+        </button>
+      </div>
+    )
+
+    const regenerateControls = !isProcessing && !hasFailed && (
+      <div className="flex items-center gap-2">
+        <SectionRegenerateButton
+          onClick={() => refreshSection('signals')}
+          className="opacity-80 hover:opacity-100"
+        />
+        {rawOutputs.signals && (
+          <button
+            onClick={() => showRawOutput('signals')}
+            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-all"
+          >
+            Raw Output
+          </button>
+        )}
+      </div>
+    )
+
+    if (!sortControls && !regenerateControls) return null
+
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        {sortControls}
+        {regenerateControls}
+      </div>
+    )
+  }, [hasFailed, isProcessing, rawOutputs.signals, refreshSection, setSortBy, showRawOutput, signals.length, sortBy])
 
 
   const insightsForSignal = useMemo(() => {
@@ -127,7 +228,15 @@ export function Signals() {
   }, [dedupedSignals, sortBy]);
 
   return (
-    <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 ${isLoading ? 'section-loading' : ''}`}>
+    <SectionCard
+      isLoading={isLoading && !hasFailed}
+      loadingOverlayContent={
+        <>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+          <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Processing Deltas...</span>
+        </>
+      }
+    >
       {hasFailed && !isLoading && (
         <div className="section-loading-overlay bg-red-500/10 border-red-500/30">
           <div className="flex flex-col items-center gap-2">
@@ -163,83 +272,18 @@ export function Signals() {
           </div>
         </div>
       )}
-      
-      {isLoading && !hasFailed && (
-        <div className="section-loading-overlay">
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-          <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Processing Deltas...</span>
-        </div>
-      )}
 
-      <div className="flex justify-between items-start mb-6">
-        <h2 className="text-xl font-semibold m-0 flex items-center gap-3 text-text-primary font-display">
-          <div className="w-1 h-5 bg-accent-primary rounded-full"></div>
+      <SectionHeader
+        className="mb-6"
+        title="Signals & Insights"
+        icon={
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          Signals & Insights
-        </h2>
-
-        <div className="flex gap-2">
-          {(signals.length > 0 || (!isProcessing && signals.length === 0)) && !isProcessing && (
-            <>
-              {signals.length > 0 && (
-                <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
-                  <button
-                    onClick={() => setSortBy('none')}
-                    className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
-                      sortBy === 'none' 
-                        ? 'bg-gray-500 text-white' 
-                        : 'text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
-                    Default
-                  </button>
-                  <button
-                    onClick={() => setSortBy('pos-neg')}
-                    className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
-                      sortBy === 'pos-neg' 
-                        ? 'bg-accent-secondary text-white' 
-                        : 'text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
-                    Positive → Negative
-                  </button>
-                  <button
-                    onClick={() => setSortBy('neg-pos')}
-                    className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
-                      sortBy === 'neg-pos' 
-                        ? 'bg-red-500 text-white' 
-                        : 'text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
-                    Negative → Positive
-                  </button>
-                </div>
-              )}
-              <button
-                onClick={() => refreshSection('signals')}
-                className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-              >
-                Regenerate
-              </button>
-              {sectionGenerationTimes.signals && (
-                <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
-                  {formatTime(sectionGenerationTimes.signals)}
-                </span>
-              )}
-              {rawOutputs.signals && (
-                <button
-                  onClick={() => showRawOutput('signals')}
-                  className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-all opacity-60 hover:opacity-100"
-                >
-                  Raw Output
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+        }
+        badges={headerBadges}
+        actions={headerActions}
+      />
 
       {/* JSON Error Display */}
       {jsonError.hasError && jsonError.sectionId === 'signals' && (
@@ -498,6 +542,6 @@ export function Signals() {
         sectionId="signals"
         title="Signals"
       />
-    </section>
+    </SectionCard>
   )
 }

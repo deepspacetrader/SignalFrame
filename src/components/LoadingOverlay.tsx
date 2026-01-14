@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo } from "react";
-import { DEFAULT_MODEL } from "../ai/runtime/engine";
 import { useSituationStore } from "../state/useSituationStore";
 
 const LOADING_MESSAGES = [
@@ -31,16 +30,17 @@ const LOADING_MESSAGES = [
 ];
 
 const SECTIONS = [
-  { id: 'narrative', name: 'Narrative Analysis', icon: '📝' },
-  { id: 'signals', name: 'Signal Detection', icon: '📡' },
-  { id: 'insights', name: 'Insight Generation', icon: '💡' },
-  { id: 'map', name: 'Geographic Mapping', icon: '🗺️' },
+  { id: 'rss', name: 'RSS Feeds', icon: '📰' },
+  { id: 'narrative', name: 'Current Narrative', icon: '📝' },
+  { id: 'signals', name: 'Signals and Insights', icon: '📡' },
+  { id: 'insights', name: 'Future Trajectory Analysis', icon: '🔮' },
   { id: 'relations', name: 'Foreign Relations', icon: '🤝' },
-  { id: 'bigPicture', name: 'Big Picture', icon: '🌍' },
+  { id: 'bigPicture', name: 'The Big Picture', icon: '🌍' },
+  { id: 'map', name: 'Map', icon: '🗺️' }
 ] as const;
 
 export function LoadingOverlay() {
-  const { isProcessing, processingStatus, aiConfig, isProcessingSection } = useSituationStore();
+  const { isProcessing, processingStatus, aiConfig, isProcessingSection, sectionFailures, completedSections } = useSituationStore();
   const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
 
   // Create a shuffled copy of messages when processing starts
@@ -99,34 +99,97 @@ export function LoadingOverlay() {
           
           {/* Progress Checklist */}
           <div className="mt-6 w-full max-w-md">
-            <h3 className="text-sm font-semibold text-text-secondary mb-3 text-center uppercase tracking-[0.1em]">
-              Progress Overview
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-[0.1em]">
+                Progress Overview
+              </h3>
+              <div className="text-xs text-accent-secondary font-mono">
+                {completedSections.size}/{SECTIONS.length} Complete
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="w-full bg-black/30 rounded-full h-2 mb-4 overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-accent-primary to-green-500 transition-all duration-500 ease-out"
+                style={{ width: `${(completedSections.size / SECTIONS.length) * 100}%` }}
+              ></div>
+            </div>
             <div className="space-y-2">
               {SECTIONS.map((section) => {
-                const isProcessing = isProcessingSection[section.id];
+                const isCurrentlyProcessing = isProcessingSection[section.id];
+                const isCompleted = completedSections.has(section.id);
+                const failure = sectionFailures[section.id];
+                const hasFailed = failure?.hasFailed;
+                const isRetrying = failure?.isRetrying;
+                
                 return (
                   <div
                     key={section.id}
                     className={`
-                      flex items-center gap-3 px-3 py-2 rounded-lg border transition-all duration-300
-                      ${isProcessing 
-                        ? 'bg-accent-primary/10 border-accent-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.2)]' 
-                        : 'bg-black/20 border-white/5'
+                      flex items-center gap-3 px-3 py-2 rounded-lg border transition-all duration-500
+                      ${isCurrentlyProcessing 
+                        ? 'bg-accent-primary/15 border-accent-primary/40 shadow-[0_0_25px_rgba(59,130,246,0.3)]' 
+                        : isCompleted
+                        ? 'bg-black/20 border-white/5 opacity-60'
+                        : hasFailed
+                        ? isRetrying
+                          ? 'bg-yellow-500/10 border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]'
+                          : 'bg-red-500/10 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+                        : 'bg-black/20 border-white/5 opacity-60'
                       }
                     `}
                   >
-                    <span className="text-lg">{section.icon}</span>
                     <span className={`
-                      text-sm font-medium flex-1
-                      ${isProcessing ? 'text-accent-primary' : 'text-text-secondary'}
+                      text-lg transition-all duration-300
+                      ${isCompleted ? 'filter brightness-125' : ''}
+                      ${hasFailed ? (isRetrying ? '' : '') : ''}
+                    `}>
+                      {hasFailed ? (isRetrying ? '🔄' : '⚠️') : section.icon}
+                    </span>
+                    <span className={`
+                      text-sm font-medium flex-1 transition-all duration-300
+                      ${isCurrentlyProcessing 
+                        ? 'text-accent-primary font-semibold' 
+                        : isCompleted
+                        ? 'text-text-secondary'
+                        : hasFailed
+                        ? isRetrying
+                          ? 'text-yellow-400'
+                          : 'text-red-400'
+                        : 'text-text-secondary'
+                      }
                     `}>
                       {section.name}
                     </span>
-                    {isProcessing ? (
-                      <div className="w-2 h-2 bg-accent-primary rounded-full animate-pulse"></div>
+                    {isCurrentlyProcessing ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-accent-primary rounded-full"></div>
+                      </div>
+                    ) : isCompleted ? (
+                      <div className="flex items-center gap-1">
+                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                    ) : hasFailed ? (
+                      <div className="flex items-center gap-1">
+                        {isRetrying ? (
+                          <>
+                            <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                            <span className="text-[0.55rem] text-yellow-400 font-mono">Retrying...</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="text-[0.55rem] text-red-400 font-mono">Failed</span>
+                          </>
+                        )}
+                      </div>
                     ) : (
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gray-500 rounded-full opacity-50"></div>
                     )}
                   </div>
                 );

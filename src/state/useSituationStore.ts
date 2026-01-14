@@ -3,6 +3,7 @@ import { processSituation, processSingleSection, processBigPicture } from '../ai
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
 import { zzfx } from '../utils/zzfx'
+import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
 
 export type Sentiment =
   | 'extremely-negative'
@@ -161,7 +162,7 @@ export interface RunningModel {
   size_vram: number;
 }
 
-export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'bigPicture';
+export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'rss' | 'bigPicture';
 
 export interface SectionFailureState {
   hasFailed: boolean;
@@ -209,8 +210,10 @@ export interface SituationState {
     insights: boolean;
     map: boolean;
     relations: boolean;
+    rss: boolean;
     bigPicture: boolean;
   };
+  completedSections: Set<string>;
   bigPicture: BigPictureData | null;
   aiConfig: AiConfig;
   availableModels: string[];
@@ -255,14 +258,16 @@ const defaultState: SituationState = {
     insights: false,
     map: false,
     relations: false,
+    rss: false,
     bigPicture: false
   },
+  completedSections: new Set(),
   bigPicture: null,
   thinkingTrace: '',
   aiConfig: {
     model: '',
-    numCtx: 0,
-    numPredict: 0,
+    numCtx: DEFAULT_num_ctx,
+    numPredict: DEFAULT_num_predict,
     enableThinking: false
   },
   availableModels: [],
@@ -302,6 +307,7 @@ const defaultState: SituationState = {
     insights: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     map: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     relations: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    rss: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     bigPicture: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
   },
   soundVolume: 0.5
@@ -709,9 +715,11 @@ export function useSituationStore() {
       isProcessing: true,
       processingStatus: 'Initializing Intelligence Network...',
       thinkingTrace: '', // Reset thinking trace on new scan
-      isProcessingSection: { narrative: true, signals: true, insights: true, map: true, relations: true, bigPicture: false }
+      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false,  bigPicture: false },
+      completedSections: new Set() // Reset completed sections
     };
     startTimer('full-scan');
+    startTimer('rss');
     notify();
 
     try {
@@ -744,6 +752,31 @@ export function useSituationStore() {
         (thinkingChunk) => {
           globalState = { ...globalState, thinkingTrace: thinkingChunk };
           notify();
+        },
+        (section: string) => {
+          const sectionOrder: (keyof SituationState['isProcessingSection'])[] = ['rss', 'narrative', 'signals', 'insights', 'map', 'relations'];
+          const typedSection = section as keyof SituationState['isProcessingSection'];
+          const currentIndex = sectionOrder.indexOf(typedSection);
+
+          // Mark current section as completed
+          globalState = {
+            ...globalState,
+            completedSections: new Set([...globalState.completedSections, section])
+          };
+          stopTimer(section);
+
+          // Update processing state: mark current as false, next as true
+          const newProcessingState = { ...globalState.isProcessingSection };
+          newProcessingState[typedSection] = false;
+
+          if (currentIndex < sectionOrder.length - 1) {
+            const nextSection = sectionOrder[currentIndex + 1];
+            newProcessingState[nextSection] = true;
+            startTimer(nextSection);
+          }
+
+          globalState = { ...globalState, isProcessingSection: newProcessingState };
+          notify();
         }
       );
 
@@ -753,7 +786,7 @@ export function useSituationStore() {
         feeds: newsFeeds,
         isProcessing: false,
         processingStatus: 'Scan Complete',
-        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false },
+        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, rss: false, bigPicture: false },
         lastUpdated: new Date()
       };
 
@@ -781,6 +814,7 @@ export function useSituationStore() {
       persist();
     } catch (error) {
       stopTimer('full-scan');
+      ['narrative', 'signals', 'insights', 'map', 'relations'].forEach(stopTimer);
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
       notify();
     }
@@ -898,7 +932,7 @@ export function useSituationStore() {
         // Special sound for Signals section
         if (sectionId === 'signals' && globalState.signals.length > 0) {
           // Play pings for number of signals (max 5 to avoid being too long)
-          const pingCount = Math.min(globalState.signals.length, 5);
+          const pingCount = globalState.signals.length; //Math.min(globalState.signals.length, 5);
           if (pingCount > 1) {
             zzfx.playMultiplePings(pingCount);
           } else {

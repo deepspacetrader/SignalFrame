@@ -5,8 +5,6 @@ import type { ForeignRelation, AiConfig, DeepDiveData, EvidenceRef, Signal, Situ
 import { StorageService } from '../../services/db';
 import { getSentimentProfile, generateCustomSentimentGuidelines } from './sentimentEngine';
 
-export const DEFAULT_MODEL = 'llama3.2';
-
 const CATEGORY_MAP: Record<string, string> = {
   'narrative': 'narrative briefing',
   'signals': 'delta signals',
@@ -113,7 +111,8 @@ export async function processSituation(
   bigPicture: any = null,
   onProgress?: (status: string) => void,
   onNarrativeChunk?: (chunk: string) => void,
-  onThinkingChunk?: (chunk: string) => void
+  onThinkingChunk?: (chunk: string) => void,
+  onSectionComplete?: (section: string) => void
 ): Promise<Partial<SituationState>> {
   const context = generateContext(feeds);
   const feedIndex = generateFeedIndex(feeds);
@@ -151,21 +150,27 @@ export async function processSituation(
       narrative = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
     }
 
+    onSectionComplete?.('narrative');
     onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
     const recentSignals = await getRecentSignalsForNovelty(7);
     const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json', options);
     const parsedSignals = applyNoveltyScores(finalizeSignals(parseJsonArray(signalsRaw), feeds), recentSignals);
     const signalsText = parsedSignals.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
 
+    onSectionComplete?.('signals');
     onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
     const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals), 'json', options);
 
+    onSectionComplete?.('insights');
     onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
     const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText), 'json', options);
 
+    onSectionComplete?.('map');
     onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
     const historicalContext = await getHistoricalRelationsContext(foreignRelations);
     const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext), 'json', options);
+
+    onSectionComplete?.('relations');
 
     return {
       narrative: finalizeNarrative(narrative),
@@ -1339,6 +1344,23 @@ export async function processSingleSection(
   extraContext: any = {},
   onJsonError?: (error: string, canRetry: boolean) => void
 ): Promise<Partial<SituationState>> {
+  // Special handling for RSS section - just validate feeds, no AI processing
+  if (sectionId === 'rss') {
+    // Simulate a brief processing delay for UX
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Check if we have any feeds - fail only if all feeds are empty/missing
+    if (!feeds || feeds.length === 0) {
+      throw new Error('No RSS feeds available. Please try refreshing feeds.');
+    }
+    
+    // RSS processing "succeeds" if we have any feeds at all
+    // Individual feed source failures are handled at the feed level, not section level
+    return { 
+      feeds: feeds // Just return the existing feeds
+    };
+  }
+
   const context = generateContext(feeds);
   const feedIndex = generateFeedIndex(feeds);
   const opt = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };

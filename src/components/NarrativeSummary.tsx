@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { RawOutputModal } from './RawOutputModal'
 import { formatTime } from '../utils/timeUtils'
+import { SectionCard } from './shared/SectionCard'
+import { SectionHeader } from './shared/SectionHeader'
+import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
+import { SectionBadge } from './shared/SectionBadge'
 
 
 export function NarrativeSummary() {
@@ -23,53 +27,65 @@ export function NarrativeSummary() {
 
   const hasThinking = thinkingTrace && thinkingTrace.length > 0;
 
-  return (
-    <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 ${isLoading ? 'section-loading' : ''}`}>
-      {isLoading && (
-        <div className="section-loading-overlay">
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-          <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Regenerating Briefing...</span>
-        </div>
-      )}
+  const headerBadges = useMemo(() => {
+    const badges: JSX.Element[] = []
+    if (aiConfig.enableThinking) {
+      badges.push(
+        <SectionBadge key="thinking" tone="accent">
+          Thinking Mode
+        </SectionBadge>
+      )
+    }
+    if (sectionGenerationTimes.narrative) {
+      badges.push(
+        <SectionBadge key="duration" tone="info">
+          {formatTime(sectionGenerationTimes.narrative)}
+        </SectionBadge>
+      )
+    }
+    return badges
+  }, [aiConfig.enableThinking, sectionGenerationTimes.narrative])
 
-      <div className="flex justify-between items-start mb-6">
-        <h2 className="text-xl font-semibold m-0 flex items-center gap-3 text-text-primary font-display">
-          <div className="w-1 h-5 bg-accent-primary rounded-full"></div>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-          </svg>
-          Current Narrative
-          {aiConfig.enableThinking && (
-            <span className="text-[0.5rem] uppercase tracking-widest font-bold px-2 py-0.5 rounded bg-accent-secondary/20 text-accent-secondary border border-accent-secondary/30">
-              Thinking Mode
-            </span>
-          )}
-        </h2>
+  const headerActions = useMemo(() => {
+    if (!narrative || isProcessing) return null
 
-        {narrative && !isProcessing && (
-          <>
-            <button
-              onClick={() => refreshSection('narrative')}
-              className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-            >
-              Regenerate
-            </button>
-            {sectionGenerationTimes.narrative && (
-              <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
-                {formatTime(sectionGenerationTimes.narrative)}
-              </span>
-            )}
-            {rawOutputs.narrative && (
-              <button
-                onClick={() => showRawOutput('narrative')}
-                className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-all opacity-60 hover:opacity-100"
-              >
-                Raw Output
-              </button>
-            )}
-          </>
+    return (
+      <div className="flex items-center gap-2">
+        <SectionRegenerateButton onClick={() => refreshSection('narrative')} />
+        {rawOutputs.narrative && (
+          <button
+            onClick={() => showRawOutput('narrative')}
+            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-all"
+          >
+            Raw Output
+          </button>
         )}
       </div>
+    )
+  }, [isProcessing, narrative, rawOutputs.narrative, refreshSection, showRawOutput])
+
+  return (
+    <SectionCard
+      isLoading={isLoading}
+      loadingOverlayContent={
+        <>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+          <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Regenerating Briefing...</span>
+        </>
+      }
+    >
+      <SectionHeader
+        className="mb-6"
+        title="Current Narrative"
+        icon={
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+          </svg>
+        }
+        badges={headerBadges}
+        actions={headerActions}
+      />
 
       {isProcessing && !narrative ? (
         <div className="loading-skeleton h-24 bg-white/5 animate-pulse rounded"></div>
@@ -167,6 +183,6 @@ export function NarrativeSummary() {
         sectionId="narrative"
         title="Current Narrative"
       />
-    </section>
+    </SectionCard>
   )
 }

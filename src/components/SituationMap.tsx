@@ -4,6 +4,8 @@ import L from 'leaflet'
 import { useSituationStore, MapPoint } from '../state/useSituationStore'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
 import 'leaflet/dist/leaflet.css'
+import { formatTime } from '../utils/timeUtils'
+
 
 const categoryColors: Record<string, string> = {
     'Tech / AI': '#3b82f6',
@@ -90,7 +92,7 @@ const createCustomIcon = (point: MapPoint) => {
 }
 
 export function SituationMap() {
-    const { mapPoints, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection } = useSituationStore()
+    const { mapPoints, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection, sectionGenerationTimes } = useSituationStore()
     const isLoading = isProcessingSection.map && !isProcessing;
 
     return (
@@ -113,12 +115,19 @@ export function SituationMap() {
                 </h2>
 
                 {mapPoints.length > 0 && !isProcessing && (
-                    <button
-                        onClick={() => refreshSection('map')}
-                        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-                    >
-                        Regenerate
-                    </button>
+                    <>
+                        <button
+                            onClick={() => refreshSection('map')}
+                            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
+                        >
+                            Regenerate
+                        </button>
+                        {sectionGenerationTimes.map && (
+                            <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
+                                {formatTime(sectionGenerationTimes.map)}
+                            </span>
+                        )}
+                    </>
                 )}
             </div>
 
