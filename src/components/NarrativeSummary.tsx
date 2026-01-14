@@ -1,8 +1,20 @@
 import { useState } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
+import { RawOutputModal } from './RawOutputModal'
 
 export function NarrativeSummary() {
-  const { narrative, thinkingTrace, isProcessing, isProcessingSection, refreshSection, aiConfig } = useSituationStore()
+  const { 
+    narrative, 
+    thinkingTrace, 
+    isProcessing, 
+    isProcessingSection, 
+    refreshSection, 
+    aiConfig,
+    rawOutputs,
+    activeRawOutput,
+    showRawOutput,
+    hideRawOutput
+  } = useSituationStore()
   const isLoading = isProcessingSection.narrative && !isProcessing;
   const [isThinkingOpen, setIsThinkingOpen] = useState(false);
 
@@ -32,12 +44,22 @@ export function NarrativeSummary() {
         </h2>
 
         {narrative && !isProcessing && (
-          <button
-            onClick={() => refreshSection('narrative')}
-            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-          >
-            Regenerate
-          </button>
+          <>
+            <button
+              onClick={() => refreshSection('narrative')}
+              className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
+            >
+              Regenerate
+            </button>
+            {rawOutputs.narrative && (
+              <button
+                onClick={() => showRawOutput('narrative')}
+                className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-all opacity-60 hover:opacity-100"
+              >
+                Raw Output
+              </button>
+            )}
+          </>
         )}
       </div>
 
@@ -45,7 +67,7 @@ export function NarrativeSummary() {
         <div className="loading-skeleton h-24 bg-white/5 animate-pulse rounded"></div>
       ) : (
         <>
-          <p className="text-lg text-text-primary leading-relaxed whitespace-pre-wrap">
+          <p className="text-text-primary leading-relaxed whitespace-pre-wrap">
             {narrative || "No narrative generated yet. Start a scan to begin."}
           </p>
 
@@ -129,6 +151,14 @@ export function NarrativeSummary() {
           )}
         </>
       )}
+      
+      {/* Raw Output Modal */}
+      <RawOutputModal
+        isOpen={activeRawOutput === 'narrative'}
+        onClose={hideRawOutput}
+        sectionId="narrative"
+        title="Current Narrative"
+      />
     </section>
   )
 }

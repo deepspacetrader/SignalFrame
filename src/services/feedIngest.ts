@@ -140,12 +140,16 @@ async function fetchRssFeed(feedUrl: string): Promise<any> {
             signal: AbortSignal.timeout(10000)
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data.status === 'ok' && data.items) {
-                return data;
-            }
+        if (!response.ok) {
+            throw new Error(`RSS2JSON HTTP ${response.status}`);
         }
+
+        const data = await response.json();
+        if (data.status === 'ok' && data.items) {
+            return data;
+        }
+
+        throw new Error('RSS2JSON returned malformed payload');
     } catch (error) {
         console.warn(`RSS2JSON failed for ${feedUrl}, falling back to raw XML parsing...`);
     }

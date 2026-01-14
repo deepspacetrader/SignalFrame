@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react'
 import { processSituation, processSingleSection, processBigPicture } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
@@ -14,14 +13,103 @@ export type Sentiment =
   | 'positive'
   | 'very-positive';
 
+export type SignalCategory =
+  | 'Tech/AI'
+  | 'Financial'
+  | 'Conflicts'
+  | 'Geopolitical'
+  | 'Other';
+
+export type DeltaType =
+  | 'escalation'
+  | 'deescalation'
+  | 'policy'
+  | 'market'
+  | 'breakthrough'
+  | 'disruption'
+  | 'other';
+
+export interface EvidenceRef {
+  feedId: string;
+  source?: string;
+  title?: string;
+  link?: string;
+  timestamp?: string;
+  quote?: string;
+}
+
+export interface ContradictionRef {
+  claimA: string;
+  claimB: string;
+  evidenceA: EvidenceRef[];
+  evidenceB: EvidenceRef[];
+}
+
+export interface DeepDiveData {
+  signalId: string;
+  generatedAt: string;
+  header: {
+    title: string;
+    text: string;
+    sentiment: Sentiment;
+    deltaType?: DeltaType;
+    category?: SignalCategory;
+  };
+  fiveWs: {
+    who?: string[];
+    what?: string;
+    where?: string;
+    when?: string;
+    why?: string;
+    soWhat?: string;
+  };
+  evidence: EvidenceRef[];
+  counterpoints?: {
+    claimA: string;
+    claimB: string;
+    evidenceA: EvidenceRef[];
+    evidenceB: EvidenceRef[];
+  }[];
+  watchNext?: string[];
+}
+
+export type MetricDefType = 'category' | 'keyword' | 'tracker';
+
+export interface MetricDef {
+  id: string;
+  name: string;
+  type: MetricDefType;
+  config: {
+    category?: SignalCategory;
+    sentiment?: Sentiment;
+    keywords?: string[];
+    trackerId?: string;
+  };
+}
+
 export interface Signal {
   text: string;
   sentiment: Sentiment;
+  id?: string;
+  title?: string;
+  category?: SignalCategory;
+  deltaType?: DeltaType;
+  importance?: number;
+  novelty?: number;
+  timeRange?: { start?: string; end?: string };
+  location?: { name: string; lat?: number; lng?: number };
+  evidence?: EvidenceRef[];
+  contradictions?: ContradictionRef[];
+  explain?: string;
+  shareText?: string;
+  threadId?: string;
 }
 
 export interface Insight {
   text: string;
   sentiment: Sentiment;
+  evidence?: EvidenceRef[];
+  signalId?: string; // Optional: tie this insight to a specific signal by its id
 }
 
 export interface MapPoint {
@@ -33,9 +121,8 @@ export interface MapPoint {
   category: 'Tech / AI' | 'Financial' | 'Conflicts' | 'Geopolitical';
   description?: string;
   sourceLink?: string;
+  signalId?: string;
 }
-
-
 
 export interface ForeignRelation {
   id: string;
@@ -105,6 +192,14 @@ export interface SituationState {
   runningModels: RunningModel[];
   lastUpdated: Date | null;
   jsonError: JsonErrorState;
+  sourceCredibility: Record<string, number>;
+  metricDefs: MetricDef[];
+  dailyMetrics: Record<string, number>;
+  deepDiveBySignalId: Record<string, DeepDiveData>;
+  activeDeepDiveSignalId: string | null;
+  isGeneratingDeepDive: boolean;
+  rawOutputs: Record<string, string>; // Store raw AI outputs by section
+  activeRawOutput: string | null; // Currently displayed raw output section
 }
 
 const getTodayStr = () => {
@@ -137,9 +232,9 @@ const defaultState: SituationState = {
   bigPicture: null,
   thinkingTrace: '',
   aiConfig: {
-    model: 'llama3.2',
-    numCtx: 25000,
-    numPredict: 15000,
+    model: '',
+    numCtx: 0,
+    numPredict: 0,
     enableThinking: false
   },
   availableModels: [],
@@ -151,7 +246,27 @@ const defaultState: SituationState = {
     canRetry: false,
     sectionId: null,
     retryCount: 0
-  }
+  },
+  sourceCredibility: {
+    'Reuters': 0.95,
+    'Associated Press': 0.92,
+    'AP News': 0.92,
+    'BBC News': 0.9,
+    'Financial Times': 0.9,
+    'The Economist': 0.88,
+    'The Wall Street Journal': 0.88,
+    'The New York Times': 0.86,
+    'Bloomberg': 0.86,
+    'Al Jazeera': 0.8,
+    'Google News Archive': 0.7
+  },
+  metricDefs: [],
+  dailyMetrics: {},
+  deepDiveBySignalId: {},
+  activeDeepDiveSignalId: null,
+  isGeneratingDeepDive: false,
+  rawOutputs: {},
+  activeRawOutput: null
 };
 
 let globalState: SituationState = { ...defaultState };
@@ -180,6 +295,7 @@ async function persist() {
     feeds: globalState.feeds,
     mapPoints: globalState.mapPoints,
     foreignRelations: globalState.foreignRelations,
+    dailyMetrics: globalState.dailyMetrics,
     lastUpdated: globalState.lastUpdated
   });
 
@@ -192,6 +308,9 @@ async function persist() {
     countryB: r.countryB,
     topic: r.topic
   })));
+  await StorageService.saveGlobal('source_credibility', globalState.sourceCredibility);
+  await StorageService.saveGlobal('metric_defs', globalState.metricDefs);
+  await StorageService.saveGlobal('deep_dive_cache', globalState.deepDiveBySignalId);
 }
 
 export function useSituationStore() {
@@ -210,8 +329,17 @@ export function useSituationStore() {
         StorageService.getGlobal('bigPicture')
       ]);
 
+      const [savedCred, savedMetricDefs, savedDeepDives] = await Promise.all([
+        StorageService.getGlobal('source_credibility'),
+        StorageService.getGlobal('metric_defs'),
+        StorageService.getGlobal('deep_dive_cache')
+      ]);
+
       if (config) globalState.aiConfig = config;
       if (savedBigPicture) globalState.bigPicture = savedBigPicture; // Load Global Big Picture
+      if (savedCred && typeof savedCred === 'object') globalState.sourceCredibility = savedCred;
+      if (savedMetricDefs && Array.isArray(savedMetricDefs)) globalState.metricDefs = savedMetricDefs;
+      if (savedDeepDives && typeof savedDeepDives === 'object') globalState.deepDiveBySignalId = savedDeepDives;
 
       globalState.availableDates = dates.length > 0 ? dates : [today];
       globalState.currentDate = today;
@@ -221,6 +349,8 @@ export function useSituationStore() {
         const bp = globalState.bigPicture;
         Object.assign(globalState, analysis);
         if (bp) globalState.bigPicture = bp;
+
+        if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
 
         if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
       } else if (defs) {
@@ -252,6 +382,122 @@ export function useSituationStore() {
       listeners.delete(setState);
       clearInterval(poll);
     };
+  }, []);
+
+  const updateSourceCredibility = useCallback((source: string, weight: number) => {
+    const normalized = String(source || '').trim();
+    if (!normalized) return;
+    const clamped = Math.max(0, Math.min(1, weight));
+    globalState = {
+      ...globalState,
+      sourceCredibility: { ...globalState.sourceCredibility, [normalized]: clamped }
+    };
+    notify();
+    persist();
+  }, []);
+
+  const upsertMetricDef = useCallback((def: MetricDef) => {
+    const existingIdx = globalState.metricDefs.findIndex(m => m.id === def.id);
+    const next = [...globalState.metricDefs];
+    if (existingIdx >= 0) next[existingIdx] = def;
+    else next.push(def);
+    globalState = { ...globalState, metricDefs: next };
+    notify();
+    persist();
+  }, []);
+
+  const removeMetricDef = useCallback((id: string) => {
+    globalState = { ...globalState, metricDefs: globalState.metricDefs.filter(m => m.id !== id) };
+    notify();
+    persist();
+  }, []);
+
+  const openDeepDive = useCallback((signalId: string) => {
+    globalState = { ...globalState, activeDeepDiveSignalId: signalId };
+    notify();
+  }, []);
+
+  const closeDeepDive = useCallback(() => {
+    globalState = { ...globalState, activeDeepDiveSignalId: null };
+    notify();
+  }, []);
+
+  const generateDeepDive = useCallback(async (signalId: string) => {
+    const existing = globalState.deepDiveBySignalId[signalId];
+    if (existing) {
+      globalState = { ...globalState, activeDeepDiveSignalId: signalId };
+      notify();
+      return;
+    }
+
+    const signal = globalState.signals.find(s => (s.id || '') === signalId);
+    if (!signal) return;
+
+    globalState = { ...globalState, isGeneratingDeepDive: true, activeDeepDiveSignalId: signalId };
+    notify();
+
+    try {
+      const { generateDeepDive: generateDeepDiveRuntime } = await import('../ai/runtime/engine');
+      const result = await generateDeepDiveRuntime(
+        signal,
+        globalState.feeds,
+        globalState.currentDate,
+        globalState.aiConfig
+      );
+
+      globalState = {
+        ...globalState,
+        deepDiveBySignalId: { ...globalState.deepDiveBySignalId, [signalId]: result },
+        isGeneratingDeepDive: false
+      };
+      notify();
+      persist();
+    } catch (e) {
+      globalState = { ...globalState, isGeneratingDeepDive: false };
+      notify();
+    }
+  }, []);
+
+  const setRawOutput = useCallback((sectionId: string, rawOutput: string) => {
+    globalState = {
+      ...globalState,
+      rawOutputs: { ...globalState.rawOutputs, [sectionId]: rawOutput }
+    };
+    notify();
+  }, []);
+
+  const showRawOutput = useCallback((sectionId: string) => {
+    globalState = { ...globalState, activeRawOutput: sectionId };
+    notify();
+  }, []);
+
+  const clearSection = useCallback((sectionId: keyof SituationState['isProcessingSection']) => {
+    console.log('Clearing section:', sectionId);
+    
+    // Clear the specific section data from current state
+    if (sectionId === 'narrative') {
+      globalState = { ...globalState, narrative: '' };
+    } else if (sectionId === 'signals') {
+      globalState = { ...globalState, signals: [] };
+    } else if (sectionId === 'insights') {
+      globalState = { ...globalState, insights: [] };
+    } else if (sectionId === 'map') {
+      globalState = { ...globalState, mapPoints: [] };
+    } else if (sectionId === 'relations') {
+      globalState = { ...globalState, foreignRelations: [] };
+    }
+    
+    // Also clear the raw output for this section
+    const newRawOutputs = { ...globalState.rawOutputs };
+    delete newRawOutputs[sectionId];
+    globalState = { ...globalState, rawOutputs: newRawOutputs };
+    
+    notify();
+  }, []);
+
+  const hideRawOutput = useCallback(() => {
+    globalState = { ...globalState, activeRawOutput: null };
+    notify();
   }, []);
 
   // Helper to find the last known state of relations across all history
@@ -286,6 +532,8 @@ export function useSituationStore() {
       // RESTORE Global Big Picture if we want it to be truly global
       if (currentBigPicture) globalState.bigPicture = currentBigPicture;
 
+      if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
+
       // Ensure we keep the latest relation definitions even when viewing history
       if (currentDefs) {
         const historicalRelations = globalState.foreignRelations;
@@ -305,6 +553,7 @@ export function useSituationStore() {
       globalState.insights = [];
       globalState.feeds = [];
       globalState.mapPoints = [];
+      globalState.dailyMetrics = {};
       globalState.lastUpdated = null;
       if (currentBigPicture) globalState.bigPicture = currentBigPicture;
 
@@ -349,7 +598,19 @@ export function useSituationStore() {
     notify();
 
     try {
-      const newsFeeds = await fetchLatestFeeds(globalState.currentDate)
+      // Check if we already have feeds for today to avoid rate limiting
+      let newsFeeds = globalState.feeds;
+      
+      // Only fetch if we don't have feeds or they're empty
+      if (!newsFeeds || newsFeeds.length === 0) {
+        globalState = { ...globalState, processingStatus: 'Fetching latest feeds...' };
+        notify();
+        newsFeeds = await fetchLatestFeeds(globalState.currentDate);
+      } else {
+        globalState = { ...globalState, processingStatus: 'Using cached feeds...' };
+        notify();
+      }
+      
       const result = await processSituation(
         newsFeeds,
         contextRelations, // Pass enriched relations
@@ -378,6 +639,15 @@ export function useSituationStore() {
         isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false },
         lastUpdated: new Date()
       };
+
+      // Store raw outputs if available
+      if ((result as any).rawOutputs) {
+        const rawOutputs = (result as any).rawOutputs;
+        globalState = {
+          ...globalState,
+          rawOutputs: { ...globalState.rawOutputs, ...rawOutputs }
+        };
+      }
 
       const dates = await StorageService.getAllDates();
       globalState.availableDates = dates;
@@ -446,7 +716,14 @@ export function useSituationStore() {
   }, []);
 
   const refreshSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection']) => {
-    if (globalState.isProcessing || globalState.isProcessingSection[sectionId] || globalState.feeds.length === 0) return;
+    if (globalState.isProcessing || globalState.isProcessingSection[sectionId] || globalState.feeds.length === 0) {
+      console.log('refreshSection blocked:', { 
+        isProcessing: globalState.isProcessing, 
+        isProcessingSection: globalState.isProcessingSection[sectionId], 
+        feedsLength: globalState.feeds.length 
+      });
+      return;
+    }
 
     globalState = {
       ...globalState,
@@ -477,14 +754,26 @@ export function useSituationStore() {
         }
       );
 
+      // console.log('processSingleSection result for', sectionId, ':', result);
       globalState = {
         ...globalState,
         ...result,
         isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false }
       };
+
+      // Store raw outputs if available
+      if ((result as any).rawOutputs) {
+        const rawOutputs = (result as any).rawOutputs;
+        // console.log('Storing raw outputs:', rawOutputs);
+        globalState = {
+          ...globalState,
+          rawOutputs: { ...globalState.rawOutputs, ...rawOutputs }
+        };
+      }
       notify();
       persist();
     } catch (error) {
+      console.error('refreshSection error for', sectionId, ':', error);
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false } };
       notify();
     }
@@ -639,6 +928,16 @@ export function useSituationStore() {
     loadDate,
     setJsonError,
     clearJsonError,
-    retryJsonSection
+    retryJsonSection,
+    updateSourceCredibility,
+    upsertMetricDef,
+    removeMetricDef,
+    openDeepDive,
+    closeDeepDive,
+    generateDeepDive,
+    setRawOutput,
+    showRawOutput,
+    hideRawOutput,
+    clearSection
   };
 }

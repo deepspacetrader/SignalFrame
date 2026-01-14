@@ -1,8 +1,6 @@
-
 import { useEffect, useState } from 'react'
 import { NarrativeSummary } from './components/NarrativeSummary'
-import { SignalList } from './components/SignalList'
-import { InsightPanel } from './components/InsightPanel'
+import { Signals } from './components/Signals'
 import { SourceFeedList } from './components/SourceFeedList'
 import { SituationMap } from './components/SituationMap'
 import { ForeignRelationsPanel } from './components/ForeignRelationsPanel'
@@ -179,18 +177,13 @@ export default function App() {
         <div className="col-span-12 lg:col-span-12 space-y-8">
           <SituationMap />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Narrative Summary */}
             <NarrativeSummary />
 
-            {/* Signal List */}
+            {/* Signal List with Inline Implications */}
             <div className="grid grid-cols-1">
-              <SignalList />
-            </div>
-
-            {/* Insight Panel */}
-            <div className="grid grid-cols-1">
-              <InsightPanel />
+              <Signals />
             </div>
           </div>
 

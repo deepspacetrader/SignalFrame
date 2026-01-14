@@ -18,6 +18,9 @@ export interface OllamaThinkingResponse {
     thinking?: string;
 }
 
+const DEFAULT_num_ctx = 32000;
+const DEFAULT_num_predict = 25000;
+
 export class OllamaService {
     private static baseUrl = 'http://127.0.0.1:11434/api';
 
@@ -41,8 +44,8 @@ export class OllamaService {
                     stream: false,
                     format,
                     options: {
-                        num_ctx: options.num_ctx || 25000,
-                        num_predict: options.num_predict || 15000,
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
                     }
                 }),
             });
@@ -76,8 +79,8 @@ export class OllamaService {
                     stream: false,
                     think: true,
                     options: {
-                        num_ctx: options.num_ctx || 32000,
-                        num_predict: options.num_predict || 20000,
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
                     }
                 }),
             });
@@ -116,8 +119,8 @@ export class OllamaService {
                     stream: true,
                     think: true,
                     options: {
-                        num_ctx: options.num_ctx || 25000,
-                        num_predict: options.num_predict || 15000,
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
                     }
                 }),
             });
@@ -177,8 +180,8 @@ export class OllamaService {
                     prompt,
                     stream: true,
                     options: {
-                        num_ctx: options.num_ctx || 25000,
-                        num_predict: options.num_predict || 15000,
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
                     }
                 }),
             });
@@ -229,8 +232,8 @@ export class OllamaService {
                     messages,
                     stream: true,
                     options: {
-                        num_ctx: options.num_ctx || 25000,
-                        num_predict: options.num_predict || 15000,
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
                     }
                 }),
             });
@@ -282,7 +285,7 @@ export class OllamaService {
                     model,
                     prompt,
                     options: {
-                        num_ctx: options.num_ctx || 25000,
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
                     }
                 }),
             });

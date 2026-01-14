@@ -30,8 +30,17 @@ const LOADING_MESSAGES = [
   "Pretending to do work while actually just scrolling social media...",
 ];
 
+const SECTIONS = [
+  { id: 'narrative', name: 'Narrative Analysis', icon: '📝' },
+  { id: 'signals', name: 'Signal Detection', icon: '📡' },
+  { id: 'insights', name: 'Insight Generation', icon: '💡' },
+  { id: 'map', name: 'Geographic Mapping', icon: '🗺️' },
+  { id: 'relations', name: 'Foreign Relations', icon: '🤝' },
+  { id: 'bigPicture', name: 'Big Picture', icon: '🌍' },
+] as const;
+
 export function LoadingOverlay() {
-  const { isProcessing, processingStatus, aiConfig } = useSituationStore();
+  const { isProcessing, processingStatus, aiConfig, isProcessingSection } = useSituationStore();
   const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
 
   // Create a shuffled copy of messages when processing starts
@@ -87,6 +96,44 @@ export function LoadingOverlay() {
           <p className="text-base text-accent-secondary font-mono animate-pulse uppercase tracking-[0.2em] font-bold text-center break-words max-w-full">
             {shuffledMessages[loadingMsgIdx]}
           </p>
+          
+          {/* Progress Checklist */}
+          <div className="mt-6 w-full max-w-md">
+            <h3 className="text-sm font-semibold text-text-secondary mb-3 text-center uppercase tracking-[0.1em]">
+              Progress Overview
+            </h3>
+            <div className="space-y-2">
+              {SECTIONS.map((section) => {
+                const isProcessing = isProcessingSection[section.id];
+                return (
+                  <div
+                    key={section.id}
+                    className={`
+                      flex items-center gap-3 px-3 py-2 rounded-lg border transition-all duration-300
+                      ${isProcessing 
+                        ? 'bg-accent-primary/10 border-accent-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.2)]' 
+                        : 'bg-black/20 border-white/5'
+                      }
+                    `}
+                  >
+                    <span className="text-lg">{section.icon}</span>
+                    <span className={`
+                      text-sm font-medium flex-1
+                      ${isProcessing ? 'text-accent-primary' : 'text-text-secondary'}
+                    `}>
+                      {section.name}
+                    </span>
+                    {isProcessing ? (
+                      <div className="w-2 h-2 bg-accent-primary rounded-full animate-pulse"></div>
+                    ) : (
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="mt-4 px-4 py-2 bg-black/20 rounded-lg border border-white/5">
             <p className="text-[10px] text-text-secondary uppercase tracking-[0.4em] opacity-80 font-bold text-center">
               {aiConfig.model}

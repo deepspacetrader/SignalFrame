@@ -62,7 +62,7 @@ export function PredictionsPanel() {
     `;
 
         try {
-            const response = await OllamaService.generate(aiConfig.model, prompt, 'json', { num_ctx: 8192, num_predict: 1024 });
+            const response = await OllamaService.generate(aiConfig.model, prompt, 'json', { num_ctx: 32000, num_predict: 25000 });
 
             // Clean up potentially malformed JSON (markdown blocks)
             let jsonStr = response;

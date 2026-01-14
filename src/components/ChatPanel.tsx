@@ -88,7 +88,7 @@ export function ChatPanel() {
         }
 
         if (includeSignals) {
-            parts.push(`KEY SIGNALS (TODAY):\n${signals.map(s => `- ${s.text} (${s.sentiment})`).join('\n')}`);
+            parts.push(`SIGNALS (TODAY):\n${signals.map(s => `- ${s.text} (${s.sentiment})`).join('\n')}`);
         }
 
         if (includeInsights) {

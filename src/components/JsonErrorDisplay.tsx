@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface JsonErrorProps {
   error: string
@@ -11,6 +11,12 @@ interface JsonErrorProps {
 export function JsonErrorDisplay({ error, onRetry, onCancel, countdown = 5, isRetrying = false }: JsonErrorProps) {
   const [timeLeft, setTimeLeft] = useState(countdown)
   const [isCountingDown, setIsCountingDown] = useState(true)
+  const onRetryRef = useRef(onRetry)
+  
+  // Update ref when onRetry changes
+  useEffect(() => {
+    onRetryRef.current = onRetry
+  }, [onRetry])
 
   // Reset countdown when error changes (new error) or when component is no longer retrying
   useEffect(() => {
@@ -31,8 +37,9 @@ export function JsonErrorDisplay({ error, onRetry, onCancel, countdown = 5, isRe
     if (!isCountingDown || timeLeft <= 0 || isRetrying) {
       // Auto-retry when countdown reaches 0
       if (timeLeft === 0 && isCountingDown && !isRetrying) {
+        console.log('JsonErrorDisplay: Auto-retry triggered');
         setIsCountingDown(false)
-        onRetry()
+        onRetryRef.current()
       }
       return
     }
@@ -48,7 +55,7 @@ export function JsonErrorDisplay({ error, onRetry, onCancel, countdown = 5, isRe
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [timeLeft, isCountingDown, isRetrying, onRetry])
+  }, [timeLeft, isCountingDown, isRetrying]) // No function dependencies
 
   const handleRetry = () => {
     if (isCountingDown && timeLeft > 0) {
