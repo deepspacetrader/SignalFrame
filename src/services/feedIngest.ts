@@ -219,6 +219,9 @@ const NEWS_FEEDS = [
     // Health
     { url: 'http://feeds.bbci.co.uk/news/health/rss.xml', category: 'Health', source: 'BBC Health' },
     { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml', category: 'Health', source: 'NY Times Health' },
+
+    // Local North Vancouver
+    { url: 'https://www.nsnews.com/rss', category: 'Local', source: 'North Shore News' }
 ];
 
 // Regex patterns for stricter matching (word boundaries)

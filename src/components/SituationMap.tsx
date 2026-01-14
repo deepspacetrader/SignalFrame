@@ -1,10 +1,15 @@
 
+import { useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet'
 import L from 'leaflet'
 import { useSituationStore, MapPoint } from '../state/useSituationStore'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
 import 'leaflet/dist/leaflet.css'
 import { formatTime } from '../utils/timeUtils'
+import { SectionCard } from './shared/SectionCard'
+import { SectionHeader } from './shared/SectionHeader'
+import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
+import { SectionBadge } from './shared/SectionBadge'
 
 
 const categoryColors: Record<string, string> = {
@@ -95,41 +100,60 @@ export function SituationMap() {
     const { mapPoints, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection, sectionGenerationTimes } = useSituationStore()
     const isLoading = isProcessingSection.map && !isProcessing;
 
+    const headerBadges = useMemo(() => {
+        const badges: JSX.Element[] = []
+
+        badges.push(
+            <SectionBadge key="count" tone={mapPoints.length > 0 ? 'neutral' : 'warning'}>
+                {mapPoints.length > 0 ? `${mapPoints.length} locations` : 'No map data'}
+            </SectionBadge>
+        )
+
+        if (sectionGenerationTimes.map) {
+            badges.push(
+                <SectionBadge key="duration" tone="info">
+                    {formatTime(sectionGenerationTimes.map)}
+                </SectionBadge>
+            )
+        }
+
+        return badges
+    }, [mapPoints.length, sectionGenerationTimes.map])
+
+    const headerActions = useMemo(() => {
+        if (mapPoints.length === 0 || isProcessing) return null
+
+        return (
+            <SectionRegenerateButton
+                onClick={() => refreshSection('map')}
+                className="opacity-80 hover:opacity-100"
+            />
+        )
+    }, [isProcessing, mapPoints.length, refreshSection])
+
     return (
-        <section className={`relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 h-[500px] flex flex-col ${isLoading ? 'section-loading' : ''}`}>
-            {isLoading && (
-                <div className="section-loading-overlay rounded-2xl z-10">
+        <SectionCard
+            className="h-[500px] flex flex-col"
+            isLoading={isLoading}
+            loadingOverlayContent={
+                <>
                     <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
                     <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary text-center px-4">Recalculating Geo-Coordinates...</span>
-                </div>
-            )}
-
-            <div className="flex justify-between items-start mb-6">
-                <h2 className="text-xl font-semibold m-0 flex items-center gap-3 text-text-primary font-display">
-                    <div className="w-1 h-5 bg-accent-primary rounded-full"></div>
+                </>
+            }
+        >
+            <SectionHeader
+                className="mb-6"
+                title="Geospatial Awareness"
+                icon={
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                     </svg>
-                    Geospatial Awareness
-                </h2>
-
-                {mapPoints.length > 0 && !isProcessing && (
-                    <>
-                        <button
-                            onClick={() => refreshSection('map')}
-                            className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100"
-                        >
-                            Regenerate
-                        </button>
-                        {sectionGenerationTimes.map && (
-                            <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary px-2 py-1">
-                                {formatTime(sectionGenerationTimes.map)}
-                            </span>
-                        )}
-                    </>
-                )}
-            </div>
+                }
+                badges={headerBadges}
+                actions={headerActions}
+            />
 
             {/* JSON Error Display */}
             {jsonError.hasError && jsonError.sectionId === 'map' && (
@@ -215,6 +239,6 @@ export function SituationMap() {
                     ))}
                 </MapContainer>
             </div>
-        </section>
+        </SectionCard>
     )
 }

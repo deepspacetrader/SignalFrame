@@ -94,7 +94,12 @@ export default function App() {
 
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
-                <p className="text-xs font-mono text-accent-secondary whitespace-nowrap">{isProcessing ? 'SCANNING...' : 'ANALYSIS STANDBY'}</p>
+                <p className={`text-xs font-mono whitespace-nowrap ${
+                  isProcessing ? 'text-accent-secondary' : 
+                  (runningModels && runningModels.length > 0 ? 'text-accent-secondary' : 'text-red-500')
+                }`}>
+                  {isProcessing ? 'SCANNING...' : (runningModels && runningModels.length > 0 ? 'ANALYSIS STANDBY' : 'AI OFFLINE')}
+                </p>
               </div>
               {lastUpdated && (
                 <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 hidden sm:block">
@@ -111,9 +116,10 @@ export default function App() {
                 </p>
               </div>
 
-              {runningModels && runningModels.length > 0 && (
-                <div className="flex gap-2">
-                  {runningModels.map(m => (
+              {/* Engine Load Display */}
+              <div className="flex gap-2">
+                {runningModels && runningModels.length > 0 ? (
+                  runningModels.map(m => (
                     <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hidden xl:block">
                       <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Engine Load</p>
                       <div className="flex items-center gap-2">
@@ -126,9 +132,16 @@ export default function App() {
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  ))
+                ) : (
+                  <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hidden xl:block">
+                    <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Engine Load</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-red-500 whitespace-nowrap">No AI Model Loaded</span>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {sectionGenerationTimes['full-scan'] && (
                 <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
