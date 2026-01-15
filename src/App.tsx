@@ -113,12 +113,12 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Engine Load Display */}
+              {/* AI Model Display */}
               <div className="flex gap-2">
                 {runningModels && runningModels.length > 0 ? (
                   runningModels.map(m => (
                     <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
-                      <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Engine Load</p>
+                      <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-mono text-white whitespace-nowrap">{m.name.split(':')[0]}</span>
                         <div className="flex items-center gap-1.5">
@@ -132,7 +132,7 @@ export default function App() {
                   ))
                 ) : (
                   <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
-                    <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Engine Load</p>
+                    <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-mono whitespace-nowrap ${aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`}>
                         {aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}

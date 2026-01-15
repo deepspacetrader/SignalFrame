@@ -153,17 +153,17 @@ export function AISettings() {
                                 {/* System Requirements */}
                                 <div className="bg-black/40 rounded-lg p-4 gap-3 mb-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">System Requirements</h5>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                    <div className="grid grid-cols-1 gap-3 text-xs">
                                         <div>
-                                            <span className="text-text-tertiary">GPU:</span>
-                                            <span className="text-text-primary ml-2">NVIDIA RTX 3060+ (tiny models may work on less powerful hardware)</span>
+                                            <span className="text-text-tertiary font-bold">GPU:</span>
+                                            <span className="text-text-primary ml-2">NVIDIA RTX 3060+ <span className="text-text-secondary italic">(A GPU with at least 12GB VRAM is recommended for most thinking models. Tiny or small models may work on less powerful hardware with mixed results.)</span></span>
                                         </div>
                                         <div>
-                                            <span className="text-text-tertiary">Storage:</span>
+                                            <span className="text-text-tertiary font-bold">Storage:</span>
                                             <span className="text-text-primary ml-2">~10-20GB for AI models</span>
                                         </div>
                                         <div>
-                                            <span className="text-text-tertiary">Internet Connection:</span>
+                                            <span className="text-text-tertiary font-bold">Internet Connection:</span>
                                             <span className="text-text-primary ml-2">For AI model and RSS feed downloads. (not required to generate AI responses)</span>
                                         </div>
                                     </div>
@@ -233,7 +233,7 @@ export function AISettings() {
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                                             <div>
-                                                <span className="text-xs font-mono text-text-primary">deepseek-r1:8b</span>
+                                                <span className="text-xs font-mono text-text-primary">deepseek-r1:8b (recommended)</span>
                                             </div>
                                             <button
                                                 onClick={() => navigator.clipboard.writeText('ollama pull deepseek-r1:8b')}
@@ -245,10 +245,10 @@ export function AISettings() {
                                         
                                         <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                                             <div>
-                                                <span className="text-xs font-mono text-text-primary">llama3.2:latest</span>
+                                                <span className="text-xs font-mono text-text-primary">gpt-oss:20b</span>
                                             </div>
                                             <button
-                                                onClick={() => navigator.clipboard.writeText('ollama pull llama3.2:latest')}
+                                                onClick={() => navigator.clipboard.writeText('ollama pull gpt-oss:20b')}
                                                 className="text-xs bg-accent-primary/20 text-accent-primary px-2 py-1 rounded hover:bg-accent-primary/30 transition-colors"
                                             >
                                                 Copy Command
@@ -444,8 +444,9 @@ export function AISettings() {
                             <input
                                 type="number"
                                 value={tempConfig.numCtx}
-                                onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value) || DEFAULT_num_ctx })}
+                                onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value)})}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
+                                placeholder={DEFAULT_num_ctx.toString()}
                             />
                         </div>
                         <div>
@@ -487,8 +488,9 @@ export function AISettings() {
                             <input
                                 type="number"
                                 value={tempConfig.numPredict}
-                                onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value) || DEFAULT_num_predict })}
+                                onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value)})}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
+                                placeholder={DEFAULT_num_predict.toString()}
                             />
                         </div>
                     </div>

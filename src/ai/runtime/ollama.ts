@@ -46,7 +46,7 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: 99,
+                        num_gpu: -1,
                         num_thread: 0
                     }
                 }),
@@ -83,7 +83,7 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: 99,
+                        num_gpu: -1,
                         num_thread: 0
                     }
                 }),
@@ -125,7 +125,7 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: 99,
+                        num_gpu: -1,
                         num_thread: 0
                     }
                 }),
@@ -188,7 +188,7 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: 99,
+                        num_gpu: -1,
                         num_thread: 0
                     }
                 }),
@@ -242,7 +242,7 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: 99,
+                        num_gpu: -1,
                         num_thread: 0
                     }
                 }),
@@ -297,7 +297,7 @@ export class OllamaService {
                     options: {
                         num_ctx: options.num_ctx || DEFAULT_num_ctx,
                         num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: 99,
+                        num_gpu: -1,
                         num_thread: 0
                     }
                 }),
