@@ -6,6 +6,7 @@ import { SituationMap } from './components/SituationMap'
 import { ForeignRelationsPanel } from './components/ForeignRelationsPanel'
 import { LoadingOverlay } from './components/LoadingOverlay'
 import { AISettings } from './components/AISettings'
+import { RSSSettings } from './components/RSSSettings'
 import { ChatPanel } from './components/ChatPanel'
 import { PredictionsPanel } from './components/PredictionsPanel'
 import { VolumeControl } from './components/VolumeControl'
@@ -16,7 +17,7 @@ import { getSentimentProfile } from './ai/runtime/sentimentEngine'
 
 
 export default function App() {
-  const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig } = useSituationStore()
+  const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig, aiStatus } = useSituationStore()
   const [showBigPicture, setShowBigPicture] = useState(false)
 
   const getLocalTodayStr = () => {
@@ -81,35 +82,31 @@ export default function App() {
             <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>
 
             <div className="flex flex-wrap gap-4 w-full lg:w-auto">
-              {/* Big Picture Button */}
-              <button
-                onClick={() => setShowBigPicture(true)}
-                className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group flex-1 md:flex-none justify-center"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform">
-                  <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
-                </svg>
-                <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
-              </button>
+
 
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
                 <p className={`text-xs font-mono whitespace-nowrap ${
                   isProcessing ? 'text-accent-secondary' : 
-                  (runningModels && runningModels.length > 0 ? 'text-accent-secondary' : 'text-red-500')
+                  (aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
                 }`}>
-                  {isProcessing ? 'SCANNING...' : (runningModels && runningModels.length > 0 ? 'ANALYSIS STANDBY' : 'AI OFFLINE')}
+                  {isProcessing ? 'SCANNING...' : (aiStatus?.isOnline ? 'OLLAMA ONLINE' : 'AI OFFLINE')}
                 </p>
               </div>
-              {lastUpdated && (
-                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 hidden sm:block">
+              {lastUpdated ? (
+                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
                   <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Last Sync</p>
                   <p className="text-xs font-mono">{lastUpdated.toLocaleTimeString()}</p>
+                </div>
+              ) : (
+                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
+                  <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Last Sync</p>
+                  <p className="text-xs font-mono text-red-500">never</p>
                 </div>
               )}
 
               {/* Sentiment Bias Display */}
-              <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 hidden sm:block">
+              <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Sentiment</p>
                 <p className="text-xs font-mono text-accent-primary">
                   {getSentimentProfile(aiConfig.sentimentProfile || 'balanced').name}
@@ -120,7 +117,7 @@ export default function App() {
               <div className="flex gap-2">
                 {runningModels && runningModels.length > 0 ? (
                   runningModels.map(m => (
-                    <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hidden xl:block">
+                    <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
                       <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Engine Load</p>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-mono text-white whitespace-nowrap">{m.name.split(':')[0]}</span>
@@ -134,10 +131,12 @@ export default function App() {
                     </div>
                   ))
                 ) : (
-                  <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hidden xl:block">
+                  <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
                     <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Engine Load</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-red-500 whitespace-nowrap">No AI Model Loaded</span>
+                      <span className={`text-xs font-mono whitespace-nowrap ${aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`}>
+                        {aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -151,10 +150,23 @@ export default function App() {
               )}
 
               <AISettings />
+              <RSSSettings />
               
               <VolumeControl />
             </div>
           </div>
+
+
+              {/* Big Picture Button */}
+              <button
+                onClick={() => setShowBigPicture(true)}
+                className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group flex-1 md:flex-none justify-center"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform">
+                  <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                </svg>
+                <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
+              </button>
 
           <button
             onClick={() => refresh()}

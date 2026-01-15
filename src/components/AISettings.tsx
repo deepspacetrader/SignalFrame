@@ -32,6 +32,22 @@ export function AISettings() {
         }
     }, [isOpen, fetchAvailableModels, aiConfig]);
 
+    useEffect(() => {
+        const handleEscapeKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && isOpen) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleEscapeKey);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, [isOpen]);
+
     const isModelInstalled = availableModels.length === 0 || availableModels.some(m => {
         const normalizedInput = tempConfig.model.toLowerCase().trim();
         const normalizedModel = m.toLowerCase();
@@ -89,9 +105,10 @@ export function AISettings() {
         return (
             <button
                 onClick={() => setIsOpen(true)}
-                className="bottom-6 right-6 z-50 p-3 bg-bg-card backdrop-blur-xl border border-white/10 rounded-full shadow-2xl hover:border-accent-primary/50 transition-all group"
+                className="bottom-6 right-6 z-50 p-3 bg-bg-card backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl hover:border-accent-primary/50 transition-all group px-4 py-2"
             >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary group-hover:text-accent-primary group-hover:rotate-45 transition-all">
+                <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Settings</p>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary group-hover:text-accent-primary group-hover:rotate-45 transition-all mx-auto flex max-w-sm items-center">
                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                     <circle cx="12" cy="12" r="3" />
                 </svg>
@@ -100,7 +117,16 @@ export function AISettings() {
     }
 
     return createPortal(
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-bg-darker/80 backdrop-blur-md animate-in fade-in duration-300">
+        <div 
+            data-ai-settings-modal
+            className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-bg-darker/80 backdrop-blur-md animate-in fade-in duration-300"
+            onClick={(e) => {
+                // Close if clicking on the backdrop (the outer div)
+                if (e.target === e.currentTarget) {
+                    setIsOpen(false);
+                }
+            }}
+        >
             <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
                 <h3 className="text-2xl font-display font-bold text-white mb-6 flex items-center gap-3">
                     <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
@@ -108,20 +134,163 @@ export function AISettings() {
                 </h3>
 
                 <div className="space-y-6">
-                    {/* Ollama Status Alert */}
+                    {/* Ollama Setup Guide */}
                     {ollamaError && (
-                        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                            <p className="text-sm text-red-400 font-semibold flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl">
+                            <div className="flex items-start gap-3 mb-4">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400 flex-shrink-0 mt-0.5">
                                     <circle cx="12" cy="12" r="10" />
                                     <line x1="12" y1="8" x2="12" y2="12" />
                                     <line x1="12" y1="16" x2="12.01" y2="16" />
                                 </svg>
-                                {ollamaError}
-                            </p>
-                            <p className="text-xs text-red-300 mt-2">
-                                Please ensure <a href="https://ollama.com/" target="_blank" rel="noopener noreferrer">Ollama</a> is installed and running on your system
-                            </p>
+                                <div>
+                                    <h4 className="text-sm text-red-400 font-semibold mb-1">Ollama Not Detected</h4>
+                                    <p className="text-xs text-red-300">SignalFrame requires Ollama to be installed and running on your local machine</p>
+                                </div>
+                            </div>
+
+
+                                {/* System Requirements */}
+                                <div className="bg-black/40 rounded-lg p-4 gap-3 mb-4">
+                                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">System Requirements</h5>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                        <div>
+                                            <span className="text-text-tertiary">GPU:</span>
+                                            <span className="text-text-primary ml-2">NVIDIA RTX 3060+ (tiny models may work on less powerful hardware)</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-text-tertiary">Storage:</span>
+                                            <span className="text-text-primary ml-2">~10-20GB for AI models</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-text-tertiary">Internet Connection:</span>
+                                            <span className="text-text-primary ml-2">For AI model and RSS feed downloads. (not required to generate AI responses)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <div className="space-y-4">
+                                {/* Installation Steps */}
+                                <div className="bg-black/40 rounded-lg p-4">
+                                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Installation Steps</h5>
+                                    
+                                    <div className="space-y-3">
+                                        {/* Windows */}
+                                        <div className="border-l-2 border-blue-500/30 pl-3">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded font-mono">Windows</span>
+                                            </div>
+                                            <ol className="text-xs text-text-secondary space-y-1 ml-4">
+                                                <li>1. Download from <a href="https://ollama.com/download/windows" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/download/windows</a></li>
+                                                <li>2. Run the installer and follow setup wizard</li>
+                                                <li>3. Ollama starts automatically in background</li>
+                                            </ol>
+                                        </div>
+
+                                        {/* macOS */}
+                                        <div className="border-l-2 border-green-500/30 pl-3">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded font-mono">macOS</span>
+                                            </div>
+                                            <ol className="text-xs text-text-secondary space-y-1 ml-4">
+                                                <li>1. Download from <a href="https://ollama.com/download/mac" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/download/mac</a></li>
+                                                <li>2. Open DMG and drag Ollama to Applications</li>
+                                                <li>3. Launch Ollama from Applications folder</li>
+                                            </ol>
+                                        </div>
+
+                                        {/* Linux */}
+                                        <div className="border-l-2 border-yellow-500/30 pl-3">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded font-mono">Linux</span>
+                                            </div>
+                                            <div className="bg-black/60 rounded p-2 mt-2">
+                                                <code className="text-xs text-green-400 font-mono">curl -fsSL https://ollama.com/install.sh | sh</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Verification */}
+                                <div className="bg-black/40 rounded-lg p-4">
+                                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Verify Installation</h5>
+                                    <p className="text-xs text-text-secondary mb-2">Open terminal/command prompt and run:</p>
+                                    <div className="bg-black/60 rounded p-2 mb-3">
+                                        <code className="text-xs text-green-400 font-mono">ollama list</code>
+                                    </div>
+                                    <p className="text-xs text-text-tertiary">If you see "Error: connect ECONNREFUSED 127.0.0.1:11434", restart Ollama</p>
+                                </div>
+
+                                {/* Download Models */}
+                                <div className="bg-black/40 rounded-lg p-4">
+                                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Download an AI Model</h5>
+                                    <p className="text-xs text-text-secondary mb-3">One billion parameters roughly equals 1GB of VRAM when using a moderate amount of context length. Exceeding this will force the CPU to process data the GPU cannot handle on its own, which is <b>significantly slower</b> than only GPU processing.</p>
+
+                                    <p className="text-xs text-text-secondary mb-3">Try to have at least 1GB spare VRAM for other applications.</p>
+
+                                    <p className="text-xs text-text-secondary mb-3">Choose an appropriate model for your hardware here are some recommendations to get started. (see <a href="https://ollama.com/search" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/search</a> for more models)</p>                                  
+                                    
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                                            <div>
+                                                <span className="text-xs font-mono text-text-primary">deepseek-r1:8b</span>
+                                            </div>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText('ollama pull deepseek-r1:8b')}
+                                                className="text-xs bg-accent-primary/20 text-accent-primary px-2 py-1 rounded hover:bg-accent-primary/30 transition-colors"
+                                            >
+                                                Copy Command
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                                            <div>
+                                                <span className="text-xs font-mono text-text-primary">llama3.2:latest</span>
+                                            </div>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText('ollama pull llama3.2:latest')}
+                                                className="text-xs bg-accent-primary/20 text-accent-primary px-2 py-1 rounded hover:bg-accent-primary/30 transition-colors"
+                                            >
+                                                Copy Command
+                                            </button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                                            <div>
+                                                <span className="text-xs font-mono text-text-primary">qwen3:8b</span>
+                                            </div>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText('ollama pull qwen3:8b')}
+                                                className="text-xs bg-accent-primary/20 text-accent-primary px-2 py-1 rounded hover:bg-accent-primary/30 transition-colors"
+                                            >
+                                                Copy Command
+                                            </button>
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+
+
+                                {/* Troubleshooting */}
+                                <div className="bg-black/40 rounded-lg p-4">
+                                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Troubleshooting</h5>
+                                    <div className="space-y-2 text-xs">
+                                        <div className="flex items-start gap-2">
+                                            <span className="text-red-400">•</span>
+                                            <span className="text-text-secondary"><strong>Connection errors:</strong> Restart Ollama or check if it's running on port 11434</span>
+                                        </div>
+                                        <div className="flex items-start gap-2">
+                                            <span className="text-red-400">•</span>
+                                            <span className="text-text-secondary"><strong>Slow responses:</strong> Try smaller models or close GPU-intensive applications</span>
+                                        </div>
+                                        <div className="flex items-start gap-2">
+                                            <span className="text-red-400">•</span>
+                                            <span className="text-text-secondary"><strong>Memory errors:</strong> Use 3B models or increase system RAM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -183,7 +352,7 @@ export function AISettings() {
                             value={tempConfig.model}
                             onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
                             className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
-                            placeholder="e.g., llama3.2, mistral"
+                            placeholder="llama3.2, qwen3:8b, deepseek-r1:8b"
                         />
                         {!isModelInstalled && (
                             <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20 rounded-lg">
@@ -192,9 +361,13 @@ export function AISettings() {
                                     AI model not detected locally
                                 </p>
                                 <div className="space-y-2">
-                                    <p className="text-[10px] text-text-secondary uppercase font-bold">Try pulling it:</p>
+                                    <p className="text-[10px] text-text-secondary font-bold">You can view / download models from Ollama using the terminal:</p>
                                     <div className="relative group/copy">
-                                        <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-white font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                        <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                            ollama list
+                                        </code>
+
+                                        <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
                                             ollama pull modelName:size
                                         </code>
                                         <button
@@ -212,7 +385,7 @@ export function AISettings() {
 
                                     {availableModels.length > 0 && (
                                         <>
-                                            <p className="text-[10px] text-text-secondary uppercase font-bold pt-2">or select from available Ollama models:</p>
+                                            <p className="text-[10px] text-text-secondary font-bold pt-2">or select from these installed models:</p>
                                             <div className="flex flex-wrap gap-2">
                                                 {availableModels.slice(0, 5).map(m => (
                                                     <button

@@ -162,6 +162,12 @@ export interface RunningModel {
   size_vram: number;
 }
 
+export interface AiStatus {
+  isOnline: boolean;
+  lastChecked: Date | null;
+  lastError: string | null;
+}
+
 export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'rss' | 'bigPicture';
 
 export interface SectionFailureState {
@@ -218,6 +224,7 @@ export interface SituationState {
   aiConfig: AiConfig;
   availableModels: string[];
   runningModels: RunningModel[];
+  aiStatus: AiStatus;
   lastUpdated: Date | null;
   jsonError: JsonErrorState;
   sourceCredibility: Record<string, number>;
@@ -272,6 +279,11 @@ const defaultState: SituationState = {
   },
   availableModels: [],
   runningModels: [],
+  aiStatus: {
+    isOnline: false,
+    lastChecked: null,
+    lastError: null
+  },
   lastUpdated: null,
   jsonError: {
     hasError: false,
@@ -447,17 +459,19 @@ export function useSituationStore() {
 
       notify();
       fetchRunningModels();
+      fetchAiStatus();
     };
     init();
 
     // Poll for running models
-    // const poll = setInterval(() => {
-    //   fetchRunningModels();
-    // }, 5000);
+    const poll = setInterval(() => {
+      fetchRunningModels();
+    }, 5000);
 
     return () => {
       listeners.delete(setState);
-      // clearInterval(poll);
+      clearInterval(poll);
+      fetchRunningModels();
     };
   }, []);
 
@@ -1108,6 +1122,38 @@ export function useSituationStore() {
       // Note: We don't call emit() here to avoid saving volatile ps data to DB
       listeners.forEach(l => l({ ...globalState }));
     } catch (e) { }
+  }, []);
+
+  const fetchAiStatus = useCallback(async () => {
+    try {
+      const { OllamaService } = await import('../ai/runtime/ollama');
+      const [models, running] = await Promise.all([
+        OllamaService.listModels(),
+        OllamaService.getRunningModels()
+      ]);
+
+      globalState = {
+        ...globalState,
+        availableModels: models,
+        runningModels: running,
+        aiStatus: {
+          isOnline: true,
+          lastChecked: new Date(),
+          lastError: null
+        }
+      };
+      listeners.forEach(l => l({ ...globalState }));
+    } catch (error) {
+      globalState = {
+        ...globalState,
+        aiStatus: {
+          isOnline: false,
+          lastChecked: new Date(),
+          lastError: error instanceof Error ? error.message : 'Unknown error'
+        }
+      };
+      listeners.forEach(l => l({ ...globalState }));
+    }
   }, []);
 
   const retryJsonSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection']) => {

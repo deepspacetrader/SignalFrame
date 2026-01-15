@@ -102,10 +102,35 @@ export function BigPictureModal({ isOpen, onClose }: BigPictureModalProps) {
         }
     }, [isOpen, bigPicture, isGenerating, generateBigPicture]);
 
+    useEffect(() => {
+        const handleEscapeKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && isOpen) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleEscapeKey);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
     return (
-        <div className="fixed big-picture inset-0 z-50 flex items-center justify-center p-8 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div 
+            data-big-picture-modal
+            className="fixed big-picture inset-0 z-50 flex items-center justify-center p-8 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={(e) => {
+                // Close if clicking on the backdrop (the outer div)
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+        >
             <div className="w-full max-w-7xl h-[90vh] bg-[#0a0f18] border border-white/10 rounded-2xl flex flex-col overflow-hidden shadow-2xl relative ">
 
                 {/* Header */}

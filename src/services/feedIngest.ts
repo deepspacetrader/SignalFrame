@@ -1,3 +1,5 @@
+import { KNOWN_RSS_FEEDS, type KnownRSSFeed } from '../data/rssFeeds';
+
 export interface RawSignal {
     id: string;
     source: string;
@@ -8,6 +10,22 @@ export interface RawSignal {
     title?: string;
     link?: string;
     picture?: string;
+}
+
+export interface RSSFeedConfig {
+    url: string;
+    category: string;
+    source: string;
+    logo?: string;
+    enabled: boolean;
+}
+
+export interface UserRSSFeed {
+    id: string;
+    name: string;
+    url: string;
+    category: string;
+    enabled: boolean;
 }
 
 // Optimize image URLs by adding size parameters for supported services
@@ -195,34 +213,75 @@ async function fetchRssFeed(feedUrl: string): Promise<any> {
     };
 }
 
-const NEWS_FEEDS = [
-    // World / Geopolitical
-    { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', category: 'World', source: 'BBC World' },
-    { url: 'https://www.theguardian.com/world/rss', category: 'World', source: 'The Guardian' },
-    { url: 'https://www.aljazeera.com/xml/rss/all.xml', category: 'World', source: 'Al Jazeera' },
-    { url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', category: 'World', source: 'NY Times World' },
+// In-memory storage for RSS configuration (in a real app, this would be persisted)
+let rssConfig: {
+    defaultFeeds: RSSFeedConfig[];
+    userFeeds: UserRSSFeed[];
+} = {
+    defaultFeeds: mapKnownFeedsToConfig(KNOWN_RSS_FEEDS),
+    userFeeds: []
+};
 
-    // Business / Financial
-    { url: 'https://search.cnbc.com/rs/search/view.xml?partnerId=2000&keywords=finance', category: 'Business', source: 'CNBC' },
-    { url: 'https://feeds.content.dowjones.io/public/rss/mw_topstories', category: 'Business', source: 'MarketWatch' },
-    { url: 'https://www.economist.com/finance-and-economics/rss.xml', category: 'Business', source: 'The Economist' },
+function mapKnownFeedsToConfig(feeds: KnownRSSFeed[]): RSSFeedConfig[] {
+    return feeds.map(feed => ({
+        url: feed.url,
+        category: feed.category,
+        source: feed.source,
+        logo: feed.logo,
+        enabled: feed.enabled ?? true
+    }));
+}
 
-    // Technology
-    { url: 'https://techcrunch.com/feed/', category: 'Technology', source: 'TechCrunch' },
-    { url: 'https://www.theverge.com/rss/index.xml', category: 'Technology', source: 'The Verge' },
-    { url: 'https://arstechnica.com/feed/', category: 'Technology', source: 'Ars Technica' },
+// Functions to manage RSS configuration
+export function getRSSConfig() {
+    return { ...rssConfig };
+}
 
-    // Science
-    { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Science.xml', category: 'Science', source: 'NY Times Science' },
-    { url: 'http://feeds.bbci.co.uk/news/science_and_environment/rss.xml', category: 'Science', source: 'BBC Science' },
+export function updateRSSConfig(config: Partial<typeof rssConfig>) {
+    rssConfig = { ...rssConfig, ...config };
+}
 
-    // Health
-    { url: 'http://feeds.bbci.co.uk/news/health/rss.xml', category: 'Health', source: 'BBC Health' },
-    { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml', category: 'Health', source: 'NY Times Health' },
+export function updateDefaultFeed(url: string, enabled: boolean) {
+    rssConfig.defaultFeeds = rssConfig.defaultFeeds.map(feed => 
+        feed.url === url ? { ...feed, enabled } : feed
+    );
+}
 
-    // Local North Vancouver
-    { url: 'https://www.nsnews.com/rss', category: 'Local', source: 'North Shore News' }
-];
+export function addUserFeed(feed: Omit<UserRSSFeed, 'id'>) {
+    const newFeed: UserRSSFeed = {
+        ...feed,
+        id: Date.now().toString(),
+        enabled: true
+    };
+    rssConfig.userFeeds.push(newFeed);
+    return newFeed;
+}
+
+export function removeUserFeed(id: string) {
+    rssConfig.userFeeds = rssConfig.userFeeds.filter(feed => feed.id !== id);
+}
+
+export function updateUserFeed(id: string, updates: Partial<UserRSSFeed>) {
+    rssConfig.userFeeds = rssConfig.userFeeds.map(feed => 
+        feed.id === id ? { ...feed, ...updates } : feed
+    );
+}
+
+// Get active feeds (enabled default feeds + enabled user feeds)
+function getActiveFeeds(): RSSFeedConfig[] {
+    const activeDefaultFeeds = rssConfig.defaultFeeds.filter(feed => feed.enabled);
+    const activeUserFeeds = rssConfig.userFeeds
+        .filter(feed => feed.enabled)
+        .map(feed => ({
+            url: feed.url,
+            category: feed.category,
+            source: feed.name,
+            enabled: true,
+            logo: undefined
+        }));
+    
+    return [...activeDefaultFeeds, ...activeUserFeeds];
+}
 
 // Regex patterns for stricter matching (word boundaries)
 const BLACKLIST_PATTERNS = [
@@ -264,7 +323,7 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     console.log(`Fetching ${isToday ? 'latest' : 'historical'} feeds for ${targetDate || 'Today'}...`);
 
     const allSignals: RawSignal[] = [];
-    const activeFeeds = [...NEWS_FEEDS];
+    let activeFeeds = getActiveFeeds();
 
     // If historical, add a targeted Google News Search to ensure we find data for that specific day
     if (!isToday && targetDate) {
@@ -277,11 +336,12 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
         const nextD = String(date.getDate()).padStart(2, '0');
         const nextDayStr = `${nextY}-${nextM}-${nextD}`;
 
-        activeFeeds.push({
+        activeFeeds = [...activeFeeds, {
             url: `https://news.google.com/rss/search?q=after:${targetDate}+before:${nextDayStr}&hl=en-US&gl=US&ceid=US:en`,
             category: 'Geopolitical',
-            source: 'Google News Archive'
-        });
+            source: 'Google News Archive',
+            enabled: true
+        }];
     }
 
     // Fetch in parallel
