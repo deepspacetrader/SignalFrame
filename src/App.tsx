@@ -76,7 +76,7 @@ export default function App() {
                   Deep Intelligence Node Active
                 </span>
               </div>
-              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.2.0</span></h1>
+              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.3.0</span></h1>
             </div>
 
             <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>
@@ -86,10 +86,9 @@ export default function App() {
 
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
-                <p className={`text-xs font-mono whitespace-nowrap ${
-                  isProcessing ? 'text-accent-secondary' : 
-                  (aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
-                }`}>
+                <p className={`text-xs font-mono whitespace-nowrap ${isProcessing ? 'text-accent-secondary' :
+                    (aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
+                  }`}>
                   {isProcessing ? 'SCANNING...' : (aiStatus?.isOnline ? 'OLLAMA ONLINE' : 'AI OFFLINE')}
                 </p>
               </div>
@@ -151,22 +150,22 @@ export default function App() {
 
               <AISettings />
               <RSSSettings />
-              
+
               <VolumeControl />
             </div>
           </div>
 
 
-              {/* Big Picture Button */}
-              <button
-                onClick={() => setShowBigPicture(true)}
-                className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group flex-1 md:flex-none justify-center"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform">
-                  <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
-                </svg>
-                <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
-              </button>
+          {/* Big Picture Button */}
+          <button
+            onClick={() => setShowBigPicture(true)}
+            className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group flex-1 md:flex-none justify-center"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform">
+              <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+            </svg>
+            <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
+          </button>
 
           <button
             onClick={() => refresh()}
@@ -221,7 +220,7 @@ export default function App() {
       <main className="grid grid-cols-12 gap-8">
         {/* Map Section */}
         <div className="col-span-12 lg:col-span-12 space-y-8">
-        
+
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Narrative Summary */}
@@ -259,7 +258,7 @@ export default function App() {
             <SourceFeedList />
           </div>
 
-  <SituationMap />
+          <SituationMap />
 
         </div>
       </main>

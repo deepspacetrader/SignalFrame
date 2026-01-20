@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { createPortal } from 'react-dom'
+import { Modal } from './shared/Modal'
 import { useSituationStore } from '../state/useSituationStore'
 import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai/runtime/sentimentEngine'
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
@@ -31,22 +31,6 @@ export function AISettings() {
             setTempConfig(aiConfig);
         }
     }, [isOpen, fetchAvailableModels, aiConfig]);
-
-    useEffect(() => {
-        const handleEscapeKey = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && isOpen) {
-                setIsOpen(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener('keydown', handleEscapeKey);
-        }
-
-        return () => {
-            document.removeEventListener('keydown', handleEscapeKey);
-        };
-    }, [isOpen]);
 
     const isModelInstalled = availableModels.length === 0 || availableModels.some(m => {
         const normalizedInput = tempConfig.model.toLowerCase().trim();
@@ -116,16 +100,11 @@ export function AISettings() {
         )
     }
 
-    return createPortal(
-        <div 
-            data-ai-settings-modal
-            className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-bg-darker/80 backdrop-blur-md animate-in fade-in duration-300"
-            onClick={(e) => {
-                // Close if clicking on the backdrop (the outer div)
-                if (e.target === e.currentTarget) {
-                    setIsOpen(false);
-                }
-            }}
+    return (
+        <Modal 
+            isOpen={isOpen} 
+            onClose={() => setIsOpen(false)} 
+            modalId="ai-settings-modal"
         >
             <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
                 <h3 className="text-2xl font-display font-bold text-white mb-6 flex items-center gap-3">
@@ -671,7 +650,6 @@ export function AISettings() {
                     </div>
                 </div>
             </div>
-        </div>,
-        document.body
+        </Modal>
     );
 }

@@ -25,19 +25,60 @@ const SENTIMENT_GUIDELINES = `
 - very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress, fall of a dictator.
 `;
 
-const DEFAULT_SOURCE_CREDIBILITY: Record<string, number> = {
-  'Reuters': 0.95,
-  'Associated Press': 0.92,
-  'AP News': 0.92,
-  'BBC News': 0.9,
-  'Financial Times': 0.9,
-  'The Economist': 0.88,
-  'The Wall Street Journal': 0.88,
-  'The New York Times': 0.86,
-  'Bloomberg': 0.86,
-  'Al Jazeera': 0.8,
-  'Google News Archive': 0.7
-};
+
+// Global cancellation token manager
+class CancellationTokenManager {
+  private controllers = new Map<string, AbortController>();
+
+  // Create a new controller for a given job ID
+  createController(jobId: string): AbortController {
+    // Cancel any existing job with the same ID
+    this.cancelJob(jobId);
+
+    const controller = new AbortController();
+    this.controllers.set(jobId, controller);
+    return controller;
+  }
+
+  // Cancel a specific job
+  cancelJob(jobId: string): boolean {
+    const controller = this.controllers.get(jobId);
+    if (controller) {
+      controller.abort();
+      this.controllers.delete(jobId);
+      console.log(`Cancelled AI job: ${jobId}`);
+      return true;
+    }
+    return false;
+  }
+
+  // Cancel all jobs
+  cancelAll(): void {
+    for (const [jobId, controller] of this.controllers) {
+      controller.abort();
+      console.log(`Cancelled AI job: ${jobId}`);
+    }
+    this.controllers.clear();
+  }
+
+  // Check if a job is currently running
+  isJobRunning(jobId: string): boolean {
+    return this.controllers.has(jobId);
+  }
+
+  // Get list of running job IDs
+  getRunningJobs(): string[] {
+    return Array.from(this.controllers.keys());
+  }
+
+  // Clean up completed job
+  cleanupJob(jobId: string): void {
+    this.controllers.delete(jobId);
+  }
+}
+
+// Global instance
+export const cancellationTokenManager = new CancellationTokenManager();
 
 async function getRecentSignalsForNovelty(days: number = 7): Promise<string[]> {
   try {
@@ -60,11 +101,11 @@ async function getRecentSignalsForNovelty(days: number = 7): Promise<string[]> {
 }
 
 function generateFeedIndex(feeds: RawSignal[]) {
-  return feeds.map(f => ({
-    feedId: f.id,
+  return feeds.map((f, idx) => ({
+    feedId: String(idx), // Use simple numeric index for AI citation reliability
     source: f.source,
     title: f.title,
-    link: f.link,
+    // link purposely omitted to prevent hallucination
     timestamp: f.timestamp,
     category: f.category
   }));
@@ -75,18 +116,18 @@ async function getHistoricalRelationsContext(foreignRelations: ForeignRelation[]
   try {
     const dates = await StorageService.getAllDates();
     let historicalContext = '';
-    
+
     // Get the last 7 days of historical data for context
     const recentDates = dates.slice(-7).reverse();
-    
+
     for (const date of recentDates) {
       const analysis = await StorageService.getAnalysis(date);
       if (analysis && analysis.foreignRelations && analysis.foreignRelations.length > 0) {
         historicalContext += `DATE: ${date}\n`;
         analysis.foreignRelations.forEach((rel: any) => {
           // Only include relations that match current trackers
-          const currentRel = foreignRelations.find(r => 
-            r.id === rel.id || 
+          const currentRel = foreignRelations.find(r =>
+            r.id === rel.id ||
             (r.countryA.toLowerCase() === rel.countryA.toLowerCase() && r.countryB.toLowerCase() === rel.countryB.toLowerCase())
           );
           if (currentRel) {
@@ -96,7 +137,7 @@ async function getHistoricalRelationsContext(foreignRelations: ForeignRelation[]
         historicalContext += '\n';
       }
     }
-    
+
     return historicalContext.trim();
   } catch (error) {
     console.error('Error getting historical context:', error);
@@ -114,81 +155,106 @@ export async function processSituation(
   onThinkingChunk?: (chunk: string) => void,
   onSectionComplete?: (section: string) => void
 ): Promise<Partial<SituationState>> {
-  const context = generateContext(feeds);
-  const feedIndex = generateFeedIndex(feeds);
-  const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+  // Create a unique job ID for full processing
+  const jobId = `full-process-${Date.now()}`;
+
+  // Create cancellation controller for this job
+  const controller = cancellationTokenManager.createController(jobId);
 
   try {
-    onProgress?.(`Generating ${CATEGORY_MAP.narrative}...`);
-    const narrativePrompt = generateNarrativePrompt(context);
+    const context = generateContext(feeds);
+    const feedIndex = generateFeedIndex(feeds);
+    const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict, signal: controller.signal };
 
-    let narrative = '';
-    let thinkingTrace = '';
+    try {
+      onProgress?.(`Generating ${CATEGORY_MAP.narrative}...`);
+      const narrativePrompt = generateNarrativePrompt(context);
 
-    if (aiConfig.enableThinking) {
-      // Use thinking-enabled streaming for narrative
-      onProgress?.(`Deep reasoning (thinking mode)...`);
-      await OllamaService.streamGenerateWithThinking(
-        aiConfig.model,
-        narrativePrompt,
-        (thinkChunk) => {
-          thinkingTrace += thinkChunk;
-          onThinkingChunk?.(thinkingTrace);
-        },
-        (contentChunk) => {
-          narrative += contentChunk;
-          onNarrativeChunk?.(narrative);
-        },
-        options
-      );
-    } else if (onNarrativeChunk) {
-      await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
-        narrative += chunk;
-        onNarrativeChunk(narrative);
-      }, options);
-    } else {
-      narrative = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
+      let narrative = '';
+      let thinkingTrace = '';
+
+      if (aiConfig.enableThinking) {
+        // Use thinking-enabled streaming for narrative
+        onProgress?.(`Deep reasoning (thinking mode)...`);
+        await OllamaService.streamGenerateWithThinking(
+          aiConfig.model,
+          narrativePrompt,
+          (thinkChunk) => {
+            thinkingTrace += thinkChunk;
+            onThinkingChunk?.(thinkingTrace);
+          },
+          (contentChunk) => {
+            narrative += contentChunk;
+            onNarrativeChunk?.(narrative);
+          },
+          options
+        );
+      } else if (onNarrativeChunk) {
+        await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
+          narrative += chunk;
+          onNarrativeChunk(narrative);
+        }, options);
+      } else {
+        narrative = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
+      }
+
+      onSectionComplete?.('narrative');
+      onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
+      const recentSignals = await getRecentSignalsForNovelty(7);
+      const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json', options);
+      const parsedSignals = applyNoveltyScores(finalizeSignals(parseJsonArray(signalsRaw), feeds), recentSignals);
+      const signalsText = parsedSignals.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
+
+      onSectionComplete?.('signals');
+      onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
+      const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals), 'json', options);
+
+      onSectionComplete?.('insights');
+      onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
+      const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText), 'json', options);
+
+      onSectionComplete?.('map');
+      onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
+      const historicalContext = await getHistoricalRelationsContext(foreignRelations);
+      const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext), 'json', options);
+
+      onSectionComplete?.('relations');
+
+      return {
+        narrative: finalizeNarrative(narrative),
+        thinkingTrace: thinkingTrace.trim(),
+        signals: parsedSignals,
+        insights: finalizeInsights(parseJsonArray(insightsRaw), feeds),
+        mapPoints: finalizeMapPoints(parseJsonArray(mapPointsRaw), parsedSignals),
+        foreignRelations: finalizeRelations(parseJsonArray(relationsRaw), foreignRelations),
+        rawOutputs: {
+          narrative: narrative,
+          signals: signalsRaw,
+          insights: insightsRaw,
+          map: mapPointsRaw,
+          relations: relationsRaw
+        }
+      };
+    } catch (error) {
+      return handleProcessError(error);
     }
 
-    onSectionComplete?.('narrative');
-    onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
-    const recentSignals = await getRecentSignalsForNovelty(7);
-    const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json', options);
-    const parsedSignals = applyNoveltyScores(finalizeSignals(parseJsonArray(signalsRaw), feeds), recentSignals);
-    const signalsText = parsedSignals.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
-
-    onSectionComplete?.('signals');
-    onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
-    const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals), 'json', options);
-
-    onSectionComplete?.('insights');
-    onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
-    const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText), 'json', options);
-
-    onSectionComplete?.('map');
-    onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
-    const historicalContext = await getHistoricalRelationsContext(foreignRelations);
-    const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext), 'json', options);
-
-    onSectionComplete?.('relations');
-
-    return {
-      narrative: finalizeNarrative(narrative),
-      thinkingTrace: thinkingTrace.trim(),
-      signals: parsedSignals,
-      insights: finalizeInsights(parseJsonArray(insightsRaw), feeds),
-      mapPoints: finalizeMapPoints(parseJsonArray(mapPointsRaw), parsedSignals),
-      foreignRelations: finalizeRelations(parseJsonArray(relationsRaw), foreignRelations),
-      rawOutputs: {
-        narrative: narrative,
-        signals: signalsRaw,
-        insights: insightsRaw,
-        map: mapPointsRaw,
-        relations: relationsRaw
-      }
-    };
   } catch (error) {
-    return handleProcessError(error);
+    // Check if this was a cancellation
+    if (error instanceof Error && (
+      error.message.includes('cancelled') ||
+      error.message.includes('AbortError') ||
+      error.name === 'AbortError'
+    )) {
+      console.log('Full situation processing was cancelled');
+      throw new Error('Processing cancelled');
+    }
+
+    // Re-throw other errors
+    throw error;
+  } finally {
+    // Always clean up the controller when done
+    cancellationTokenManager.cleanupJob(jobId);
   }
 }
 
@@ -197,43 +263,50 @@ export async function processBigPicture(
   aiConfig: AiConfig,
   onStream?: (chunk: string) => void
 ) {
-  // Construct context for the Grand Narrative
-  const context = history.map(h => `DATE: ${h.date}\nSUMMARY: ${h.narrative}\nSIGNALS: ${h.signals.length} detected.`).join('\n\n');
-  const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+  // Create a unique job ID for big picture processing
+  const jobId = `big-picture-${Date.now()}`;
 
-  // 1. Construct Timeline PRECISELY from existing history (Deterministic)
-  const timeline = history.map((h: any) => {
-    // deduce sentiment from signals if available
-    let sentiment = 'neutral';
-    if (h.signals && h.signals.length > 0) {
-      // Simple heuristic: if any signal is negative, the day is negative
-      const neg = h.signals.find((s: any) => s.sentiment.includes('negative'));
-      if (neg) sentiment = neg.sentiment;
-    }
+  // Create cancellation controller for this job
+  const controller = cancellationTokenManager.createController(jobId);
 
-    // formatting title/summary from narrative
-    let title = 'Situation Report';
-    let summaryStr = h.narrative || '';
+  try {
+    // Construct context for the Grand Narrative
+    const context = history.map(h => `DATE: ${h.date}\nSUMMARY: ${h.narrative}\nSIGNALS: ${h.signals.length} detected.`).join('\n\n');
+    const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict, signal: controller.signal };
 
-    // Try to extract a headline if the narrative starts with one
-    const lines = summaryStr
-      .split("\n")
-      .filter((l: string) => l.trim().length > 0);
-    if (lines.length > 0) {
-      title = lines[0].replace(/[*#]/g, "").trim();
-      summaryStr = lines.slice(1).join(" ");
-    }
+    // 1. Construct Timeline PRECISELY from existing history (Deterministic)
+    const timeline = history.map((h: any) => {
+      // deduce sentiment from signals if available
+      let sentiment = 'neutral';
+      if (h.signals && h.signals.length > 0) {
+        // Simple heuristic: if any signal is negative, the day is negative
+        const neg = h.signals.find((s: any) => s.sentiment.includes('negative'));
+        if (neg) sentiment = neg.sentiment;
+      }
 
-    return {
-      date: h.date,
-      title: title,
-      summary: summaryStr,
-      sentiment: sentiment
-    };
-  }).sort((a: any, b: any) => a.date.localeCompare(b.date));
+      // formatting title/summary from narrative
+      let title = 'Situation Report';
+      let summaryStr = h.narrative || '';
 
-  // 2. Generate Grand Narrative
-  const narrativePrompt = `
+      // Try to extract a headline if the narrative starts with one
+      const lines = summaryStr
+        .split("\n")
+        .filter((l: string) => l.trim().length > 0);
+      if (lines.length > 0) {
+        title = lines[0].replace(/[*#]/g, "").trim();
+        summaryStr = lines.slice(1).join(" ");
+      }
+
+      return {
+        date: h.date,
+        title: title,
+        summary: summaryStr,
+        sentiment: sentiment
+      };
+    }).sort((a: any, b: any) => a.date.localeCompare(b.date));
+
+    // 2. Generate Grand Narrative
+    const narrativePrompt = `
 Based on the following historical data of daily briefings, write a "Grand Narrative" that explains the overall trajectory of world events.
 Focus on the connections between days, the escalation of tensions, or the resolution of conflicts.
 This should be a high-level strategic overview, not a day-by-day recount.
@@ -243,20 +316,38 @@ HISTORY:
 ${context}
 `;
 
-  let summary = '';
-  if (onStream) {
-    await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
-      summary += chunk;
-      onStream(chunk);
-    }, options);
-  } else {
-    summary = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
-  }
+    let summary = '';
+    if (onStream) {
+      await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
+        summary += chunk;
+        onStream(chunk);
+      }, options);
+    } else {
+      summary = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
+    }
 
-  return {
-    summary: finalizeNarrative(summary),
-    timeline: timeline
-  };
+    return {
+      summary: finalizeNarrative(summary),
+      timeline: timeline
+    };
+
+  } catch (error) {
+    // Check if this was a cancellation
+    if (error instanceof Error && (
+      error.message.includes('cancelled') ||
+      error.message.includes('AbortError') ||
+      error.name === 'AbortError'
+    )) {
+      console.log('Big picture processing was cancelled');
+      throw new Error('Processing cancelled');
+    }
+
+    // Re-throw other errors
+    throw error;
+  } finally {
+    // Always clean up the controller when done
+    cancellationTokenManager.cleanupJob(jobId);
+  }
 }
 
 function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
@@ -291,11 +382,11 @@ function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
 }
 
 function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateStr: string) {
-  const feedIndex = feedsSubset.map(f => ({
-    feedId: f.id,
+  const feedIndex = feedsSubset.map((f, idx) => ({
+    feedId: String(idx),
     source: f.source,
     title: f.title,
-    link: f.link,
+    // link omitted to prevent hallucination
     timestamp: f.timestamp,
     category: f.category,
     content: f.content
@@ -337,7 +428,7 @@ Return EXACTLY one JSON object with this shape:
     "soWhat": string
   },
   "evidence": [
-    { "feedId": string, "source": string, "title": string, "link": string, "timestamp": string, "quote": string }
+    { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
   ],
   "counterpoints": [
     { "claimA": string, "claimB": string, "evidenceA": EvidenceRef[], "evidenceB": EvidenceRef[] }
@@ -394,19 +485,7 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
   return { success: false, data: null, error: `JSON parsing failed: ${errorDetails}`, canRetry };
 }
 
-function finalizeEvidenceRefs(raw: any): EvidenceRef[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .map((e: any) => ({
-      feedId: String(e.feedId || ''),
-      source: e.source ? String(e.source) : undefined,
-      title: e.title ? String(e.title) : undefined,
-      link: e.link ? String(e.link) : undefined,
-      timestamp: e.timestamp ? String(e.timestamp) : undefined,
-      quote: e.quote ? String(e.quote) : undefined
-    }))
-    .filter((e: EvidenceRef) => Boolean(e.feedId));
-}
+
 
 export async function generateDeepDive(
   signal: Signal,
@@ -449,13 +528,13 @@ export async function generateDeepDive(
       why: fiveWs.why ? String(fiveWs.why) : undefined,
       soWhat: fiveWs.soWhat ? String(fiveWs.soWhat) : undefined
     },
-    evidence: finalizeEvidenceRefs(obj.evidence),
+    evidence: normalizeEvidence(obj.evidence, feedsSubset),
     counterpoints: Array.isArray(obj.counterpoints)
       ? obj.counterpoints.map((c: any) => ({
         claimA: String(c.claimA || ''),
         claimB: String(c.claimB || ''),
-        evidenceA: finalizeEvidenceRefs(c.evidenceA),
-        evidenceB: finalizeEvidenceRefs(c.evidenceB)
+        evidenceA: normalizeEvidence(c.evidenceA, feedsSubset),
+        evidenceB: normalizeEvidence(c.evidenceB, feedsSubset)
       })).filter((c: any) => c.claimA && c.claimB)
       : undefined,
     watchNext: Array.isArray(obj.watchNext) ? obj.watchNext.map((x: any) => String(x)).filter(Boolean) : undefined
@@ -540,14 +619,14 @@ Your response MUST start with [ and end with ] and contain 5-8 signal objects li
     "explain": string,
     "shareText": string,
     "evidence": [
-      { "feedId": string, "source": string, "title": string, "link": string, "timestamp": string, "quote": string }
+      { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
     ],
     "contradictions": [
       {
         "claimA": string,
         "claimB": string,
-        "evidenceA": [{ "feedId": string, "source": string, "title": string, "link": string, "timestamp": string, "quote": string }],
-        "evidenceB": [{ "feedId": string, "source": string, "title": string, "link": string, "timestamp": string, "quote": string }]
+        "evidenceA": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }],
+        "evidenceB": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }]
       }
     ]
   }
@@ -559,7 +638,7 @@ Rules:
 - text: 1-2 sentences detailed description of the signal (e.g., "Authorities are escalating violent crackdowns on nationwide protests, with reports of mass arrests and lethal force being used against demonstrators.")
 - importance is 0..100.
 - novelty is 0..100 (lower if similar to RECENT SIGNALS).
-- evidence.feedId MUST come from FEED INDEX.
+- feedId MUST be the numeric index from FEED INDEX.
 - Always include at least 1 evidence source item.
 - Each signal should cover different topics/events (don't repeat the same Iran story multiple times)
 
@@ -568,7 +647,7 @@ ${customGuidelines || SENTIMENT_GUIDELINES}
 
 Feeds:
 ${context}`;
-  
+
   console.log('Signals prompt length:', prompt.length);
   console.log('Feed index length:', feedIndex.length);
   return prompt;
@@ -600,7 +679,7 @@ OUTPUT FORMAT (STRICT JSON):
     "sentiment": "neutral",
     "signalId": "sig_abc123", // Optional: id of the related signal if this insight is derived from a specific signal
     "evidence": [
-      { "feedId": "", "source": "", "title": "", "link": "", "timestamp": "", "quote": "" }
+      { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
     ]
   }
 ]
@@ -707,7 +786,7 @@ interface JsonParseResult {
 
 function parseJsonArrayWithDetection(text: string): JsonParseResult {
   let cleanText = text.trim();
-  
+
   if (!cleanText) {
     return { success: false, data: [], error: 'Empty response', canRetry: true };
   }
@@ -723,7 +802,7 @@ function parseJsonArrayWithDetection(text: string): JsonParseResult {
           console.log('WARNING: AI returned single object instead of array. Converting to array but prompt needs fixing.');
           return [parsed];
         }
-        
+
         const arrayProp = Object.values(parsed).find(v => Array.isArray(v));
         if (arrayProp && Array.isArray(arrayProp)) return arrayProp.flat(1);
         const keys = Object.keys(parsed);
@@ -764,7 +843,7 @@ function parseJsonArrayWithDetection(text: string): JsonParseResult {
         // Split by "text": to find individual objects
         const parts = cleanText.split('"text":').slice(1); // Remove first empty part
         const objects = [];
-        
+
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
           // Find the end of this object (next "text": or end of string)
@@ -776,10 +855,10 @@ function parseJsonArrayWithDetection(text: string): JsonParseResult {
               endPos = nextTextIndex + 1;
             }
           }
-          
+
           // Extract and reconstruct the object
           let objectStr = '{"text":' + part.substring(0, endPos);
-          
+
           // Ensure it ends properly
           if (!objectStr.endsWith('}') && !objectStr.endsWith('"}')) {
             objectStr += '"';
@@ -787,10 +866,10 @@ function parseJsonArrayWithDetection(text: string): JsonParseResult {
               objectStr += '}';
             }
           }
-          
+
           try {
             const obj = JSON.parse(objectStr);
-            if (obj.text && obj.sentiment ){
+            if (obj.text && obj.sentiment) {
               objects.push(obj);
             }
           } catch (e) {
@@ -798,7 +877,7 @@ function parseJsonArrayWithDetection(text: string): JsonParseResult {
             continue;
           }
         }
-        
+
         if (objects.length > 0) {
           return objects;
         }
@@ -824,12 +903,12 @@ function parseJsonArrayWithDetection(text: string): JsonParseResult {
   // All strategies failed - return error object instead of fallback data
   const errorDetails = lastError?.message || 'Unknown parsing error';
   const canRetry = !errorDetails.includes('Empty response');
-  
-  return { 
-    success: false, 
+
+  return {
+    success: false,
     data: [{ error: `JSON parsing failed: ${errorDetails}` }], // Return error object to be detected by finalize functions
-    error: `JSON parsing failed: ${errorDetails}`, 
-    canRetry 
+    error: `JSON parsing failed: ${errorDetails}`,
+    canRetry
   };
 }
 
@@ -838,15 +917,15 @@ function parseJsonArray(text: string): any[] {
   if (result.success) {
     return result.data;
   }
-  
+
   // Check if the data contains error objects and filter them out
   if (Array.isArray(result.data)) {
-    const filtered = result.data.filter(item => 
+    const filtered = result.data.filter(item =>
       !(typeof item === 'object' && item !== null && 'error' in item)
     );
     return filtered;
   }
-  
+
   return [];
 }
 
@@ -897,31 +976,34 @@ function normalizeDeltaType(raw: any): 'escalation' | 'deescalation' | 'policy' 
 
 function normalizeEvidence(raw: any, feeds: RawSignal[]): EvidenceRef[] {
   if (!Array.isArray(raw)) return [];
-  const feedById = new Map<string, RawSignal>(feeds.map(f => [String(f.id), f]));
+  // Create mapping of IDs and also handle numeric indices for AI reliability
+  const feedById = new Map<string, RawSignal>();
+  feeds.forEach((f, idx) => {
+    feedById.set(String(f.id), f);
+    feedById.set(String(idx), f); // Support lookup by prompt index
+  });
 
   const refs = raw.map((entry: any) => {
-    if (typeof entry === 'string') {
-      const id = String(entry);
-      const feed = feedById.get(id);
-      return feed
-        ? {
-            feedId: id,
-            source: feed.source,
-            title: feed.title,
-            link: feed.link,
-            timestamp: feed.timestamp
-          }
-        : { feedId: id };
-    }
+
 
     const feedId = entry?.feedId ? String(entry.feedId) : '';
     if (!feedId) return null;
-    const feed = feedById.get(feedId);
+
+    let feed = feedById.get(feedId);
+
+    // Fuzzy fallback: If ID fails, try matching by Title similarity
+    if (!feed && entry.title) {
+      const entryTitleLower = entry.title.toLowerCase();
+      feed = feeds.find(f =>
+        f.title?.toLowerCase() === entryTitleLower ||
+        (f.title && calculateTextSimilarity(f.title.toLowerCase(), entryTitleLower) > 0.8)
+      );
+    }
     return {
       feedId,
       source: entry?.source ? String(entry.source) : feed?.source,
       title: entry?.title ? String(entry.title) : feed?.title,
-      link: entry?.link ? String(entry.link) : feed?.link,
+      link: feed?.link, // CRITICAL: NEVER use AI-generated links (prevents hallucination)
       timestamp: entry?.timestamp ? String(entry.timestamp) : feed?.timestamp,
       quote: entry?.quote ? String(entry.quote) : undefined
     } as EvidenceRef;
@@ -958,7 +1040,7 @@ function applyNoveltyScores(signals: any[], recentSignals: string[]): any[] {
 function deduplicateSignals(signals: any[]) {
   const uniqueSignals: any[] = [];
   const seenTexts = new Set<string>();
-  
+
   for (const signal of signals) {
     // Normalize text for comparison
     const normalizedText = signal.text
@@ -966,12 +1048,12 @@ function deduplicateSignals(signals: any[]) {
       .trim()
       .replace(/[^\w\s]/g, '') // Remove punctuation
       .replace(/\s+/g, ' '); // Normalize whitespace
-    
+
     // Check for exact duplicates
     if (seenTexts.has(normalizedText)) {
       continue;
     }
-    
+
     // Check for essentially the same signals (high similarity)
     let isDuplicate = false;
     for (const existingSignal of uniqueSignals) {
@@ -980,10 +1062,10 @@ function deduplicateSignals(signals: any[]) {
         .trim()
         .replace(/[^\w\s]/g, '')
         .replace(/\s+/g, ' ');
-      
+
       // Calculate similarity (simple word overlap)
       const similarity = calculateTextSimilarity(normalizedText, existingNormalized);
-      
+
       // If similarity is high (>0.4) and sentiment is the same, consider it duplicate
       if (similarity > 0.4 && signal.sentiment === existingSignal.sentiment) {
         isDuplicate = true;
@@ -995,41 +1077,41 @@ function deduplicateSignals(signals: any[]) {
         break;
       }
     }
-    
+
     if (!isDuplicate) {
       uniqueSignals.push(signal);
       seenTexts.add(normalizedText);
     }
   }
-  
+
   return uniqueSignals;
 }
 
 function calculateTextSimilarity(text1: string, text2: string): number {
   const words1 = new Set(text1.split(' ').filter(w => w.length > 1));
   const words2 = new Set(text2.split(' ').filter(w => w.length > 1));
-  
+
   if (words1.size === 0 || words2.size === 0) return 0;
-  
+
   const intersection = new Set([...words1].filter(x => words2.has(x)));
   const union = new Set([...words1, ...words2]);
-  
+
   return intersection.size / union.size;
 }
 
 function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
   // Check if the raw data contains actual error objects (not signal objects)
-  const hasError = raw.some(item => 
-    typeof item === 'object' && 
-    item !== null && 
-    'error' in item && 
+  const hasError = raw.some(item =>
+    typeof item === 'object' &&
+    item !== null &&
+    'error' in item &&
     typeof item.error === 'string' &&
     // Make sure it's actually an error object, not a signal
     // Signal objects have properties like title, text, sentiment, etc.
     // Error objects typically only have error property
     !('title' in item) && !('text' in item) && !('sentiment' in item)
   );
-  
+
   if (hasError) {
     console.error('Error detected in raw signals data:', raw);
     return [];
@@ -1040,7 +1122,7 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
 
     // Extract text from various possible fields
     let text = '';
-    
+
     if (s.text) {
       text = s.text;
     } else if (s.title) {
@@ -1058,9 +1140,9 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
         text = String(s[key]);
       } else {
         // Multiple keys, try to find most likely text content
-        const textKey = keys.find(k => 
-          typeof s[k] === 'string' && 
-          s[k].length > 10 && 
+        const textKey = keys.find(k =>
+          typeof s[k] === 'string' &&
+          s[k].length > 10 &&
           !k.includes('sentiment') && !k.includes('level')
         );
         text = textKey ? String(s[textKey]) : JSON.stringify(s);
@@ -1068,26 +1150,30 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
     }
 
     const sentiment = (s.sentiment || s.level || DEFAULT_SENTIMENT).toLowerCase();
-    
+
     // Validate sentiment is one of the allowed values
     const allowedSentiments: Set<string> = new Set([
       'extremely-negative', 'very-negative', 'negative', 'somewhat-negative',
       'neutral', 'interesting', 'positive', 'very-positive'
     ]);
-    
+
     const finalSentiment = allowedSentiments.has(sentiment) ? sentiment : 'neutral';
 
     const title = s.title ? String(s.title) : undefined;
     const category = normalizeCategory(s.category);
     const deltaType = normalizeDeltaType(s.deltaType);
     const evidence = normalizeEvidence(s.evidence, feeds);
-    const contradictions = Array.isArray(s.contradictions) ? s.contradictions : [];
+    const contradictions = (Array.isArray(s.contradictions) ? s.contradictions : []).map((c: any) => ({
+      ...c,
+      evidenceA: normalizeEvidence(c.evidenceA, feeds),
+      evidenceB: normalizeEvidence(c.evidenceB, feeds)
+    }));
 
 
-    const importance = typeof s.importance === 'number' ? s.importance : 
-                      typeof s.importance === 'string' ? parseFloat(s.importance) : undefined;
-    const novelty = typeof s.novelty === 'number' ? s.novelty : 
-                   typeof s.novelty === 'string' ? parseFloat(s.novelty) : undefined;
+    const importance = typeof s.importance === 'number' ? s.importance :
+      typeof s.importance === 'string' ? parseFloat(s.importance) : undefined;
+    const novelty = typeof s.novelty === 'number' ? s.novelty :
+      typeof s.novelty === 'string' ? parseFloat(s.novelty) : undefined;
 
     const stableSeed = `${title || ''}|${text}|${category || ''}|${deltaType || ''}|${(evidence[0]?.feedId) || ''}`;
     const id = s.id ? String(s.id) : `sig_${hashString(stableSeed)}`;
@@ -1112,26 +1198,26 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
   if (processedSignals.length > 0) {
     console.log('First signal:', processedSignals[0].title);
   }
-  
+
   return deduplicateSignals(processedSignals);
 }
 
 function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
   console.log('Raw insights data:', raw);
-  
+
   // Check if the raw data contains error objects
-  const hasError = raw.some(item => 
-    typeof item === 'object' && 
-    item !== null && 
-    'error' in item && 
+  const hasError = raw.some(item =>
+    typeof item === 'object' &&
+    item !== null &&
+    'error' in item &&
     typeof item.error === 'string'
   );
-  
+
   if (hasError) {
     // Find the first error and throw it to trigger the error handling
-    const errorItem = raw.find(item => 
-      typeof item === 'object' && 
-      item !== null && 
+    const errorItem = raw.find(item =>
+      typeof item === 'object' &&
+      item !== null &&
       'error' in item
     );
     console.error('AI returned error for insights:', errorItem);
@@ -1140,7 +1226,7 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
 
   return raw.map((i: any) => {
     if (typeof i === 'string') return { text: i, sentiment: DEFAULT_SENTIMENT };
-    
+
     // Handle malformed objects like {"34":"text...", "sentiment":"interesting"}
     let text = '';
     if (i.text) {
@@ -1150,22 +1236,22 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
     } else {
       // Extract text from malformed objects
       const keys = Object.keys(i).filter(k => k !== 'sentiment' && k !== 'evidence');
-      
+
       // Skip if the only remaining keys look like URLs or numbers
       const nonUrlKeys = keys.filter(k => {
         const value = String(i[k]);
         return !value.startsWith('http') && !value.match(/^\d+$/);
       });
-      
+
       if (nonUrlKeys.length === 1) {
         // Single non-sentiment key, use its value
         const key = nonUrlKeys[0];
         text = String(i[key]);
       } else if (nonUrlKeys.length > 1) {
         // Multiple keys, try to find the most likely text content
-        const textKey = nonUrlKeys.find(k => 
-          typeof i[k] === 'string' && 
-          i[k].length > 20 && 
+        const textKey = nonUrlKeys.find(k =>
+          typeof i[k] === 'string' &&
+          i[k].length > 20 &&
           !i[k].startsWith('http') &&
           !k.includes('sentiment')
         );
@@ -1175,12 +1261,12 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
         text = 'Unable to parse insight content - AI returned URLs instead of text';
       }
     }
-    
+
     // Final validation: if text is still a URL or too short, create fallback
     if (text.startsWith('http') || text.length < 10) {
       text = 'AI model returned invalid content format - expected insight text';
     }
-    
+
     let sentiment = String(i.sentiment || DEFAULT_SENTIMENT).toLowerCase();
 
     // Mapping for numeric or common string sentiments
@@ -1199,24 +1285,24 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
 
 function finalizeMapPoints(raw: any[], signals: any[] = []) {
   console.log('Raw map points data:', raw);
-  
+
   // Check if the raw data contains error objects
-  const hasError = raw.some(item => 
-    typeof item === 'object' && 
-    item !== null && 
-    'error' in item && 
+  const hasError = raw.some(item =>
+    typeof item === 'object' &&
+    item !== null &&
+    'error' in item &&
     typeof item.error === 'string'
   );
-  
+
   if (hasError) {
     // Find the first error and log it
-    const errorItem = raw.find(item => 
-      typeof item === 'object' && 
-      item !== null && 
+    const errorItem = raw.find(item =>
+      typeof item === 'object' &&
+      item !== null &&
       'error' in item
     );
     console.error('AI returned error for map points:', errorItem);
-    
+
     // Return empty array instead of throwing to allow the app to continue
     return [];
   }
@@ -1269,18 +1355,18 @@ function finalizeMapPoints(raw: any[], signals: any[] = []) {
 
 function finalizeRelations(raw: any[], relations: ForeignRelation[]) {
   // Check if the raw data contains error objects
-  const hasError = raw.some(item => 
-    typeof item === 'object' && 
-    item !== null && 
-    'error' in item && 
+  const hasError = raw.some(item =>
+    typeof item === 'object' &&
+    item !== null &&
+    'error' in item &&
     typeof item.error === 'string'
   );
-  
+
   if (hasError) {
     // Find the first error and throw it to trigger the error handling
-    const errorItem = raw.find(item => 
-      typeof item === 'object' && 
-      item !== null && 
+    const errorItem = raw.find(item =>
+      typeof item === 'object' &&
+      item !== null &&
       'error' in item
     );
     throw new Error(errorItem?.error || 'JSON parsing error in relations');
@@ -1344,140 +1430,165 @@ export async function processSingleSection(
   extraContext: any = {},
   onJsonError?: (error: string, canRetry: boolean) => void
 ): Promise<Partial<SituationState>> {
-  // Special handling for RSS section - just validate feeds, no AI processing
-  if (sectionId === 'rss') {
-    // Simulate a brief processing delay for UX
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Check if we have any feeds - fail only if all feeds are empty/missing
-    if (!feeds || feeds.length === 0) {
-      throw new Error('No RSS feeds available. Please try refreshing feeds.');
+  // Create a unique job ID for this section processing
+  const jobId = `section-${sectionId}-${Date.now()}`;
+
+  // Create cancellation controller for this job
+  const controller = cancellationTokenManager.createController(jobId);
+
+  try {
+    // Special handling for RSS section - just validate feeds, no AI processing
+    if (sectionId === 'rss') {
+      // Simulate a brief processing delay for UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Check if we have any feeds - fail only if all feeds are empty/missing
+      if (!feeds || feeds.length === 0) {
+        throw new Error('No RSS feeds available. Please try refreshing feeds.');
+      }
+
+      // RSS processing "succeeds" if we have any feeds at all
+      // Individual feed source failures are handled at the feed level, not section level
+      return {
+        feeds: feeds // Just return the existing feeds
+      };
     }
-    
-    // RSS processing "succeeds" if we have any feeds at all
-    // Individual feed source failures are handled at the feed level, not section level
-    return { 
-      feeds: feeds // Just return the existing feeds
+
+    const context = generateContext(feeds);
+    const feedIndex = generateFeedIndex(feeds);
+    const opt = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict, signal: controller.signal };
+
+    if (sectionId === 'narrative') {
+      let narrative = '';
+      const prompt = generateNarrativePrompt(context);
+      if (onStream) {
+        await OllamaService.streamGenerate(aiConfig.model, prompt, (c) => { narrative += c; onStream(narrative); }, opt);
+      } else {
+        narrative = await OllamaService.generate(aiConfig.model, prompt, undefined, opt);
+      }
+      const rawOutputs: Record<string, string> = { narrative: narrative || '' };
+      return {
+        narrative: finalizeNarrative(narrative),
+        rawOutputs
+      };
+    }
+
+    const prompts: any = {
+      signals: async () => {
+        const recentSignals = await getRecentSignalsForNovelty(7);
+        return generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig);
+      },
+      insights: generateInsightsPrompt(context, feedIndex, extraContext.signalsText || ''),
+      map: generateMapPointsPrompt(context, extraContext.signalsText || ''),
+      relations: async () => {
+        const historicalContext = await getHistoricalRelationsContext(foreignRelations);
+        return generateRelationsPrompt(
+          context,
+          foreignRelations,
+          extraContext.narrative || '',
+          extraContext.signals || [],
+          extraContext.insights || [],
+          extraContext.bigPicture || null,
+          historicalContext
+        );
+      }
     };
-  }
 
-  const context = generateContext(feeds);
-  const feedIndex = generateFeedIndex(feeds);
-  const opt = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+    let res;
+    let parseResult: JsonParseResult;
+    if (sectionId === 'relations') {
+      // console.log('Processing relations section');
+      res = await OllamaService.generate(aiConfig.model, await prompts.relations(), 'json', opt);
+      parseResult = parseJsonArrayWithDetection(res);
+    } else if (sectionId === 'signals') {
+      // console.log('Processing signals section');
+      let lastRes = '';
+      let lastParse: JsonParseResult = { success: false, data: [], error: 'No attempt made', canRetry: true };
 
-  if (sectionId === 'narrative') {
-    let narrative = '';
-    const prompt = generateNarrativePrompt(context);
-    if (onStream) {
-      await OllamaService.streamGenerate(aiConfig.model, prompt, (c) => { narrative += c; onStream(narrative); }, opt);
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const basePrompt = await prompts.signals();
+        const strictSuffix = attempt === 0
+          ? ''
+          : `\n\nFINAL CHECK (MANDATORY): Output ONLY a JSON array with 5-8 signal objects. If you produced a single object, wrap it in an array and add additional distinct signals until there are 5-8 total. Do not output any prose or markdown.`;
+
+        // NOTE: Do NOT use Ollama's JSON mode here.
+        // In practice it often biases the model into emitting a single JSON object,
+        // which is the exact failure mode we're trying to avoid for signals.
+        lastRes = await OllamaService.generate(aiConfig.model, `${basePrompt}${strictSuffix}`, undefined, opt);
+
+        lastParse = parseJsonArrayWithDetection(lastRes);
+        if (!lastParse.success) continue;
+
+        const clean = String(lastRes || '').trim();
+        const looksLikeSingleObject = clean.startsWith('{') && !clean.startsWith('[');
+        const tooFewSignals = Array.isArray(lastParse.data) && lastParse.data.length < 5;
+
+        if (!looksLikeSingleObject && !tooFewSignals) break;
+      }
+
+      res = lastRes;
+      parseResult = lastParse;
     } else {
-      narrative = await OllamaService.generate(aiConfig.model, prompt, undefined, opt);
+      // console.log('Processing section:', sectionId);
+      res = await OllamaService.generate(aiConfig.model, prompts[sectionId], 'json', opt);
+      parseResult = parseJsonArrayWithDetection(res);
     }
-    const rawOutputs: Record<string, string> = { narrative: narrative || '' };
-    return { 
-      narrative: finalizeNarrative(narrative),
-      rawOutputs
-    };
-  }
 
-  const prompts: any = {
-    signals: async () => {
+    if (!parseResult.success) {
+      if (onJsonError) {
+        onJsonError(parseResult.error || 'Unknown JSON parsing error', parseResult.canRetry);
+      }
+      throw new Error(parseResult.error);
+    }
+
+    if (sectionId === 'signals') {
       const recentSignals = await getRecentSignalsForNovelty(7);
-      return generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig);
-    },
-    insights: generateInsightsPrompt(context, feedIndex, extraContext.signalsText || ''),
-    map: generateMapPointsPrompt(context, extraContext.signalsText || ''),
-    relations: async () => {
-      const historicalContext = await getHistoricalRelationsContext(foreignRelations);
-      return generateRelationsPrompt(
-        context,
-        foreignRelations,
-        extraContext.narrative || '',
-        extraContext.signals || [],
-        extraContext.insights || [],
-        extraContext.bigPicture || null,
-        historicalContext
-      );
+      const rawOutputs: Record<string, string> = { signals: res || '' };
+      return {
+        signals: applyNoveltyScores(finalizeSignals(parseResult.data, feeds), recentSignals),
+        rawOutputs
+      };
     }
-  };
-
-  let res;
-  let parseResult: JsonParseResult;
-  if (sectionId === 'relations') {
-    // console.log('Processing relations section');
-    res = await OllamaService.generate(aiConfig.model, await prompts.relations(), 'json', opt);
-    parseResult = parseJsonArrayWithDetection(res);
-  } else if (sectionId === 'signals') {
-    // console.log('Processing signals section');
-    let lastRes = '';
-    let lastParse: JsonParseResult = { success: false, data: [], error: 'No attempt made', canRetry: true };
-
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const basePrompt = await prompts.signals();
-      const strictSuffix = attempt === 0
-        ? ''
-        : `\n\nFINAL CHECK (MANDATORY): Output ONLY a JSON array with 5-8 signal objects. If you produced a single object, wrap it in an array and add additional distinct signals until there are 5-8 total. Do not output any prose or markdown.`;
-
-      // NOTE: Do NOT use Ollama's JSON mode here.
-      // In practice it often biases the model into emitting a single JSON object,
-      // which is the exact failure mode we're trying to avoid for signals.
-      lastRes = await OllamaService.generate(aiConfig.model, `${basePrompt}${strictSuffix}`, undefined, opt);
-
-      lastParse = parseJsonArrayWithDetection(lastRes);
-      if (!lastParse.success) continue;
-
-      const clean = String(lastRes || '').trim();
-      const looksLikeSingleObject = clean.startsWith('{') && !clean.startsWith('[');
-      const tooFewSignals = Array.isArray(lastParse.data) && lastParse.data.length < 5;
-
-      if (!looksLikeSingleObject && !tooFewSignals) break;
+    if (sectionId === 'insights') {
+      const rawOutputs: Record<string, string> = { insights: res || '' };
+      return {
+        insights: finalizeInsights(parseResult.data, feeds),
+        rawOutputs
+      };
+    }
+    if (sectionId === 'map') {
+      const rawOutputs: Record<string, string> = { map: res || '' };
+      return {
+        mapPoints: finalizeMapPoints(parseResult.data, extraContext.signals || []),
+        rawOutputs
+      };
+    }
+    if (sectionId === 'relations') {
+      const rawOutputs: Record<string, string> = { relations: res || '' };
+      return {
+        foreignRelations: finalizeRelations(parseResult.data, foreignRelations),
+        rawOutputs
+      };
     }
 
-    res = lastRes;
-    parseResult = lastParse;
-  } else {
-    // console.log('Processing section:', sectionId);
-    res = await OllamaService.generate(aiConfig.model, prompts[sectionId], 'json', opt);
-    parseResult = parseJsonArrayWithDetection(res);
-  }
+    // Fallback to full process if unknown section (shouldn't happen)
+    return processSituation(feeds, foreignRelations, aiConfig, extraContext.bigPicture);
 
-  if (!parseResult.success) {
-    if (onJsonError) {
-      onJsonError(parseResult.error || 'Unknown JSON parsing error', parseResult.canRetry);
+  } catch (error) {
+    // Check if this was a cancellation
+    if (error instanceof Error && (
+      error.message.includes('cancelled') ||
+      error.message.includes('AbortError') ||
+      error.name === 'AbortError'
+    )) {
+      console.log(`Section ${sectionId} processing was cancelled`);
+      throw new Error('Processing cancelled');
     }
-    throw new Error(parseResult.error);
-  }
 
-  if (sectionId === 'signals') {
-    const recentSignals = await getRecentSignalsForNovelty(7);
-    const rawOutputs: Record<string, string> = { signals: res || '' };
-    return { 
-      signals: applyNoveltyScores(finalizeSignals(parseResult.data, feeds), recentSignals),
-      rawOutputs
-    };
+    // Re-throw other errors
+    throw error;
+  } finally {
+    // Always clean up the controller when done
+    cancellationTokenManager.cleanupJob(jobId);
   }
-  if (sectionId === 'insights') {
-    const rawOutputs: Record<string, string> = { insights: res || '' };
-    return { 
-      insights: finalizeInsights(parseResult.data, feeds),
-      rawOutputs
-    };
-  }
-  if (sectionId === 'map') {
-    const rawOutputs: Record<string, string> = { map: res || '' };
-    return { 
-      mapPoints: finalizeMapPoints(parseResult.data, extraContext.signals || []),
-      rawOutputs
-    };
-  }
-  if (sectionId === 'relations') {
-    const rawOutputs: Record<string, string> = { relations: res || '' };
-    return { 
-      foreignRelations: finalizeRelations(parseResult.data, foreignRelations),
-      rawOutputs
-    };
-  }
-
-  // Fallback to full process if unknown section (shouldn't happen)
-  return processSituation(feeds, foreignRelations, aiConfig, extraContext.bigPicture);
 }

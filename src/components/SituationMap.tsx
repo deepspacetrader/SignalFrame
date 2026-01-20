@@ -125,7 +125,7 @@ export function SituationMap() {
 
         return (
             <SectionRegenerateButton
-                onClick={() => refreshSection('map')}
+                onClick={() => refreshSection('map', true)}
                 className="opacity-80 hover:opacity-100"
             />
         )

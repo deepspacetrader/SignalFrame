@@ -51,7 +51,7 @@ export function NarrativeSummary() {
 
     return (
       <div className="flex items-center gap-2">
-        <SectionRegenerateButton onClick={() => refreshSection('narrative')} />
+        <SectionRegenerateButton onClick={() => refreshSection('narrative', true)} />
         {rawOutputs.narrative && (
           <button
             onClick={() => showRawOutput('narrative')}

@@ -52,7 +52,7 @@ export function ForeignRelationsPanel() {
                 <SectionRegenerateButton
                     key="refresh"
                     label="Update"
-                    onClick={() => refreshSection('relations')}
+                    onClick={() => refreshSection('relations', true)}
                     className="opacity-80 hover:opacity-100"
                 />
             )

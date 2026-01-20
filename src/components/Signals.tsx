@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
+import { DeepDiveModal } from './DeepDiveModal'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
 import { RawOutputModal } from './RawOutputModal'
 import { formatTime } from '../utils/timeUtils'
@@ -35,24 +36,28 @@ const sentimentOrder = {
 
 
 export function Signals() {
-  const { 
-    signals, 
+  const {
+    signals,
     insights,
-    isProcessing, 
-    isProcessingSection, 
-    refreshSection, 
-    jsonError, 
-    clearJsonError, 
+    isProcessing,
+    isProcessingSection,
+    refreshSection,
+    jsonError,
+    clearJsonError,
     retryJsonSection,
     rawOutputs,
     activeRawOutput,
     showRawOutput,
     hideRawOutput,
-    sourceCredibility,
     sectionGenerationTimes,
     sectionFailures,
     retryFailedSection,
-    clearSectionFailure
+    clearSectionFailure,
+    generateDeepDive,
+    closeDeepDive,
+    deepDiveBySignalId,
+    activeDeepDiveSignalId,
+    isGeneratingDeepDive
   } = useSituationStore()
   const [sortBy, setSortBy] = useState<'none' | 'pos-neg' | 'neg-pos'>('none')
   const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null)
@@ -100,31 +105,28 @@ export function Signals() {
       <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
         <button
           onClick={() => setSortBy('none')}
-          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
-            sortBy === 'none'
-              ? 'bg-gray-500 text-white'
-              : 'text-text-secondary hover:text-text-primary'
-          }`}
+          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'none'
+            ? 'bg-gray-500 text-white'
+            : 'text-text-secondary hover:text-text-primary'
+            }`}
         >
           Default
         </button>
         <button
           onClick={() => setSortBy('pos-neg')}
-          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
-            sortBy === 'pos-neg'
-              ? 'bg-accent-secondary text-white'
-              : 'text-text-secondary hover:text-text-primary'
-          }`}
+          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'pos-neg'
+            ? 'bg-accent-secondary text-white'
+            : 'text-text-secondary hover:text-text-primary'
+            }`}
         >
           Positive → Negative
         </button>
         <button
           onClick={() => setSortBy('neg-pos')}
-          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${
-            sortBy === 'neg-pos'
-              ? 'bg-red-500 text-white'
-              : 'text-text-secondary hover:text-text-primary'
-          }`}
+          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'neg-pos'
+            ? 'bg-red-500 text-white'
+            : 'text-text-secondary hover:text-text-primary'
+            }`}
         >
           Negative → Positive
         </button>
@@ -134,7 +136,7 @@ export function Signals() {
     const regenerateControls = !isProcessing && !hasFailed && (
       <div className="flex items-center gap-2">
         <SectionRegenerateButton
-          onClick={() => refreshSection('signals')}
+          onClick={() => refreshSection('signals', true)}
           className="opacity-80 hover:opacity-100"
         />
         {rawOutputs.signals && (
@@ -222,7 +224,7 @@ export function Signals() {
     return [...base].sort((a, b) => {
       const orderA = sentimentOrder[a.sentiment as keyof typeof sentimentOrder] ?? 4;
       const orderB = sentimentOrder[b.sentiment as keyof typeof sentimentOrder] ?? 4;
-      
+
       return sortBy === 'pos-neg' ? orderB - orderA : orderA - orderB;
     });
   }, [dedupedSignals, sortBy]);
@@ -303,7 +305,7 @@ export function Signals() {
       ) : (
         <div className="space-y-4">
           {sortedSignals.map((signal, idx) => (
-            <div 
+            <div
               key={signal.id || `signal-${idx}`}
               className="relative bg-white/5 border-l-4 p-4 rounded-r-lg transition-all hover:bg-white/10"
               style={{ borderColor: getSentimentColor(signal.sentiment) }}
@@ -316,21 +318,36 @@ export function Signals() {
             >
               {/* Header with title and sentiment */}
               <div className="flex items-start justify-between gap-3 mb-3">
-                <h3 className="font-semibold text-text-primary text-base leading-tight">
+                <h3 className="signal-text font-semibold text-text-primary text-base leading-tight">
                   {signal.title || 'Error generating signal title'}
                 </h3>
-                <span 
-                  className="text-[0.65rem] uppercase tracking-widest px-2 py-1 rounded text-white font-medium"
-                  style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
-                >
-                  {signal.sentiment.replace('-', ' ')}
-                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      generateDeepDive(signal.id || '');
+                    }}
+                    className="p-1.5 rounded bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"
+                    title="Deep Intelligence Analyze"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:scale-110 transition-transform">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                  </button>
+                  <span
+                    className="text-[0.65rem] uppercase tracking-widest px-2 py-1 rounded text-white font-medium shadow-md"
+                    style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
+                  >
+                    {signal.sentiment.replace('-', ' ')}
+                  </span>
+                </div>
               </div>
 
 
 
               {/* Signal text - only show if different from title */}
-              <p className="text-text-secondary text-sm leading-relaxed mb-3">
+              <p className="signal-text text-text-secondary text-sm leading-relaxed mb-3">
                 {signal.text || 'Error generating signal text'}
               </p>
 
@@ -389,7 +406,7 @@ export function Signals() {
 
               {/* Evidence on hover */}
               {hoveredSignalId === (signal.id || `signal-${idx}`) && (
-                <div className="absolute z-100 bottom-full  mt-2 w-full max-w-2xl bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4">
+                <div className="mt-2 w-full max-w-2xl bg-slate-900/100 border border-white/10 rounded-xl shadow-2xl p-4">
                   {signal.evidence && signal.evidence.length > 0 ? (
                     <>
                       <div className="flex justify-between items-start mb-3">
@@ -458,7 +475,7 @@ export function Signals() {
                                 <span className="text-[0.6rem] font-medium text-blue-400">Claim B:</span>
                                 <p className="text-xs text-text-primary flex-1">{contradiction.claimB}</p>
                               </div>
-                              
+
                               {/* Evidence for Claim A */}
                               {contradiction.evidenceA && contradiction.evidenceA.length > 0 && (
                                 <div className="mt-2">
@@ -481,6 +498,16 @@ export function Signals() {
                                           <p className="mt-1 italic text-[0.55rem] text-text-secondary">
                                             "{evidence.quote}"
                                           </p>
+                                        )}
+                                        {evidence.link && (
+                                          <a
+                                            href={evidence.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-accent-primary hover:underline text-[0.6rem] mt-1 inline-block"
+                                          >
+                                            Open article ↗
+                                          </a>
                                         )}
                                       </div>
                                     ))}
@@ -511,6 +538,16 @@ export function Signals() {
                                             "{evidence.quote}"
                                           </p>
                                         )}
+                                        {evidence.link && (
+                                          <a
+                                            href={evidence.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-accent-primary hover:underline text-[0.6rem] mt-1 inline-block"
+                                          >
+                                            Open article ↗
+                                          </a>
+                                        )}
                                       </div>
                                     ))}
                                   </div>
@@ -526,7 +563,7 @@ export function Signals() {
               )}
             </div>
           ))}
-          
+
           {!isProcessing && signals.length === 0 && !jsonError.hasError && (
             <div className="py-8 text-center border-2 border-dashed border-white/5 rounded-xl">
               <p className="text-text-secondary italic">No critical signals identified in this period.</p>
@@ -534,13 +571,20 @@ export function Signals() {
           )}
         </div>
       )}
-      
+
       {/* Raw Output Modal */}
       <RawOutputModal
         isOpen={activeRawOutput === 'signals'}
         onClose={hideRawOutput}
         sectionId="signals"
         title="Signals"
+      />
+
+      <DeepDiveModal
+        isOpen={!!activeDeepDiveSignalId}
+        onClose={closeDeepDive}
+        data={activeDeepDiveSignalId ? deepDiveBySignalId[activeDeepDiveSignalId] : null}
+        isGenerating={isGeneratingDeepDive}
       />
     </SectionCard>
   )

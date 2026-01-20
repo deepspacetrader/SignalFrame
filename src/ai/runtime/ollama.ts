@@ -11,6 +11,7 @@ export interface OllamaOptions {
     num_predict?: number;
     temperature?: number;
     think?: boolean; // Enable thinking/reasoning trace for supported models (deepseek-r1, qwen3, etc.)
+    signal?: AbortSignal; // AbortSignal for cancellation
 }
 
 export interface OllamaThinkingResponse {
@@ -38,6 +39,7 @@ export class OllamaService {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
                 body: JSON.stringify({
                     model,
                     prompt,
@@ -56,6 +58,10 @@ export class OllamaService {
             const data: OllamaResponse = await response.json();
             return data.response;
         } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama generation cancelled');
+                throw new Error('Generation cancelled');
+            }
             console.error('Ollama Service Error:', error);
             throw error;
         }
@@ -75,6 +81,7 @@ export class OllamaService {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
                 body: JSON.stringify({
                     model,
                     messages: [{ role: 'user', content: prompt }],
@@ -96,6 +103,10 @@ export class OllamaService {
                 thinking: data.message?.thinking || ''
             };
         } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama thinking generation cancelled');
+                throw new Error('Thinking generation cancelled');
+            }
             console.error('Ollama Thinking Error:', error);
             throw error;
         }
@@ -117,6 +128,7 @@ export class OllamaService {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
                 body: JSON.stringify({
                     model,
                     messages: [{ role: 'user', content: prompt }],
@@ -161,6 +173,10 @@ export class OllamaService {
                 }
             }
         } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama thinking streaming cancelled');
+                throw new Error('Thinking streaming cancelled');
+            }
             console.error('Ollama Thinking Streaming Error:', error);
             throw error;
         }
@@ -181,6 +197,7 @@ export class OllamaService {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
                 body: JSON.stringify({
                     model,
                     prompt,
@@ -219,6 +236,10 @@ export class OllamaService {
                 }
             }
         } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama streaming cancelled');
+                throw new Error('Streaming cancelled');
+            }
             console.error('Ollama Streaming Error:', error);
             throw error;
         }
@@ -235,6 +256,7 @@ export class OllamaService {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
                 body: JSON.stringify({
                     model,
                     messages,
@@ -276,6 +298,10 @@ export class OllamaService {
                 }
             }
         } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama chat cancelled');
+                throw new Error('Chat cancelled');
+            }
             console.error('Ollama Chat Error:', error);
             throw error;
         }
@@ -291,6 +317,7 @@ export class OllamaService {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
                 body: JSON.stringify({
                     model,
                     prompt,
@@ -307,6 +334,10 @@ export class OllamaService {
             const data = await response.json();
             return data.embedding;
         } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama embeddings cancelled');
+                throw new Error('Embeddings cancelled');
+            }
             console.error('Ollama Embeddings Error:', error);
             throw error;
         }

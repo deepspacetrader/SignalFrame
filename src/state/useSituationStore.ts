@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { processSituation, processSingleSection, processBigPicture } from '../ai/runtime/engine'
+import { processSituation, processSingleSection, processBigPicture, cancellationTokenManager } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
 import { zzfx } from '../utils/zzfx'
@@ -227,7 +227,6 @@ export interface SituationState {
   aiStatus: AiStatus;
   lastUpdated: Date | null;
   jsonError: JsonErrorState;
-  sourceCredibility: Record<string, number>;
   metricDefs: MetricDef[];
   dailyMetrics: Record<string, number>;
   deepDiveBySignalId: Record<string, DeepDiveData>;
@@ -292,19 +291,7 @@ const defaultState: SituationState = {
     sectionId: null,
     retryCount: 0
   },
-  sourceCredibility: {
-    'Reuters': 0.95,
-    'Associated Press': 0.92,
-    'AP News': 0.92,
-    'BBC News': 0.9,
-    'Financial Times': 0.9,
-    'The Economist': 0.88,
-    'The Wall Street Journal': 0.88,
-    'The New York Times': 0.86,
-    'Bloomberg': 0.86,
-    'Al Jazeera': 0.8,
-    'Google News Archive': 0.7
-  },
+
   metricDefs: [],
   dailyMetrics: {},
   deepDiveBySignalId: {},
@@ -392,7 +379,6 @@ async function persist() {
     countryB: r.countryB,
     topic: r.topic
   })));
-  await StorageService.saveGlobal('source_credibility', globalState.sourceCredibility);
   await StorageService.saveGlobal('metric_defs', globalState.metricDefs);
   await StorageService.saveGlobal('deep_dive_cache', globalState.deepDiveBySignalId);
   await StorageService.saveGlobal('sound_volume', globalState.soundVolume);
@@ -423,7 +409,6 @@ export function useSituationStore() {
 
       if (config) globalState.aiConfig = config;
       if (savedBigPicture) globalState.bigPicture = savedBigPicture; // Load Global Big Picture
-      if (savedCred && typeof savedCred === 'object') globalState.sourceCredibility = savedCred;
       if (savedMetricDefs && Array.isArray(savedMetricDefs)) globalState.metricDefs = savedMetricDefs;
       if (savedDeepDives && typeof savedDeepDives === 'object') globalState.deepDiveBySignalId = savedDeepDives;
       if (typeof savedSoundVolume === 'number' && savedSoundVolume >= 0 && savedSoundVolume <= 1) {
@@ -475,17 +460,7 @@ export function useSituationStore() {
     };
   }, []);
 
-  const updateSourceCredibility = useCallback((source: string, weight: number) => {
-    const normalized = String(source || '').trim();
-    if (!normalized) return;
-    const clamped = Math.max(0, Math.min(1, weight));
-    globalState = {
-      ...globalState,
-      sourceCredibility: { ...globalState.sourceCredibility, [normalized]: clamped }
-    };
-    notify();
-    persist();
-  }, []);
+
 
   const upsertMetricDef = useCallback((def: MetricDef) => {
     const existingIdx = globalState.metricDefs.findIndex(m => m.id === def.id);
@@ -564,7 +539,7 @@ export function useSituationStore() {
 
   const clearSection = useCallback((sectionId: SectionKey) => {
     console.log('Clearing section:', sectionId);
-    
+
     // Clear the specific section data from current state
     if (sectionId === 'narrative') {
       globalState = { ...globalState, narrative: '' };
@@ -577,12 +552,12 @@ export function useSituationStore() {
     } else if (sectionId === 'relations') {
       globalState = { ...globalState, foreignRelations: [] };
     }
-    
+
     // Also clear the raw output for this section
     const newRawOutputs = { ...globalState.rawOutputs };
     delete newRawOutputs[sectionId];
     globalState = { ...globalState, rawOutputs: newRawOutputs };
-    
+
     notify();
   }, []);
 
@@ -595,7 +570,7 @@ export function useSituationStore() {
     const now = new Date();
     const retryDelay = Math.min(1000 * Math.pow(2, globalState.sectionFailures[sectionId].retryCount), 30000); // Max 30 seconds
     const nextRetryAt = new Date(now.getTime() + retryDelay);
-    
+
     globalState = {
       ...globalState,
       sectionFailures: {
@@ -709,6 +684,13 @@ export function useSituationStore() {
   const refresh = useCallback(async () => {
     if (globalState.isProcessing) return;
 
+    // Cancel all existing jobs before starting full processing
+    const runningJobs = cancellationTokenManager.getRunningJobs();
+    if (runningJobs.length > 0) {
+      console.log(`Cancelling ${runningJobs.length} existing jobs before full refresh`);
+      cancellationTokenManager.cancelAll();
+    }
+
     // Use last known relations for context if current day is empty or just "Awaiting..."
     let contextRelations = globalState.foreignRelations;
     if (contextRelations.every(r => r.status === 'No data for this date.' || r.status.includes('Awaiting'))) {
@@ -729,7 +711,7 @@ export function useSituationStore() {
       isProcessing: true,
       processingStatus: 'Initializing Intelligence Network...',
       thinkingTrace: '', // Reset thinking trace on new scan
-      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false,  bigPicture: false },
+      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false },
       completedSections: new Set() // Reset completed sections
     };
     startTimer('full-scan');
@@ -739,7 +721,7 @@ export function useSituationStore() {
     try {
       // Check if we already have feeds for today to avoid rate limiting
       let newsFeeds = globalState.feeds;
-      
+
       // Only fetch if we don't have feeds or they're empty
       if (!newsFeeds || newsFeeds.length === 0) {
         globalState = { ...globalState, processingStatus: 'Fetching latest feeds...' };
@@ -749,7 +731,7 @@ export function useSituationStore() {
         globalState = { ...globalState, processingStatus: 'Using cached feeds...' };
         notify();
       }
-      
+
       const result = await processSituation(
         newsFeeds,
         contextRelations, // Pass enriched relations
@@ -830,6 +812,13 @@ export function useSituationStore() {
       stopTimer('full-scan');
       ['narrative', 'signals', 'insights', 'map', 'relations'].forEach(stopTimer);
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
+
+      // Check if this was a cancellation
+      if (error instanceof Error && error.message.includes('Processing cancelled')) {
+        console.log('Full processing was cancelled by user');
+        globalState = { ...globalState, processingStatus: 'Cancelled' };
+      }
+
       notify();
     }
   }, []);
@@ -889,12 +878,59 @@ export function useSituationStore() {
     notify();
   }, []);
 
-  const refreshSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection']) => {
-    if (globalState.isProcessing || globalState.isProcessingSection[sectionId] || globalState.feeds.length === 0) {
-      console.log('refreshSection blocked:', { 
-        isProcessing: globalState.isProcessing, 
-        isProcessingSection: globalState.isProcessingSection[sectionId], 
-        feedsLength: globalState.feeds.length 
+  const refreshSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection'], force: boolean = false) => {
+    console.log(`refreshSection called for ${sectionId}`, {
+      isProcessing: globalState.isProcessing,
+      isProcessingSection: globalState.isProcessingSection[sectionId],
+      feedsLength: globalState.feeds.length,
+      runningJobs: cancellationTokenManager.getRunningJobs(),
+      force
+    });
+
+    if (globalState.isProcessing || globalState.feeds.length === 0) {
+      console.log('refreshSection blocked:', {
+        isProcessing: globalState.isProcessing,
+        feedsLength: globalState.feeds.length
+      });
+      return;
+    }
+
+    // If not forced and section is already processing, don't proceed
+    if (!force && globalState.isProcessingSection[sectionId]) {
+      console.log('refreshSection blocked: section already processing', {
+        sectionId,
+        isProcessingSection: globalState.isProcessingSection[sectionId]
+      });
+      return;
+    }
+
+    // Cancel any existing job for this section FIRST
+    const runningJobs = cancellationTokenManager.getRunningJobs();
+    const sectionJobs = runningJobs.filter(jobId => jobId.includes(`section-${sectionId}-`));
+
+    console.log(`Found ${sectionJobs.length} jobs for section ${sectionId}:`, sectionJobs);
+
+    if (sectionJobs.length > 0) {
+      console.log(`Cancelling ${sectionJobs.length} existing jobs for section ${sectionId}`);
+      sectionJobs.forEach(jobId => cancellationTokenManager.cancelJob(jobId));
+
+      // Force-clear the processing state for this section
+      globalState = {
+        ...globalState,
+        isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false }
+      };
+      stopTimer(sectionId);
+      notify();
+
+      // Give a brief moment for cancellation to take effect
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    // Now check if section is still processing (after cancellation attempt)
+    if (globalState.isProcessingSection[sectionId]) {
+      console.log('Section still processing after cancellation attempt:', {
+        sectionId,
+        isProcessingSection: globalState.isProcessingSection[sectionId]
       });
       return;
     }
@@ -942,7 +978,7 @@ export function useSituationStore() {
       // Play completion sound effect
       if (globalState.soundVolume > 0) {
         zzfx.setMasterVolume(globalState.soundVolume);
-        
+
         // Special sound for Signals section
         if (sectionId === 'signals' && globalState.signals.length > 0) {
           // Play pings for number of signals (max 5 to avoid being too long)
@@ -972,7 +1008,14 @@ export function useSituationStore() {
       console.error('refreshSection error for', sectionId, ':', error);
       stopTimer(sectionId);
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, [sectionId]: false } };
-      
+
+      // Check if this was a cancellation - don't set failure state for cancellations
+      if (error instanceof Error && error.message.includes('Processing cancelled')) {
+        console.log(`Section ${sectionId} processing was cancelled by user`);
+        notify();
+        return;
+      }
+
       // Set failure state for this section
       setSectionFailure(sectionId as SectionKey, String(error));
       notify();
@@ -981,6 +1024,15 @@ export function useSituationStore() {
 
   const generateBigPicture = useCallback(async () => {
     if (globalState.isProcessing || globalState.isProcessingSection.bigPicture) return;
+
+    // Cancel any existing big picture job
+    const runningJobs = cancellationTokenManager.getRunningJobs();
+    const bigPictureJobs = runningJobs.filter(jobId => jobId.includes('big-picture-'));
+
+    if (bigPictureJobs.length > 0) {
+      console.log(`Cancelling ${bigPictureJobs.length} existing big picture jobs`);
+      bigPictureJobs.forEach(jobId => cancellationTokenManager.cancelJob(jobId));
+    }
 
     globalState = {
       ...globalState,
@@ -1030,6 +1082,12 @@ export function useSituationStore() {
     } catch (error) {
       console.error(error);
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, bigPicture: false } };
+
+      // Check if this was a cancellation
+      if (error instanceof Error && error.message.includes('Processing cancelled')) {
+        console.log('Big picture processing was cancelled by user');
+      }
+
       notify();
     }
   }, []);
@@ -1087,7 +1145,7 @@ export function useSituationStore() {
     notify();
 
     try {
-      await refreshSection(sectionId);
+      await refreshSection(sectionId, true);
       // Success - clear the failure
       clearSectionFailure(sectionId);
     } catch (error) {
@@ -1095,7 +1153,7 @@ export function useSituationStore() {
       const now = new Date();
       const retryDelay = Math.min(1000 * Math.pow(2, failure.retryCount + 1), 30000);
       const nextRetryAt = new Date(now.getTime() + retryDelay);
-      
+
       globalState = {
         ...globalState,
         sectionFailures: {
@@ -1170,7 +1228,7 @@ export function useSituationStore() {
     notify();
 
     try {
-      await refreshSection(sectionId);
+      await refreshSection(sectionId, true);
       // Success - error should already be cleared by clearJsonError() at the start
     } catch (error) {
       // If retry fails, set error state again with updated retry count
@@ -1204,7 +1262,7 @@ export function useSituationStore() {
     const interval = setInterval(() => {
       const now = new Date();
       let hasUpdates = false;
-      
+
       Object.entries(globalState.sectionFailures).forEach(([sectionId, failure]) => {
         if (failure.hasFailed && !failure.isRetrying && failure.nextRetryAt && now >= failure.nextRetryAt) {
           // Time to retry this section
@@ -1212,7 +1270,7 @@ export function useSituationStore() {
           hasUpdates = true;
         }
       });
-      
+
       if (hasUpdates) {
         notify();
       }
@@ -1236,7 +1294,6 @@ export function useSituationStore() {
     setJsonError,
     clearJsonError,
     retryJsonSection,
-    updateSourceCredibility,
     upsertMetricDef,
     removeMetricDef,
     openDeepDive,
