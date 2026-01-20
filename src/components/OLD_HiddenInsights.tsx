@@ -146,7 +146,7 @@ export function HiddenInsights() {
               <button
                 onClick={() => {
                   console.log('Regenerating insights...');
-                  refreshSection('insights');
+                  refreshSection('insights', true);
                 }}
                 className="text-[0.65rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-60 hover:opacity-100 flex items-center gap-2"
               >

@@ -10,8 +10,8 @@ SignalFrame is an intelligence dashboard designed to transform raw feeds into si
 ### 🧠 Triple-Layer AI Synthesis
 SignalFrame reasons across three distinct layers:
 - **Current Narrative**: A high-level briefing on the primary global shift occurring in the current feed.
-- **Key Signals**: Precise identification of what has fundamentally changed or escalated in the last 24 hours.
-- **Hidden Insights**: Discovery of second-order effects and trends that are often missed by traditional news cycles.
+- **Signals**: Precise identification of what has fundamentally changed or escalated in the last 24 hours.
+- **Insights**: Discovery of second-order effects and trends that are often missed by traditional news cycles.
 
 ### ⏱️ Intelligence Timeline (IndexedDB)
 SignalFrame maintains a persistent **Intelligence Timeline**:
@@ -52,21 +52,58 @@ src/
 
 ## 🚀 Quick Start
 
-### 1. Requirements
-- **Node.js** ≥ 18
-- **[Ollama](https://ollama.com/)** running locally (Port 11434)
-- **GPU (Recommended)**: NVIDIA RTX 3060/4060 or better for smooth 7B-14B model performance.
+### 1. Install Ollama (Required)
 
-### 2. Prepare AI Models
-We recommend **Qwen 2.5 (7B)** or **Llama 3.2 (3B)** for the best balance of speed and JSON accuracy.
+SignalFrame requires **Ollama** to be installed and running on your local machine. Ollama is the local AI engine that powers all intelligence synthesis.
 
+#### Windows:
+1. Download Ollama from [https://ollama.com/download/windows](https://ollama.com/download/windows)
+2. Run the installer and follow the setup wizard
+3. Ollama will automatically start and run in the background
+
+#### macOS:
+1. Download Ollama from [https://ollama.com/download/mac](https://ollama.com/download/mac)
+2. Open the downloaded DMG file and drag Ollama to Applications
+3. Launch Ollama from your Applications folder
+
+#### Linux:
 ```bash
-# Recommended models
-ollama pull qwen2.5:7b
-ollama pull llama3.2
+curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-### 3. Launch SignalFrame
+### 2. Verify Ollama is Running
+
+Open your terminal or command prompt and run:
+```bash
+ollama list
+```
+
+If you see an error like "Error: connect ECONNREFUSED 127.0.0.1:11434", Ollama is not running. Restart it or check the installation.
+
+### 3. Download an AI Model
+
+SignalFrame needs at least one model to function. We recommend these for best performance:
+
+```bash
+# Recommended: Fast and accurate for JSON structured outputs
+ollama pull qwen2.5:7b
+
+# Alternative: Lightweight and fast
+ollama pull llama3.2
+
+# Optional: Larger model for more detailed analysis (requires more RAM/GPU)
+ollama pull llama3.1:8b
+```
+
+### 4. System Requirements
+
+- **Node.js** ≥ 18
+- **Ollama** running locally (Port 11434)
+- **RAM**: Minimum 8GB, recommended 16GB+
+- **GPU (Recommended)**: NVIDIA RTX 3060/4060 or better for smooth 7B-14B model performance
+- **Storage**: 2GB+ free space for models
+
+### 5. Launch SignalFrame
 ```bash
 git clone https://github.com/your-repo/signalframe
 cd signalframe
@@ -75,6 +112,26 @@ npm run dev
 ```
 
 Visit `http://localhost:5173` to initiate your first **Broad Spectrum Scan**.
+
+### 🔧 Troubleshooting Ollama
+
+**Problem**: "Ollama not found" or connection errors
+**Solution**: 
+- Ensure Ollama is installed and running
+- Check that Ollama is accessible at `http://localhost:11434`
+- Restart Ollama: `ollama serve` (Linux/macOS) or restart the Ollama application (Windows)
+
+**Problem**: Model responses are very slow
+**Solution**:
+- Check if you have a compatible GPU for acceleration
+- Try a smaller model like `llama3.2` instead of 7B models
+- Close other applications using GPU/RAM resources
+
+**Problem**: Out of memory errors
+**Solution**:
+- Use smaller models (`llama3.2` instead of `qwen2.5:7b`)
+- Increase system RAM or close memory-intensive applications
+- Adjust AI parameters in the app settings (reduce context window)
 
 ---
 

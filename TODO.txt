@@ -1,9 +1,35 @@
-1. I can see SignalFrameDB has data separated by day under the analysis table, but when I regenerate the big picture it overwrites the timeline data instead of adding to it while maintaining the existing data for previous days.
+Enhanced RSS Feeds so that known working sources can be toggled on and off on the settings. Simply show a logo for each source and checkbox next to it. Also add an area for users to add their own rss feeds urls and names which then get added into the mix of data sources. It must be a valid xml rss feed url so some kind of validation should be performed.
+Each section on the settings should be separated visually better with a clear border and background color they can each be the same color but different from the background color.
 
-2. On The Big Picture, the "Grand Strategy Assessment" should perhaps be part of the global table in the database since that can change over time and isn't for a specific day but rather the sum of all days data up to and including today's changes.
 
-3. The SituationMap isn't showing more than one data point. It should show all of the data points for the selected day only (if geographically relevant). Also look to how the map is styled and functions on this tool: https://hipcityreg.github.io/situation-monitor/ and make it more like that where it shows different icons for each category of data point and allows for zooming in and out to see more detail while also allowing for simple hover to reveal more details about the data point.  I'm not so interested in the rest of that app because it seems more like a lot of information that is forced upon the user and leads to them easily being overwhelmed while this app aims to understand the incoming data and provide value to the user in a way that is easy to digest and understand.
+There should be some basic setup instructions for the user to follow to get started with the app when Ollama is not installed or running. It should be clear and easy to understand. Users must have ollama installed and running with a model on their local machine in order to use this app.
 
-4. The Foreign Relations Panel isn't working at all. It should be showing a brief text summary of the user defined topic as constrained by the user defined countries A and B. Seems to always say "No data for this date." because its attempting to only look at selected day's data instead of all historical data in addition to currently selected day's data.
 
-5. Remove Sports, Entertainment, Lifestyle, and Travel categories from Google Trends and all other data source feeds.
+Improve AI Model Display to show if thinking is on or off with a small brain icon. (use same one from my ai-scanner tool)
+Maybe adjust the prompt to be less complex for AI models not using thinking mode because they seem to fail to generate the signals and insights well enough.
+
+Make the previous AI model unload first before the new one is loaded to avoid running two at once.
+
+
+
+
+Since I'm running SignalFrame locally and not through a web server the app is unreachable for others. Since it requires ollama to run properly and I don't want to pay for everyone to use Ollama on a server, I think it's best to setup simple free tier hosting for the app running on github pages and simply read from json files for the data so that it can display the data based on a balanced sentiment analysis perspective on the webhosted version of the app for all to see.
+Users won't be able to use chat, predictions, or any of the AI features but they will be able to view the data and see the current narrative, big picture, signals and insights, rss feed and map if all the data is coming json files in the github repo. Therefore those AI sections should be disabled for the webhosted (demo version) of the app and covered with a message that explains how they can run download and run the app locally on their own machine along with ollama to use the AI features.
+
+Each day I could run the AI to generate new data and push to github. Then there can be a setting that allows the user to switch between local and webhosted mode. Ideally it would automatically detect and switch the data source.
+
+Then eventually I could setup a BYOK (bring your own key) model for users who want to use the app but don't have the required hardware to run it themselves locally. They'll have to purchase a license for the app and can use it on a server that I host for them with their AI 3rd party AI model of choice (OpenAI, Claude, Gemini ... etc). This would allow users to run the app on a server and use the AI features while I receive a small monthly commission for each sale. This would be a subscription model and requires user accounts, a payment processor and a database to store user information and payment history.
+
+
+In Progress
+-----------------
+Up Next
+
+
+
+When there's an error in the console log the loading spinner per manually regenerated section doesn't stop. Each section should have its own failure detection and automatic retry mechanism.
+
+There should be a way for the user to click a button which performs a deeper dive into any given RSS news feed article so that the entire contents of the article can be fetched and processed by the AI for further analysis and insights of details that might of been missed by the initial summary and headline alone. (This will probably require a web scraper preferably a free one perhaps playwright or similar.)
+
+
+The SituationMap is now showing more than one data point and most are correct however some are not. It should show all of the data points for the selected day only if geographically relevant and clearly and easily identifiable. It doesn't have to be exactly precise but it should at least be within the same country or region while also avoiding overlapping other points. Some points were simply incorrect such as Uganda internet outage report showing up in China. The geographically relevant data points should be based on the location of the event not the source location of the news article itself. If there is no clear geographically relevant location then the data point should be ignored from the map view for example: "Research finds rise in mental health crisis due to extensive social media use." or "Global warming causes more wildfires." Those have no geographically relevant location and should be ignored.

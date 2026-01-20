@@ -35,7 +35,6 @@
 | Feature	| Description	| Priority |
 | ----------- | ----------- | ----------- |
 | RAG for Historical Context	| Retrieve relevant past analyses when generating new insights	| High |
-| Confidence Scoring	| AI indicates how confident it is in each insight	| High |
 | Citation Linking	| AI responses link back to source signals	| Medium |
 
 

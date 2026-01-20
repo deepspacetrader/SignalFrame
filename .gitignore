@@ -6,3 +6,8 @@ dist/*
 dist/assets
 dist/assets/*
 dist/index.html
+src/components/OLD_HiddenInsights.tsx
+PLANv1.md
+PLANv2.md
+PLANv2_ACTION_PROMPT.md
+TODO.txt
