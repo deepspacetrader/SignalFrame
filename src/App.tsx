@@ -78,7 +78,7 @@ export default function App() {
   };
 
   return (
-    <div className="w-full mx-auto px-8 py-8 min-h-screen bg-bg-darker text-text-primary">
+    <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen bg-bg-darker text-text-primary">
       <header className="mb-10 flex flex-col gap-6 bg-bg-card/40 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-2xl">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full gap-6 lg:gap-0">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full lg:w-auto">
@@ -94,7 +94,7 @@ export default function App() {
 
             <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>
 
-            <div className="flex flex-wrap gap-4 w-full lg:w-auto">
+            <div className="header-stats grid grid-cols-2 gap-4 w-full lg:w-auto lg:flex lg:flex-wrap">
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
                 <p className={`text-xs font-mono whitespace-nowrap ${isProcessing ? 'text-accent-secondary' :
@@ -190,10 +190,10 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-white/5 pt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/5 pt-4">
           <button
             onClick={handlePrevDay}
-            className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-text-secondary hover:text-accent-primary transition-all group"
+            className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-white hover:text-secondary transition-all group"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="transition-transform group-hover:-translate-x-1"><path d="m15 18-6-6 6-6" /></svg>
             <span className="hidden sm:inline">Previous Day</span>
@@ -209,7 +209,7 @@ export default function App() {
           {!isToday ? (
             <button
               onClick={handleNextDay}
-              className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-text-secondary hover:text-accent-primary transition-all group"
+              className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-white hover:text-secondary transition-all group"
             >
               <span className="hidden sm:inline">Next Day</span>
               <span className="sm:hidden">Next</span>
@@ -227,7 +227,9 @@ export default function App() {
       <main className="grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-12 space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <NarrativeSummary onAIRequired={() => setShowAIModal(true)} />
+            <div className="lg:sticky lg:top-8 lg:h-fit">
+              <NarrativeSummary onAIRequired={() => setShowAIModal(true)} />
+            </div>
             <div className="grid grid-cols-1">
               <Signals onAIRequired={() => setShowAIModal(true)} />
             </div>

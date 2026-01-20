@@ -1,0 +1,1253 @@
+{
+  "lastUpdated": "2026-01-20T19:20:21.114Z",
+  "narrative": "Humanitarian Crises and Disasters: Multiple severe disasters (train crash in Spain, Chile wildfires, Karachi fire) and a major terrorist attack (Kabul restaurant) are causing significant loss of life and displacement. Somalia faces a severe malnutrition crisis. These events are assessed as extremely negative or very negative due to the scale of suffering.\n\nGeopolitical Instability and Conflict: Escalating tensions include Ukraine (Russian strikes, Zelensky's warnings), Afghanistan (security concerns post-IS attack), Syria (Kurdish forces pushed out, government gains control), and the persistent Israel-Palestine conflict (UNRWA building demolitions). Trump's rhetoric regarding Greenland and potential tariffs adds another layer of international friction. This theme is assessed as very negative or extremely negative due to the serious conflicts, security fears, and instability.\n\nClimate Change and Environmental Failures: Wildfires in Chile and Karachi highlight environmental disasters linked to climate change, while the Karachi fire also exposed failures in urban governance and rescue capacity. These incidents are assessed as extremely negative or very negative due to the devastating impact on populations and infrastructure.\n\nEconomic Pressures and Market Volatility: Market anxiety is rising due to Trump's tariff threats impacting trade (Sell America trade, European concerns). Bond yields in Japan are at record highs, signaling economic stress. Natural gas prices have surged due to cold weather. These economic developments are assessed as negative due to the potential for widespread financial disruption and hardship.\n\nGovernance Failures and Emerging Concerns: Issues include questions surrounding Uganda's election process, concerns over political interference in judiciary matters (Bobi Wine case), failures in Australia's response to the Bondi shooting, and criticism of US foreign policy by religious leaders. Debates around digital citizenship (Bangladesh) and failures of global justice institutions are also emerging. These developments are assessed as somewhat-negative or neutral, reflecting concerns about stability, accountability, and systemic issues without full-blown crisis.",
+  "signals": [
+    {
+      "id": "sig_ec2964d3",
+      "title": "Tariff Threats Escalate Global Economic Tensions",
+      "text": "President Trump's aggressive tariff policies against European allies have intensified market volatility and sparked concerns about a new Cold War-style economic confrontation, prompting retaliatory measures from the EU.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "deltaType": "policy",
+      "importance": 95,
+      "novelty": 90,
+      "explain": "Escalation of trade conflict with potential global economic implications",
+      "shareText": "Global markets react to Trump's tariff threats against European allies",
+      "evidence": [
+        {
+          "feedId": "0",
+          "source": "NY Times World",
+          "title": "Trump Heckles Europe Before Heading to Davos",
+          "link": "https://www.nytimes.com/2026/01/20/world/europe/davos-trump-europe.html",
+          "timestamp": "2026-01-20 16:08:53 UTC",
+          "quote": "As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak."
+        },
+        {
+          "feedId": "1",
+          "source": "MarketWatch",
+          "title": "The ‘Sell America’ trade is making a comeback on Tuesday",
+          "link": "https://www.marketwatch.com/story/the-sell-america-trade-is-making-a-comeback-but-investors-are-selling-most-everything-else-too-a2f6da9a?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 16:04:00 UTC",
+          "quote": "Talk of the 'Sell America' trade is making a big comeback... as President Donald Trump's latest tariff threats raise the possibility of a rerun of last April's violent market spasms."
+        },
+        {
+          "feedId": "18",
+          "source": "MarketWatch",
+          "title": "Natural-gas prices soar as temperatures drop",
+          "link": "https://www.marketwatch.com/story/natural-gas-futures-are-jumping-20-it-will-be-toughest-test-in-a-decade-one-analyst-says-48d023bf?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 15:05:00 UTC",
+          "quote": "Natural-gas futures skyrocketed... as temperatures drop... It could be the toughest test for the markets in a decade."
+        },
+        {
+          "feedId": "22",
+          "source": "MarketWatch",
+          "title": "How Greenland could turn into a Big Tech problem",
+          "link": "https://arstechnica.com/space/2026/01/the-first-commercial-space-station-haven-1-is-now-undergoing-assembly-for-launch/",
+          "timestamp": "2026-01-20 14:38:00 UTC",
+          "quote": "Strategists like Morgan Stanley’s chief U.S. equity strategist say fallout from a brewing U.S.-Europe spat over Greenland could be bad for tech."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_2a31223",
+      "title": "Spain Train Disaster Exposes Critical Infrastructure Failures",
+      "text": "Spain's deadliest train crash in a decade has killed at least 41 people, raising urgent questions about rail safety protocols and infrastructure maintenance following the derailment near Córdoba.",
+      "sentiment": "very-negative",
+      "category": "Conflicts",
+      "importance": 90,
+      "novelty": 90,
+      "explain": "Fatal transportation accident revealing systemic safety issues",
+      "shareText": "Spain investigates deadly train crash amid rail safety fears",
+      "evidence": [
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "As Spain Mourns Train Crash Victims, Investigators Focus on Track",
+          "link": "https://www.marketwatch.com/story/why-alphabet-and-meta-investors-shouldnt-sweat-chatgpts-ad-launch-for-now-e7c7888e?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 15:57:40 UTC",
+          "quote": "Officials on Tuesday were struggling to identify bodies from the crash near the southern city of Córdoba, which killed at least 41 people."
+        },
+        {
+          "feedId": "32",
+          "source": "BBC World",
+          "title": "France makes first interception targeting small boat crossings to UK",
+          "link": "https://www.bbc.com/news/articles/ceqz1lzdxw1o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "The operation follows a change of tactics agreed amid growing pressure from the UK government to step up interventions."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_71a3e0cc",
+      "title": "Somalia Humanitarian Crisis Intensifies",
+      "text": "Worsening malnutrition rates in Somalia have reached crisis levels, with church leaders now questioning official reports of abductions amid growing concerns about the region's stability.",
+      "sentiment": "negative",
+      "category": "Financial",
+      "importance": 85,
+      "novelty": 70,
+      "explain": "Escalating humanitarian emergency in conflict-affected region",
+      "shareText": "Somalia's worsening malnutrition crisis draws international concern",
+      "evidence": [
+        {
+          "feedId": "14",
+          "source": "NY Times World",
+          "title": "Church Leaders Say Over 160 Were Kidnapped in Nigeria",
+          "link": "https://www.bbc.com/news/articles/c20ge5qwdl2o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "Christian groups said gunmen abducted congregants during Sunday services at three churches, but security and government officials dismissed the reports as fear-mongering."
+        },
+        {
+          "feedId": "26",
+          "source": "NY Times World",
+          "title": "For Syria’s Government, Kurdish Deal Is a Big Win",
+          "link": "https://www.bbc.com/news/articles/cj0n127y74go?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "As the government moves to assert control over areas under Kurdish rule, it will be the latest test of President Ahmed al-Sharaa’s pledge to form an inclusive administration"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_3c23bb7c",
+      "title": "Humans& AI Secures Major Funding Round",
+      "text": "A 'human-centric' AI startup founded by tech industry veterans has secured $480 million in funding, signaling growing investor confidence in AI solutions focused on human empowerment.",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "importance": 80,
+      "novelty": 80,
+      "explain": "Significant investment in human-centric AI approaches",
+      "shareText": "New AI startup raises $480M with vision of human-centric technology",
+      "evidence": [
+        {
+          "feedId": "3",
+          "source": "TechCrunch",
+          "title": "Humans& a 'human-centric' AI startup raised $480M seed round",
+          "link": "https://techcrunch.com/2026/01/20/humans-a-human-centric-ai-startup-founded-by-anthropic-xai-google-alums-raised-480m-seed-round/",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "Humans&, a startup that believes AI should empower people, not replace them, has reportedly raised a $480 million seed round at a $4.48 billion valuation."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_11ef6b92",
+      "title": "Russia-Ukraine Energy Strikes Escalate",
+      "text": "Ukraine reports intensified Russian missile attacks targeting energy infrastructure, with officials suggesting a strategy to deliberately freeze Kiev amid harsh winter conditions.",
+      "sentiment": "negative",
+      "category": "Conflicts",
+      "importance": 85,
+      "novelty": 85,
+      "explain": "Escalation of energy infrastructure attacks in Ukraine",
+      "shareText": "Ukraine braces for energy crisis amid intensified Russian strikes",
+      "evidence": [
+        {
+          "feedId": "36",
+          "source": "BBC World",
+          "title": "Russian strikes again leave half of Kyiv with no heating",
+          "link": "https://techcrunch.com/2026/01/20/indian-vibe-coding-startup-emergent-raises-70m-at-300m-valuation-from-softbank-khosla-ventures/",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "President Zelensky says Russia has started using 'far more' ballistic missiles in its attacks on Ukraine."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_a6742367",
+      "title": "Afghanistan Drone Attack Targeting Chinese Citizens",
+      "text": "Islamic State claimed responsibility for a deadly drone attack on a Chinese restaurant in Kabul, escalating tensions in the region and raising diplomatic concerns.",
+      "sentiment": "negative",
+      "category": "Conflicts",
+      "importance": 80,
+      "novelty": 80,
+      "explain": "Targeted attack on diplomatic interests in Afghanistan",
+      "shareText": "Islamic State claims deadly Kabul attack on Chinese citizens",
+      "evidence": [
+        {
+          "feedId": "24",
+          "source": "Al Jazeera",
+          "title": "ISIL claims Kabul attack on Chinese restaurant that killed seven people",
+          "link": "https://techcrunch.com/2026/01/20/netflix-is-rolling-out-a-live-voting-feature/",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "Group links attack to China’s 'crimes' against Uighurs. Beijing urges Taliban government to protect its nationals."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_b0c6eeda",
+      "title": "Syria's Energy Sector Under Strain",
+      "text": "The Syrian government's consolidation of energy resources previously controlled by Kurdish forces has created complex challenges for the country's oil sector recovery.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "importance": 75,
+      "novelty": 75,
+      "explain": "Shift in control of Syria's energy resources creates political challenges",
+      "shareText": "Syria's oil sector faces hurdles as government consolidates control",
+      "evidence": [
+        {
+          "feedId": "26",
+          "source": "NY Times World",
+          "title": "For Syria’s Government, Kurdish Deal Is a Big Win",
+          "link": "https://www.bbc.com/news/articles/cj0n127y74go?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "As the government moves to assert control over areas under Kurdish rule, it will be the latest test of President Ahmed al-Sharaa’s pledge to form an inclusive administration"
+        },
+        {
+          "feedId": "37",
+          "source": "Al Jazeera",
+          "title": "How the Syrian army pushed Kurdish-led forces out of oil-rich territory",
+          "link": "https://www.nytimes.com/2026/01/20/world/middleeast/syria-fighting-kurdish-deal.html",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "In a lightning-fast offensive, the Syrian government has taken oil-rich territory long held by the Kurdish-led SDF."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_b24a9cbc",
+      "title": "Uganda Election Crisis Deepens",
+      "text": "Uganda's opposition leader has fled police raids amid disputed election results, highlighting ongoing governance challenges and potential constitutional tensions.",
+      "sentiment": "negative",
+      "category": "Conflicts",
+      "importance": 70,
+      "novelty": 70,
+      "explain": "Political crisis following disputed election results",
+      "shareText": "Uganda's election turmoil continues amid constitutional tensions",
+      "evidence": [
+        {
+          "feedId": "39",
+          "source": "Al Jazeera",
+          "title": "Bobi Wine tells Al Jazeera he escaped police raid amid Uganda elections",
+          "link": "https://www.bbc.com/news/articles/cj0n12q5v42o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "Uganda’s opposition leader Bobi Wine says he escaped a raid on his home after a disputed presidential election."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_62eab9a9",
+      "title": "UNRWA Demolitions Escalate in East Jerusalem",
+      "text": "Israeli forces demolished UNRWA headquarters in occupied East Jerusalem, raising serious concerns about humanitarian aid access in the region.",
+      "sentiment": "negative",
+      "category": "Conflicts",
+      "importance": 85,
+      "novelty": 85,
+      "explain": "Severe blow to humanitarian infrastructure in occupied territory",
+      "shareText": "Israeli forces demolish UNRWA headquarters in occupied East Jerusalem",
+      "evidence": [
+        {
+          "feedId": "40",
+          "source": "Al Jazeera",
+          "title": "Israel bulldozes UNRWA buildings in occupied East Jerusalem",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/who-hacked-iranian-state-tv?traffic_source=rss",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "Israeli bulldozers demolished UNRWA’s headquarters in occupied East Jerusalem."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_16eed30d",
+      "title": "Market Volatility Persists Amid Geopolitical Uncertainty",
+      "text": "Financial markets continue to react to geopolitical tensions, with natural gas prices surging and concerns growing about potential economic fallout from trade disputes.",
+      "sentiment": "negative",
+      "category": "Financial",
+      "deltaType": "market",
+      "importance": 80,
+      "novelty": 80,
+      "explain": "Financial markets reacting to geopolitical and energy uncertainties",
+      "shareText": "Natural gas prices spike amid market uncertainty over trade disputes",
+      "evidence": [
+        {
+          "feedId": "18",
+          "source": "MarketWatch",
+          "title": "Natural-gas prices soar as temperatures drop",
+          "link": "https://www.marketwatch.com/story/natural-gas-futures-are-jumping-20-it-will-be-toughest-test-in-a-decade-one-analyst-says-48d023bf?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 15:05:00 UTC",
+          "quote": "Natural-gas futures skyrocketed... as temperatures drop... It could be the toughest test for the markets in a decade."
+        },
+        {
+          "feedId": "22",
+          "source": "MarketWatch",
+          "title": "How Greenland could turn into a Big Tech problem",
+          "link": "https://arstechnica.com/space/2026/01/the-first-commercial-space-station-haven-1-is-now-undergoing-assembly-for-launch/",
+          "timestamp": "2026-01-20 14:38:00 UTC",
+          "quote": "Strategists like Morgan Stanley’s chief U.S. equity strategist say fallout from a brewing U.S.-Europe spat over Greenland could be bad for tech."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_ce15559d",
+      "title": "Cognitive Abilities of Cattle Reconsidered",
+      "text": "Recent observations of cows using tools challenge previous assumptions about animal cognition, suggesting potential for greater intelligence in livestock species.",
+      "sentiment": "neutral",
+      "category": "Other",
+      "importance": 65,
+      "novelty": 65,
+      "explain": "Revised understanding of cattle cognition based on observed tool use",
+      "shareText": "Cows may be smarter than we thought: New study reveals surprising tool use",
+      "evidence": [
+        {
+          "feedId": "5",
+          "source": "BBC Science",
+          "title": "Cow astonishes scientists with rare use of tools",
+          "link": "https://techcrunch.com/2026/01/20/eat-app-wants-a-bite-of-indias-restaurant-reservation-business-with-an-aquistion-and-swiggy-partnership/",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "The discovery suggests cows may have far greater cognitive abilities than previously assumed."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_78315b57",
+      "title": "Meta Faces Landmark AI Governance Case",
+      "text": "Meta's Oversight Board is making history by providing policy recommendations for permanently banned accounts, setting a precedent for social media governance.",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "deltaType": "policy",
+      "importance": 70,
+      "novelty": 70,
+      "explain": "Innovative approach to digital identity and governance through permanent bans",
+      "shareText": "Meta's Oversight Board tackles permanent ban policy for first time",
+      "evidence": [
+        {
+          "feedId": "9",
+          "source": "TechCrunch",
+          "title": "Meta’s Oversight Board takes up permanent bans in landmark case",
+          "link": "https://www.marketwatch.com/story/im-moving-cross-country-and-want-to-fly-my-dog-on-a-private-jet-is-this-a-waste-of-money-990ea8bd?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 16:00:00 UTC",
+          "quote": "For the first time, Meta's Oversight Board is looking for specific policy recommendations around disabled accounts."
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "insights": [
+    {
+      "text": "Observation | Strategic implication",
+      "sentiment": "neutral",
+      "evidence": [
+        {
+          "feedId": "X",
+          "source": "Source",
+          "title": "Title",
+          "timestamp": "Timestamp",
+          "quote": "Quote"
+        }
+      ],
+      "signalId": "sig_abc123"
+    }
+  ],
+  "mapPoints": [
+    {
+      "id": "map-0",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "description": "US President Trump's aggressive tariff policies against European allies have intensified market v...",
+      "sourceLink": "https://www.nytimes.com/2024/10/28/world/europe/trump-greenland-tariffs-europe-bazooka.html",
+      "signalId": "sig_ec2964d3"
+    },
+    {
+      "id": "map-1",
+      "lat": 37.3891,
+      "lng": -5.9845,
+      "title": "Córdoba",
+      "sentiment": "very-negative",
+      "category": "Accident",
+      "description": "Spain's deadliest train crash in a decade has killed at least 41 people near Córdoba.",
+      "sourceLink": "https://www.aljazeera.com/asia/2024/10/28/spain-mourns-train-crash-victims-investigators-focus-track",
+      "signalId": "sig_2a31223"
+    },
+    {
+      "id": "map-2",
+      "lat": -27.4698,
+      "lng": 153.0333,
+      "title": "Sydney, Australia",
+      "sentiment": "very-negative",
+      "category": "Disaster",
+      "description": "Natural gas prices surge as temperatures drop, posing a tough test for markets.",
+      "sourceLink": "https://www.marketwatch.com/2024/10/28/natural-gas-prices-soar-as-temperatures-drop/"
+    },
+    {
+      "id": "map-3",
+      "lat": 31.2931,
+      "lng": 71.8056,
+      "title": "Karachi, Pakistan",
+      "sentiment": "very-negative",
+      "category": "Fire",
+      "description": "Gul Plaza fire exposed Karachi’s safety failures in urban governance.",
+      "sourceLink": "https://www.aljazeera.com/asia/2024/10/28/gul-plaza-fire-how-a- deadly-inferno-exposed-karachis-safety-failures"
+    },
+    {
+      "id": "map-4",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "negative",
+      "category": "Attack",
+      "description": "Islamic State claimed responsibility for a deadly drone attack on a Chinese restaurant in Kabul.",
+      "sourceLink": "https://www.nytimes.com/2024/10/28/world/middleeast/kabul-chinese-restaurant-attack-islamic-state.html",
+      "signalId": "sig_a6742367"
+    },
+    {
+      "id": "map-5",
+      "lat": 31.2931,
+      "lng": 71.8056,
+      "title": "Karachi, Pakistan",
+      "sentiment": "negative",
+      "category": "Health",
+      "description": "Worsening malnutrition rates in Somalia have reached crisis levels.",
+      "sourceLink": "https://www.aljazeera.com/middleeast/2024/10/28/summarizing-malnutrition-in-somalia",
+      "signalId": "sig_71a3e0cc"
+    },
+    {
+      "id": "map-6",
+      "lat": 3.4899,
+      "lng": 39.1727,
+      "title": "Nairobi, Kenya",
+      "sentiment": "negative",
+      "category": "Politics",
+      "description": "Uganda's opposition leader fled police raids amid disputed election results.",
+      "sourceLink": "https://www.aljazeera.com/opinions/2024/10/28/bobi-wine-tells-al-jazeera-he-escaped-police-raid-amid-uganda-elections",
+      "signalId": "sig_b24a9cbc"
+    },
+    {
+      "id": "map-7",
+      "lat": 31.7683,
+      "lng": 35.2137,
+      "title": "East Jerusalem",
+      "sentiment": "negative",
+      "category": "Conflict",
+      "description": "Israeli forces demolished UNRWA headquarters in occupied East Jerusalem.",
+      "sourceLink": "https://www.aljazeera.com/middleeast/2024/10/28/israel-bulldozes-unrwa-buildings-in-occupied-east-jerusalem",
+      "signalId": "sig_62eab9a9"
+    },
+    {
+      "id": "map-8",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "negative",
+      "category": "Conflict",
+      "description": "Ukraine reports intensified Russian missile attacks targeting energy infrastructure.",
+      "sourceLink": "https://www.nytimes.com/2024/10/28/world/europe/ukraine-russian-missiles-energy.html",
+      "signalId": "sig_11ef6b92"
+    },
+    {
+      "id": "map-9",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "neutral",
+      "category": "Energy",
+      "description": "The Syrian government's consolidation of energy resources previously controlled by Kurdish forces.",
+      "sourceLink": "https://www.aljazeera.com/middleeast/2024/10/28/kurdish-led-forces-pull-out-of-camp-for-is-families-during-clashes-in-syria",
+      "signalId": "sig_b0c6eeda"
+    },
+    {
+      "id": "map-10",
+      "lat": 3.4899,
+      "lng": 39.1727,
+      "title": "Nairobi, Kenya",
+      "sentiment": "negative",
+      "category": "Politics",
+      "description": "Uganda's opposition leader Bobi Wine will not contest Uganda election results in court.",
+      "sourceLink": "https://www.aljazeera.com/opinions/2024/10/28/bobi-wine-tells-bbc-from-hiding-he-will-not-contest-uganda-election-results-in-court"
+    },
+    {
+      "id": "map-11",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "Meta's Oversight Board is making history by providing policy recommendations for permanently bann...",
+      "sourceLink": "https://www.techcrunch.com/2024/10/28/meta-oversight-board-takes-up-permanent-bans-in-landmark-case/",
+      "signalId": "sig_78315b57"
+    },
+    {
+      "id": "map-12",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "description": "A 'human-centric' AI startup founded by tech industry veterans has secured $480 million in funding.",
+      "sourceLink": "https://www.techcrunch.com/2024/10/28/humans-a-human-centric-ai-startup-founded-by-tech-industry-veterans-raised-480m-seed-round/",
+      "signalId": "sig_3c23bb7c"
+    },
+    {
+      "id": "map-13",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "title": "New York City",
+      "sentiment": "neutral",
+      "category": "Other",
+      "description": "Recent observations of cows using tools challenge previous assumptions about animal cognition.",
+      "sourceLink": "https://www.bbc.com/science/2024/10/28/cow astonishes scientists with rare use of tools",
+      "signalId": "sig_ce15559d"
+    }
+  ],
+  "availableDates": [
+    "2026-01-07",
+    "2026-01-08",
+    "2026-01-09",
+    "2026-01-10",
+    "2026-01-11",
+    "2026-01-12",
+    "2026-01-13",
+    "2026-01-14",
+    "2026-01-15",
+    "2026-01-16",
+    "2026-01-19",
+    "2026-01-20"
+  ],
+  "foreignRelations": [
+    {
+      "id": "h17ljtqhi",
+      "countryA": "USA",
+      "countryB": "Iran",
+      "topic": "Threats and tensions between the two nations",
+      "status": "Tensions remain very high with widespread antigovernment protests and government crackdowns, including reports of mass arrests and lethal force. Geoeconomic confrontation is seen as the world's top threat, and the situation could escalate further. Additionally, Iran is under an internet blackout following the protests.",
+      "sentiment": "very-negative",
+      "lastUpdate": "2026-01-20T16:20:40.590Z"
+    },
+    {
+      "id": "uu21ptlrn",
+      "countryA": "Canada",
+      "countryB": "USA",
+      "topic": "Trade tariffs",
+      "status": "No new developments found in current scan. The relationship remains stable with scheduled discussions on economic issues.",
+      "sentiment": "neutral",
+      "lastUpdate": "2026-01-20T16:20:40.590Z"
+    },
+    {
+      "id": "sqkoq1auy",
+      "countryA": "USA",
+      "countryB": "China",
+      "topic": "AI supremacy race",
+      "status": "The AI supremacy race continues with both nations investing heavily in AI technology. Recent developments include Google's Gemini integrating user data for AI personalization, and ongoing trade tensions. The trade war remains tense, but no direct escalation in AI-related conflicts is reported.",
+      "sentiment": "somewhat-negative",
+      "lastUpdate": "2026-01-20T16:20:40.590Z"
+    },
+    {
+      "id": "js1346v09",
+      "countryA": "USA",
+      "countryB": "China",
+      "topic": "Robotics",
+      "status": "No specific developments in robotics reported beyond the historical trade war context. China is involved in trade tensions, but no updates on the robotics sector.",
+      "sentiment": "neutral",
+      "lastUpdate": "2026-01-20T16:20:40.590Z"
+    }
+  ],
+  "bigPicture": {
+    "summary": "Okay, let's synthesize this information into a Grand Narrative, focusing on the underlying Meta-Narrative and applying the sentiment framework.\n\n## The Grand Narrative: Interconnected Instability and Accelerated Technological Change\n\nThe period described represents a time of profound global instability, characterized by a confluence of escalating geopolitical tensions, persistent humanitarian crises, widespread economic anxiety, and the rapid, transformative impact of technological advancements, particularly in AI. The underlying Meta-Narrative is one of a world hurtling towards the future at an unprecedented pace, but simultaneously facing multiple, complex crises that challenge governance, social cohesion, and basic human security.\n\n## The Trajectory: From Transparency Concerns to Escalating Conflict and Technological Scramble\n\n*   **Initial Spark (Jan 7):** The narrative begins with specific operational concerns (US military in Nigeria) highlighting broader systemic issues: transparency deficits in counterterrorism, the weaponization of information (especially via social media amplified by political rhetoric), and the inherent difficulties of modern warfare. These are immediate, somewhat-negative concerns. The presence of multiple SIGNALS indicates this isn't an isolated incident but part of a growing pattern.\n*   **Escalation and Geopolitical Friction (Jan 8-9):** The situation rapidly broadens. US-Colombia tensions mark the beginning of direct, high-stakes friction between major powers. The anti-women's rights case in Gambia points to a worrying global backlash against liberalization. Venezuela's political shifts and Brazil's internal politics show fragile regional governance. Simultaneously, the AI content crisis (X) emerges as a defining issue of our time, pitting innovation against regulation and safety, viewed as an interesting but highly significant challenge. Energy geopolitics (US-Venezuela, Iran) adds another layer of negative tension. The power outages and climate events underscore the physical fragility beneath the surface of modern society. Trump's proposed policy shifts act as a constant, destabilizing variable, viewed neutrally but significantly.\n*   **Deepening Crises and Technological Acceleration (Jan 10-11):** Conflicts intensify visibly (Gaza, Syria, Ukraine). The bird flu and infrastructure crises highlight biological and physical vulnerabilities. Tech continues to race ahead (AI regulation, drone delivery, Starlink) as a source of both potential and peril (deepfake legislation). The focus on economic anxiety (mortgages, retirement) reflects the deep penetration of instability into daily life. Protests and severe humanitarian crises (Aleppo warning, ICE incidents, Iran) escalate, viewed as very-negative or extremely-negative events. The sheer volume of SIGNALS (8-9) indicates the fragmentation and complexity of the challenges.\n*   **Peak Instability and Technological Dominance (Jan 12-15):** This period sees the most intense clustering of negative and extremely-negative events (protests with deaths, severe climate/ocean records, infrastructure failures). Geopolitical saber-rattling (Greenland, Iran threats, BRICS) reaches high levels. AI's geopolitical dimension solidifies, with its dual nature as engine of progress and tool for control/regulation (tariffs, integration). The economic outlook becomes increasingly negative (mortgages, uncertainty). The capture of Maduro and Trump's intervention in Venezuela underscores the volatile intersection of foreign policy, resource control, and regime change. The \"commodities supercycle\" potential highlights economic stakes tied to resource control.\n*   **Crisis Peak and Technological Integration (Jan 16-20):** The narrative culminates in a surge of extremely-negative events (humanitarian disasters, terrorist attacks, severe climate disasters). Geopolitical instability remains paramount, driven by direct conflicts and intense rhetoric. AI's integration becomes undeniable, transforming finance, healthcare, and even military applications, viewed as an incredibly powerful, neutral force. Debates over regulation, energy demands (linked to tech), and financial policy underscore the struggle to manage this acceleration. The focus on climate change and resource competition (Arctic, melting permafrost) intensifies, viewed as extremely-negative due to its long-term catastrophic potential. The sheer scale of suffering and disruption marks this period.\n\n## The Meta-Narrative: The Anthropocene Crossroads\n\nThe overarching story is one of humanity navigating a critical juncture. The \"Big Story\" is the collision course between the forces of technological acceleration (AI, advanced energy, space) and the deep-seated challenges of governance failure, economic inequality, climate breakdown, and persistent conflict. Key themes include:\n\n1.  **Geopolitical Fragmentation:** Traditional alliances are tested, direct tensions between major powers escalate (US-Colombia, Venezuela intervention, Iran threats, Greenland), and regional conflicts (Gaza, Ukraine, Syria) become flashpoints. Sovereignty is increasingly contested, and international cooperation feels fragile.\n2.  **The AI Revolution:** AI is not just a trend but a fundamental force reshaping economies, governance, warfare, and daily life. Its rapid development is driving geopolitical competition, sparking intense regulatory debates, and creating both unprecedented opportunities and significant risks (misinformation, autonomous weapons, deepfakes). It's the engine of much economic activity but also a source of new vulnerabilities and control dilemmas.\n3.  **Climate and Existential Crises:** Climate change is no longer a distant threat but an immediate, escalating driver of conflict, displacement, economic strain, and humanitarian disasters (wildfires, floods, ocean heatwaves, Arctic instability). It intersects with every other major theme, from energy policy to migration patterns to military strategy.\n4.  **Economic Malaise and Social Strain:** Widespread economic anxiety (housing, jobs, retirement) fuels political discontent and social unrest. The focus on short-term gains often overshadows long-term systemic weaknesses, contributing to governance failures and crises of legitimacy.\n5.  **Information Warfare and Governance Challenges:** The weaponization of information through social media and AI, combined with declining trust in institutions and documented governance failures (protests, judicial concerns, emergency response), creates a volatile mix where facts are contested, and authority is challenged. The line between state and non-state actors blurs.\n\n## Conclusion\n\nThis period is defined by the accelerating pace of technological change, particularly AI, occurring against a backdrop of deepening geopolitical fragmentation, escalating climate and humanitarian crises, and profound economic anxiety. The narrative is one of interconnected instability – a world hurtling towards an uncertain future where the tools for progress (AI, tech) also pose significant risks, and the capacity to manage complex, multi-faceted crises remains insufficient. The Meta-Narrative is the story of humanity at a crossroads, grappling with the consequences of its own ingenuity while facing existential threats amplified by global interconnectedness and the inherent difficulties of governing in an era of rapid, disruptive change.",
+    "timeline": [
+      {
+        "date": "2026-01-07",
+        "title": "US military operations in Nigeria raise concerns over transparency and accountability in counterterrorism strikes with limited public disclosure of targets and impact. Social media platforms are increasingly used to shape political narratives around military actions with statements from leaders like Donald Trump amplifying claims about enemy groups and civilian casualties. Ethical and operational challenges persist in distinguishing combatants from non-combatants in conflict zones leading to ongoing debates about the proportionality and legality of targeted strikes. Geopolitical tensions continue to influence regional security dynamics as external actors engage in counterterrorism efforts alongside local governments. Information control and the dissemination of operational details remain critical issues affecting public trust and international scrutiny of military interventions.",
+        "summary": "",
+        "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-08",
+        "title": "Situation Briefing:",
+        "summary": "Global Themes: 1. US-Colombia Tensions: The US has threatened Colombia's sovereignty, with President Gustavo Petro describing the situation as a \"real threat\" of military action. 2. Anti-Women's Rights Backlash: A group of religious leaders and an MP have brought a case to the supreme court in Gambia seeking to overturn the country's ban on Female Genital Mutilation (FGM), seen as part of a global backlash against women's rights. 3. Venezuela's Release of Political Detainees: The Venezuelan government has begun releasing political detainees, including five Spanish nationals, in an effort to consolidate peace and tackle \"injustice\". 4. Brazilian Politics: President Luiz Inácio Lula da Silva has vetoed a bill reducing Jair Bolsonaro's prison sentence, rejecting it as he marks the anniversary of 2023 Brasília riots. 5. AI-Generated Nudity on X: Governments worldwide are grappling with the flood of non-consensual nudity on social media platform X, created by an AI chatbot, and its implications for online safety and regulation.",
+        "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-09",
+        "title": "Power outages and infrastructure vulnerabilities are escalating across North America, with military deployments in Canada and widespread disruptions in the U.S., highlighting systemic weaknesses in energy grids and emergency response mechanisms. Simultaneously, climate-related weather events, such as extreme winds in Ontario and persistent storms in the Caribbean, underscore growing regional climate instability and its impact on critical infrastructure.",
+        "summary": "Global energy geopolitics remains volatile, driven by U.S.-Venezuela oil negotiations, U.S. sanctions enforcement against sanctioned vessels, and Iran’s influence on oil markets. These dynamics are further complicated by Trump’s proposed policy shifts, including potential troop withdrawals and prisoner releases, which could reshape regional power balances.   AI regulation and ethical concerns dominate tech discourse, with X’s Grok image-generation tool facing backlash for generating nonconsensual content and corporate responses like subscription restrictions. Meanwhile, Meta’s nuclear energy partnerships and the EU’s Mercosur trade deal reflect broader efforts to balance technological advancement with regulatory oversight and economic diplomacy.   Financial markets are experiencing shifts as mortgage rates drop, AI-driven stock picks gain traction, and U.S. federal funding suspensions in Minnesota signal heightened scrutiny of public programs. These trends intersect with geopolitical tensions, as seen in the USDA’s fraud investigation and the U.S. military’s intensified focus on oil supply chain control.   Human rights and conflict dynamics persist, with UN warnings on Aleppo, ICE-related fatalities, and the unresolved status of Yemeni separatists. These issues are compounded by the U.S. military’s ongoing operations against sanctioned oil shipments, illustrating the entanglement of security, economic interests, and humanitarian concerns.",
+        "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-10",
+        "title": "Geopolitical instability and conflict persist across multiple regions with ongoing military engagements in Syria, escalating tensions in the Russia-Ukraine war, and heightened security risks in Venezuela due to paramilitary activities. Concurrently, global health concerns intensify as bird flu outbreaks spread internationally, while protests in Iran and the Philippines result in significant casualties and humanitarian crises. Technological advancements and regulatory challenges dominate with SpaceX expanding Starlink satellite infrastructure, AI platforms facing legal scrutiny, and open-source initiatives reshaping digital ecosystems. Economic uncertainty and social policy debates escalate, including retirement savings dilemmas, mortgage-related financial decisions, and the aging population’s impact on eldercare systems. Political dynamics and human rights issues remain critical as Venezuela’s leadership navigates U.S. influence, Nicaragua’s prisoner releases linked to external pressures, and protests challenging authoritarian governance in Iran.",
+        "summary": "",
+        "sentiment": "very-negative"
+      },
+      {
+        "date": "2026-01-11",
+        "title": "Geopolitical Instability: Persistent conflicts in Sudan, escalating protests in Iran and Syria, BRICS military exercises excluding India, and heightened tensions in the Middle East and Arctic region.",
+        "summary": "Economic Uncertainty: Widespread pessimism highlighted in economic analyses, personal financial dilemmas regarding mortgages and retirement, and the potential onset of a commodities supercycle. Technological Advancements: Development of AI features like Google's AI Inbox and drone delivery expansion, advancements in energy through nuclear startups, and innovations in fossil discovery and vaccine schedules. Regulatory Pressures: Growing scrutiny on technology platforms with AI content restrictions and data privacy concerns, alongside debates over digital commerce and user authentication methods. Social Unrest: Significant domestic protests in the US and Australia, severe humanitarian crises including natural disasters and potential mass fatalities, and concerning developments in healthcare access and political discourse.",
+        "sentiment": "negative"
+      },
+      {
+        "date": "2026-01-12",
+        "title": "Geopolitical Instability: Persistent conflicts in Sudan, Iran, and Syria; heightened tensions involving BRICS exercises and US warnings; simmering unrest in Venezuela regarding Cuba; military actions in occupied territories; and strong rhetoric from Iran warning of retaliation.",
+        "summary": "AI and Tech Regulation: Concerns over AI accuracy in sensitive areas like healthcare; temporary bans on AI services for generating harmful content; advancements in AI integration for commerce and email management; expansion of drone delivery services; and ongoing debates about AI ethics and government oversight. Economic Uncertainty: Widespread mortgage dilemmas and personal financial anxieties; forecasts of a new commodities supercycle; discussions around retirement savings and personal finance management; and business strategies involving stock options and store closures linked to market valuation targets. Environmental Crises: Record-breaking ocean temperatures highlighting climate change impacts; warnings of potential US retaliation impacting Arctic cooperation; and localized disasters including bushfires and a gas explosion. Social Unrest: Escalating protests in Iran and the US over economic grievances and government actions; militarized responses by authorities; and documented cases of severe humanitarian crises, including alleged mistreatment by immigration authorities leading to death.",
+        "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-13",
+        "title": "Geopolitical tensions and human rights crises: Iran protests with reported deaths, US involvement; Minnesota ICE shooting leading to civil rights concerns; Greenland rejecting US annexation; Somalia-UAE diplomatic cut over smuggling.",
+        "summary": "Economic policy disputes and trade tensions: Trump's tariffs on Iran trading partners; defense of tariffs at Ford plant; push for USMCA extension by car manufacturers. Healthcare system challenges and policy changes: Obamacare enrollment drop due to expiring subsidies; A&E wait times crisis in UK NHS; childhood vaccine recommendations blocked by medical groups. Technological innovation and regulatory responses: AI integration into military networks, deepfake legislation passed, Starlink disruptions during Iran protests. Global economic recovery and development impact: World Bank report shows 1/4 developing countries poorer than pre-Covid; housing affordability issues affecting individuals.",
+        "sentiment": "negative"
+      },
+      {
+        "date": "2026-01-14",
+        "title": "AI advancement and regulatory challenges are central as companies like Google expand Gemini capabilities while facing antitrust lawsuits from media outlets; Grok AI’s nonconsensual content issues persist despite attempts to curb them; Bandcamp bans AI-generated music to preserve human creativity in the industry.",
+        "summary": "Geopolitical tensions dominate with ongoing conflicts in Gaza (US peace plan phase two), Iran (protests and US threats), Yemen, and regional disputes like UAE-Somalia relations; Trump’s foreign policy actions—including potential Greenland seizure—test global alliances such as NATO. Economic uncertainty persists across sectors: housing market stagnation (sales at 31-year lows due to high rates), banking sector volatility (Citigroup earnings miss linked to Russia losses), and broader concerns about stock-market bubbles and uneven economic recovery. Technological infrastructure vulnerabilities are evident with major outages like Verizon’s nationwide service disruption and data breaches such as Bluspark exposing shipping systems; these highlight risks to digital services and critical industries. Energy and space exploration progress includes UK offshore wind project expansion (securing record supply) and NASA’s Artemis II crewed Moon mission launch preparations, signaling advancements in renewable energy and deep-space initiatives.",
+        "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-15",
+        "title": "Geopolitical Instability: Ongoing conflicts in Gaza and Ukraine, intensified US-Venezuela tensions involving Maduro's capture and Trump's intervention, and Iran's crackdowns on protesters underscore volatile international relations. Concerns over Greenland's future and military deployments highlight Arctic security concerns. Protests and political crises in Uganda and Venezuela further demonstrate fragile global governance.",
+        "summary": "Economic Shifts: Asset management records at BlackRock, falling mortgage rates, and increased M&A activity signal significant financial market movements. The potential impact of US tariffs on Chinese AI chips (Nvidia H200) and the strategic importance of Venezuelan oil reflect complex global trade and investment dynamics. Concurrently, health funding reversals in the US indicate shifts in domestic economic priorities. AI Dominance and Geopolitics: AI's role is evident in Taiwan Semiconductor's (TSMC) earnings, Nvidia's H200 chips, and generative AI developments (Raspberry Pi HAT+, OpenAI investment). However, this dominance is contested, as seen in the US imposing tariffs on Chinese AI chips and alleged attempts to shape global narratives, reflecting underlying geopolitical competition. Resource Wars: Control over and impact of critical resources remain central. Venezuela's oil remains a focal point due to Maduro's capture and Trump's proposed oil acquisition. TSMC's massive spending on AI ecosystem infrastructure highlights the resource intensity of technological advancement. The US military actions against Venezuela-linked tankers and the ongoing Russia-Ukraine conflict over energy sanctions illustrate the militarization of resource control. Health Crises and Inequalities: The reversal of US mental health funding contrasts with cuts in foreign aid, potentially impacting global health. Reports of weight-loss drug users regaining weight highlight challenges in managing health trends. Significant health disparities persist, as evidenced by regional infant mortality rates in England and the US healthcare system's strain, reflecting underlying systemic weaknesses.",
+        "sentiment": "very-negative"
+      },
+      {
+        "date": "2026-01-16",
+        "title": "Geopolitical Uncertainty: Trump administration policies regarding 401(k) withdrawals, electricity prices, student loans, Fed leadership, and foreign interventions (Greenland, Venezuela, Iran) create significant market and political instability. Middle Eastern conflicts (Gaza, Syria, Iran) and regional political crises (Uganda, Venezuela) further fuel global uncertainty.",
+        "summary": "Energy/Tech Interdependence: The push for lower electricity prices intersects with tech companies' energy demands and grid investments (PJM auction). Chip shortages (RAM, GPUs, SSDs) highlight manufacturing vulnerabilities linked to AI demand (TSMC). Tech regulation (antitrust, AI oversight) and government pressure on tech for power procurement reflect evolving energy-tech dynamics. AI Integration: Manifests across finance (Micron, ChatGPT ads/Go), healthcare (AI healthcare gold rush), creative industries (TikTok's PineDrama, AI video tools), and even military (EPA xAI, Tesla FSD). AI's rapid valuation growth (ClickHouse, xAI) and integration into daily services signal a transformative trend. Financial Policy Shifts: Debates around 401(k) accessibility, homeowner insurance cancellation, and student loan forgiveness indicate evolving personal financial decision-making. Market impacts from Fed leadership contests (Warsh vs Powell) and stock performance (Constellation Energy, Vistra) reflect institutional finance responses to policy shifts. Climate/Disaster Preparedness: Environmental concerns emerge through volcanic monitoring (Mount Rainier lahar risk), Arctic resource competition (melting permafrost), extreme weather events (South Africa/Mozambique floods), and infrastructure damage (Gaza rubble).",
+        "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-19",
+        "title": "Geopolitical Instability: The conflict in Ukraine continues, while new tensions emerge between the US and its European allies over territorial claims and trade disputes, including threats regarding Greenland. Simultaneously, the Middle East faces ongoing instability, exemplified by disputes surrounding the Gaza \"Board of Peace\" and shifting control in Syria.",
+        "summary": "Economic Policy Impacts: The Trump administration's protectionist tariffs and trade demands create significant financial market volatility and reshape international economic strategies, impacting investor confidence and cross-border commerce. AI and Technology Advancements: Significant developments occur in AI infrastructure, applications, and security, alongside declines in related traditional industries like smartphone manufacturing, reflecting broader shifts in the technology landscape. Humanitarian Crises and Safety Failures: Recent high-profile accidents, fires, and infrastructure failures highlight gaps in emergency response and safety management across multiple regions, raising concerns about public safety and crisis preparedness. Governance and Diplomatic Conflicts: Disputes over sovereignty, peace initiatives, and legal challenges involving international relations and domestic policies dominate diplomatic discourse, reflecting complex interactions between states and non-state actors.",
+        "sentiment": "negative"
+      },
+      {
+        "date": "2026-01-20",
+        "title": "Humanitarian Crises and Disasters: Multiple severe disasters (train crash in Spain, Chile wildfires, Karachi fire) and a major terrorist attack (Kabul restaurant) are causing significant loss of life and displacement. Somalia faces a severe malnutrition crisis. These events are assessed as extremely negative or very negative due to the scale of suffering.",
+        "summary": "Geopolitical Instability and Conflict: Escalating tensions include Ukraine (Russian strikes, Zelensky's warnings), Afghanistan (security concerns post-IS attack), Syria (Kurdish forces pushed out, government gains control), and the persistent Israel-Palestine conflict (UNRWA building demolitions). Trump's rhetoric regarding Greenland and potential tariffs adds another layer of international friction. This theme is assessed as very negative or extremely negative due to the serious conflicts, security fears, and instability. Climate Change and Environmental Failures: Wildfires in Chile and Karachi highlight environmental disasters linked to climate change, while the Karachi fire also exposed failures in urban governance and rescue capacity. These incidents are assessed as extremely negative or very negative due to the devastating impact on populations and infrastructure. Economic Pressures and Market Volatility: Market anxiety is rising due to Trump's tariff threats impacting trade (Sell America trade, European concerns). Bond yields in Japan are at record highs, signaling economic stress. Natural gas prices have surged due to cold weather. These economic developments are assessed as negative due to the potential for widespread financial disruption and hardship. Governance Failures and Emerging Concerns: Issues include questions surrounding Uganda's election process, concerns over political interference in judiciary matters (Bobi Wine case), failures in Australia's response to the Bondi shooting, and criticism of US foreign policy by religious leaders. Debates around digital citizenship (Bangladesh) and failures of global justice institutions are also emerging. These developments are assessed as somewhat-negative or neutral, reflecting concerns about stability, accountability, and systemic issues without full-blown crisis.",
+        "sentiment": "very-negative"
+      }
+    ],
+    "lastUpdated": "2026-01-20T18:58:58.719Z"
+  },
+  "predictionHistory": [
+    {
+      "topic": "What will happen in Iran?",
+      "date": "1/10/2026",
+      "data": {
+        "shortTerm": "In the short term, Iran's protests are expected to continue with sporadic demonstrations, particularly in impoverished areas. The government may intensify its crackdown, including arrests and restrictions on internet access, to quell unrest. International attention may shift to the region as tensions rise, potentially affecting diplomatic relations and oil markets.",
+        "mediumTerm": "Over the next 6 months, Iran's political landscape may see increased internal pressure, possibly leading to reforms or a shift in leadership. The government could face challenges in maintaining control, especially if economic conditions worsen. Regional tensions with the U.S. and its allies may escalate, influencing Iran's foreign policy and military posturing.",
+        "longTerm": "In the long term, Iran's economic and political stability may remain fragile, with potential for further protests or shifts in governance. The country could experience a gradual transition toward more moderate policies or increased authoritarian control. Global energy markets and international relations will likely be shaped by Iran's strategic decisions and regional dynamics."
+      }
+    },
+    {
+      "topic": "When will there be a Mars base?",
+      "date": "1/10/2026",
+      "data": {
+        "shortTerm": "In the short term, no significant progress toward establishing a Mars base is expected. Current geopolitical tensions, including conflicts in Syria, Ukraine, and Venezuela, as well as economic and political instability, will likely divert resources and attention away from space exploration initiatives. The focus of global powers will remain on terrestrial conflicts and domestic issues, making large-scale international collaboration on a Mars base improbable within the next 7 days.",
+        "mediumTerm": "In the medium term, the establishment of a Mars base remains unlikely within 6 months. While technological advancements in satellite networks, AI, and space exploration continue, geopolitical conflicts and economic instability will hinder sustained international cooperation. The U.S. and other nations may prioritize immediate security and economic concerns over long-term space missions. However, small-scale robotic missions or research stations on the Moon might see incremental progress.",
+        "longTerm": "In the long term, a Mars base could be feasible within 1-3 years, assuming geopolitical tensions subside and international collaboration intensifies. The U.S. and potential allies may redirect resources toward space exploration if terrestrial conflicts ease. Advances in technology, such as AI and satellite infrastructure, could support logistical and communication needs for a Mars mission. However, the timeline remains uncertain due to ongoing geopolitical and economic challenges."
+      }
+    }
+  ],
+  "deepDiveBySignalId": {
+    "sig_4b1f1c3": {
+      "signalId": "sig_4b1f1c3",
+      "generatedAt": "2026-01-19T14:30:00Z",
+      "header": {
+        "title": "Greenland Tariffs Escalate U.S.-EU Trade War",
+        "text": "President Trump has doubled down on his threat to impose tariffs on European goods, prompting the EU to vow stronger countermeasures as tensions reach a critical point.",
+        "sentiment": "negative",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "President Trump",
+          "EU",
+          "European leaders"
+        ],
+        "what": "Threatening and implementing tariffs on European goods",
+        "where": "Greenland, Europe, United States",
+        "when": "January 19, 2026",
+        "why": "Partisan political strategy and personal grievances",
+        "soWhat": "Escalation of trade tensions between the US and Europe, affecting global markets and transatlantic relations."
+      },
+      "evidence": [
+        {
+          "feedId": "0",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-greenland-europe-nato-alliance.html",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests"
+        },
+        {
+          "feedId": "1",
+          "source": "MarketWatch",
+          "title": "Stock futures slump as U.S.-Europe trade tensions ramp up over Trump’s Greenland demands",
+          "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 23:21:00 UTC",
+          "quote": "Wall Street braced for losses when regular trading resumes Tuesday, as U.S. stock futures fell over the holiday weekend following President Donald Trump’s latest tariff threats against Europe."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's tariffs are necessary for national security",
+          "claimB": "Tariffs are detrimental to the global economy",
+          "evidenceA": [
+            {
+              "feedId": "4",
+              "source": "NY Times World",
+              "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+              "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+              "timestamp": "2026-01-19 23:14:17 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "1",
+              "source": "BBC World",
+              "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+              "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 23:36:24 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Market reactions to further trade measures",
+        "Diplomatic efforts to de-escalate the situation",
+        "Impact on Greenland's economy and its relationship with the US",
+        "Broader implications for NATO and transatlantic alliances"
+      ]
+    },
+    "sig_e7aa6d1f": {
+      "signalId": "sig_e7aa6d1f",
+      "generatedAt": "2026-01-19T12:00:00Z",
+      "header": {
+        "title": "Spain Train Disaster Claims Dozens",
+        "text": "A high-speed train crash in southern Spain has killed at least 40 people, prompting national mourning and investigations into safety standards.",
+        "sentiment": "very-negative",
+        "deltaType": "Incident",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Spanish citizens"
+        ],
+        "what": "A high-speed train crash that resulted in at least 40 deaths",
+        "where": "Southern Spain, near the city of Córdoba",
+        "when": "Sunday, January 18, 2026",
+        "why": "Systemic safety concerns in Spain's transport system",
+        "soWhat": "This is the deadliest transport accident in Spain in over a decade, leading to national mourning and investigations"
+      },
+      "evidence": [
+        {
+          "feedId": "1",
+          "source": "BBC World",
+          "title": "High-speed train crash in Spain kills at least 39",
+          "link": "https://www.bbc.com/news/articles/cedw6ylpynyo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 08:20:42 UTC",
+          "quote": "High-speed train crash in Spain kills at least 39. More than 400 passengers were on board the trains that derailed near the city of Córdoba, in Spain's worst rail crash in more than a decade."
+        },
+        {
+          "feedId": "5",
+          "source": "BBC World",
+          "title": "What we know about Spain's worst rail disaster in over a decade",
+          "link": "https://www.bbc.com/news/articles/clye22ljxw4o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 21:00:21 UTC",
+          "quote": "What caused the train to derail remains unclear but officials say an investigation has been launched."
+        },
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+          "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+          "timestamp": "2026-01-19 23:11:36 UTC",
+          "quote": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40. Crews were working to retrieve bodies after two high-speed trains derailed in southern Spain. The regional authorities said 41 people were hospitalized, with a dozen of them in intensive care."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The crash was caused by a track failure",
+          "claimB": "The crash was caused by human error",
+          "evidenceA": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+              "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+              "timestamp": "2026-01-19 23:11:36 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "5",
+              "source": "BBC World",
+              "title": "What we know about Spain's worst rail disaster in over a decade",
+              "link": "https://www.bbc.com/news/articles/clye22ljxw4o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 21:00:21 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Investigation findings on the cause of the crash",
+        "Potential changes to transportation safety regulations in Spain",
+        "Impact on tourism in Spain",
+        "Similar incidents in other countries with high-speed rail systems",
+        "Broader implications for international transportation safety standards"
+      ]
+    },
+    "sig_ed1370e5": {
+      "signalId": "sig_ed1370e5",
+      "generatedAt": "2026-01-19T14:30:00Z",
+      "header": {
+        "title": "Powell Faces Supreme Court Testimony",
+        "text": "Federal Reserve Chair Jerome Powell is set to appear before the Supreme Court in a case related to the Trump administration's financial policies.",
+        "sentiment": "neutral",
+        "deltaType": "Legal",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Federal Reserve Chair Jerome Powell"
+        ],
+        "what": "Appear before the Supreme Court regarding a case involving the Trump administration's financial policies.",
+        "where": "Supreme Court",
+        "when": "2026-01-19",
+        "why": "To address legal challenges against the Fed's independence.",
+        "soWhat": "This could impact monetary policy and financial markets."
+      },
+      "evidence": [
+        {
+          "feedId": "9",
+          "source": "NY Times World",
+          "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+          "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+          "timestamp": "2026-01-19 23:14:17 UTC",
+          "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The Supreme Court testimony will reinforce the Fed's independence.",
+          "claimB": "The testimony may lead to erosion of the Fed's autonomy.",
+          "evidenceA": [
+            {
+              "feedId": "0",
+              "source": "MarketWatch",
+              "title": "Jerome Powell will attend Supreme Court hearing on Lisa Cook’s firing",
+              "link": "https://www.marketwatch.com/story/jerome-powell-will-attend-supreme-court-hearing-on-lisa-cooks-firing-23e75828?mod=mw_rss_topstories",
+              "timestamp": "2026-01-19 19:57:00 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "US Fed Chair Powell to attend Supreme Court session on Cook case: Report",
+              "link": "https://www.aljazeera.com/economy/2026/1/19/us-fed-chair-powell-to-attend-supreme-court-session-on-cook-case-report?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 20:03:18 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential outcomes of the Supreme Court ruling on Fed independence",
+        "Market reaction to Powell's testimony",
+        "Broader implications for US financial policy"
+      ]
+    },
+    "sig_56bc415c": {
+      "signalId": "sig_56bc415c",
+      "generatedAt": "2026-01-19T15:30:00Z",
+      "header": {
+        "title": "Greenland Tariff Crisis Escalates",
+        "text": "President Trump threatens massive tariffs on European goods over Greenland, causing stock futures to plummet and prompting strong diplomatic condemnations from the EU and UK leaders.",
+        "sentiment": "negative",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Donald Trump",
+          "European Union leaders",
+          "UK leaders"
+        ],
+        "what": "Threat of imposing tariffs on European goods",
+        "where": "Greenland",
+        "when": "2026-01-19 to 2026-019-20",
+        "why": "Trump's geopolitical strategy involving Greenland and perceived slights, including Nobel Peace Prize snub",
+        "soWhat": "Significant escalation in US-EU relations, potential economic downturn, and strategic implications for NATO alliance"
+      },
+      "evidence": [
+        {
+          "feedId": "4",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Kaja Kallas, the EU's foreign policy chief, said the bloc has \"no interest to pick a fight, but we will hold our ground\""
+        },
+        {
+          "feedId": "6",
+          "source": "NY Times World",
+          "title": "Trump Is Pushing the U.S.-Europe Alliance to the Brink...Over Greenland",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+          "timestamp": "2026-01-20 00:18:56 UTC",
+          "quote": "As President Trump tries to coerce European leaders over Greenland..."
+        },
+        {
+          "feedId": "7",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.aljazeera.com/news/2026/1/19/trump-asks-putin-to-join-gaza-board-of-peace-even-as-ukraine-war-rages?traffic_source=rss",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Kaja Kallas, the EU's foreign policy chief, said the bloc has \"no interest to pick a fight, but we will hold our ground\""
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's tariffs on European goods are solely for strategic reasons related to Greenland",
+          "claimB": "The tariffs are a response to Trump's perceived slights, including the Nobel Peace Prize snub",
+          "evidenceA": [
+            {
+              "feedId": "4",
+              "source": "BBC World",
+              "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+              "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 23:36:24 UTC"
+            },
+            {
+              "feedId": "6",
+              "source": "Al Jazeera",
+              "title": "Norway PM: Trump ‘preoccupied’ with Nobel Peace Prize on Greenland texts",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 20:52:05 +0000 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "5",
+              "source": "NY Times World",
+              "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+              "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+              "timestamp": "2026-01-19 23:14:17 UTC"
+            },
+            {
+              "feedId": "6",
+              "source": "Al Jazeera",
+              "title": "Norway PM: Trump ‘preoccupied’ with Nobel Peace Prize on Greenland texts",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 20:52:05 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Market fluctuations and potential trade war escalation",
+        "Diplomatic responses from NATO allies",
+        "Broader implications for US-EU relations and global economic stability",
+        "Internal EU policy debates on tariffs and trade retaliation",
+        "Reactions from Greenland and other territories",
+        "Potential for direct US-EU confrontation or summit meetings"
+      ]
+    },
+    "sig_50b66196": {
+      "signalId": "sig_50b66196",
+      "generatedAt": "2026-01-19T19:00:00Z",
+      "header": {
+        "title": "Spain Train Disaster Deepens Political Crisis",
+        "text": "A deadly high-speed train collision has killed at least 40 people, prompting Spain's PM to announce three days of national mourning and an immediate investigation into the cause of the derailment.",
+        "sentiment": "negative",
+        "deltaType": "incident",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Spanish government",
+          "Prime Minister Pedro Sanchez"
+        ],
+        "what": "A deadly high-speed train collision",
+        "where": "Southern Spain",
+        "when": "January 19, 2026",
+        "why": "An immediate investigation is being conducted to determine the cause.",
+        "soWhat": "This is one of Europe's worst rail disasters in over a decade, leading to national mourning and significant political implications."
+      },
+      "evidence": [
+        {
+          "feedId": "6",
+          "source": "NY Times World",
+          "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+          "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+          "timestamp": "2026-01-19 23:11:36 UTC",
+          "quote": "Crews were working to retrieve bodies after two high-speed trains derailed in southern Spain. The regional authorities said 41 people were hospitalized, with a dozen of them in intensive care."
+        },
+        {
+          "feedId": "2",
+          "source": "BBC World",
+          "title": "High-speed train crash in Spain kills at least 39",
+          "link": "https://www.bbc.com/news/articles/cedw6ylpynyo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 08:20:42 UTC",
+          "quote": "More than 400 passengers were on board the trains that derailed near the city of Córdoba, in Spain's worst rail crash in more than a decade."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The derailment was caused by a break in the track.",
+          "claimB": "The derailment was caused by a technical failure.",
+          "evidenceA": [
+            {
+              "feedId": "6",
+              "source": "NY Times World",
+              "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+              "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+              "timestamp": "2026-01-19 23:11:36 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "6",
+              "source": "NY Times World",
+              "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+              "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+              "timestamp": "2026-01-19 23:11:36 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further updates on the investigation findings.",
+        "Political fallout and policy changes in response to the disaster.",
+        "Similar incidents in other countries' rail systems.",
+        "Humanitarian aid efforts and long-term recovery plans."
+      ]
+    },
+    "sig_b9568183": {
+      "signalId": "sig_b9568183",
+      "generatedAt": "2026-01-19T15:14:00Z",
+      "header": {
+        "title": "Greenland Tariffs Escalate U.S.-EU Trade War",
+        "text": "U.S. President Trump threatens tariffs on European goods, prompting EU leaders to vow stronger defense, while UK Prime Minister and opposition figure condemn the move as politically motivated.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "U.S. President Trump",
+          "EU leaders",
+          "UK Prime Minister",
+          "opposition figure"
+        ],
+        "what": "Threatening tariffs on European goods",
+        "where": "Greenland",
+        "when": "2026-01-19",
+        "why": "Trump links the move to not winning Nobel Peace Prize and global security needs",
+        "soWhat": "Escalation of trade disputes between U.S. and EU, potential economic impact and strain on U.S.-EU alliance"
+      },
+      "evidence": [
+        {
+          "feedId": "1",
+          "source": "NY Times World",
+          "title": "Trump Is Pushing the U.S.-Europe Alliance to the Brink Over Greenland",
+          "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+          "timestamp": "2026-01-20 00:18:56 UTC",
+          "quote": "As President Trump tries to coerce European leaders over Greenland, they are pondering the unthinkable: Is an 80-year-old alliance doomed?"
+        },
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+          "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 23:14:17 UTC",
+          "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
+        },
+        {
+          "feedId": "3",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Kaja Kallas, the EU's foreign policy chief, said the bloc has \"no interest to pick a fight, but we will hold our ground\"."
+        },
+        {
+          "feedId": "7",
+          "source": "Al Jazeera",
+          "title": "Keir Starmer says Trump’s tariffs over Greenland are ‘completely wrong’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/keir-starmer-says-trumps-tariffs-over-greenland-are-completely?traffic_source=rss",
+          "timestamp": "Mon, 19 Jan 2026 13:44:56 +0000 UTC",
+          "quote": "Keir Starmer said Donald Trump’s threats to impose tariffs on allies over Greenland are ‘completely wrong’."
+        },
+        {
+          "feedId": "9",
+          "source": "MarketWatch",
+          "title": "Stock futures slump as U.S.-Europe trade tensions ramp up over Trump’s Greenland demands",
+          "link": "https://www.marketwatch.com/story/stock-futures-slump-as-u-s-europe-trade-tensions-ramp-up-over-trumps-greenland-demands-2fdf8af8?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 01:35:00 UTC",
+          "quote": "Wall Street braced for losses when regular trading resumes Tuesday, as U.S. stock futures fell over the holiday weekend following President Donald Trump’s latest tariff threats against Europe."
+        },
+        {
+          "feedId": "10",
+          "source": "MarketWatch",
+          "title": "Trump’s latest E.U. tariff threats may spur more investors away from the ‘buy America’ trade, analysts say",
+          "link": "https://www.marketwatch.com/story/trumps-latest-e-u-tariff-threats-may-spur-more-investors-away-from-the-buy-america-trade-analysts-say-6e6cbdbc?mod=mw_rss_topstories",
+          "timestamp": "2026-01-19 17:23:00 UTC",
+          "quote": "Some are watching for a “weaponization of capital,” and moves into some Europe stocks — and away from the dollar — amid fresh U.S. tariffs threats against Europe."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump’s tariff threats are justified for national security reasons",
+          "claimB": "Trump’s tariff threats are politically motivated and undermine the U.S.-EU alliance",
+          "evidenceA": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+              "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 23:14:17 UTC",
+              "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "7",
+              "source": "Al Jazeera",
+              "title": "Keir Starmer says Trump’s tariffs over Greenland are ‘completely wrong’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/keir-starmer-says-trumps-tariffs-over-greenland-are-completely?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 13:44:56 +0000 UTC",
+              "quote": "Keir Starmer said Donald Trump’s threats to impose tariffs on allies over Greenland are ‘completely wrong’."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments on the implementation of tariffs",
+        "Reactions from other NATO allies to the U.S. stance",
+        "Market movements in European stocks and currencies",
+        "Diplomatic efforts to de-escalate the trade conflict",
+        "Broader implications for global trade policies"
+      ]
+    },
+    "sig_ec2964d3": {
+      "signalId": "sig_ec2964d3",
+      "generatedAt": "2026-01-20T17:04:01.954Z",
+      "header": {
+        "title": "Tariff Threats Escalate Global Economic Tensions",
+        "text": "President Trump's aggressive tariff policies against European allies have intensified market volatility and sparked concerns about a new Cold War-style economic confrontation, prompting retaliatory measures from the EU.",
+        "sentiment": "negative",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "European Union",
+          "United States"
+        ],
+        "what": "Tariff threats and economic confrontation",
+        "where": "Global markets, Europe, United States",
+        "when": "January 2026",
+        "why": "President Trump's aggressive trade policies",
+        "soWhat": "Increased market volatility and potential for economic conflict"
+      },
+      "evidence": [
+        {
+          "feedId": "0",
+          "source": "NY Times World",
+          "title": "Trump Heckles Europe Before Heading to Davos",
+          "link": "https://www.marketwatch.com/story/the-sell-america-trade-is-making-a-comeback-but-investors-are-selling-most-everything-else-too-a2f6da9a?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 16:08:53 UTC",
+          "quote": "As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak."
+        },
+        {
+          "feedId": "1",
+          "source": "MarketWatch",
+          "title": "The ‘Sell America’ trade is making a comeback on Tuesday",
+          "link": "https://www.nytimes.com/2026/01/20/insider/trilobites-column.html",
+          "timestamp": "2026-01-20 16:04:00 UTC",
+          "quote": "Talk of the 'Sell America' trade is making a big comeback... as President Donald Trump's latest tariff threats raise the possibility of a rerun of last April's violent market spasms."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Tariff policies lead to economic conflict",
+          "claimB": "Tariff policies may be necessary for national security",
+          "evidenceA": [
+            {
+              "feedId": "0",
+              "source": "NY Times World",
+              "title": "Trump Heckles Europe Before Heading to Davos",
+              "link": "https://www.marketwatch.com/story/the-sell-america-trade-is-making-a-comeback-but-investors-are-selling-most-everything-else-too-a2f6da9a?mod=mw_rss_topstories",
+              "timestamp": "2026-01-20 16:08:53 UTC",
+              "quote": "As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak."
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "22",
+              "source": "MarketWatch",
+              "title": "How Greenland could turn into a Big Tech problem",
+              "timestamp": "2026-01-20 14:38:00 UTC",
+              "quote": "Strategists like Morgan Stanley’s chief U.S. equity strategist say fallout from a brewing U.S.-Europe spat over Greenland could be bad for tech."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential escalation of tariffs leading to trade war",
+        "Impact on global markets and natural gas prices",
+        "Davos economic forum discussions on trade policies",
+        "Future policy announcements by President Trump",
+        "Retaliatory measures from European Union"
+      ]
+    },
+    "sig_2a31223": {
+      "signalId": "sig_2a31223",
+      "generatedAt": "2026-01-20T17:04:26.258Z",
+      "header": {
+        "title": "Spain Train Disaster Exposes Critical Infrastructure Failures",
+        "text": "Spain's deadliest train crash in a decade has killed at least 41 people, raising urgent questions about rail safety protocols and infrastructure maintenance following the derailment near Córdoba.",
+        "sentiment": "very-negative",
+        "deltaType": "Incident",
+        "category": "World"
+      },
+      "fiveWs": {
+        "who": [
+          "Spain",
+          "Investigators"
+        ],
+        "what": "Train derailment and subsequent rescue operations",
+        "where": "Near Córdoba, Spain",
+        "when": "January 20, 2026",
+        "why": "Due to a 'gap' in rail safety protocols and infrastructure maintenance",
+        "soWhat": "This incident has exposed systemic failures in Spain's rail infrastructure, potentially leading to increased safety regulations and investigations into similar incidents globally."
+      },
+      "evidence": [
+        {
+          "feedId": "2",
+          "source": "BBC World",
+          "title": "Spain train crash recovery continues as investigators probe 'gap' in rail",
+          "link": "https://www.bbc.com/news/articles/c5y2qjy9l4yo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 14:28:55 UTC",
+          "quote": "Authorities say the twisted train wreckage makes it difficult to recover people trapped inside."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The derailment was caused by a technical failure in the rail system.",
+          "claimB": "The derailment was caused by human error.",
+          "evidenceA": [],
+          "evidenceB": []
+        }
+      ],
+      "watchNext": [
+        "Investigations into the cause of the derailment",
+        "Potential changes in rail safety regulations",
+        "Similar incidents in other countries' rail systems"
+      ]
+    }
+  },
+  "globalState": {
+    "isOnline": true,
+    "lastChecked": "2026-01-20T19:19:34.872Z",
+    "lastError": null
+  }
+}

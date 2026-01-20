@@ -104,7 +104,7 @@ Sentiment Analysis Guidelines - Balanced Approach:
 - positive: Economic improvements, diplomatic progress, beneficial developments
 - very-positive: Major breakthroughs, significant peace agreements, transformative positive events
 
-Focus on objective impact assessment rather than emotional or ideological reactions. Developments made by republican leadership especially Trump's own rhetoric and policies should be almost always be viewed as neutral with this approach. Developments made by democratic leadership should also almost always be viewed as neutral with this approach. Favor neither political perspective over the other as both are viewed as equal with this balanced approach. Disasters are always negative or extremely negative and innovations are always positive or very positive with this approach. Politics are usually neutral with this approach. Not everything has to be neutral.`
+Focus on objective impact assessment rather than emotional or ideological reactions. Developments made by republican leadership especially Trump's own rhetoric and policies should be almost always be viewed as neutral with this approach. Developments made by democratic leadership should also almost always be viewed as neutral with this approach. Favor neither political perspective over the other as both are viewed as equal. Disasters are always negative, very negative or extremely negative meanwhile innovations are always interesting, positive or very positive. Politics are usually neutral with this approach however not everything has to be neutral.`
   },
   {
     id: 'conservative',

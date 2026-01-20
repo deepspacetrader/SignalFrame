@@ -259,6 +259,62 @@ const getTodayStr = () => {
   return `${year}-${month}-${day}`;
 };
 
+/**
+ * Load a date-stamped snapshot from static files
+ * Attempts to load snapshot for the specific date, falls back to latest available
+ */
+const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> => {
+  try {
+    // First try to load the specific date
+    const response = await fetch(`./data/snapshot-${targetDate}.json`);
+    if (response.ok) {
+      const snapshot = await response.json();
+      console.log(`Loaded snapshot for date: ${targetDate}`);
+      return snapshot;
+    }
+  } catch (e) {
+    console.warn(`Failed to load snapshot for ${targetDate}:`, e);
+  }
+
+  // If specific date not found, try to find the latest available snapshot
+  try {
+    // Try to fetch a directory listing (this may not work on all static hosts)
+    // As a fallback, try recent dates in reverse order
+    for (let i = 0; i < 30; i++) { // Check last 30 days
+      const checkDate = new Date(targetDate);
+      checkDate.setDate(checkDate.getDate() - i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+      
+      try {
+        const fallbackResponse = await fetch(`./data/snapshot-${dateStr}.json`);
+        if (fallbackResponse.ok) {
+          const snapshot = await fallbackResponse.json();
+          console.log(`Fallback: Loaded snapshot for date: ${dateStr}`);
+          return snapshot;
+        }
+      } catch (e) {
+        // Continue to next date
+      }
+    }
+  } catch (e) {
+    console.warn('Fallback snapshot search failed:', e);
+  }
+
+  // Finally, try the legacy snapshot.json for backward compatibility
+  try {
+    const legacyResponse = await fetch('./data/snapshot.json');
+    if (legacyResponse.ok) {
+      const snapshot = await legacyResponse.json();
+      console.log('Loaded legacy snapshot.json');
+      return snapshot;
+    }
+  } catch (e) {
+    console.warn('Failed to load legacy snapshot:', e);
+  }
+
+  return null;
+};
+
 const defaultState: SituationState = {
   currentDate: getTodayStr(),
   availableDates: [],
@@ -471,14 +527,12 @@ export function useSituationStore() {
       const isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 
       if (isStatic) {
-        console.log('Static Mode detected. Loading snapshot...');
+        console.log('Static Mode detected. Loading date-stamped snapshot...');
         try {
-          // Attempt to load static snapshot from public/data/snapshot.json
-          // Note for Deployment: Ensure this file exists in your build
-          const response = await fetch('./data/snapshot.json');
-          if (response.ok) {
-            const snapshot = await response.json();
-
+          // Load date-stamped snapshot for the current date
+          const snapshot = await loadDateStampedSnapshot(globalState.currentDate);
+          
+          if (snapshot) {
             // Hydrate state with snapshot data
             // We use Object.assign to merge carefully
             Object.assign(globalState, {
@@ -504,12 +558,12 @@ export function useSituationStore() {
               size_vram: 0
             }];
 
-            console.log('Snapshot loaded successfully');
+            console.log('Date-stamped snapshot loaded successfully');
             notify();
             return; // EXIT early - do not start polling Ollama
           }
         } catch (e) {
-          console.warn('Failed to load static snapshot:', e);
+          console.warn('Failed to load date-stamped snapshot:', e);
         }
       }
 
@@ -573,6 +627,35 @@ export function useSituationStore() {
       return;
     }
 
+    const signal = globalState.signals.find(s => (s.id || '') === signalId);
+    if (!signal) return;
+
+    globalState = { ...globalState, isGeneratingDeepDive: true, activeDeepDiveSignalId: signalId };
+    notify();
+
+    try {
+      const { generateDeepDive: generateDeepDiveRuntime } = await import('../ai/runtime/engine');
+      const result = await generateDeepDiveRuntime(
+        signal,
+        globalState.feeds,
+        globalState.currentDate,
+        globalState.aiConfig
+      );
+
+      globalState = {
+        ...globalState,
+        deepDiveBySignalId: { ...globalState.deepDiveBySignalId, [signalId]: result },
+        isGeneratingDeepDive: false
+      };
+      notify();
+      persist();
+    } catch (e) {
+      globalState = { ...globalState, isGeneratingDeepDive: false };
+      notify();
+    }
+  }, []);
+
+  const regenerateDeepDive = useCallback(async (signalId: string) => {
     const signal = globalState.signals.find(s => (s.id || '') === signalId);
     if (!signal) return;
 
@@ -706,11 +789,75 @@ export function useSituationStore() {
   const loadDate = useCallback(async (dateStr: string) => {
     if (globalState.isProcessing) return;
 
+    // Check if we're in static mode
+    const isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
     // Cache current relation defs to prevent overwriting them with historical snapshots
     const currentDefs = await StorageService.getGlobal('relation_defs');
     const currentBigPicture = globalState.bigPicture;
 
     globalState.currentDate = dateStr;
+
+    if (isStatic) {
+      // In static mode, try to load date-stamped snapshot
+      console.log(`Static mode: Loading snapshot for date ${dateStr}`);
+      const snapshot = await loadDateStampedSnapshot(dateStr);
+      
+      if (snapshot) {
+        Object.assign(globalState, {
+          ...snapshot,
+          lastUpdated: snapshot.lastUpdated ? new Date(snapshot.lastUpdated) : new Date(),
+          deepDiveBySignalId: snapshot.deepDiveBySignalId || {},
+          // Preserve static mode settings
+          aiStatus: {
+            isOnline: true,
+            lastChecked: new Date(),
+            lastError: null,
+            model: 'STATIC SNAPSHOT'
+          },
+          isProcessing: false
+        });
+
+        // Ensure running models shows a placeholder
+        globalState.runningModels = [{
+          name: 'STATIC DATA:RO',
+          size: 0,
+          size_vram: 0
+        }];
+
+        // RESTORE Global Big Picture if we want it to be truly global
+        if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+
+        if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
+
+        notify();
+        return;
+      } else {
+        console.log(`No snapshot found for date ${dateStr}, showing empty state`);
+        // Set empty state for dates without snapshots
+        globalState.narrative = '';
+        globalState.signals = [];
+        globalState.insights = [];
+        globalState.feeds = [];
+        globalState.mapPoints = [];
+        globalState.dailyMetrics = {};
+        globalState.lastUpdated = null;
+        if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+
+        if (currentDefs) {
+          globalState.foreignRelations = currentDefs.map((d: any) => ({
+            ...d,
+            status: 'No data for this date.',
+            sentiment: 'neutral',
+            lastUpdate: new Date().toISOString()
+          }));
+        }
+        notify();
+        return;
+      }
+    }
+
+    // Normal mode: Load from database
     const analysis = await StorageService.getAnalysis(dateStr);
 
     if (analysis) {
@@ -956,28 +1103,28 @@ export function useSituationStore() {
   }, []);
 
   const refreshSection = useCallback(async (sectionId: keyof SituationState['isProcessingSection'], force: boolean = false) => {
-    console.log(`refreshSection called for ${sectionId}`, {
-      isProcessing: globalState.isProcessing,
-      isProcessingSection: globalState.isProcessingSection[sectionId],
-      feedsLength: globalState.feeds.length,
-      runningJobs: cancellationTokenManager.getRunningJobs(),
-      force
-    });
+    // console.log(`refreshSection called for ${sectionId}`, {
+    //   isProcessing: globalState.isProcessing,
+    //   isProcessingSection: globalState.isProcessingSection[sectionId],
+    //   feedsLength: globalState.feeds.length,
+    //   runningJobs: cancellationTokenManager.getRunningJobs(),
+    //   force
+    // });
 
     if (globalState.isProcessing || globalState.feeds.length === 0) {
-      console.log('refreshSection blocked:', {
-        isProcessing: globalState.isProcessing,
-        feedsLength: globalState.feeds.length
-      });
+      // console.log('refreshSection blocked:', {
+      //   isProcessing: globalState.isProcessing,
+      //   feedsLength: globalState.feeds.length
+      // });
       return;
     }
 
     // If not forced and section is already processing, don't proceed
     if (!force && globalState.isProcessingSection[sectionId]) {
-      console.log('refreshSection blocked: section already processing', {
-        sectionId,
-        isProcessingSection: globalState.isProcessingSection[sectionId]
-      });
+      // console.log('refreshSection blocked: section already processing', {
+      //   sectionId,
+      //   isProcessingSection: globalState.isProcessingSection[sectionId]
+      // });
       return;
     }
 
@@ -985,10 +1132,10 @@ export function useSituationStore() {
     const runningJobs = cancellationTokenManager.getRunningJobs();
     const sectionJobs = runningJobs.filter(jobId => jobId.includes(`section-${sectionId}-`));
 
-    console.log(`Found ${sectionJobs.length} jobs for section ${sectionId}:`, sectionJobs);
+    // console.log(`Found ${sectionJobs.length} jobs for section ${sectionId}:`, sectionJobs);
 
     if (sectionJobs.length > 0) {
-      console.log(`Cancelling ${sectionJobs.length} existing jobs for section ${sectionId}`);
+      // console.log(`Cancelling ${sectionJobs.length} existing jobs for section ${sectionId}`);
       sectionJobs.forEach(jobId => cancellationTokenManager.cancelJob(jobId));
 
       // Force-clear the processing state for this section
@@ -1386,6 +1533,7 @@ export function useSituationStore() {
     openDeepDive,
     closeDeepDive,
     generateDeepDive,
+    regenerateDeepDive,
     setRawOutput,
     showRawOutput,
     hideRawOutput,

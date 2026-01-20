@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Modal } from './shared/Modal'
 import { DeepDiveData, Sentiment } from '../state/useSituationStore'
 import { SectionBadge } from './shared/SectionBadge'
+import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
 
 interface DeepDiveModalProps {
     isOpen: boolean;
@@ -9,6 +10,7 @@ interface DeepDiveModalProps {
     data: DeepDiveData | null;
     isGenerating?: boolean;
     onAIRequired?: () => void;
+    regenerateDeepDive?: (signalId: string) => void;
 }
 
 const getSentimentColor = (sentiment: string) => {
@@ -25,7 +27,7 @@ const getSentimentColor = (sentiment: string) => {
     }
 }
 
-export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired }: DeepDiveModalProps) {
+export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired, regenerateDeepDive }: DeepDiveModalProps) {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
     // If in demo mode and no data is available, show demo modal instead
@@ -40,18 +42,35 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} modalId="deep-dive-modal">
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-0 max-w-4xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl flex flex-col">
+            <div className="bg-bg-card border border-white/10 rounded-2xl p-0 max-w-4xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl flex flex-col md:flex-row">
                 {/* Header Section */}
-                <div className="p-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent relative">
+                <div className="p-4 sm:p-6 lg:p-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent relative md:w-1/2">
                     <button
                         onClick={onClose}
-                        className="absolute top-6 right-6 p-2 text-text-tertiary hover:text-white transition-colors rounded-full hover:bg-white/5"
+                        className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-text-tertiary hover:text-white transition-colors rounded-full hover:bg-white/5"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
                     </button>
+
+                    {/* Regenerate button - only show when data exists and not generating */}
+                    {data && !isGenerating && regenerateDeepDive && (
+                        <div className="absolute top-4 right-12 sm:top-6 sm:right-16">
+                            <SectionRegenerateButton
+                                onClick={() => {
+                                    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                                    if (!isLocalhost) {
+                                        onAIRequired?.();
+                                        return;
+                                    }
+                                    regenerateDeepDive(data.signalId);
+                                }}
+                                disabled={isGenerating}
+                            />
+                        </div>
+                    )}
 
                     {isGenerating ? (
                         <div className="py-12 flex flex-col items-center justify-center text-center">
@@ -83,16 +102,16 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         {data.header.category}
                                     </span>
                                 )}
-                                <span className="text-[0.6rem] text-text-tertiary uppercase tracking-widest ml-auto">
+                                <span className="text-[0.6rem] text-text-tertiary uppercase tracking-widest">
                                     Generated: {new Date(data.generatedAt).toLocaleString()}
                                 </span>
                             </div>
 
-                            <h2 className="text-3xl font-bold text-text-primary mb-4 leading-tight tracking-tight">
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary mb-4 leading-tight tracking-tight">
                                 {data.header.title}
                             </h2>
 
-                            <div className="flex items-center gap-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                                 <div className="flex items-center gap-2">
                                     <span className="text-[0.65rem] uppercase tracking-widest text-text-secondary font-bold">Status Assessment:</span>
                                     <span
@@ -117,8 +136,8 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
                 {/* Content Section - Scrollable */}
                 {data && !isGenerating && (
-                    <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 xl:gap-10">
 
                             {/* Left Column: Summary & 5Ws */}
                             <div className="space-y-8">
@@ -147,25 +166,25 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                             </div>
                                         )}
                                         {data.fiveWs.what && (
-                                            <div className="flex gap-4">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHAT</div>
                                                 <div className="text-text-primary text-sm leading-snug">{data.fiveWs.what}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.where && (
-                                            <div className="flex gap-4">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHERE</div>
                                                 <div className="text-text-primary text-sm font-medium">{data.fiveWs.where}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.when && (
-                                            <div className="flex gap-4">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHEN</div>
                                                 <div className="text-text-primary text-sm">{data.fiveWs.when}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.why && (
-                                            <div className="flex gap-4">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHY</div>
                                                 <div className="text-text-secondary text-sm italic leading-snug">{data.fiveWs.why}</div>
                                             </div>
@@ -228,7 +247,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         <div className="space-y-4">
                                             {data.counterpoints.map((cp, idx) => (
                                                 <div key={idx} className="bg-orange-500/5 border border-orange-500/10 rounded-xl p-4">
-                                                    <div className="grid grid-cols-2 gap-4">
+                                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                                         <div className="space-y-2">
                                                             <p className="text-[0.6rem] uppercase tracking-widest text-red-400 font-bold mb-1">Perspective A</p>
                                                             <p className="text-xs text-text-primary font-medium leading-snug">{cp.claimA}</p>

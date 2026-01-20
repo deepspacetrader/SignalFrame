@@ -121,7 +121,7 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
     }, [mapPoints.length, sectionGenerationTimes.map])
 
     const headerActions = useMemo(() => {
-        if (mapPoints.length === 0 || isProcessing) return null
+        if (isProcessing) return null
 
         return (
             <SectionRegenerateButton
@@ -138,7 +138,7 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
                 className="opacity-80 hover:opacity-100"
             />
         )
-    }, [isProcessing, mapPoints.length, refreshSection, onAIRequired])
+    }, [isProcessing, refreshSection, onAIRequired])
 
     return (
         <SectionCard

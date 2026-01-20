@@ -55,6 +55,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
     retryFailedSection,
     clearSectionFailure,
     generateDeepDive,
+    regenerateDeepDive,
     closeDeepDive,
     deepDiveBySignalId,
     activeDeepDiveSignalId,
@@ -108,7 +109,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
           onClick={() => setSortBy('none')}
           className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'none'
             ? 'bg-gray-500 text-white'
-            : 'text-text-secondary hover:text-text-primary'
+            : 'text-white hover:text-text-primary'
             }`}
         >
           Default
@@ -117,7 +118,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
           onClick={() => setSortBy('pos-neg')}
           className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'pos-neg'
             ? 'bg-accent-secondary text-white'
-            : 'text-text-secondary hover:text-text-primary'
+            : 'text-white hover:text-text-primary'
             }`}
         >
           Positive → Negative
@@ -126,7 +127,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
           onClick={() => setSortBy('neg-pos')}
           className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'neg-pos'
             ? 'bg-red-500 text-white'
-            : 'text-text-secondary hover:text-text-primary'
+            : 'text-white hover:text-text-primary'
             }`}
         >
           Negative → Positive
@@ -610,6 +611,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
         data={activeDeepDiveSignalId ? deepDiveBySignalId[activeDeepDiveSignalId] : null}
         isGenerating={isGeneratingDeepDive}
         onAIRequired={onAIRequired}
+        regenerateDeepDive={regenerateDeepDive}
       />
     </SectionCard>
   )

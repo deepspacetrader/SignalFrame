@@ -425,7 +425,6 @@ ${JSON.stringify(feedIndex)}${customGuidelines}
 Return EXACTLY one JSON object with this shape:
 {
   "signalId": string,
-  "generatedAt": string,
   "header": {
     "title": string,
     "text": string,
@@ -526,7 +525,7 @@ export async function generateDeepDive(
 
   return {
     signalId: String(obj.signalId || signal.id || ''),
-    generatedAt: String(obj.generatedAt || now),
+    generatedAt: now,
     header: {
       title: String(header.title || signal.title || 'Error generating signal title'),
       text: String(header.text || signal.text || 'Error generating signal text'),
