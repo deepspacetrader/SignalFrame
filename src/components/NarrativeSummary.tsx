@@ -8,14 +8,15 @@ import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
 import { SectionBadge } from './shared/SectionBadge'
 
 
-export function NarrativeSummary() {
-  const { 
-    narrative, 
-    thinkingTrace, 
-    isProcessing, 
-    isProcessingSection, 
-    refreshSection, 
+export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void }) {
+  const {
+    narrative,
+    thinkingTrace,
+    isProcessing,
+    isProcessingSection,
+    refreshSection,
     aiConfig,
+    aiStatus,
     rawOutputs,
     activeRawOutput,
     showRawOutput,
@@ -51,7 +52,17 @@ export function NarrativeSummary() {
 
     return (
       <div className="flex items-center gap-2">
-        <SectionRegenerateButton onClick={() => refreshSection('narrative', true)} />
+        <SectionRegenerateButton onClick={() => {
+          const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          if (!isLocalhost) {
+            // Not on localhost - always show AI required modal
+            onAIRequired();
+            return;
+          }
+
+          // On localhost - proceed with refresh (it will fail naturally if AI is offline)
+          refreshSection('narrative', true);
+        }} />
         {rawOutputs.narrative && (
           <button
             onClick={() => showRawOutput('narrative')}
@@ -175,7 +186,7 @@ export function NarrativeSummary() {
           )}
         </>
       )}
-      
+
       {/* Raw Output Modal */}
       <RawOutputModal
         isOpen={activeRawOutput === 'narrative'}

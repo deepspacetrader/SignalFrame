@@ -11,7 +11,7 @@ import {
 } from '../services/feedIngest'
 import { KNOWN_RSS_FEEDS } from '../data/rssFeeds'
 
-export function RSSSettings() {
+export function RSSSettings({ onAIRequired }: { onAIRequired?: () => void }) {
     const [isOpen, setIsOpen] = useState(false);
     const [rssConfig, setRssConfig] = useState<{ defaultFeeds: RSSFeedConfig[], userFeeds: UserRSSFeed[] }>({
         defaultFeeds: [],
@@ -74,6 +74,11 @@ export function RSSSettings() {
     };
 
     const toggleFeed = (url: string) => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost && onAIRequired) {
+            onAIRequired();
+            return;
+        }
         const feed = rssConfig.defaultFeeds.find(f => f.url === url);
         if (feed) {
             updateDefaultFeed(url, !feed.enabled);
@@ -82,6 +87,12 @@ export function RSSSettings() {
     };
 
     const addUserFeedHandler = async () => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost && onAIRequired) {
+            onAIRequired();
+            return;
+        }
+
         if (!newFeed.name.trim() || !newFeed.url.trim()) {
             setValidationError('Name and URL are required');
             return;
@@ -109,11 +120,21 @@ export function RSSSettings() {
     };
 
     const removeUserFeedHandler = (id: string) => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost && onAIRequired) {
+            onAIRequired();
+            return;
+        }
         removeUserFeed(id);
         loadSettings(); // Reload to reflect changes
     };
 
     const saveSettings = () => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost && onAIRequired) {
+            onAIRequired();
+            return;
+        }
         // Settings are already saved through the feed management functions
         console.log('RSS settings saved');
         setIsOpen(false);
@@ -169,8 +190,8 @@ export function RSSSettings() {
                                     <div
                                         key={feed.url}
                                         className={`bg-white/5 border rounded-lg p-4 transition-all hover:bg-white/10 ${isEnabled
-                                                ? 'border-accent-primary/50 bg-accent-primary/5'
-                                                : 'border-white/10'
+                                            ? 'border-accent-primary/50 bg-accent-primary/5'
+                                            : 'border-white/10'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
@@ -207,8 +228,8 @@ export function RSSSettings() {
                                             <button
                                                 onClick={() => toggleFeed(feed.url)}
                                                 className={`relative w-12 h-6 rounded-full transition-all duration-300 ${isEnabled
-                                                        ? 'bg-accent-primary'
-                                                        : 'bg-white/10 border border-white/20'
+                                                    ? 'bg-accent-primary'
+                                                    : 'bg-white/10 border border-white/20'
                                                     }`}
                                             >
                                                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-lg transition-all duration-300 ${isEnabled ? 'left-7' : 'left-1'
@@ -338,6 +359,7 @@ export function RSSSettings() {
                     </div>
                 </div>
             </div>
+
         </Modal>
     );
 }

@@ -5,8 +5,9 @@ import { useSituationStore } from '../state/useSituationStore'
 import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai/runtime/sentimentEngine'
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
 
-export function AISettings() {
-    const { aiConfig, availableModels, updateAiConfig, fetchAvailableModels } = useSituationStore()
+export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
+    const fullState = useSituationStore();
+    const { aiConfig, availableModels, updateAiConfig, fetchAvailableModels } = fullState;
     const [isOpen, setIsOpen] = useState(false)
     const [tempConfig, setTempConfig] = useState(aiConfig)
     const [copied, setCopied] = useState(false)
@@ -26,7 +27,7 @@ export function AISettings() {
                     setOllamaError('Ollama service is not running or not accessible');
                 }
             };
-            
+
             checkOllamaStatus();
             setTempConfig(aiConfig);
         }
@@ -52,6 +53,12 @@ export function AISettings() {
     }
 
     const handleSentimentProfileChange = (profileId: string) => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost && onAIRequired) {
+            onAIRequired();
+            return;
+        }
+
         setTempConfig({
             ...tempConfig,
             sentimentProfile: profileId,
@@ -101,9 +108,9 @@ export function AISettings() {
     }
 
     return (
-        <Modal 
-            isOpen={isOpen} 
-            onClose={() => setIsOpen(false)} 
+        <Modal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
             modalId="ai-settings-modal"
         >
             <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
@@ -129,30 +136,30 @@ export function AISettings() {
                             </div>
 
 
-                                {/* System Requirements */}
-                                <div className="bg-black/40 rounded-lg p-4 gap-3 mb-4">
-                                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">System Requirements</h5>
-                                    <div className="grid grid-cols-1 gap-3 text-xs">
-                                        <div>
-                                            <span className="text-text-tertiary font-bold">GPU:</span>
-                                            <span className="text-text-primary ml-2">NVIDIA RTX 3060+ <span className="text-text-secondary italic">(A GPU with at least 12GB VRAM is recommended for most thinking models. Tiny or small models may work on less powerful hardware with mixed results.)</span></span>
-                                        </div>
-                                        <div>
-                                            <span className="text-text-tertiary font-bold">Storage:</span>
-                                            <span className="text-text-primary ml-2">~10-20GB for AI models</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-text-tertiary font-bold">Internet Connection:</span>
-                                            <span className="text-text-primary ml-2">For AI model and RSS feed downloads. (not required to generate AI responses)</span>
-                                        </div>
+                            {/* System Requirements */}
+                            <div className="bg-black/40 rounded-lg p-4 gap-3 mb-4">
+                                <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">System Requirements</h5>
+                                <div className="grid grid-cols-1 gap-3 text-xs">
+                                    <div>
+                                        <span className="text-text-tertiary font-bold">GPU:</span>
+                                        <span className="text-text-primary ml-2">NVIDIA RTX 3060+ <span className="text-text-secondary italic">(A GPU with at least 12GB VRAM is recommended for most thinking models. Tiny or small models may work on less powerful hardware with mixed results.)</span></span>
+                                    </div>
+                                    <div>
+                                        <span className="text-text-tertiary font-bold">Storage:</span>
+                                        <span className="text-text-primary ml-2">~10-20GB for AI models</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-text-tertiary font-bold">Internet Connection:</span>
+                                        <span className="text-text-primary ml-2">For AI model and RSS feed downloads. (not required to generate AI responses)</span>
                                     </div>
                                 </div>
+                            </div>
 
                             <div className="space-y-4">
                                 {/* Installation Steps */}
                                 <div className="bg-black/40 rounded-lg p-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Installation Steps</h5>
-                                    
+
                                     <div className="space-y-3">
                                         {/* Windows */}
                                         <div className="border-l-2 border-blue-500/30 pl-3">
@@ -207,8 +214,8 @@ export function AISettings() {
 
                                     <p className="text-xs text-text-secondary mb-3">Try to have at least 1GB spare VRAM for other applications.</p>
 
-                                    <p className="text-xs text-text-secondary mb-3">Choose an appropriate model for your hardware here are some recommendations to get started. (see <a href="https://ollama.com/search" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/search</a> for more models)</p>                                  
-                                    
+                                    <p className="text-xs text-text-secondary mb-3">Choose an appropriate model for your hardware here are some recommendations to get started. (see <a href="https://ollama.com/search" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/search</a> for more models)</p>
+
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                                             <div>
@@ -221,7 +228,7 @@ export function AISettings() {
                                                 Copy Command
                                             </button>
                                         </div>
-                                        
+
                                         <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                                             <div>
                                                 <span className="text-xs font-mono text-text-primary">gpt-oss:20b</span>
@@ -246,7 +253,7 @@ export function AISettings() {
                                             </button>
                                         </div>
 
-                                        
+
                                     </div>
                                 </div>
 
@@ -254,7 +261,54 @@ export function AISettings() {
                                 {/* Troubleshooting */}
                                 <div className="bg-black/40 rounded-lg p-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Troubleshooting</h5>
-                                    <div className="space-y-2 text-xs">
+                                    <div className="space-y-4 text-xs">
+                                        <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg">
+                                            <h6 className="text-blue-400 font-bold mb-2 flex items-center gap-2">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                                                "Connect to local network" Prompt
+                                            </h6>
+                                            <p className="text-text-secondary mb-3 leading-relaxed">
+                                                Chrome may show a popup asking to <strong>"connect to any device on your local network"</strong>.
+                                            </p>
+                                            <p className="text-text-secondary mb-3 leading-relaxed text-[11px]">
+                                                This is a standard security feature because this website (public) is trying to talk to your local computer (private).
+                                                <strong> It is NOT scanning your home network.</strong> It is only trying to reach the Ollama AI engine running on your own machine.
+                                            </p>
+                                            <p className="font-bold text-text-primary mb-2">To proceed:</p>
+                                            <p className="text-text-secondary">Click <strong>"Allow"</strong> to enable the connection between this interface and your local AI.</p>
+                                        </div>
+
+                                        <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-xl">
+                                            <h6 className="text-red-400 font-bold mb-3 flex items-center gap-2">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                                                Fix Connection (CORS / 403 Forbidden)
+                                            </h6>
+
+                                            <p className="text-[11px] text-text-secondary mb-4 leading-relaxed">
+                                                Browsers block public websites from talking to your local AI for security. Follow these steps to "trust" this domain:
+                                            </p>
+
+                                            <div className="space-y-4">
+                                                <div className="bg-black/40 p-4 rounded-lg border border-white/5">
+                                                    <ol className="text-[11px] text-text-secondary space-y-3 ml-4 list-decimal">
+                                                        <li><strong>Restart Ollama</strong> with permissions (Copy & Run in PowerShell):
+                                                            <div className="bg-black/60 p-2 rounded mt-2 font-mono text-[10px] text-green-400 break-all select-all flex items-center justify-between group cursor-pointer">
+                                                                <span>taskkill /F /IM "ollama.exe" /T; $env:OLLAMA_ORIGINS="https://deepspacetrader.github.io"; ollama serve</span>
+                                                            </div>
+                                                        </li>
+                                                        <li><strong>Refresh this page</strong> and click "Retry Connection".</li>
+                                                    </ol>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 p-3 bg-blue-500/5 rounded-lg border border-blue-500/10">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
+                                                    <p className="text-[10px] text-text-tertiary">
+                                                        <strong>Security Note:</strong> Origins are domain-level. Always use the base domain (e.g., https://deepspacetrader.github.io) without sub-paths like /signalframe/.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div className="flex items-start gap-2">
                                             <span className="text-red-400">•</span>
                                             <span className="text-text-secondary"><strong>Connection errors:</strong> Restart Ollama or check if it's running on port 11434</span>
@@ -262,10 +316,6 @@ export function AISettings() {
                                         <div className="flex items-start gap-2">
                                             <span className="text-red-400">•</span>
                                             <span className="text-text-secondary"><strong>Slow responses:</strong> Try smaller models or close GPU-intensive applications</span>
-                                        </div>
-                                        <div className="flex items-start gap-2">
-                                            <span className="text-red-400">•</span>
-                                            <span className="text-text-secondary"><strong>Memory errors:</strong> Use 3B models or increase system RAM</span>
                                         </div>
                                     </div>
                                 </div>
@@ -291,48 +341,77 @@ export function AISettings() {
                     )}
 
                     <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Target Model</label>
-                            <div className="group relative">
-                                <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
-                                    <span className="text-[8px] text-accent-primary font-bold">i</span>
-                                </div>
-                                <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
-                                    <p className="text-[11px] text-text-primary leading-relaxed mb-3">
-                                        Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.
-                                    </p>
-                                    <div className="border-t border-white/10 pt-2">
-                                        <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
-                                        <div className="space-y-1">
-                                            <div className="flex justify-between text-[10px]">
-                                                <span className="text-text-secondary">8GB VRAM:</span>
-                                                <span className="text-text-primary font-mono">llama3.2:3b, qwen2.5:3b</span>
-                                            </div>
-                                            <div className="flex justify-between text-[10px]">
-                                                <span className="text-text-secondary">12GB VRAM:</span>
-                                                <span className="text-text-primary font-mono">llama3.2:7b, qwen2.5:7b</span>
-                                            </div>
-                                            <div className="flex justify-between text-[10px]">
-                                                <span className="text-text-secondary">16GB VRAM:</span>
-                                                <span className="text-text-primary font-mono">llama3.2:13b, qwen2.5:14b</span>
-                                            </div>
-                                            <div className="flex justify-between text-[10px]">
-                                                <span className="text-text-secondary">24GB+ VRAM:</span>
-                                                <span className="text-text-primary font-mono">llama3.2:70b, qwen2.5:32b</span>
-                                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Ollama Base URL</label>
+                                    <div className="group relative">
+                                        <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
+                                            <span className="text-[8px] text-accent-primary font-bold">i</span>
+                                        </div>
+                                        <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
+                                            <p className="text-[11px] text-text-primary leading-relaxed">
+                                                The API endpoint for your Ollama instance. Default is http://127.0.0.1:11434/api.
+                                                If using a tunnel (like Cloudflare or Tailscale), enter your public URL here.
+                                            </p>
+                                            <div className="absolute right-full top-4 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-bg-darker"></div>
                                         </div>
                                     </div>
-                                    <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-bg-darker"></div>
                                 </div>
+                                <input
+                                    type="text"
+                                    value={tempConfig.baseUrl || ''}
+                                    onChange={(e) => setTempConfig({ ...tempConfig, baseUrl: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
+                                    placeholder="http://127.0.0.1:11434/api"
+                                />
+                            </div>
+
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Target Model</label>
+                                    <div className="group relative">
+                                        <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
+                                            <span className="text-[8px] text-accent-primary font-bold">i</span>
+                                        </div>
+                                        <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
+                                            <p className="text-[11px] text-text-primary leading-relaxed mb-3">
+                                                Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.
+                                            </p>
+                                            <div className="border-t border-white/10 pt-2">
+                                                <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
+                                                <div className="space-y-1">
+                                                    <div className="flex justify-between text-[10px]">
+                                                        <span className="text-text-secondary">8GB VRAM:</span>
+                                                        <span className="text-text-primary font-mono">llama3.2:3b, qwen2.5:3b</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-[10px]">
+                                                        <span className="text-text-secondary">12GB VRAM:</span>
+                                                        <span className="text-text-primary font-mono">llama3.2:7b, qwen2.5:7b</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-[10px]">
+                                                        <span className="text-text-secondary">16GB VRAM:</span>
+                                                        <span className="text-text-primary font-mono">llama3.2:13b, qwen2.5:14b</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-[10px]">
+                                                        <span className="text-text-secondary">24GB+ VRAM:</span>
+                                                        <span className="text-text-primary font-mono">llama3.2:70b, qwen2.5:32b</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="absolute right-full top-4 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-bg-darker"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input
+                                    type="text"
+                                    value={tempConfig.model}
+                                    onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
+                                    placeholder="llama3.2, qwen3:8b, deepseek-r1:8b"
+                                />
                             </div>
                         </div>
-                        <input
-                            type="text"
-                            value={tempConfig.model}
-                            onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
-                            placeholder="llama3.2, qwen3:8b, deepseek-r1:8b"
-                        />
                         {!isModelInstalled && (
                             <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20 rounded-lg">
                                 <p className="text-xs text-accent-alert mb-2 font-semibold flex items-center gap-2">
@@ -391,7 +470,7 @@ export function AISettings() {
                                     <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
                                         <span className="text-[8px] text-accent-primary font-bold">i</span>
                                     </div>
-                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                         <p className="text-[11px] text-text-primary leading-relaxed mb-3">
                                             Total tokens model can remember (input + output). Larger values allow longer conversations but use more VRAM.
                                         </p>
@@ -423,7 +502,7 @@ export function AISettings() {
                             <input
                                 type="number"
                                 value={tempConfig.numCtx}
-                                onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value)})}
+                                onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value) })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
                                 placeholder={DEFAULT_num_ctx.toString()}
                             />
@@ -435,7 +514,7 @@ export function AISettings() {
                                     <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
                                         <span className="text-[8px] text-accent-primary font-bold">i</span>
                                     </div>
-                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                         <p className="text-[11px] text-text-primary leading-relaxed mb-3">
                                             Maximum tokens in model's response (output only). Higher values allow longer answers but must fit within context window.
                                         </p>
@@ -467,7 +546,7 @@ export function AISettings() {
                             <input
                                 type="number"
                                 value={tempConfig.numPredict}
-                                onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value)})}
+                                onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value) })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
                                 placeholder={DEFAULT_num_predict.toString()}
                             />
@@ -522,17 +601,24 @@ export function AISettings() {
                                     <button
                                         key={profile.id}
                                         onClick={() => handleSentimentProfileChange(profile.id)}
-                                        className={`p-4 rounded-lg border transition-all text-left ${
-                                            (tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
-                                                ? 'bg-accent-primary/20 border-accent-primary text-text-primary'
-                                                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
-                                        }`}
+                                        className={`p-4 rounded-lg border transition-all text-left ${(tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
+                                            ? 'bg-accent-primary/20 border-accent-primary text-text-primary'
+                                            : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                                            }`}
                                     >
                                         <div className="font-medium text-sm mb-1">{profile.name}</div>
                                         <div className="text-xs text-text-tertiary">{profile.description}</div>
                                     </button>
                                 ))}
                             </div>
+                            {window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && (
+                                <div className="mt-4 p-4 bg-accent-primary/10 border border-accent-primary/20 rounded-xl">
+                                    <p className="text-xs text-accent-primary leading-relaxed">
+                                        <strong>Static Snapshot Mode:</strong> Sentiment Analysis is fixed on the <strong>"Balanced"</strong> setting for the static snapshot data.
+                                        To customize sentiment profiles or use manual weights, you must run SignalFrame on <strong>localhost</strong> with a personal Ollama instance.
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Current Guidelines */}
@@ -574,60 +660,108 @@ export function AISettings() {
                                         Reset to Default
                                     </button>
                                 </div>
-                            </div>
 
-                            {isCustomMode && customWeights && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {Object.entries(customWeights).map(([key, value]) => (
-                                        <div key={key} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
-                                            <label className="text-sm text-text-secondary capitalize min-w-[120px]">
-                                                {key.replace(/([A-Z])/g, ' $1').trim()}
-                                            </label>
-                                            <div className="flex items-center gap-3">
-                                                <input
-                                                    type="range"
-                                                    min="-5"
-                                                    max="5"
-                                                    step="0.5"
-                                                    value={value as number}
-                                                    onChange={(e) => handleCustomWeightChange(key, parseFloat(e.target.value))}
-                                                    className="w-32"
-                                                />
-                                                <span className="text-sm text-text-primary w-12 text-right font-mono">
-                                                    {(value as number) > 0 ? '+' : ''}{value as number}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {!isCustomMode && (
-                                <div className="bg-black/30 border border-white/10 rounded-lg p-4">
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        {Object.entries(currentSentimentProfile.weights).map(([key, value]) => (
-                                            <div key={key} className="text-center">
-                                                <div className="text-xs text-text-tertiary capitalize mb-1">
+                                {isCustomMode && customWeights && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {Object.entries(customWeights).map(([key, value]) => (
+                                            <div key={key} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                                                <label className="text-sm text-text-secondary capitalize min-w-[120px]">
                                                     {key.replace(/([A-Z])/g, ' $1').trim()}
-                                                </div>
-                                                <div className="text-lg font-mono text-text-primary">
-                                                    {(value as number) > 0 ? '+' : ''}{value as number}
+                                                </label>
+                                                <div className="flex items-center gap-3">
+                                                    <input
+                                                        type="range"
+                                                        min="-5"
+                                                        max="5"
+                                                        step="0.5"
+                                                        value={value as number}
+                                                        onChange={(e) => handleCustomWeightChange(key, parseFloat(e.target.value))}
+                                                        className="w-32"
+                                                    />
+                                                    <span className="text-sm text-text-primary w-12 text-right font-mono">
+                                                        {(value as number) > 0 ? '+' : ''}{value as number}
+                                                    </span>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {!isCustomMode && (
+                                    <div className="bg-black/30 border border-white/10 rounded-lg p-4">
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {Object.entries(currentSentimentProfile.weights).map(([key, value]) => (
+                                                <div key={key} className="text-center">
+                                                    <div className="text-xs text-text-tertiary capitalize mb-1">
+                                                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                                                    </div>
+                                                    <div className="text-lg font-mono text-text-primary">
+                                                        {(value as number) > 0 ? '+' : ''}{value as number}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Impact Explanation */}
+                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                                <h4 className="text-sm font-medium text-blue-300 mb-2">How This Affects Analysis</h4>
+                                <p className="text-xs text-blue-200 leading-relaxed">
+                                    Sentiment profiles determine how AI interprets and classifies the emotional tone of news events.
+                                    Different profiles may classify the same event differently based on their weighting system.
+                                    Custom weights allow you to fine-tune analysis according to your specific needs and perspective.
+                                </p>
+                            </div>
+
+                            {/* Deployment / Static Build Section */}
+                            {/* Deployment / Static Build Section - ONLY ON LOCALHOST */}
+                            {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
+                                <div className="bg-purple-500/10 border border-purple-500/20 p-4 rounded-xl mt-6">
+                                    <h6 className="text-purple-400 font-bold mb-3 flex items-center gap-2">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                                        Deployment / Static Build
+                                    </h6>
+                                    <p className="text-[11px] text-text-secondary mb-4 leading-relaxed">
+                                        Create a static snapshot of the current intelligence data. Use this to update the live <strong>GitHub Pages</strong> site without requiring users to have local AI.
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            const snapshot = fullState;
+                                            // Create a clean export object with just the data we need
+                                            const exportData = {
+                                                lastUpdated: new Date().toISOString(),
+                                                narrative: snapshot.narrative,
+                                                signals: snapshot.signals,
+                                                insights: snapshot.insights,
+                                                mapPoints: snapshot.mapPoints,
+                                                availableDates: snapshot.availableDates,
+                                                foreignRelations: snapshot.foreignRelations,
+                                                bigPicture: snapshot.bigPicture,
+                                                predictionHistory: snapshot.predictionHistory,
+                                                globalState: snapshot.aiStatus // Optional metadata
+                                            };
+
+                                            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                                            const url = URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = 'snapshot.json';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            document.body.removeChild(a);
+                                            URL.revokeObjectURL(url);
+                                        }}
+                                        className="w-full py-2 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-lg text-xs font-bold uppercase tracking-widest transition-all"
+                                    >
+                                        Download snapshot.json
+                                    </button>
+                                    <p className="text-[9px] text-text-tertiary mt-2 text-center">
+                                        Place this file in your project's <strong>public/data/</strong> folder and push to GitHub.
+                                    </p>
                                 </div>
                             )}
-                        </div>
-
-                        {/* Impact Explanation */}
-                        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                            <h4 className="text-sm font-medium text-blue-300 mb-2">How This Affects Analysis</h4>
-                            <p className="text-xs text-blue-200 leading-relaxed">
-                                Sentiment profiles determine how AI interprets and classifies the emotional tone of news events. 
-                                Different profiles may classify the same event differently based on their weighting system. 
-                                Custom weights allow you to fine-tune analysis according to your specific needs and perspective.
-                            </p>
                         </div>
                     </div>
 

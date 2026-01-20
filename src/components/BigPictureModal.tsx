@@ -6,6 +6,7 @@ import { useSituationStore } from '../state/useSituationStore';
 interface BigPictureModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onAIRequired: () => void;
 }
 
 const SENTIMENT_COLORS: Record<string, string> = {
@@ -89,8 +90,8 @@ function MarkdownDisplay({ content }: { content: string }) {
     return <div>{nodes}</div>;
 }
 
-export function BigPictureModal({ isOpen, onClose }: BigPictureModalProps) {
-    const { bigPicture, generateBigPicture, isProcessingSection } = useSituationStore();
+export function BigPictureModal({ isOpen, onClose, onAIRequired }: BigPictureModalProps) {
+    const { bigPicture, generateBigPicture, isProcessingSection, aiStatus } = useSituationStore();
     const isGenerating = isProcessingSection.bigPicture;
     const hasData = bigPicture && bigPicture.timeline.length > 0;
 
@@ -99,16 +100,22 @@ export function BigPictureModal({ isOpen, onClose }: BigPictureModalProps) {
     // So we should probably trigger it if it's null.
     useEffect(() => {
         if (isOpen && !bigPicture && !isGenerating) {
-            generateBigPicture();
+            if (aiStatus?.isOnline) {
+                generateBigPicture();
+            } else {
+                // We don't auto-popup here because it might be annoying on open, 
+                // but we SHOULD show it if they click the button.
+                // However, without bigPicture data, the modal is empty.
+            }
         }
-    }, [isOpen, bigPicture, isGenerating, generateBigPicture]);
+    }, [isOpen, bigPicture, isGenerating, generateBigPicture, aiStatus]);
 
     if (!isOpen) return null;
 
     return (
-        <Modal 
-            isOpen={isOpen} 
-            onClose={onClose} 
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
             modalId="big-picture-modal"
             backdropClassName="fixed big-picture inset-0 z-50 flex items-center justify-center p-8 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
         >
@@ -130,9 +137,18 @@ export function BigPictureModal({ isOpen, onClose }: BigPictureModalProps) {
 
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={generateBigPicture}
+                            onClick={() => {
+                                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                                if (!isLocalhost) {
+                                    onAIRequired();
+                                    return;
+                                }
+
+                                // On localhost - proceed with generation
+                                generateBigPicture();
+                            }}
                             disabled={isGenerating}
-                            className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-colors disabled:opacity-50"
+                            className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 hover:bg-white/10"
                         >
                             {isGenerating ? 'Synthesizing History...' : 'Regenerate Analysis'}
                         </button>

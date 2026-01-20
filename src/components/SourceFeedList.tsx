@@ -67,7 +67,7 @@ function FeedItem({ item }: { item: RawSignal }) {
     );
 }
 
-export function SourceFeedList() {
+export function SourceFeedList({ onAIRequired }: { onAIRequired?: () => void }) {
     const { feeds, isProcessing, refreshFeeds } = useSituationStore()
 
     // Memoize RSS feed grouping to prevent recalculation on every render
@@ -94,7 +94,14 @@ export function SourceFeedList() {
                 </svg>
                 Data Feeds
                 <button
-                    onClick={() => refreshFeeds()}
+                    onClick={() => {
+                        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                        if (!isLocalhost) {
+                            onAIRequired?.();
+                            return;
+                        }
+                        refreshFeeds();
+                    }}
                     disabled={isProcessing}
                     className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-medium text-text-secondary hover:text-text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >

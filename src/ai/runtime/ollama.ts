@@ -25,6 +25,14 @@ export const DEFAULT_num_predict = 16384;
 export class OllamaService {
     private static baseUrl = 'http://127.0.0.1:11434/api';
 
+    static setBaseUrl(url: string) {
+        this.baseUrl = url;
+    }
+
+    static getBaseUrl(): string {
+        return this.baseUrl;
+    }
+
     /**
      * Standard non-streaming generation
      */

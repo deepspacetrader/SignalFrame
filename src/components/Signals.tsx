@@ -35,13 +35,14 @@ const sentimentOrder = {
 };
 
 
-export function Signals() {
+export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
   const {
     signals,
     insights,
     isProcessing,
     isProcessingSection,
     refreshSection,
+    aiStatus,
     jsonError,
     clearJsonError,
     retryJsonSection,
@@ -136,7 +137,16 @@ export function Signals() {
     const regenerateControls = !isProcessing && !hasFailed && (
       <div className="flex items-center gap-2">
         <SectionRegenerateButton
-          onClick={() => refreshSection('signals', true)}
+          onClick={() => {
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (!isLocalhost) {
+              onAIRequired();
+              return;
+            }
+
+            // On localhost - proceed with refresh
+            refreshSection('signals', true);
+          }}
           className="opacity-80 hover:opacity-100"
         />
         {rawOutputs.signals && (
@@ -325,6 +335,20 @@ export function Signals() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                      const hasDeepDiveData = deepDiveBySignalId[signal.id || ''];
+
+                      if (!isLocalhost) {
+                        if (hasDeepDiveData) {
+                          // Allow viewing static/cached data in demo mode
+                          generateDeepDive(signal.id || '');
+                        } else {
+                          onAIRequired();
+                        }
+                        return;
+                      }
+
+                      // On localhost - proceed with deep dive (which generates if needed)
                       generateDeepDive(signal.id || '');
                     }}
                     className="p-1.5 rounded bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"

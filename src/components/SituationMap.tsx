@@ -96,7 +96,7 @@ const createCustomIcon = (point: MapPoint) => {
     })
 }
 
-export function SituationMap() {
+export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
     const { mapPoints, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection, sectionGenerationTimes } = useSituationStore()
     const isLoading = isProcessingSection.map && !isProcessing;
 
@@ -125,11 +125,20 @@ export function SituationMap() {
 
         return (
             <SectionRegenerateButton
-                onClick={() => refreshSection('map', true)}
+                onClick={() => {
+                    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    if (!isLocalhost) {
+                        onAIRequired();
+                        return;
+                    }
+
+                    // On localhost - proceed with refresh
+                    refreshSection('map', true);
+                }}
                 className="opacity-80 hover:opacity-100"
             />
         )
-    }, [isProcessing, mapPoints.length, refreshSection])
+    }, [isProcessing, mapPoints.length, refreshSection, onAIRequired])
 
     return (
         <SectionCard
@@ -185,10 +194,10 @@ export function SituationMap() {
                             position={[point.lat || 0, point.lng || 0]}
                             icon={createCustomIcon(point)}
                         >
-                            <Tooltip 
-                                direction="top" 
-                                offset={[0, -16]} 
-                                opacity={1} 
+                            <Tooltip
+                                direction="top"
+                                offset={[0, -16]}
+                                opacity={1}
                                 className="custom-tooltip"
                                 permanent={false}
                             >

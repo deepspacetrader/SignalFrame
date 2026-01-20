@@ -7,8 +7,8 @@ interface Message {
     content: string;
 }
 
-export function ChatPanel() {
-    const { narrative, signals, insights, foreignRelations, bigPicture, aiConfig } = useSituationStore();
+export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
+    const { narrative, signals, insights, foreignRelations, bigPicture, aiConfig, aiStatus } = useSituationStore();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -156,6 +156,12 @@ export function ChatPanel() {
     };
 
     const handleSend = async () => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost) {
+            onAIRequired();
+            return;
+        }
+
         if (!input.trim() || isTyping) return;
 
         const userMsg: Message = { role: 'user', content: input };

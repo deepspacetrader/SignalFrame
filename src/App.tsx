@@ -14,11 +14,14 @@ import { useSituationStore } from './state/useSituationStore'
 import { BigPictureModal } from './components/BigPictureModal'
 import { formatTime } from './utils/timeUtils'
 import { getSentimentProfile } from './ai/runtime/sentimentEngine'
-
+import { LocalAIRequiredModal } from './components/LocalAIRequiredModal'
+import { DisclaimerModal } from './components/DisclaimerModal'
 
 export default function App() {
   const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig, aiStatus } = useSituationStore()
   const [showBigPicture, setShowBigPicture] = useState(false)
+  const [showAIModal, setShowAIModal] = useState(false)
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
 
   const getLocalTodayStr = () => {
     const d = new Date();
@@ -36,7 +39,6 @@ export default function App() {
     if (currentIndex > 0) {
       loadDate(availableDates[currentIndex - 1]);
     } else {
-      // Fallback: just go back one calendar day
       const [y, m, d] = currentDate.split('-').map(Number);
       const date = new Date(y, m - 1, d);
       date.setDate(date.getDate() - 1);
@@ -64,6 +66,17 @@ export default function App() {
     }
   };
 
+  const handleRefresh = () => {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!isLocalhost) {
+      setShowAIModal(true);
+      return;
+    }
+
+    // On localhost - proceed with refresh
+    refresh();
+  };
+
   return (
     <div className="w-full mx-auto px-8 py-8 min-h-screen bg-bg-darker text-text-primary">
       <header className="mb-10 flex flex-col gap-6 bg-bg-card/40 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-2xl">
@@ -82,12 +95,10 @@ export default function App() {
             <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>
 
             <div className="flex flex-wrap gap-4 w-full lg:w-auto">
-
-
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
                 <p className={`text-xs font-mono whitespace-nowrap ${isProcessing ? 'text-accent-secondary' :
-                    (aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
+                  (aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
                   }`}>
                   {isProcessing ? 'SCANNING...' : (aiStatus?.isOnline ? 'OLLAMA ONLINE' : 'AI OFFLINE')}
                 </p>
@@ -104,7 +115,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* Sentiment Bias Display */}
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Sentiment</p>
                 <p className="text-xs font-mono text-accent-primary">
@@ -112,7 +122,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* AI Model Display */}
               <div className="flex gap-2">
                 {runningModels && runningModels.length > 0 ? (
                   runningModels.map(m => (
@@ -148,15 +157,12 @@ export default function App() {
                 </div>
               )}
 
-              <AISettings />
-              <RSSSettings />
-
+              <AISettings onAIRequired={() => setShowAIModal(true)} />
+              <RSSSettings onAIRequired={() => setShowAIModal(true)} />
               <VolumeControl />
             </div>
           </div>
 
-
-          {/* Big Picture Button */}
           <button
             onClick={() => setShowBigPicture(true)}
             className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group flex-1 md:flex-none justify-center"
@@ -167,22 +173,23 @@ export default function App() {
             <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
           </button>
 
-          <button
-            onClick={() => refresh()}
-            disabled={isProcessing}
-            className={`w-full lg:w-auto mt-4 lg:mt-0 group relative overflow-hidden font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] 
+          <div className="flex flex-col items-center">
+            <button
+              onClick={handleRefresh}
+              disabled={isProcessing}
+              className={`w-full lg:w-auto mt-4 lg:mt-0 group relative overflow-hidden font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] 
               ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.3)]' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
-          >
-            <span className="flex items-center justify-center gap-2">
-              {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}
-              <svg className={`transition-transform duration-700 ${isProcessing ? 'animate-spin' : 'group-hover:rotate-12'}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-              </svg>
-            </span>
-          </button>
+            >
+              <span className="flex items-center justify-center gap-2">
+                {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}
+                <svg className={`transition-transform duration-700 ${isProcessing ? 'animate-spin' : 'group-hover:rotate-12'}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              </span>
+            </button>
+          </div>
         </div>
 
-        {/* Date Navigation Bar */}
         <div className="flex items-center justify-between border-t border-white/5 pt-4">
           <button
             onClick={handlePrevDay}
@@ -218,17 +225,11 @@ export default function App() {
       </header>
 
       <main className="grid grid-cols-12 gap-8">
-        {/* Map Section */}
         <div className="col-span-12 lg:col-span-12 space-y-8">
-
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Narrative Summary */}
-            <NarrativeSummary />
-
-            {/* Signal List with Inline Implications */}
+            <NarrativeSummary onAIRequired={() => setShowAIModal(true)} />
             <div className="grid grid-cols-1">
-              <Signals />
+              <Signals onAIRequired={() => setShowAIModal(true)} />
             </div>
           </div>
 
@@ -238,28 +239,23 @@ export default function App() {
               Deep Intelligence Suite
               <span className="w-full h-[1px] bg-white/5"></span>
             </h2>
-
-            {/* Interactive Panels */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <ChatPanel />
-              <PredictionsPanel />
+              <ChatPanel onAIRequired={() => setShowAIModal(true)} />
+              <PredictionsPanel onAIRequired={() => setShowAIModal(true)} />
             </div>
           </div>
 
-          {/* Foreign Relations Section */}
           <div className="w-full">
             <div className="grid grid-cols-1">
-              <ForeignRelationsPanel />
+              <ForeignRelationsPanel onAIRequired={() => setShowAIModal(true)} />
             </div>
           </div>
 
-          {/* Source Feed Section */}
           <div className="w-full">
-            <SourceFeedList />
+            <SourceFeedList onAIRequired={() => setShowAIModal(true)} />
           </div>
 
-          <SituationMap />
-
+          <SituationMap onAIRequired={() => setShowAIModal(true)} />
         </div>
       </main>
 
@@ -267,13 +263,23 @@ export default function App() {
         <p className="text-[0.65rem] uppercase tracking-widest font-bold">
           © {new Date().getFullYear()} <a href="https://github.com/deepspacetrader" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">DeepSpaceTrader</a> • SignalFrame
         </p>
-        <p className="text-[0.65rem] uppercase tracking-widest font-bold opacity-50">
-          Experimental Intelligence Framework
-        </p>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setShowDisclaimer(true)}
+            className="text-[0.65rem] uppercase tracking-widest font-bold hover:text-white transition-colors underline decoration-dotted underline-offset-2"
+          >
+            Disclaimer
+          </button>
+          <p className="text-[0.65rem] uppercase tracking-widest font-bold opacity-50">
+            Experimental Intelligence Framework
+          </p>
+        </div>
       </footer>
 
       <LoadingOverlay />
-      <BigPictureModal isOpen={showBigPicture} onClose={() => setShowBigPicture(false)} />
-    </div >
+      <BigPictureModal isOpen={showBigPicture} onClose={() => setShowBigPicture(false)} onAIRequired={() => setShowAIModal(true)} />
+      <LocalAIRequiredModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} />
+      <DisclaimerModal isOpen={showDisclaimer} onClose={() => setShowDisclaimer(false)} />
+    </div>
   )
 }

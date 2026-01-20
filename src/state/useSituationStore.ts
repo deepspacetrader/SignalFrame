@@ -147,8 +147,19 @@ export interface BigPictureData {
   lastUpdated: string;
 }
 
+export interface PredictionHistoryItem {
+  topic: string;
+  date: string;
+  data: {
+    shortTerm: string;
+    mediumTerm: string;
+    longTerm: string;
+  };
+}
+
 export interface AiConfig {
   model: string;
+  baseUrl?: string; // Custom Ollama base URL (e.g., for tunnels or remote servers)
   numCtx: number;
   numPredict: number;
   enableThinking: boolean; // Enable thinking/reasoning trace for supported models
@@ -237,6 +248,7 @@ export interface SituationState {
   sectionGenerationTimes: Record<string, number>; // Track generation time per section in milliseconds
   sectionFailures: Record<SectionKey, SectionFailureState>; // Track section failures and retries
   soundVolume: number; // Master volume for sound effects (0-1)
+  predictionHistory: PredictionHistoryItem[];
 }
 
 const getTodayStr = () => {
@@ -272,6 +284,7 @@ const defaultState: SituationState = {
   thinkingTrace: '',
   aiConfig: {
     model: '',
+    baseUrl: 'http://127.0.0.1:11434/api',
     numCtx: DEFAULT_num_ctx,
     numPredict: DEFAULT_num_predict,
     enableThinking: false
@@ -309,7 +322,8 @@ const defaultState: SituationState = {
     rss: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     bigPicture: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
   },
-  soundVolume: 0.5
+  soundVolume: 0.5,
+  predictionHistory: []
 };
 
 let globalState: SituationState = { ...defaultState };
@@ -382,6 +396,7 @@ async function persist() {
   await StorageService.saveGlobal('metric_defs', globalState.metricDefs);
   await StorageService.saveGlobal('deep_dive_cache', globalState.deepDiveBySignalId);
   await StorageService.saveGlobal('sound_volume', globalState.soundVolume);
+  await StorageService.saveGlobal('prediction_history', globalState.predictionHistory);
 }
 
 export function useSituationStore() {
@@ -400,19 +415,27 @@ export function useSituationStore() {
         StorageService.getGlobal('bigPicture')
       ]);
 
-      const [savedCred, savedMetricDefs, savedDeepDives, savedSoundVolume] = await Promise.all([
+      const [savedCred, savedMetricDefs, savedDeepDives, savedSoundVolume, savedPredictionHistory] = await Promise.all([
         StorageService.getGlobal('source_credibility'),
         StorageService.getGlobal('metric_defs'),
         StorageService.getGlobal('deep_dive_cache'),
-        StorageService.getGlobal('sound_volume')
+        StorageService.getGlobal('sound_volume'),
+        StorageService.getGlobal('prediction_history')
       ]);
 
-      if (config) globalState.aiConfig = config;
+      if (config) {
+        globalState.aiConfig = config;
+        const { OllamaService } = await import('../ai/runtime/ollama');
+        if (config.baseUrl) OllamaService.setBaseUrl(config.baseUrl);
+      }
       if (savedBigPicture) globalState.bigPicture = savedBigPicture; // Load Global Big Picture
       if (savedMetricDefs && Array.isArray(savedMetricDefs)) globalState.metricDefs = savedMetricDefs;
       if (savedDeepDives && typeof savedDeepDives === 'object') globalState.deepDiveBySignalId = savedDeepDives;
       if (typeof savedSoundVolume === 'number' && savedSoundVolume >= 0 && savedSoundVolume <= 1) {
         globalState.soundVolume = savedSoundVolume;
+      }
+      if (savedPredictionHistory && Array.isArray(savedPredictionHistory)) {
+        globalState.predictionHistory = savedPredictionHistory;
       }
 
       globalState.availableDates = dates.length > 0 ? dates : [today];
@@ -443,21 +466,73 @@ export function useSituationStore() {
       }
 
       notify();
+
+      // Check for Static Mode (GitHub Pages / hosted)
+      const isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
+      if (isStatic) {
+        console.log('Static Mode detected. Loading snapshot...');
+        try {
+          // Attempt to load static snapshot from public/data/snapshot.json
+          // Note for Deployment: Ensure this file exists in your build
+          const response = await fetch('./data/snapshot.json');
+          if (response.ok) {
+            const snapshot = await response.json();
+
+            // Hydrate state with snapshot data
+            // We use Object.assign to merge carefully
+            Object.assign(globalState, {
+              ...snapshot,
+              lastUpdated: snapshot.lastUpdated ? new Date(snapshot.lastUpdated) : new Date(),
+              // Set a special AI status for static mode
+              aiStatus: {
+                isOnline: true,
+                lastChecked: new Date(),
+                lastError: null,
+                model: 'STATIC SNAPSHOT'
+              },
+              // Disable processing flags
+              isProcessing: false
+            });
+
+            // Ensure running models shows a placeholder
+            globalState.runningModels = [{
+              name: 'STATIC DATA:RO',
+              size: 0,
+              size_vram: 0
+            }];
+
+            console.log('Snapshot loaded successfully');
+            notify();
+            return; // EXIT early - do not start polling Ollama
+          }
+        } catch (e) {
+          console.warn('Failed to load static snapshot:', e);
+        }
+      }
+
       fetchRunningModels();
       fetchAiStatus();
     };
     init();
 
-    // Poll for running models
-    const poll = setInterval(() => {
-      fetchRunningModels();
-    }, 5000);
+    // Poll for running models (Only if NOT in static mode)
+    const isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    if (!isStatic) {
+      const poll = setInterval(() => {
+        fetchRunningModels();
+      }, 5000);
 
-    return () => {
-      listeners.delete(setState);
-      clearInterval(poll);
-      fetchRunningModels();
-    };
+      return () => {
+        listeners.delete(setState);
+        clearInterval(poll);
+        fetchRunningModels();
+      };
+    } else {
+      return () => {
+        listeners.delete(setState);
+      };
+    }
   }, []);
 
 
@@ -1120,8 +1195,12 @@ export function useSituationStore() {
     } catch (e) { }
   }, []);
 
-  const updateAiConfig = useCallback((config: Partial<AiConfig>) => {
+  const updateAiConfig = useCallback(async (config: Partial<AiConfig>) => {
     globalState = { ...globalState, aiConfig: { ...globalState.aiConfig, ...config } };
+    if (config.baseUrl) {
+      const { OllamaService } = await import('../ai/runtime/ollama');
+      OllamaService.setBaseUrl(config.baseUrl);
+    }
     notify();
     persist();
   }, []);
@@ -1257,6 +1336,12 @@ export function useSituationStore() {
     persist();
   }, []);
 
+  const setPredictionHistory = useCallback((history: PredictionHistoryItem[]) => {
+    globalState = { ...globalState, predictionHistory: history };
+    notify();
+    persist();
+  }, []);
+
   // Auto-retry mechanism for failed sections
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1308,6 +1393,8 @@ export function useSituationStore() {
     sectionFailures: globalState.sectionFailures,
     setSectionFailure,
     clearSectionFailure,
-    retryFailedSection
+    retryFailedSection,
+    setPredictionHistory,
+    isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   };
 }

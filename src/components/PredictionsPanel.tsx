@@ -15,27 +15,23 @@ interface PredictionHistoryItem {
     data: Predictions;
 }
 
-export function PredictionsPanel() {
-    const { narrative, signals, insights, aiConfig } = useSituationStore();
+export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void }) {
+    const { narrative, signals, insights, aiConfig, aiStatus, predictionHistory, setPredictionHistory } = useSituationStore();
     const [topic, setTopic] = useState('');
     const [viewingItem, setViewingItem] = useState<{ topic: string, date: string } | null>(null);
     const [predictions, setPredictions] = useState<Predictions | null>(null);
-    const [history, setHistory] = useState<PredictionHistoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        // Load history on mount
-        const loadHistory = async () => {
-            const saved = await StorageService.getGlobal('prediction_history');
-            if (saved && Array.isArray(saved)) {
-                setHistory(saved);
-            }
-        };
-        loadHistory();
-    }, []);
 
     const handlePredict = async () => {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost) {
+            onAIRequired();
+            return;
+        }
+
         if (!topic.trim() || isLoading) return;
+
         setIsLoading(true);
 
         const safeSignals = Array.isArray(signals) ? signals : [];
@@ -92,14 +88,11 @@ export function PredictionsPanel() {
 
             const dateStr = new Date().toLocaleDateString();
             const newItem = { topic, date: dateStr, data: newPrediction };
-            const newHistory = [newItem, ...history];
+            const newHistory = [newItem, ...predictionHistory];
 
             setPredictions(newPrediction);
             setViewingItem({ topic, date: dateStr });
-            setHistory(newHistory);
-
-            // Persist
-            await StorageService.saveGlobal('prediction_history', newHistory);
+            setPredictionHistory(newHistory);
 
         } catch (error) {
             console.error('Prediction error:', error);
@@ -110,10 +103,9 @@ export function PredictionsPanel() {
 
     const removeHistoryItem = async (e: React.MouseEvent, index: number) => {
         e.stopPropagation();
-        const itemToRemove = history[index];
-        const newHistory = history.filter((_, i) => i !== index);
-        setHistory(newHistory);
-        await StorageService.saveGlobal('prediction_history', newHistory);
+        const itemToRemove = predictionHistory[index];
+        const newHistory = predictionHistory.filter((_, i) => i !== index);
+        setPredictionHistory(newHistory);
 
         if (viewingItem && viewingItem.topic === itemToRemove.topic && viewingItem.date === itemToRemove.date) {
             setViewingItem(null);
@@ -191,11 +183,11 @@ export function PredictionsPanel() {
                 </div>
             )}
 
-            {history.length > 0 && (
+            {predictionHistory.length > 0 && (
                 <div className="mt-8 pt-6 border-t border-white/5">
                     <h4 className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-4">Previous Projections</h4>
                     <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-                        {history.map((h, i) => (
+                        {predictionHistory.map((h, i) => (
                             <div key={i} className="group relative flex-shrink-0">
                                 <button
                                     onClick={() => {

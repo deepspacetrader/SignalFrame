@@ -29,23 +29,47 @@ export interface UserRSSFeed {
 }
 
 // Optimize image URLs by adding size parameters for supported services
-function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: number = 128): string {
-    if (!url) return url;
-    
+function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: number = 128, baseUrl?: string): string {
+    if (!url) return '';
+
     try {
-        const urlObj = new URL(url);
-        
+        let absoluteUrl = url;
+
+        // Check if URL is relative (starts with / or doesn't have a protocol)
+        const isRelativeUrl = url.startsWith('/') || (!url.includes('://') && !url.startsWith('data:'));
+
+        if (isRelativeUrl) {
+            // Try to resolve relative URL against the base URL
+            if (baseUrl) {
+                try {
+                    const base = new URL(baseUrl);
+                    absoluteUrl = new URL(url, base.origin).toString();
+                } catch (e) {
+                    // baseUrl is also invalid, can't resolve
+                    console.warn('Could not resolve relative image URL:', url, 'with base:', baseUrl);
+                    return '';
+                }
+            } else {
+                // No base URL provided for a relative URL - can't use it
+                console.warn('Relative image URL without base URL:', url);
+                return '';
+            }
+        }
+
+        const urlObj = new URL(absoluteUrl);
+
         // BBC iChef (ichef.bbci.co.uk) - supports size parameters
         if (urlObj.hostname.includes('ichef.bbci.co.uk')) {
             // Replace /standard/240/ with /standard/128/ or add size parameter
             if (urlObj.pathname.includes('/standard/')) {
-                return urlObj.pathname.replace(/\/standard\/\d+\//, `/standard/${targetWidth}/`);
+                urlObj.pathname = urlObj.pathname.replace(/\/standard\/\d+\//, `/standard/${targetWidth}/`);
+                return urlObj.toString();
             }
             // Fallback: add size parameter
             urlObj.searchParams.set('resize', `${targetWidth}`);
             return urlObj.toString();
         }
-        
+
         // The Verge platform.theverge.com - supports WordPress-style parameters
         if (urlObj.hostname.includes('platform.theverge.com')) {
             urlObj.searchParams.set('w', targetWidth.toString());
@@ -53,12 +77,13 @@ function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: 
             urlObj.searchParams.set('crop', '1');
             return urlObj.toString();
         }
-        
+
         // Ars Technica (cdn.arstechnica.net) - WordPress style
         if (urlObj.hostname.includes('cdn.arstechnica.net')) {
             // Replace -1152x648 with -128x128 or add resize parameters
             if (urlObj.pathname.includes('-1152x648')) {
-                return urlObj.pathname.replace(/-\d+x\d+/, `-${targetWidth}x${targetHeight}`);
+                urlObj.pathname = urlObj.pathname.replace(/-\d+x\d+/, `-${targetWidth}x${targetHeight}`);
+                return urlObj.toString();
             }
             // Fallback: add WordPress parameters
             urlObj.searchParams.set('w', targetWidth.toString());
@@ -66,7 +91,7 @@ function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: 
             urlObj.searchParams.set('crop', '1');
             return urlObj.toString();
         }
-        
+
         // NY Times images (static01.nyt.com) - use multithumb
         if (urlObj.hostname.includes('static01.nyt.com')) {
             // NY Times supports multithumb parameters
@@ -76,7 +101,7 @@ function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: 
             urlObj.searchParams.set('auto', 'webp'); // format
             return urlObj.toString();
         }
-        
+
         // Guardian images (i.guim.co.uk) - supports width/height parameters
         if (urlObj.hostname.includes('i.guim.co.uk')) {
             urlObj.searchParams.set('width', targetWidth.toString());
@@ -84,32 +109,33 @@ function optimizeImageUrl(url: string, targetWidth: number = 128, targetHeight: 
             urlObj.searchParams.set('quality', '85');
             return urlObj.toString();
         }
-        
+
         // Al Jazeera images (cdn.aljazeera.net) - try common parameters
         if (urlObj.hostname.includes('aljazeera.net')) {
             urlObj.searchParams.set('w', targetWidth.toString());
             urlObj.searchParams.set('h', targetHeight.toString());
             return urlObj.toString();
         }
-        
+
         // CNBC/MarketWatch images - try common parameters
         if (urlObj.hostname.includes('cnbc.com') || urlObj.hostname.includes('marketwatch.com') || urlObj.hostname.includes('wsj.net')) {
             urlObj.searchParams.set('w', targetWidth.toString());
             urlObj.searchParams.set('h', targetHeight.toString());
             return urlObj.toString();
         }
-        
+
         // Economist images
         if (urlObj.hostname.includes('economist.com')) {
             urlObj.searchParams.set('w', targetWidth.toString());
             urlObj.searchParams.set('h', targetHeight.toString());
             return urlObj.toString();
         }
-        
+
         return urlObj.toString();
     } catch (e) {
-        // If URL parsing fails, return original
-        return url;
+        // If URL parsing fails, return empty string to hide broken image
+        console.warn('Failed to parse image URL:', url);
+        return '';
     }
 }
 
@@ -185,19 +211,29 @@ async function fetchRssFeed(feedUrl: string): Promise<any> {
         items: Array.from(items).map(item => {
             const description = item.querySelector('description')?.textContent || '';
 
-            // Extract image from media:content, enclosure, or description
+            // Extract image from media:content, media:thumbnail, enclosure, or description
             let picture = '';
             const mediaContent = item.getElementsByTagName('media:content')[0];
+            const mediaThumbnail = item.getElementsByTagName('media:thumbnail')[0];
             const enclosure = item.querySelector('enclosure');
+            const articleLink = item.querySelector('link')?.textContent || '';
 
             if (mediaContent && mediaContent.getAttribute('url')) {
-                picture = optimizeImageUrl(mediaContent.getAttribute('url') || '');
-            } else if (enclosure && enclosure.getAttribute('type')?.startsWith('image') && enclosure.getAttribute('url')) {
-                picture = optimizeImageUrl(enclosure.getAttribute('url') || '');
+                picture = optimizeImageUrl(mediaContent.getAttribute('url') || '', 128, 128, articleLink);
+            } else if (mediaThumbnail && mediaThumbnail.getAttribute('url')) {
+                picture = optimizeImageUrl(mediaThumbnail.getAttribute('url') || '', 128, 128, articleLink);
+            } else if (enclosure && enclosure.getAttribute('url')) {
+                // Check enclosure - some feeds don't specify type correctly
+                const encUrl = enclosure.getAttribute('url') || '';
+                const encType = enclosure.getAttribute('type') || '';
+                // Only use if it's an image type or if the URL looks like an image
+                if (encType.startsWith('image') || /\.(jpg|jpeg|png|gif|webp)$/i.test(encUrl)) {
+                    picture = optimizeImageUrl(encUrl, 128, 128, articleLink);
+                }
             } else if (description) {
-                const imgMatch = description.match(/<img[^>]+src="([^">]+)"/);
+                const imgMatch = description.match(/<img[^>]+src=["']([^"']+)["']/i);
                 if (imgMatch) {
-                    picture = optimizeImageUrl(imgMatch[1]);
+                    picture = optimizeImageUrl(imgMatch[1], 128, 128, articleLink);
                 }
             }
 
@@ -207,7 +243,7 @@ async function fetchRssFeed(feedUrl: string): Promise<any> {
                 description: description,
                 pubDate: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
                 guid: item.querySelector('guid')?.textContent || item.querySelector('link')?.textContent || '',
-                enclosure: { link: picture } // Mock RSS2JSON structure for consistency
+                enclosure: { url: picture } // Use .url for consistency with RSS2JSON format
             };
         })
     };
@@ -242,7 +278,7 @@ export function updateRSSConfig(config: Partial<typeof rssConfig>) {
 }
 
 export function updateDefaultFeed(url: string, enabled: boolean) {
-    rssConfig.defaultFeeds = rssConfig.defaultFeeds.map(feed => 
+    rssConfig.defaultFeeds = rssConfig.defaultFeeds.map(feed =>
         feed.url === url ? { ...feed, enabled } : feed
     );
 }
@@ -262,7 +298,7 @@ export function removeUserFeed(id: string) {
 }
 
 export function updateUserFeed(id: string, updates: Partial<UserRSSFeed>) {
-    rssConfig.userFeeds = rssConfig.userFeeds.map(feed => 
+    rssConfig.userFeeds = rssConfig.userFeeds.map(feed =>
         feed.id === id ? { ...feed, ...updates } : feed
     );
 }
@@ -279,7 +315,7 @@ function getActiveFeeds(): RSSFeedConfig[] {
             enabled: true,
             logo: undefined
         }));
-    
+
     return [...activeDefaultFeeds, ...activeUserFeeds];
 }
 
@@ -375,9 +411,19 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                     const pubDate = item.pubDate || new Date().toISOString();
                     const timestamp = pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate} UTC`;
 
-                    // Attempt to find and optimize image
-                    const rawPicture = item.enclosure?.link || item.thumbnail || '';
-                    const picture = optimizeImageUrl(rawPicture);
+                    // Attempt to find and optimize image from various sources
+                    // RSS2JSON uses enclosure.url (not .link), plus thumbnail field
+                    let rawPicture = item.enclosure?.url || item.thumbnail || '';
+
+                    // If no thumbnail found, try to extract from description HTML
+                    if (!rawPicture && item.description) {
+                        const imgMatch = item.description.match(/<img[^>]+src=["']([^"']+)["']/i);
+                        if (imgMatch) {
+                            rawPicture = imgMatch[1];
+                        }
+                    }
+
+                    const picture = optimizeImageUrl(rawPicture, 128, 128, item.link);
 
                     return {
                         id: item.guid || item.link,

@@ -9,8 +9,8 @@ import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
 import { SectionBadge } from './shared/SectionBadge'
 
 
-export function ForeignRelationsPanel() {
-    const { foreignRelations, addRelation, removeRelation, isProcessing, isProcessingSection, refreshSection, jsonError, clearJsonError, retryJsonSection, sectionGenerationTimes } = useSituationStore()
+export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => void }) {
+    const { foreignRelations, addRelation, removeRelation, isProcessing, isProcessingSection, refreshSection, aiStatus, jsonError, clearJsonError, retryJsonSection, sectionGenerationTimes } = useSituationStore()
     const [isAdding, setIsAdding] = useState(false)
     const [newRel, setNewRel] = useState({ countryA: '', countryB: '', topic: '' })
 
@@ -47,12 +47,23 @@ export function ForeignRelationsPanel() {
     const headerActions = useMemo(() => {
         const actions: JSX.Element[] = []
 
+
+
         if (foreignRelations.length > 0 && !isProcessing) {
             actions.push(
                 <SectionRegenerateButton
                     key="refresh"
                     label="Update"
-                    onClick={() => refreshSection('relations', true)}
+                    onClick={() => {
+                        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                        if (!isLocalhost) {
+                            onAIRequired();
+                            return;
+                        }
+
+                        // On localhost - proceed with refresh
+                        refreshSection('relations', true);
+                    }}
                     className="opacity-80 hover:opacity-100"
                 />
             )
@@ -61,7 +72,14 @@ export function ForeignRelationsPanel() {
         actions.push(
             <button
                 key="toggle"
-                onClick={() => setIsAdding(!isAdding)}
+                onClick={() => {
+                    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    if (!isLocalhost) {
+                        onAIRequired();
+                        return;
+                    }
+                    setIsAdding(!isAdding)
+                }}
                 className={`text-[0.65rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg border transition-all duration-300 ${isAdding
                     ? 'bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/40'
                     : 'bg-white/5 border-white/10 text-white hover:bg-accent-primary hover:border-accent-primary'
@@ -195,7 +213,7 @@ export function ForeignRelationsPanel() {
                                 <div className="flex flex-col gap-0.5">
                                     <div className="flex items-center gap-1.5">
                                         <span className="text-sm font-bold text-white tracking-tight">{rel.countryA}</span>
-                                        <span className="text-text-secondary text-[10px] opacity-40">VS</span>
+                                        <span className="text-text-secondary text-[10px] opacity-40">&</span>
                                         <span className="text-sm font-bold text-white tracking-tight">{rel.countryB}</span>
                                     </div>
                                     <p className="text-[10px] font-mono font-bold text-purple-400 uppercase tracking-wider opacity-80">{rel.topic}</p>
@@ -232,7 +250,14 @@ export function ForeignRelationsPanel() {
                         </div>
 
                         <button
-                            onClick={() => removeRelation(rel.id)}
+                            onClick={() => {
+                                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                                if (!isLocalhost) {
+                                    onAIRequired();
+                                    return;
+                                }
+                                removeRelation(rel.id)
+                            }}
                             className="absolute -top-1 -right-1 w-5 h-5 bg-red-500/80 hover:bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 border border-white/20"
                             title="Remove Tracker"
                         >
