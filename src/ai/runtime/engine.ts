@@ -168,7 +168,7 @@ export async function processSituation(
 
     try {
       onProgress?.(`Generating ${CATEGORY_MAP.narrative}...`);
-      const narrativePrompt = generateNarrativePrompt(context);
+      const narrativePrompt = generateNarrativePrompt(context, aiConfig);
 
       let narrative = '';
       let thinkingTrace = '';
@@ -207,16 +207,16 @@ export async function processSituation(
 
       onSectionComplete?.('signals');
       onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
-      const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals), 'json', options);
+      const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals, aiConfig), 'json', options);
 
       onSectionComplete?.('insights');
       onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
-      const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText), 'json', options);
+      const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText, aiConfig), 'json', options);
 
       onSectionComplete?.('map');
       onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
       const historicalContext = await getHistoricalRelationsContext(foreignRelations);
-      const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext), 'json', options);
+      const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext, aiConfig), 'json', options);
 
       onSectionComplete?.('relations');
 
@@ -306,11 +306,18 @@ export async function processBigPicture(
     }).sort((a: any, b: any) => a.date.localeCompare(b.date));
 
     // 2. Generate Grand Narrative
+    // Get custom sentiment guidelines if profile is specified
+    let sentimentGuidance = '';
+    if (aiConfig.sentimentProfile) {
+      const profile = getSentimentProfile(aiConfig.sentimentProfile);
+      sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing historical events and their trajectory, interpret them through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the significance, tone, and trajectory of events in your Grand Narrative.`;
+    }
+
     const narrativePrompt = `
 Based on the following historical data of daily briefings, write a "Grand Narrative" that explains the overall trajectory of world events.
 Focus on the connections between days, the escalation of tensions, or the resolution of conflicts.
 This should be a high-level strategic overview, not a day-by-day recount.
-Identify the "Meta-Narrative" - what is the big story happening underneath the noise?
+Identify the "Meta-Narrative" - what is the big story happening underneath the noise?${sentimentGuidance}
 
 HISTORY:
 ${context}
@@ -381,7 +388,7 @@ function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
   return selected;
 }
 
-function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateStr: string) {
+function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateStr: string, aiConfig?: AiConfig) {
   const feedIndex = feedsSubset.map((f, idx) => ({
     feedId: String(idx),
     source: f.source,
@@ -391,6 +398,13 @@ function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateSt
     category: f.category,
     content: f.content
   }));
+
+  // Get custom sentiment guidelines if profile is specified
+  let customGuidelines = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    customGuidelines = `\n\nSENTIMENT GUIDELINES:\n${generateCustomSentimentGuidelines(profile)}\n\nWhen analyzing the signal and determining sentiment, apply these guidelines consistently.`;
+  }
 
   return `You are an elite intelligence analyst.
 Generate a structured Deep Dive for the provided Signal.
@@ -406,7 +420,7 @@ SIGNAL:
 ${JSON.stringify(signal)}
 
 FEED INDEX (for citations):
-${JSON.stringify(feedIndex)}
+${JSON.stringify(feedIndex)}${customGuidelines}
 
 Return EXACTLY one JSON object with this shape:
 {
@@ -494,7 +508,7 @@ export async function generateDeepDive(
   aiConfig: AiConfig
 ): Promise<DeepDiveData> {
   const feedsSubset = selectRelevantFeeds(signal, feeds);
-  const prompt = generateDeepDivePrompt(signal, feedsSubset, dateStr);
+  const prompt = generateDeepDivePrompt(signal, feedsSubset, dateStr, aiConfig);
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
   const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
 
@@ -554,10 +568,17 @@ function generateContext(feeds: RawSignal[]) {
     .join('\n\n');
 }
 
-function generateNarrativePrompt(context: string) {
+function generateNarrativePrompt(context: string, aiConfig?: AiConfig) {
+  // Get custom sentiment guidelines if profile is specified
+  let sentimentGuidance = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing events, interpret them through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the significance and tone of events in your briefing.`;
+  }
+
   return `Analyze these news feeds and provide a short but comprehensive Situation Briefing. 
 Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing.
-Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any additional text and especially do not include any em dashes or other additional formatting. Just text.
+Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any additional text and especially do not include any em dashes or other additional formatting. No markdown formatting either. Separate each event or theme with a newline.${sentimentGuidance}
 
 Feeds:
 ${context}`;
@@ -653,9 +674,16 @@ ${context}`;
   return prompt;
 }
 
-function generateInsightsPrompt(context: string, feedIndex: any[], signalsContext: string = '', parsedSignals: any[] = []) {
+function generateInsightsPrompt(context: string, feedIndex: any[], signalsContext: string = '', parsedSignals: any[] = [], aiConfig?: AiConfig) {
   const signalsSummary = formatSignalsContextForInsights(signalsContext);
   const signalsWithIds = parsedSignals.map(s => `- ${s.text} [ID: ${s.id || 'unknown'}]`).join('\n');
+
+  // Get custom sentiment guidelines if profile is specified
+  let customGuidelines = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    customGuidelines = generateCustomSentimentGuidelines(profile);
+  }
 
   return `You are the lead analyst in an intelligence fusion cell. Derive non-obvious, second-order insights grounded in the provided reporting and signals.
 
@@ -695,10 +723,17 @@ RULES:
 - If no credible insight exists, return [] exactly.
 
 SENTIMENT GUIDELINES:
-${SENTIMENT_GUIDELINES}`;
+${customGuidelines || SENTIMENT_GUIDELINES}`;
 }
 
-function generateMapPointsPrompt(context: string, signalsContext: string = '') {
+function generateMapPointsPrompt(context: string, signalsContext: string = '', aiConfig?: AiConfig) {
+  // Get custom sentiment guidelines if profile is specified
+  let customGuidelines = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    customGuidelines = generateCustomSentimentGuidelines(profile);
+  }
+
   return `Generate geographical map coordinates for the Signals listed below.
 CRITICAL: You MUST attempt to generate a map point for EVERY Signal provided.
 If a specific city/location is not mentioned, deduce the most relevant country or region (e.g. use the capital city).
@@ -732,7 +767,7 @@ SIGNALS TO PLOT:
 ${signalsContext}
 
 SENTIMENT GUIDELINES:
-${SENTIMENT_GUIDELINES}
+${customGuidelines || SENTIMENT_GUIDELINES}
 
 Feeds (for reference/coordinates):
 ${context}`;
@@ -745,7 +780,8 @@ function generateRelationsPrompt(
   signals: any[] = [],
   insights: any[] = [],
   bigPicture: any = null,
-  historicalContext: string = ''
+  historicalContext: string = '',
+  aiConfig?: AiConfig
 ) {
   let deepContext = `### INTELLIGENCE CONTEXT\n`;
   if (narrative) deepContext += `CURRENT SITUATION NARRATIVE:\n${narrative}\n\n`;
@@ -753,6 +789,13 @@ function generateRelationsPrompt(
   if (insights && insights.length) deepContext += `HIDDEN INSIGHTS:\n${insights.map(i => `- ${i.text}`).join('\n')}\n\n`;
   if (bigPicture) deepContext += `THE BIG PICTURE (STRATEGIC OVERVIEW):\n${bigPicture.summary}\n\n`;
   if (historicalContext) deepContext += `HISTORICAL CONTEXT (Previous relevant data):\n${historicalContext}\n\n`;
+
+  // Get custom sentiment guidelines if profile is specified
+  let customGuidelines = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    customGuidelines = generateCustomSentimentGuidelines(profile);
+  }
 
   return `Act as a geopolitical analyst. Update status/sentiment for these geopolitical trackers using the provided Intelligence Context, News Feeds, and Historical Context.
 CRITICAL: You MUST return a JSON object for EVERY SINGLE TRACKER in the EXACT ORDER they are listed below.
@@ -768,7 +811,7 @@ If the provided data does not contain specific information about a pair, you MUS
 Return JSON array: [{"id": "...", "countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]
 
 SENTIMENT GUIDELINES (Use these EXACT strings for the sentiment field):
-${SENTIMENT_GUIDELINES}
+${customGuidelines || SENTIMENT_GUIDELINES}
 
 ${deepContext}
 
@@ -1460,7 +1503,7 @@ export async function processSingleSection(
 
     if (sectionId === 'narrative') {
       let narrative = '';
-      const prompt = generateNarrativePrompt(context);
+      const prompt = generateNarrativePrompt(context, aiConfig);
       if (onStream) {
         await OllamaService.streamGenerate(aiConfig.model, prompt, (c) => { narrative += c; onStream(narrative); }, opt);
       } else {
@@ -1478,8 +1521,8 @@ export async function processSingleSection(
         const recentSignals = await getRecentSignalsForNovelty(7);
         return generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig);
       },
-      insights: generateInsightsPrompt(context, feedIndex, extraContext.signalsText || ''),
-      map: generateMapPointsPrompt(context, extraContext.signalsText || ''),
+      insights: generateInsightsPrompt(context, feedIndex, extraContext.signalsText || '', extraContext.signals || [], aiConfig),
+      map: generateMapPointsPrompt(context, extraContext.signalsText || '', aiConfig),
       relations: async () => {
         const historicalContext = await getHistoricalRelationsContext(foreignRelations);
         return generateRelationsPrompt(
@@ -1489,7 +1532,8 @@ export async function processSingleSection(
           extraContext.signals || [],
           extraContext.insights || [],
           extraContext.bigPicture || null,
-          historicalContext
+          historicalContext,
+          aiConfig
         );
       }
     };

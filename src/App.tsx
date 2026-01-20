@@ -89,7 +89,7 @@ export default function App() {
                   Deep Intelligence Node Active
                 </span>
               </div>
-              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.3.0</span></h1>
+              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.4.0</span></h1>
             </div>
 
             <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>

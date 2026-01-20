@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Modal } from './shared/Modal'
 import { DeepDiveData, Sentiment } from '../state/useSituationStore'
 import { SectionBadge } from './shared/SectionBadge'
@@ -7,6 +8,7 @@ interface DeepDiveModalProps {
     onClose: () => void;
     data: DeepDiveData | null;
     isGenerating?: boolean;
+    onAIRequired?: () => void;
 }
 
 const getSentimentColor = (sentiment: string) => {
@@ -23,7 +25,17 @@ const getSentimentColor = (sentiment: string) => {
     }
 }
 
-export function DeepDiveModal({ isOpen, onClose, data, isGenerating }: DeepDiveModalProps) {
+export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired }: DeepDiveModalProps) {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    // If in demo mode and no data is available, show demo modal instead
+    useEffect(() => {
+        if (isOpen && !isLocalhost && !data && !isGenerating && onAIRequired) {
+            onClose();
+            onAIRequired();
+        }
+    }, [isOpen, isLocalhost, data, isGenerating, onAIRequired, onClose]);
+
     if (!isOpen) return null;
 
     return (
@@ -50,6 +62,17 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating }: DeepDiveM
                     ) : !data ? (
                         <div className="py-12 text-center">
                             <p className="text-text-secondary italic">No data available for this deep dive.</p>
+                            {!isLocalhost && onAIRequired && (
+                                <button
+                                    onClick={() => {
+                                        onClose();
+                                        onAIRequired();
+                                    }}
+                                    className="mt-4 px-4 py-2 bg-accent-primary/20 hover:bg-accent-primary/40 text-accent-primary border border-accent-primary/30 rounded-lg text-sm font-bold uppercase tracking-widest transition-all"
+                                >
+                                    View Demo Mode Info
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <>

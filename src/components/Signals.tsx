@@ -609,6 +609,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
         onClose={closeDeepDive}
         data={activeDeepDiveSignalId ? deepDiveBySignalId[activeDeepDiveSignalId] : null}
         isGenerating={isGeneratingDeepDive}
+        onAIRequired={onAIRequired}
       />
     </SectionCard>
   )

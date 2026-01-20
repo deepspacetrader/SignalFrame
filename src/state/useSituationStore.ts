@@ -484,6 +484,8 @@ export function useSituationStore() {
             Object.assign(globalState, {
               ...snapshot,
               lastUpdated: snapshot.lastUpdated ? new Date(snapshot.lastUpdated) : new Date(),
+              // Ensure deepDiveBySignalId is loaded from snapshot if available
+              deepDiveBySignalId: snapshot.deepDiveBySignalId || {},
               // Set a special AI status for static mode
               aiStatus: {
                 isOnline: true,

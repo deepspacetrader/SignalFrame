@@ -596,21 +596,49 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
                         {/* Profile Selection */}
                         <div>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                {SENTIMENT_PROFILES.map((profile) => (
+                            {(() => {
+                                // Order: Far Left, Progressive, Conservative, Far Right
+                                const topRowProfiles = [
+                                    SENTIMENT_PROFILES.find(p => p.id === 'far-left'),
+                                    SENTIMENT_PROFILES.find(p => p.id === 'progressive'),
+                                    SENTIMENT_PROFILES.find(p => p.id === 'conservative'),
+                                    SENTIMENT_PROFILES.find(p => p.id === 'far-right')
+                                ].filter(Boolean) as typeof SENTIMENT_PROFILES;
+
+                                const balancedProfile = SENTIMENT_PROFILES.find(p => p.id === 'balanced');
+
+                                const ProfileButton = ({ profile }: { profile: typeof SENTIMENT_PROFILES[0] }) => (
                                     <button
                                         key={profile.id}
                                         onClick={() => handleSentimentProfileChange(profile.id)}
-                                        className={`p-4 rounded-lg border transition-all text-left ${(tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
+                                        className={`p-4 rounded-lg border transition-all text-left h-full w-full ${(tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
                                             ? 'bg-accent-primary/20 border-accent-primary text-text-primary'
                                             : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
                                             }`}
                                     >
-                                        <div className="font-medium text-sm mb-1">{profile.name}</div>
-                                        <div className="text-xs text-text-tertiary">{profile.description}</div>
+                                        <div className="font-medium text-sm mb-1 text-center">{profile.name}</div>
+                                        <div className="text-xxs text-center text-text-tertiary line-clamp-2">{profile.description}</div>
                                     </button>
-                                ))}
-                            </div>
+                                );
+
+                                return (
+                                    <div className="space-y-3">
+                                        {/* Row 1: The Spectrum Ends */}
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                            {topRowProfiles.map(p => <ProfileButton key={p.id} profile={p} />)}
+                                        </div>
+
+                                        {/* Row 2: Balanced (Centered) */}
+                                        {balancedProfile && (
+                                            <div className="flex justify-center">
+                                                <div className="w-full md:w-1/2">
+                                                    <ProfileButton profile={balancedProfile} />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })()}
                             {window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && (
                                 <div className="mt-4 p-4 bg-accent-primary/10 border border-accent-primary/20 rounded-xl">
                                     <p className="text-xs text-accent-primary leading-relaxed">
@@ -740,6 +768,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                                 foreignRelations: snapshot.foreignRelations,
                                                 bigPicture: snapshot.bigPicture,
                                                 predictionHistory: snapshot.predictionHistory,
+                                                deepDiveBySignalId: snapshot.deepDiveBySignalId,
                                                 globalState: snapshot.aiStatus // Optional metadata
                                             };
 
