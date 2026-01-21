@@ -42,12 +42,12 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} modalId="deep-dive-modal">
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-0 max-w-4xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl flex flex-col md:flex-row">
+            <div className="bg-bg-card border border-white/10 rounded-2xl p-0 max-w-6xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl flex flex-col">
                 {/* Header Section */}
-                <div className="p-4 sm:p-6 lg:p-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent relative md:w-1/2">
+                <div className="p-4 sm:p-6 lg:p-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent relative pt-16 sm:pt-20 lg:pt-24">
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-text-tertiary hover:text-white transition-colors rounded-full hover:bg-white/5"
+                        className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-text-tertiary hover:text-white transition-colors rounded-full hover:bg-white/5 z-10"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -57,7 +57,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
                     {/* Regenerate button - only show when data exists and not generating */}
                     {data && !isGenerating && regenerateDeepDive && (
-                        <div className="absolute top-4 right-12 sm:top-6 sm:right-16">
+                        <div className="absolute top-4 right-12 sm:top-6 sm:right-16 z-10">
                             <SectionRegenerateButton
                                 onClick={() => {
                                     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -95,19 +95,19 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                         </div>
                     ) : (
                         <>
-                            <div className="flex items-center gap-3 mb-4">
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
                                 <SectionBadge tone="accent">Deep Dive Analysis</SectionBadge>
                                 {data.header.category && (
-                                    <span className="px-2 py-1 rounded bg-slate-500/20 text-slate-300 text-[0.65rem] uppercase tracking-widest font-bold">
+                                    <span className="px-2 py-1 rounded bg-slate-500/20 text-slate-300 text-[0.6rem] sm:text-[0.65rem] uppercase tracking-widest font-bold">
                                         {data.header.category}
                                     </span>
                                 )}
-                                <span className="text-[0.6rem] text-text-tertiary uppercase tracking-widest">
+                                <span className="text-[0.55rem] sm:text-[0.6rem] text-text-tertiary uppercase tracking-widest">
                                     Generated: {new Date(data.generatedAt).toLocaleString()}
                                 </span>
                             </div>
 
-                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary mb-4 leading-tight tracking-tight">
+                            <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-text-primary mb-4 leading-tight tracking-tight">
                                 {data.header.title}
                             </h2>
 
@@ -137,7 +137,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                 {/* Content Section - Scrollable */}
                 {data && !isGenerating && (
                     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
-                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 xl:gap-10">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10">
 
                             {/* Left Column: Summary & 5Ws */}
                             <div className="space-y-8">
@@ -247,12 +247,12 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         <div className="space-y-4">
                                             {data.counterpoints.map((cp, idx) => (
                                                 <div key={idx} className="bg-orange-500/5 border border-orange-500/10 rounded-xl p-4">
-                                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                                        <div className="space-y-2">
+                                                    <div className="flex flex-col sm:flex-row gap-4">
+                                                        <div className="flex-1 space-y-2">
                                                             <p className="text-[0.6rem] uppercase tracking-widest text-red-400 font-bold mb-1">Perspective A</p>
                                                             <p className="text-xs text-text-primary font-medium leading-snug">{cp.claimA}</p>
                                                         </div>
-                                                        <div className="space-y-2">
+                                                        <div className="flex-1 space-y-2">
                                                             <p className="text-[0.6rem] uppercase tracking-widest text-blue-400 font-bold mb-1">Perspective B</p>
                                                             <p className="text-xs text-text-primary font-medium leading-snug">{cp.claimB}</p>
                                                         </div>

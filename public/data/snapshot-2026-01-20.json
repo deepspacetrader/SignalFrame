@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-20T19:20:21.114Z",
+  "lastUpdated": "2026-01-21T20:24:07.767Z",
   "narrative": "Humanitarian Crises and Disasters: Multiple severe disasters (train crash in Spain, Chile wildfires, Karachi fire) and a major terrorist attack (Kabul restaurant) are causing significant loss of life and displacement. Somalia faces a severe malnutrition crisis. These events are assessed as extremely negative or very negative due to the scale of suffering.\n\nGeopolitical Instability and Conflict: Escalating tensions include Ukraine (Russian strikes, Zelensky's warnings), Afghanistan (security concerns post-IS attack), Syria (Kurdish forces pushed out, government gains control), and the persistent Israel-Palestine conflict (UNRWA building demolitions). Trump's rhetoric regarding Greenland and potential tariffs adds another layer of international friction. This theme is assessed as very negative or extremely negative due to the serious conflicts, security fears, and instability.\n\nClimate Change and Environmental Failures: Wildfires in Chile and Karachi highlight environmental disasters linked to climate change, while the Karachi fire also exposed failures in urban governance and rescue capacity. These incidents are assessed as extremely negative or very negative due to the devastating impact on populations and infrastructure.\n\nEconomic Pressures and Market Volatility: Market anxiety is rising due to Trump's tariff threats impacting trade (Sell America trade, European concerns). Bond yields in Japan are at record highs, signaling economic stress. Natural gas prices have surged due to cold weather. These economic developments are assessed as negative due to the potential for widespread financial disruption and hardship.\n\nGovernance Failures and Emerging Concerns: Issues include questions surrounding Uganda's election process, concerns over political interference in judiciary matters (Bobi Wine case), failures in Australia's response to the Bondi shooting, and criticism of US foreign policy by religious leaders. Debates around digital citizenship (Bangladesh) and failures of global justice institutions are also emerging. These developments are assessed as somewhat-negative or neutral, reflecting concerns about stability, accountability, and systemic issues without full-blown crisis.",
   "signals": [
     {
@@ -342,6 +342,738 @@
       "signalId": "sig_abc123"
     }
   ],
+  "feeds": [
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/europe/davos-trump-europe.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 16:08:53 UTC",
+      "content": "Trump Heckles Europe Before Heading to Davos. As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak.",
+      "category": "World",
+      "title": "Trump Heckles Europe Before Heading to Davos",
+      "link": "https://www.nytimes.com/2026/01/20/world/europe/davos-trump-europe.html",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711728",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 16:04:00 UTC",
+      "content": "The ‘Sell America’ trade is making a comeback on Tuesday. Here’s what investors need to know.. Talk of the “Sell America” trade is making a big comeback on Tuesday as President Donald Trump’s latest tariff threats against European allies raise the possibility of a rerun of last April’s violent market spasms.",
+      "category": "Business",
+      "title": "The ‘Sell America’ trade is making a comeback on Tuesday. Here’s what investors need to know.",
+      "link": "https://www.marketwatch.com/story/the-sell-america-trade-is-making-a-comeback-but-investors-are-selling-most-everything-else-too-a2f6da9a?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711709",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 16:01:00 UTC",
+      "content": "Why Alphabet and Meta investors shouldn’t sweat ChatGPT’s ad launch — for now. While ChatGPT’s entry into the ad market marks a pivotal moment for the company, analysts argue Google and Meta face little immediate threat to their advertising empires.",
+      "category": "Business",
+      "title": "Why Alphabet and Meta investors shouldn’t sweat ChatGPT’s ad launch — for now",
+      "link": "https://www.marketwatch.com/story/why-alphabet-and-meta-investors-shouldnt-sweat-chatgpts-ad-launch-for-now-e7c7888e?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3083788",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 16:00:57 UTC",
+      "content": "Humans&amp;, a ‘human-centric’ AI startup founded by Anthropic, xAI, Google alums, raised $480M seed round. Humans&, a startup that believes AI should empower people, not replace them, has reportedly raised a $480 million seed round at a $4.48 billion valuation.",
+      "category": "Technology",
+      "title": "Humans&amp;, a ‘human-centric’ AI startup founded by Anthropic, xAI, Google alums, raised $480M seed round",
+      "link": "https://techcrunch.com/2026/01/20/humans-a-human-centric-ai-startup-founded-by-anthropic-xai-google-alums-raised-480m-seed-round/",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711060",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 16:00:00 UTC",
+      "content": "My sister is buying our parents’ $3 million house, but wants to deduct $100K for renovations. Who’s right?. “If she didn’t want the home, it would have been sold at fair market value.”",
+      "category": "Business",
+      "title": "My sister is buying our parents’ $3 million house, but wants to deduct $100K for renovations. Who’s right?",
+      "link": "https://www.marketwatch.com/story/my-sister-is-buying-our-parents-3-million-house-but-wants-to-deduct-100k-for-renovations-whos-right-cd0e8129?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3078174",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 16:00:00 UTC",
+      "content": "Eat App wants a bite of India’s restaurant reservation business with an aquistion and Swiggy partnership. Eat App is making India its central focus to market its reservation and dine-in growth suite",
+      "category": "Technology",
+      "title": "Eat App wants a bite of India’s restaurant reservation business with an aquistion and Swiggy partnership",
+      "link": "https://techcrunch.com/2026/01/20/eat-app-wants-a-bite-of-indias-restaurant-reservation-business-with-an-aquistion-and-swiggy-partnership/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/europe/spain-train-crash-track-investigation.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 15:57:40 UTC",
+      "content": "As Spain Mourns Train Crash Victims, Investigators Focus on Track. Officials on Tuesday were struggling to identify bodies from the crash near the southern city of Córdoba, which killed at least 41 people.",
+      "category": "World",
+      "title": "As Spain Mourns Train Crash Victims, Investigators Focus on Track",
+      "link": "https://www.nytimes.com/2026/01/20/world/europe/spain-train-crash-track-investigation.html",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3083766",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 15:55:45 UTC",
+      "content": "SpaceX didn’t properly inspect crane before collapse at Starbase, OSHA says. The federal safety agency has hit SpaceX with a $115,850 fine after finding seven \"serious\" violations during its investigation.",
+      "category": "Technology",
+      "title": "SpaceX didn’t properly inspect crane before collapse at Starbase, OSHA says",
+      "link": "https://techcrunch.com/2026/01/20/spacex-didnt-properly-inspect-crane-before-collapse-at-starbase-osha-says/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768923821",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 15:49:17 +0000 UTC",
+      "content": "Al Jazeera sees devastation from southern Chile wildfires. Wildfires in Chile have wiped out entire towns, killing at least 20 people.",
+      "category": "World",
+      "title": "Al Jazeera sees devastation from southern Chile wildfires",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/al-jazeera-sees-devastation-from-southern-chile-wildfires?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004712241",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 15:40:00 UTC",
+      "content": "I’m moving cross country and want to fly my dog on a private jet. Is this a waste of money?. Driving is the most affordable and gives you more control of the situation. But flying is in your price range and cute.",
+      "category": "Business",
+      "title": "I’m moving cross country and want to fly my dog on a private jet. Is this a waste of money?",
+      "link": "https://www.marketwatch.com/story/im-moving-cross-country-and-want-to-fly-my-dog-on-a-private-jet-is-this-a-waste-of-money-990ea8bd?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864339",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 15:35:00 UTC",
+      "content": "Corsair’s wired Hall effect gaming keyboard is cheaper than ever. Hall effect switches are the most customizable and fastest you can currently get in a gaming keyboard. As such, they don’t usually come cheap. However, they’re fairly affordable to upgrade to today thanks to a deal on Corsair’s Vanguard Pro 96, which is cheaper than ever at Amazon and Best Buy, selling for $159.99 (originally […]",
+      "category": "Technology",
+      "title": "Corsair’s wired Hall effect gaming keyboard is cheaper than ever",
+      "link": "https://www.theverge.com/gadgets/864339/corsair-hall-effect-gaming-keyboard-resident-evil-requiem-surface-laptop-deal-sale",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711750",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 15:31:00 UTC",
+      "content": "Japan’s long-bond yields surge to record highs. Why it may be a problem beyond Tokyo.. The problems in Japan may expand elsewhere.",
+      "category": "Business",
+      "title": "Japan’s long-bond yields surge to record highs. Why it may be a problem beyond Tokyo.",
+      "link": "https://www.marketwatch.com/story/japans-long-bond-yields-surge-to-record-highs-why-it-may-be-a-problem-beyond-tokyo-e36cc46f?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004707149",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 15:30:00 UTC",
+      "content": "I manage an $80K trust for a 15-year-old. How do I do deal with interfering relatives?. “I don’t want to step on any toes.”",
+      "category": "Business",
+      "title": "I manage an $80K trust for a 15-year-old. How do I do deal with interfering relatives?",
+      "link": "https://www.marketwatch.com/story/i-dont-want-to-step-on-any-toes-i-manage-a-80k-trust-for-a-15-year-old-relative-how-do-i-deal-with-nosy-relatives-9f2d4754?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711325",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 15:30:00 UTC",
+      "content": "‘People are often unreasonable when money is involved’: My husband, 62, gave me a 5-year life estate. Would I have to pay for a new roof?. “He has included a provision stating that I would be responsible for ‘maintenance and expenses’ during my occupancy.”",
+      "category": "Business",
+      "title": "‘People are often unreasonable when money is involved’: My husband, 62, gave me a 5-year life estate. Would I have to pay for a new roof?",
+      "link": "https://www.marketwatch.com/story/people-are-often-unreasonable-when-money-is-involved-my-husband-62-gave-me-a-5-year-life-estate-would-i-have-to-pay-for-a-new-roof-db4e0efb?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c20ge5qwdl2o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 15:11:35 UTC",
+      "content": "Australia parliament passes gun reform and anti-hate bills after Bondi shooting. The reforms are in response to Australia's worst mass shooting in decades at a Jewish festival in December.",
+      "category": "World",
+      "title": "Australia parliament passes gun reform and anti-hate bills after Bondi shooting",
+      "link": "https://www.bbc.com/news/articles/c20ge5qwdl2o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/6b8d/live/d24ef340-f59f-11f0-8230-d15972f6fa20.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768906757",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 15:07:29 +0000 UTC",
+      "content": "Gul Plaza fire: How a deadly inferno exposed Karachi’s safety failures. Karachi’s deadliest fire in years raises urgent questions about building safety, rescue capacity and urban governance.",
+      "category": "World",
+      "title": "Gul Plaza fire: How a deadly inferno exposed Karachi’s safety failures",
+      "link": "https://www.aljazeera.com/news/2026/1/20/gul-plaza-fire-how-a-deadly-inferno-exposed-karachis-safety-failures?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/asia/isis-kabul-bomb-china.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 15:06:55 UTC",
+      "content": "Islamic State Claims Deadly Attack on Chinese Restaurant in Afghanistan. A bombing that killed seven people and injured a dozen more at a noodle restaurant in a busy area of Kabul is likely to heighten China’s growing security concerns in Afghanistan.",
+      "category": "World",
+      "title": "Islamic State Claims Deadly Attack on Chinese Restaurant in Afghanistan",
+      "link": "https://www.nytimes.com/2026/01/20/world/asia/isis-kabul-bomb-china.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768921456",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 15:05:45 +0000 UTC",
+      "content": "Key moments from Trump’s first year back as US president. US President Donald Trump has repeatedly divided opinion at home and faced fierce criticism from overseas.",
+      "category": "World",
+      "title": "Key moments from Trump’s first year back as US president",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/key-moments-from-trumps-first-year-back-as-us-president?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711390",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 15:05:00 UTC",
+      "content": "Natural-gas prices soar as temperatures drop. It could be the toughest test for the markets in a decade.. Natural-gas futures skyrocketed on Tuesday in anticipation of a bitter cold stretch in the Northeastern part in the U.S.",
+      "category": "Business",
+      "title": "Natural-gas prices soar as temperatures drop. It could be the toughest test for the markets in a decade.",
+      "link": "https://www.marketwatch.com/story/natural-gas-futures-are-jumping-20-it-will-be-toughest-test-in-a-decade-one-analyst-says-48d023bf?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768917229",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 15:02:49 +0000 UTC",
+      "content": "Sharp rise in malnutrition cases, preventable diseases in Somalia: MSF. Aid workers report growing numbers of severely malnourished or seriously ill children at displacement camps.",
+      "category": "World",
+      "title": "Sharp rise in malnutrition cases, preventable diseases in Somalia: MSF",
+      "link": "https://www.aljazeera.com/news/2026/1/20/sharp-rise-in-malnutrition-cases-preventable-diseases-in-somalia-msf?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864390",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 15:01:40 UTC",
+      "content": "Amazon’s CEO says tariffs are starting to ‘creep into’ pricing. Amazon CEO Andy Jassy says consumers are starting to see the impact of tariffs less than a year after President Donald Trump implemented sweeping fees on a range of imported goods. During an interview with CNBC, Jassy says the inventory Amazon and third-party sellers prebought in early 2025 to keep prices low has \"run out,\" […]",
+      "category": "Technology",
+      "title": "Amazon’s CEO says tariffs are starting to ‘creep into’ pricing",
+      "link": "https://www.theverge.com/news/864390/amazon-ceo-andy-jassy-tariffs-creep-into-pricing",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/science/infinite-pancake-math-puzzle.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-20 15:00:27 UTC",
+      "content": "How to Cut an Infinitely Large Pancake into as Many Pieces as Possible. A team of mathematicians seeks to cut an infinitely large pancake into as many pieces as possible, in a new take on an old puzzle.",
+      "category": "Science",
+      "title": "How to Cut an Infinitely Large Pancake into as Many Pieces as Possible",
+      "link": "https://www.nytimes.com/2026/01/20/science/infinite-pancake-math-puzzle.html",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/space/2026/01/the-first-commercial-space-station-haven-1-is-now-undergoing-assembly-for-launch/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-20 15:00:04 UTC",
+      "content": "The first commercial space station, Haven-1, is now undergoing assembly for launch. \"We have a very strong incentive to send a crew as quickly as we can safely do so.\"",
+      "category": "Technology",
+      "title": "The first commercial space station, Haven-1, is now undergoing assembly for launch",
+      "link": "https://arstechnica.com/space/2026/01/the-first-commercial-space-station-haven-1-is-now-undergoing-assembly-for-launch/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/Vast_Haven-1_Integration_Phase-1_ISO8_Cleanroom_Spring_2026-01-15-DSC_1375-3-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "WP-MKTW-0004708767",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 15:00:00 UTC",
+      "content": "I started working as a dishwasher at age 13. Social Security refuses to acknowledge this. Am I being cheated?. “I am 69, and started collecting Social Security when I was 66½.”",
+      "category": "Business",
+      "title": "I started working as a dishwasher at age 13. Social Security refuses to acknowledge this. Am I being cheated?",
+      "link": "https://www.marketwatch.com/story/i-started-working-as-a-dishwasher-at-13-social-security-refuses-to-acknowledge-this-am-i-being-cheated-164d6435?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3083735",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 15:00:00 UTC",
+      "content": "Netflix is rolling out a live voting feature. Netflix said it the feature will be available globally and it will tally votes in real-time",
+      "category": "Technology",
+      "title": "Netflix is rolling out a live voting feature",
+      "link": "https://techcrunch.com/2026/01/20/netflix-is-rolling-out-a-live-voting-feature/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768892352",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 14:54:42 +0000 UTC",
+      "content": "Uganda’s Bobi Wine: ‘We have evidence’ of election fraud in Museveni win. In exclusive interview from hiding, main opposition presidential candidate blasts gov&#039;t&#039;s &#039;crackdown to silence&#039; critics.",
+      "category": "World",
+      "title": "Uganda’s Bobi Wine: ‘We have evidence’ of election fraud in Museveni win",
+      "link": "https://www.aljazeera.com/news/2026/1/20/ugandas-bobi-wine-we-have-evidence-of-election-fraud-in-museveni-win?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cj0n127y74go#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 14:54:29 UTC",
+      "content": "Cow astonishes scientists with rare use of tools. The discovery suggests cows may have far greater cognitive abilities than previously assumed.",
+      "category": "World",
+      "title": "Cow astonishes scientists with rare use of tools",
+      "link": "https://www.bbc.com/news/articles/cj0n127y74go?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/dac4/live/ee8f3280-f5f5-11f0-a745-635c33f47272.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cj0n127y74go#0",
+      "source": "BBC Science",
+      "timestamp": "2026-01-20 14:54:29 UTC",
+      "content": "Cow astonishes scientists with rare use of tools. The discovery suggests cows may have far greater cognitive abilities than previously assumed.",
+      "category": "Science",
+      "title": "Cow astonishes scientists with rare use of tools",
+      "link": "https://www.bbc.com/news/articles/cj0n127y74go?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/dac4/live/ee8f3280-f5f5-11f0-a745-635c33f47272.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768916997",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 14:47:29 +0000 UTC",
+      "content": "Sanctions request against Netanyahu filed by UK lawyers, rights group. The Arab Organisation for Human Rights UK (AOHR UK) calls for targeted financial and travel sanctions.",
+      "category": "World",
+      "title": "Sanctions request against Netanyahu filed by UK lawyers, rights group",
+      "link": "https://www.aljazeera.com/news/2026/1/20/sanctions-request-against-netanyahu-filed-by-uk-lawyers-rights-group?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768919950",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 14:44:58 +0000 UTC",
+      "content": "Israel bulldozes UNRWA buildings in occupied East Jerusalem. Israeli bulldozers demolished UNRWA’s headquarters in occupied East Jerusalem.",
+      "category": "World",
+      "title": "Israel bulldozes UNRWA buildings in occupied East Jerusalem",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/israel-bulldozes-unrwa-buildings-in-occupied-east-jerusalem-2?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/jan/20/catholic-cardinals-trump-foreign-policy",
+      "source": "The Guardian",
+      "timestamp": "2026-01-20 14:44:02 UTC",
+      "content": "Catholic cardinals warn US foreign policy under Trump risks global suffering. Church leaders cite Greenland threats, Venezuela action and aid cuts as undermining human dignity and peace Three cardinals in the US Catholic church have criticized the Trump administration ’s foreign policy, saying its push to obtain or otherwise seize Greenland , recent military action in Venezuela , and cuts to humanitarian aid risk “destroying international relations and plunging the world into incalculable suffering”. “Our country’s moral role in confronting evil around the world, sustaining the right to life and human dignity, and supporting religious liberty are all under examination,” said a joint statement from Blase Cupich, Robert McElroy and Joseph Tobin, respectively the archbishops of Chicago, Washington DC, and Newark, New Jersey. The Associated Press contributed Continue reading...",
+      "category": "World",
+      "title": "Catholic cardinals warn US foreign policy under Trump risks global suffering",
+      "link": "https://www.theguardian.com/us-news/2026/jan/20/catholic-cardinals-trump-foreign-policy",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711358",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-20 14:38:00 UTC",
+      "content": "How Greenland could turn into a Big Tech problem, according to Morgan Stanley’s Mike Wilson. Strategists like Morgan Stanley’s chief U.S. equity strategist say fallout from a brewing U.S.-Europe spat over Greenland could be bad for tech.",
+      "category": "Business",
+      "title": "How Greenland could turn into a Big Tech problem, according to Morgan Stanley’s Mike Wilson",
+      "link": "https://www.marketwatch.com/story/how-greenland-could-turn-into-a-big-tech-problem-according-to-morgan-stanleys-mike-wilson-eabee481?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/ceqz1lzdxw1o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 14:37:58 UTC",
+      "content": "France makes first interception targeting small boat crossings to UK. The operation follows a change of tactics agreed amid growing pressure from the UK government to step up interventions.",
+      "category": "World",
+      "title": "France makes first interception targeting small boat crossings to UK",
+      "link": "https://www.bbc.com/news/articles/ceqz1lzdxw1o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/08f9/live/2020b720-f5eb-11f0-a422-4ba8a094a8fa.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c5y2qjy9l4yo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 14:28:55 UTC",
+      "content": "Spain train crash recovery continues as investigators probe 'gap' in rail. Authorities say the twisted train wreckage makes it difficult to recover people trapped inside.",
+      "category": "World",
+      "title": "Spain train crash recovery continues as investigators probe 'gap' in rail",
+      "link": "https://www.bbc.com/news/articles/c5y2qjy9l4yo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/cdd6/live/8ce62dd0-f605-11f0-b385-5f48925de19a.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c4g39w8k8zwo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 14:02:43 UTC",
+      "content": "Kurdish-led forces pull out of camp for IS families during clashes in Syria. The move comes amid continuing clashes with Syrian government forces despite a ceasefire agreement.",
+      "category": "World",
+      "title": "Kurdish-led forces pull out of camp for IS families during clashes in Syria",
+      "link": "https://www.bbc.com/news/articles/c4g39w8k8zwo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/515a/live/e890ef40-f604-11f0-842b-5772902eef21.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768913673",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 13:51:56 +0000 UTC",
+      "content": "How the Syrian army pushed Kurdish-led forces out of oil-rich territory. In a lightning-fast offensive, the Syrian government has taken oil-rich territory long held by the Kurdish-led SDF.",
+      "category": "World",
+      "title": "How the Syrian army pushed Kurdish-led forces out of oil-rich territory",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/how-the-syrian-army-pushed-kurdish-led-forces-out-of-oil-rich-territory?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3083742",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 13:50:09 UTC",
+      "content": "Indian vibe-coding startup Emergent triples valuation to $300M with $70M fundraise. The funding comes as the startup claims it has scaled ARR to $50 million, and is targeting $100 million by April 2026.",
+      "category": "Technology",
+      "title": "Indian vibe-coding startup Emergent triples valuation to $300M with $70M fundraise",
+      "link": "https://techcrunch.com/2026/01/20/indian-vibe-coding-startup-emergent-raises-70m-at-300m-valuation-from-softbank-khosla-ventures/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/middleeast/syria-fighting-kurdish-deal.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 13:30:16 UTC",
+      "content": "For Syria’s Government, Kurdish Deal Is a Big Win. As the government moves to assert control over areas under Kurdish rule, it will be the latest test of President Ahmed al-Sharaa’s pledge to form an inclusive administration that empowers minorities.",
+      "category": "World",
+      "title": "For Syria’s Government, Kurdish Deal Is a Big Win",
+      "link": "https://www.nytimes.com/2026/01/20/world/middleeast/syria-fighting-kurdish-deal.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768915271",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 13:23:50 +0000 UTC",
+      "content": "Bobi Wine tells Al Jazeera he escaped police raid amid Uganda elections. Uganda’s opposition leader Bobi Wine says he escaped a raid on his home after a disputed presidential election.",
+      "category": "World",
+      "title": "Bobi Wine tells Al Jazeera he escaped police raid amid Uganda elections",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/bobi-wine-tells-al-jazeera-he-escaped-police-raid-amid-uganda-elections?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cj0n12q5v42o#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-20 13:10:57 UTC",
+      "content": "Doctor accused of sex assaults on 38 patients. The charges relate to alleged offences against patients, including children, in the West Midlands.",
+      "category": "Health",
+      "title": "Doctor accused of sex assaults on 38 patients",
+      "link": "https://www.bbc.com/news/articles/cj0n12q5v42o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/264e/live/6a733260-f601-11f0-842b-5772902eef21.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768914173",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 13:04:58 +0000 UTC",
+      "content": "Who hacked Iranian state TV?. Iranian state TV has been hacked, to show messages from the exiled son of the late Shah.",
+      "category": "World",
+      "title": "Who hacked Iranian state TV?",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/who-hacked-iranian-state-tv?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768913723",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 12:58:10 +0000 UTC",
+      "content": "Have global justice institutions failed?. Can the world agree on a shared system of morality and justice?",
+      "category": "World",
+      "title": "Have global justice institutions failed?",
+      "link": "https://www.aljazeera.com/video/doha-debates/2026/1/20/have-global-justice-institutions-failed?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768889321",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 12:52:42 +0000 UTC",
+      "content": "Trump’s Greenland tariffs: What’s Europe’s ‘bazooka’ option to hit back?. After tariff threats against Europe, Trump renews bid for Greenland in message to Norway as EU mulls retaliation.",
+      "category": "World",
+      "title": "Trump’s Greenland tariffs: What’s Europe’s ‘bazooka’ option to hit back?",
+      "link": "https://www.aljazeera.com/economy/2026/1/20/trumps-greenland-tariffs-whats-europes-bazooka-option-to-hit-back?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/africa/nigeria-christian-church-kidnapping.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 12:48:23 UTC",
+      "content": "Church Leaders Say Over 160 Were Kidnapped in Nigeria, but Officials Deny It. Christian groups said gunmen abducted congregants during Sunday services at three churches, but security and government officials dismissed the reports as fear-mongering.",
+      "category": "World",
+      "title": "Church Leaders Say Over 160 Were Kidnapped in Nigeria, but Officials Deny It",
+      "link": "https://www.nytimes.com/2026/01/20/world/africa/nigeria-christian-church-kidnapping.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768908834",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 12:45:51 +0000 UTC",
+      "content": "Naomi Osaka’s outfit, entrance and win headline Australian Open day three. Former champion Osaka&#039;s walkout steals the show in Melbourne as holder Jannik Sinner eases into the second round.",
+      "category": "World",
+      "title": "Naomi Osaka’s outfit, entrance and win headline Australian Open day three",
+      "link": "https://www.aljazeera.com/sports/2026/1/20/naomi-osakas-outfit-entrance-and-win-headline-australian-open-day-three?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cwy1lpgqenxo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 12:44:19 UTC",
+      "content": "Russian strikes again leave half of Kyiv with no heating in winter cold snap. President Zelensky says Russia has started using \"far more\" ballistic missiles in its attacks on Ukraine.",
+      "category": "World",
+      "title": "Russian strikes again leave half of Kyiv with no heating in winter cold snap",
+      "link": "https://www.bbc.com/news/articles/cwy1lpgqenxo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/d510/live/60d85bb0-f5f5-11f0-b5f7-49f0357294ff.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768907059",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 12:35:48 +0000 UTC",
+      "content": "ISIL claims Kabul attack on Chinese restaurant that killed seven people. Group links attack to China’s &#039;crimes&#039; against Uighurs. Beijing urges Taliban government to protect its nationals.",
+      "category": "World",
+      "title": "ISIL claims Kabul attack on Chinese restaurant that killed seven people",
+      "link": "https://www.aljazeera.com/news/2026/1/20/isil-claims-kabul-attack-on-chinese-restaurant-that-killed-7-people?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=863318",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 12:26:10 UTC",
+      "content": "Netflix revises Warner Bros. bid to an all-cash offer. Netflix has updated the acquisition terms for its Warner Bros. Discovery offer to an all-cash deal, replacing its initial $82.7 billion cash and stock agreement. The changes are designed to expedite the sale of WBD studios and streaming businesses, following repeated attempts by rival bidder Paramount to pressure shareholders into accepting its own $108 billion […]",
+      "category": "Technology",
+      "title": "Netflix revises Warner Bros. bid to an all-cash offer",
+      "link": "https://www.theverge.com/news/863318/netflix-warner-bros-discovery-merger-revision-cash-deal",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768904466",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 12:24:58 +0000 UTC",
+      "content": "How a year of Trump reshaped the world in seven charts. First year of Trump 2.0 saw deportations, tariffs and a captured President Maduro. Al Jazeera breaks down the numbers.",
+      "category": "World",
+      "title": "How a year of Trump reshaped the world in seven charts",
+      "link": "https://www.aljazeera.com/news/2026/1/20/how-a-year-of-trump-reshaped-the-world-in-seven-charts?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768906070",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 12:20:38 +0000 UTC",
+      "content": "Israeli prisons are akin to ‘torture camps’, Israeli rights group finds. B’Tselem&#039;s latest report sounds alarm on abuse, dozens of deaths of Palestinian prisoners in Israeli jails.",
+      "category": "World",
+      "title": "Israeli prisons are akin to ‘torture camps’, Israeli rights group finds",
+      "link": "https://www.aljazeera.com/news/2026/1/20/israeli-prisons-are-akin-to-torture-camps-israeli-rights-group-finds?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768908949",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 11:38:18 +0000 UTC",
+      "content": "Video: More than 100 vehicles involved in pile-up during US snowstorm. More than 100 vehicles crashed into each other or slid off a highway during a snowstorm in the US state of Michigan.",
+      "category": "World",
+      "title": "Video: More than 100 vehicles involved in pile-up during US snowstorm",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/20/video-more-than-100-vehicles-involved-in-pile-up-during-us-snowstorm?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864296",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 11:20:49 UTC",
+      "content": "Spotify is testing a feature that syncs audiobooks with paper editions. Spotify appears to be working on a novel feature that will allow audiobook listeners to pick up where they left off in the physical book. Android Authority reports that version 9.1.18.282 of the Spotify app includes code references to a Page Match beta feature that can quickly sync audiobooks on the platform with their paper […]",
+      "category": "Technology",
+      "title": "Spotify is testing a feature that syncs audiobooks with paper editions",
+      "link": "https://www.theverge.com/news/864296/spotify-page-match-audiobook-testing-feature",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768897250",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 11:19:31 +0000 UTC",
+      "content": "Trump undermines key allies UK and France before Davos visit. US president posts provocative messages on Greenland, Danish PM says sovereignty of Danish territory non-negotiable.",
+      "category": "World",
+      "title": "Trump undermines key allies UK and France before Davos visit",
+      "link": "https://www.aljazeera.com/news/2026/1/20/trump-undermines-key-allies-uk-and-france-ahead-of-davos-visit?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c5yvqx22dyvo#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 11:16:37 UTC",
+      "content": "China demands Taliban protect its citizens after deadly Kabul blast. The Islamic State group says they were behind the blast in Kabul, but police say they are still investigating the cause.",
+      "category": "World",
+      "title": "China demands Taliban protect its citizens after deadly Kabul blast",
+      "link": "https://www.bbc.com/news/articles/c5yvqx22dyvo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/9483/live/6379f150-f5e4-11f0-ba9d-e74ae9ca738f.png"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768863534",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 11:10:17 +0000 UTC",
+      "content": "Trump’s first year back live: US president ramps up pressure on allies. US President Donald Trump marks first year back by expanding presidential power and reshaping global relations.",
+      "category": "World",
+      "title": "Trump’s first year back live: US president ramps up pressure on allies",
+      "link": "https://www.aljazeera.com/news/liveblog/2026/1/20/trump-first-year-back-live-us-president-ramps-up-pressure-on-allies?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3083706",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 11:00:00 UTC",
+      "content": "Meta’s Oversight Board takes up permanent bans in landmark case. For the first time, Meta's Oversight Board is looking for specific policy recommendations around disabled accounts.",
+      "category": "Technology",
+      "title": "Meta’s Oversight Board takes up permanent bans in landmark case",
+      "link": "https://techcrunch.com/2026/01/20/metas-oversight-board-is-taking-on-its-first-case-focused-the-companys-ability-to-disable-accounts/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768876659",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 10:56:20 +0000 UTC",
+      "content": "Syria’s war-ravaged oil sector faces tough road to recovery, analysts say. Syrian government&#039;s control of energy reserves from SDF has raised hopes of return to pre-war production levels.",
+      "category": "World",
+      "title": "Syria’s war-ravaged oil sector faces tough road to recovery, analysts say",
+      "link": "https://www.aljazeera.com/economy/2026/1/20/syrias-war-ravaged-oil-sector-faces-tough-road-to-recovery-analysts-say?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864261",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 10:38:34 UTC",
+      "content": "Microsoft’s free Xbox Cloud Gaming is coming soon with ads. Microsoft has been testing its ad-supported Xbox Cloud Gaming service over the past few months, as I exclusively revealed in October. Now, the software giant is getting close to testing the free streaming option with Xbox Insiders. Over the weekend, Microsoft updated its Xbox app with loading screens for Xbox Cloud Gaming that mention \"1 […]",
+      "category": "Technology",
+      "title": "Microsoft’s free Xbox Cloud Gaming is coming soon with ads",
+      "link": "https://www.theverge.com/news/864261/xbox-cloud-gaming-free-ads-testing",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768904985",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 10:31:28 +0000 UTC",
+      "content": "How a year of Trump has reshaped the US and the world. The first year of Trump 2.0 featured deportations, tariffs and an abducted president.",
+      "category": "World",
+      "title": "How a year of Trump has reshaped the US and the world",
+      "link": "https://www.aljazeera.com/video/by-the-numbers-3/2026/1/20/how-a-year-of-trump-has-reshaped-the-us-and-the-world?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768901997",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 10:28:30 +0000 UTC",
+      "content": "Greenland is not just a territorial concern. It is a reckoning. It is quite ironic that the imperialism Denmark helped normalise for decades now threatens Danish sovereignty.",
+      "category": "World",
+      "title": "Greenland is not just a territorial concern. It is a reckoning",
+      "link": "https://www.aljazeera.com/opinions/2026/1/20/greenland-is-not-just-a-territorial-concern-it-is-a-reckoning?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864263",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 10:21:49 UTC",
+      "content": "Sony’s TV business is being taken over by TCL. Sony has announced plans to spin off its TV hardware business, shifting it to a new joint venture with TCL. The two companies have signed a nonbinding agreement for Sony's home entertainment business, with TCL set to hold a 51 percent stake in the new venture and Sony holding 49 percent. With this partnership, TCL […]",
+      "category": "Technology",
+      "title": "Sony’s TV business is being taken over by TCL",
+      "link": "https://www.theverge.com/news/864263/sony-tcl-tv-business-partnership-takeover-announcement",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768897975",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 10:15:48 +0000 UTC",
+      "content": "Dual citizenship: Bangladesh’s latest political flashpoint before elections. A divide over whether dual citizens should be allowed to contest is threatening Bangladesh&#039;s February elections.",
+      "category": "World",
+      "title": "Dual citizenship: Bangladesh’s latest political flashpoint before elections",
+      "link": "https://www.aljazeera.com/features/2026/1/20/dual-citizenship-bangladeshs-latest-political-flashpoint-before-elections?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/europe/ukraine-russia-kyiv-heat-cold.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 10:12:50 UTC",
+      "content": "Fresh Russian Strikes Cut Heat to Thousands in Ukraine’s Freezing Capital. Ukrainian authorities say that the repeated attacks on energy infrastructure are an attempt to force the country into submission.",
+      "category": "World",
+      "title": "Fresh Russian Strikes Cut Heat to Thousands in Ukraine’s Freezing Capital",
+      "link": "https://www.nytimes.com/2026/01/20/world/europe/ukraine-russia-kyiv-heat-cold.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c394pk4p707o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-20 10:05:49 UTC",
+      "content": "Bobi Wine tells the BBC from hiding he will not contest Uganda election results in court. The losing presidential candidate calls for \"peaceful change\", saying Uganda's judiciary is not independent.",
+      "category": "World",
+      "title": "Bobi Wine tells the BBC from hiding he will not contest Uganda election results in court",
+      "link": "https://www.bbc.com/news/articles/c394pk4p707o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/c8bd/live/324e77f0-f5e3-11f0-ba9d-e74ae9ca738f.jpg"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/americas/venezuela-prisoner-release.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 10:02:46 UTC",
+      "content": "A Venezuelan Political Prisoner Finally Comes Home. Ángel Godoy was thrown into jail after writing columns that angered the government of President Nicolás Maduro. Now his family is trying to make up for lost time.",
+      "category": "World",
+      "title": "A Venezuelan Political Prisoner Finally Comes Home",
+      "link": "https://www.nytimes.com/2026/01/20/world/americas/venezuela-prisoner-release.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/20/trial-peru-amazon-quinto-inuma-alvarado-indigenous-leader",
+      "source": "The Guardian",
+      "timestamp": "2026-01-20 10:00:22 UTC",
+      "content": "Men charged with contract killing of Indigenous leader to go on trial in Peru. Prosecution over death of Quinto Inuma Alvarado seen as test of ability to curb attacks on environmental defenders Five men are due to go on trial on Tuesday over the killing of an Amazonian Indigenous leader, in a legal case that could test whether Peru can hold perpetrators accountable for violence linked to illegal logging and drug trafficking in one of the world’s most dangerous regions for environmental defenders. The Kichwa tribal leader Quinto Inuma Alvarado was killed on 29 November 2023, after repeatedly denouncing illegal activity within his community’s territory. Continue reading...",
+      "category": "World",
+      "title": "Men charged with contract killing of Indigenous leader to go on trial in Peru",
+      "link": "https://www.theguardian.com/world/2026/jan/20/trial-peru-amazon-quinto-inuma-alvarado-indigenous-leader",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1768900591",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 20 Jan 2026 09:45:34 +0000 UTC",
+      "content": "Israel bulldozes UNRWA buildings in occupied East Jerusalem. The destruction comes as Israel clamps down on NGOs providing humanitarian aid to Palestinians in Gaza.",
+      "category": "World",
+      "title": "Israel bulldozes UNRWA buildings in occupied East Jerusalem",
+      "link": "https://www.aljazeera.com/news/2026/1/20/israel-bulldozes-unrwa-buildings-in-occupied-east-jerusalem?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/world/asia/china-ocean-flower-island-real-estate.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-20 09:09:42 UTC",
+      "content": "The Chinese Island Where Dreams of Real Estate Glory Never Die. Intended as China’s version of Dubai’s palm-shaped artificial island, Ocean Flower Island is a $12 billion monument to debt-fueled economic excess.",
+      "category": "World",
+      "title": "The Chinese Island Where Dreams of Real Estate Glory Never Die",
+      "link": "https://www.nytimes.com/2026/01/20/world/asia/china-ocean-flower-island-real-estate.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864254",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 08:57:34 UTC",
+      "content": "Realme promises days of battery from its 10,001mAh phone. After teasing 10,000mAh and 15,000mAh concept devices, Realme is ready to make those big batteries a reality with the P4 Power, which launches in India on January 29th with a 10,001mAh capacity. Realme says the P4 Power will last for three and a half days of light use, which I can believe - I got […]",
+      "category": "Technology",
+      "title": "Realme promises days of battery from its 10,001mAh phone",
+      "link": "https://www.theverge.com/news/864254/realme-promises-days-of-battery-from-its-10001mah-phone",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/insider/trilobites-column.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-20 08:00:17 UTC",
+      "content": "A Bite-Size Column About Delight and Wonder in Science. In Trilobites, reporters aim to share new findings in the science world, be it interspecies friendships or discoveries of ancient fossils.",
+      "category": "Science",
+      "title": "A Bite-Size Column About Delight and Wonder in Science",
+      "link": "https://www.nytimes.com/2026/01/20/insider/trilobites-column.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/science/birds-feathers-filoplumes-cornell.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-20 08:00:16 UTC",
+      "content": "Filoplumes Are Nature’s Super Feather. Filoplumes may be tiny, but these hairlike feathers enable nonstop flights that span thousands of miles.",
+      "category": "Science",
+      "title": "Filoplumes Are Nature’s Super Feather",
+      "link": "https://www.nytimes.com/2026/01/20/science/birds-feathers-filoplumes-cornell.html",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3083714",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-20 08:00:00 UTC",
+      "content": "Everstone combines Wingify, AB Tasty for $100M+ digital experience optimization platform. The combined business will serve more than 4,000 customers globally and surpass $100 million in annual revenue.",
+      "category": "Technology",
+      "title": "Everstone combines Wingify, AB Tasty for $100M+ digital experience optimization platform",
+      "link": "https://techcrunch.com/2026/01/20/everstone-combines-wingify-ab-tasty-for-100m-digital-experience-optimization-platform/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864095",
+      "source": "The Verge",
+      "timestamp": "2026-01-20 08:00:00 UTC",
+      "content": "Roland’s Go:Mixer Studio turns your phone into a mobile music studio. Roland now offers a more capable audio mixer for phones and tablets with the launch of the Go:Mixer Studio. The Go:Mixer audio interface lineup has always been a bit limited, better suited for scrappy livestreams and capturing quick demos on their phones than professional recording. The Go:Mixer Studio is an attempt to actually reach that […]",
+      "category": "Technology",
+      "title": "Roland’s Go:Mixer Studio turns your phone into a mobile music studio",
+      "link": "https://www.theverge.com/entertainment/864095/roland-gomixer-studio-namm",
+      "picture": ""
+    }
+  ],
   "mapPoints": [
     {
       "id": "map-0",
@@ -507,7 +1239,8 @@
     "2026-01-15",
     "2026-01-16",
     "2026-01-19",
-    "2026-01-20"
+    "2026-01-20",
+    "2026-01-21"
   ],
   "foreignRelations": [
     {
@@ -548,7 +1281,7 @@
     }
   ],
   "bigPicture": {
-    "summary": "Okay, let's synthesize this information into a Grand Narrative, focusing on the underlying Meta-Narrative and applying the sentiment framework.\n\n## The Grand Narrative: Interconnected Instability and Accelerated Technological Change\n\nThe period described represents a time of profound global instability, characterized by a confluence of escalating geopolitical tensions, persistent humanitarian crises, widespread economic anxiety, and the rapid, transformative impact of technological advancements, particularly in AI. The underlying Meta-Narrative is one of a world hurtling towards the future at an unprecedented pace, but simultaneously facing multiple, complex crises that challenge governance, social cohesion, and basic human security.\n\n## The Trajectory: From Transparency Concerns to Escalating Conflict and Technological Scramble\n\n*   **Initial Spark (Jan 7):** The narrative begins with specific operational concerns (US military in Nigeria) highlighting broader systemic issues: transparency deficits in counterterrorism, the weaponization of information (especially via social media amplified by political rhetoric), and the inherent difficulties of modern warfare. These are immediate, somewhat-negative concerns. The presence of multiple SIGNALS indicates this isn't an isolated incident but part of a growing pattern.\n*   **Escalation and Geopolitical Friction (Jan 8-9):** The situation rapidly broadens. US-Colombia tensions mark the beginning of direct, high-stakes friction between major powers. The anti-women's rights case in Gambia points to a worrying global backlash against liberalization. Venezuela's political shifts and Brazil's internal politics show fragile regional governance. Simultaneously, the AI content crisis (X) emerges as a defining issue of our time, pitting innovation against regulation and safety, viewed as an interesting but highly significant challenge. Energy geopolitics (US-Venezuela, Iran) adds another layer of negative tension. The power outages and climate events underscore the physical fragility beneath the surface of modern society. Trump's proposed policy shifts act as a constant, destabilizing variable, viewed neutrally but significantly.\n*   **Deepening Crises and Technological Acceleration (Jan 10-11):** Conflicts intensify visibly (Gaza, Syria, Ukraine). The bird flu and infrastructure crises highlight biological and physical vulnerabilities. Tech continues to race ahead (AI regulation, drone delivery, Starlink) as a source of both potential and peril (deepfake legislation). The focus on economic anxiety (mortgages, retirement) reflects the deep penetration of instability into daily life. Protests and severe humanitarian crises (Aleppo warning, ICE incidents, Iran) escalate, viewed as very-negative or extremely-negative events. The sheer volume of SIGNALS (8-9) indicates the fragmentation and complexity of the challenges.\n*   **Peak Instability and Technological Dominance (Jan 12-15):** This period sees the most intense clustering of negative and extremely-negative events (protests with deaths, severe climate/ocean records, infrastructure failures). Geopolitical saber-rattling (Greenland, Iran threats, BRICS) reaches high levels. AI's geopolitical dimension solidifies, with its dual nature as engine of progress and tool for control/regulation (tariffs, integration). The economic outlook becomes increasingly negative (mortgages, uncertainty). The capture of Maduro and Trump's intervention in Venezuela underscores the volatile intersection of foreign policy, resource control, and regime change. The \"commodities supercycle\" potential highlights economic stakes tied to resource control.\n*   **Crisis Peak and Technological Integration (Jan 16-20):** The narrative culminates in a surge of extremely-negative events (humanitarian disasters, terrorist attacks, severe climate disasters). Geopolitical instability remains paramount, driven by direct conflicts and intense rhetoric. AI's integration becomes undeniable, transforming finance, healthcare, and even military applications, viewed as an incredibly powerful, neutral force. Debates over regulation, energy demands (linked to tech), and financial policy underscore the struggle to manage this acceleration. The focus on climate change and resource competition (Arctic, melting permafrost) intensifies, viewed as extremely-negative due to its long-term catastrophic potential. The sheer scale of suffering and disruption marks this period.\n\n## The Meta-Narrative: The Anthropocene Crossroads\n\nThe overarching story is one of humanity navigating a critical juncture. The \"Big Story\" is the collision course between the forces of technological acceleration (AI, advanced energy, space) and the deep-seated challenges of governance failure, economic inequality, climate breakdown, and persistent conflict. Key themes include:\n\n1.  **Geopolitical Fragmentation:** Traditional alliances are tested, direct tensions between major powers escalate (US-Colombia, Venezuela intervention, Iran threats, Greenland), and regional conflicts (Gaza, Ukraine, Syria) become flashpoints. Sovereignty is increasingly contested, and international cooperation feels fragile.\n2.  **The AI Revolution:** AI is not just a trend but a fundamental force reshaping economies, governance, warfare, and daily life. Its rapid development is driving geopolitical competition, sparking intense regulatory debates, and creating both unprecedented opportunities and significant risks (misinformation, autonomous weapons, deepfakes). It's the engine of much economic activity but also a source of new vulnerabilities and control dilemmas.\n3.  **Climate and Existential Crises:** Climate change is no longer a distant threat but an immediate, escalating driver of conflict, displacement, economic strain, and humanitarian disasters (wildfires, floods, ocean heatwaves, Arctic instability). It intersects with every other major theme, from energy policy to migration patterns to military strategy.\n4.  **Economic Malaise and Social Strain:** Widespread economic anxiety (housing, jobs, retirement) fuels political discontent and social unrest. The focus on short-term gains often overshadows long-term systemic weaknesses, contributing to governance failures and crises of legitimacy.\n5.  **Information Warfare and Governance Challenges:** The weaponization of information through social media and AI, combined with declining trust in institutions and documented governance failures (protests, judicial concerns, emergency response), creates a volatile mix where facts are contested, and authority is challenged. The line between state and non-state actors blurs.\n\n## Conclusion\n\nThis period is defined by the accelerating pace of technological change, particularly AI, occurring against a backdrop of deepening geopolitical fragmentation, escalating climate and humanitarian crises, and profound economic anxiety. The narrative is one of interconnected instability – a world hurtling towards an uncertain future where the tools for progress (AI, tech) also pose significant risks, and the capacity to manage complex, multi-faceted crises remains insufficient. The Meta-Narrative is the story of humanity at a crossroads, grappling with the consequences of its own ingenuity while facing existential threats amplified by global interconnectedness and the inherent difficulties of governing in an era of rapid, disruptive change.",
+    "summary": "Okay, here is a \"Grand Narrative\" synthesizing the provided historical data, focusing on trajectory, connections, and the underlying Meta-Narrative, while adhering to the specified sentiment framework.\n\n# Grand Narrative: The Fracturing of Stability - A Convergence of Crises and Control\n\nThe period captured in this data reveals a world hurtling towards increased instability, driven by a complex interplay of deepening geopolitical rivalries, simmering economic anxieties, cascading environmental disasters, and the disruptive rise of powerful new technologies. The overall trajectory is one of **accelerating fragmentation and struggle for control** amidst a backdrop of systemic fragility.\n\n## The Trajectory and Connections\n\nThe narrative unfolds from a foundation of existing tensions – the US military operation in Nigeria (Jan 7) highlighted ongoing challenges in counterterrorism legitimacy and information warfare. This sets the stage for a month marked by escalation and unresolved conflict, rather than resolution.\n\n*   **Geopolitical Escalation:** The core driver appears to be the **assertive recalibration of global power**. This manifests through US foreign policy shifts (Jan 7, 8, 9, 12, 14, 15, 16, 19, 20, 21), characterized by rhetoric (e.g., Greenland, tariffs, 401k) and actions (e.g., Venezuela intervention, Iran threats) that directly challenge allies and regional actors. Simultaneously, traditional conflict zones (Gaza, Ukraine, Syria, Yemen, Iran) continue to fester or intensify, often intersecting with US policy. The BRICS exercises (Jan 11, 12) and the \"Board of Peace\" initiative (Jan 21) signal a pushback against US influence and a potential strengthening of alternative geopolitical blocs. The sheer volume and intensity of conflicts (Jan 10, 11, 12, 20) suggest this isn't merely a US-led drama but a multi-polar system under extreme stress.\n\n*   **Economic Anxiety and Instability:** Underlying the geopolitical noise is a **growing economic malaise**. High mortgage rates (Jan 9, 14, 15), financial uncertainties (Jan 9, 10, 12, 14, 16), and market volatility (Jan 8, 9, 19, 20) create a foundation of widespread anxiety. This economic pressure fuels domestic political tensions (Jan 9, 15) and potentially exacerbates the humanitarian crises (Jan 10, 20). The focus on controlling resources (oil, critical minerals, food supplies) (Jan 8, 9, 15, 16) underscores how economic interests are weaponized within this volatile geopolitical landscape.\n\n*   **Climate Change as an Unseen Weapon:** The frequency and severity of climate-related disasters (Jan 9, 10, 11, 12, 16, 19, 20) – from infrastructure failures and extreme weather to resource scarcity – are escalating. These events are increasingly framed not just as environmental tragedies but as sources of direct conflict, humanitarian crises, and failures of governance (Jan 10, 11, 20). The melting Arctic (Jan 12) and Greenland situation (Jan 8, 19, 21) exemplify how climate change is opening new geopolitical frontiers and potentially triggering resource wars (Jan 15).\n\n*   **Technology: A Double-Edged Sword:** The rise of AI (Jan 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21) is simultaneously a source of innovation and profound disruption. It fuels economic shifts and military strategies, but also creates new ethical dilemmas (deepfakes, non-consensual content) (Jan 8, 10, 13, 14) and regulatory nightmares (Jan 9, 10, 12, 14). Its potential for misuse (generative content, military integration, influencing discourse) is a major concern, viewed as **somewhat-negative** or **interesting**, while its beneficial applications (healthcare, logistics) are **interesting** or **neutral**.\n\n## The Meta-Narrative: The Struggle for Control in a Fracturing World System\n\nThe overarching story is one of a **world system under immense strain, struggling to adapt to multiple converging crises, with powerful actors increasingly resorting to unilateral action and heightened rhetoric, fragmenting international cooperation and trust.**\n\n*   **Systemic Fragility:** The world appears fundamentally less stable. Energy grids are vulnerable (Jan 8), infrastructure fails catastrophically (Jan 10, 12), humanitarian needs spiral (Jan 10, 20), and traditional governance structures face challenges (Jan 11, 13). Climate change acts as an accelerating force multiplier, turning manageable problems into existential threats for many regions.\n\n*   **Escalation of Rhetoric and Action:** The data suggests a dangerous trend of **rhetoric preceding or accompanying direct intervention**. US actions and threats (e.g., Nigeria, Venezuela, Iran) are common, often viewed neutrally here. This blurring of lines between diplomacy and potential force increases the risk of miscalculation and unintended conflict. The fragmentation into competing blocs (US vs. BRICS/alternative alliances) further destabilizes the system.\n\n*   **Technology as a Central Pivot:** AI and related technologies are not just peripheral; they are deeply integrated into the core dynamics. They drive economic forces, shape military capabilities, influence political discourse, and potentially exacerbate crises (e.g., through deepfakes spreading disinformation or resource-hungry AI straining grids). The struggle for technological dominance (Jan 15) is inextricably linked to the geopolitical and economic struggles.\n\n*   **The Human Cost:** Beneath the geopolitical and economic narratives lies a sea of human suffering. The increase in severe disasters and conflicts (Jan 20) points towards a world where large-scale crises are becoming more frequent, pushing sentiment towards **very-negative** or **extremely-negative** territory for those directly affected. This human dimension fuels political instability and social unrest (Jan 10, 11, 12).\n\n## Conclusion\n\nThe Grand Narrative is one of a world hurtling towards greater instability. Geopolitical tensions are reaching fever pitch, economic anxieties are pervasive, climate change is acting as an existential multiplier, and disruptive technology is central to the conflicts and potential solutions. The Meta-Narrative is the story of a fragile global system, increasingly defined by competition, unilateralism, and the high-stakes struggle for control over resources, technology, and influence, with the potential for widespread negative consequences. The trajectory points towards continued escalation and fragmentation, making the path forward highly uncertain and fraught with risk.",
     "timeline": [
       {
         "date": "2026-01-07",
@@ -621,9 +1354,15 @@
         "title": "Humanitarian Crises and Disasters: Multiple severe disasters (train crash in Spain, Chile wildfires, Karachi fire) and a major terrorist attack (Kabul restaurant) are causing significant loss of life and displacement. Somalia faces a severe malnutrition crisis. These events are assessed as extremely negative or very negative due to the scale of suffering.",
         "summary": "Geopolitical Instability and Conflict: Escalating tensions include Ukraine (Russian strikes, Zelensky's warnings), Afghanistan (security concerns post-IS attack), Syria (Kurdish forces pushed out, government gains control), and the persistent Israel-Palestine conflict (UNRWA building demolitions). Trump's rhetoric regarding Greenland and potential tariffs adds another layer of international friction. This theme is assessed as very negative or extremely negative due to the serious conflicts, security fears, and instability. Climate Change and Environmental Failures: Wildfires in Chile and Karachi highlight environmental disasters linked to climate change, while the Karachi fire also exposed failures in urban governance and rescue capacity. These incidents are assessed as extremely negative or very negative due to the devastating impact on populations and infrastructure. Economic Pressures and Market Volatility: Market anxiety is rising due to Trump's tariff threats impacting trade (Sell America trade, European concerns). Bond yields in Japan are at record highs, signaling economic stress. Natural gas prices have surged due to cold weather. These economic developments are assessed as negative due to the potential for widespread financial disruption and hardship. Governance Failures and Emerging Concerns: Issues include questions surrounding Uganda's election process, concerns over political interference in judiciary matters (Bobi Wine case), failures in Australia's response to the Bondi shooting, and criticism of US foreign policy by religious leaders. Debates around digital citizenship (Bangladesh) and failures of global justice institutions are also emerging. These developments are assessed as somewhat-negative or neutral, reflecting concerns about stability, accountability, and systemic issues without full-blown crisis.",
         "sentiment": "very-negative"
+      },
+      {
+        "date": "2026-01-21",
+        "title": "Geopolitical Tensions Escalate: Trump's initiatives, including the Board of Peace and Greenland ambitions, generate significant international friction, particularly among traditional US allies. Concurrently, conflicts persist, marked by casualties in Gaza and the sentencing related to Japan's former PM, while geopolitical interventions raise questions about international law.",
+        "summary": "Economic Policy Shifts Impact Markets: The implementation of the new US tax law influences financial decisions. Markets exhibit sensitivity to political rhetoric (Greenland comments), while corporate strategies and forecasts face investor scrutiny, impacting stock performance across various sectors including tech and media. Technology Innovation and Integration: AI advancements are accelerating across multiple domains, including healthcare diagnostics, drug discovery, content creation, and media platforms. Concurrently, hardware innovation focuses on versatile devices and improving user experiences, alongside ethical debates surrounding AI generation and detection. Climate Change and Energy Security: The restart of Japan's nuclear plant underscores energy policy complexities post-Fukushima. Simultaneously, the environmental impact of rapid AI expansion, particularly its water consumption, is recognized as a growing public health and security risk, highlighting interconnected global challenges. Humanitarian Crises and Social Unrest: Multiple regions face severe crises, including mass kidnappings in Nigeria and the demolition of UN facilities in occupied territories. These events, alongside ongoing conflicts and political assassinations, contribute to a volatile global security landscape marked by significant negative developments.",
+        "sentiment": "somewhat-negative"
       }
     ],
-    "lastUpdated": "2026-01-20T18:58:58.719Z"
+    "lastUpdated": "2026-01-21T18:57:05.012Z"
   },
   "predictionHistory": [
     {
@@ -1243,11 +1982,161 @@
         "Potential changes in rail safety regulations",
         "Similar incidents in other countries' rail systems"
       ]
+    },
+    "sig_8ff2c623": {
+      "signalId": "sig_8ff2c623",
+      "generatedAt": "2026-01-21T16:56:38.299Z",
+      "header": {
+        "title": "Greenland Acquisition Ambitions Escalate Amid Geopolitical Tensions",
+        "text": "US President Trump's continued public pursuit of Greenland, despite downplaying military options, has intensified concerns among European allies about potential strategic shifts.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Trump",
+          "European allies"
+        ],
+        "what": "Pursuit of Greenland",
+        "where": "Greenland",
+        "when": "2026-01-21",
+        "why": "Strategic interest in the Arctic region",
+        "soWhat": "Potential implications for Arctic strategy and transatlantic relations"
+      },
+      "evidence": [
+        {
+          "feedId": "11",
+          "source": "Al Jazeera",
+          "title": "Trump live news: US president says ‘won’t use force’ to acquire Greenland",
+          "link": "https://www.aljazeera.com/news/liveblog/2026/1/21/trump-live-news-us-president-in-davos-as-greenland-threats-spark-outrage?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 12:05:35 +0000 UTC",
+          "quote": "The US president, at the World Economic Forum, says he’ll have ‘many meetings’ on Greenland as Europe tensions simmer."
+        },
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC",
+          "quote": "Donald Trump said the US needs “ownership” of Greenland, but he “won’t use force” to acquire the territory."
+        },
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+          "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC",
+          "quote": "Trump has angered European leaders with his Greenland ambitions and tariffs-for-all-who-oppose approach."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "US President Trump is pursuing Greenland for strategic reasons.",
+          "claimB": "European allies are concerned about this pursuit.",
+          "evidenceA": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+              "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Davos discussions on Greenland policy",
+        "Future US-Greenland negotiations",
+        "Potential reactions from Greenland authorities",
+        "Broader implications for Arctic sovereignty"
+      ]
+    },
+    "sig_8267f892": {
+      "signalId": "sig_8267f892",
+      "generatedAt": "2026-01-21T17:55:40.366Z",
+      "header": {
+        "title": "Market Confidence Shifts Amid Tech Forecast Concerns",
+        "text": "Investor confidence in Netflix remains fragile despite its diversification efforts, reflecting broader market concerns about AI integration in healthcare information.",
+        "sentiment": "neutral",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Netflix investors",
+          "Market analysts",
+          "AI developers"
+        ],
+        "what": "Investor confidence in Netflix is fragile due to concerns about its forecasts and diversification efforts, while broader market worries about AI's role in healthcare information.",
+        "where": "Global markets, particularly U.S. stock market",
+        "when": "January 2026",
+        "why": "Investors are skeptical about Netflix's 2026 guidance and its acquisition of Warner Bros. Discovery, and there is growing concern about the implications of AI chatbots in healthcare information.",
+        "soWhat": "This could lead to further stock volatility for Netflix and other companies involved in AI and healthcare sectors, and may indicate broader shifts in investor sentiment towards tech and AI applications."
+      },
+      "evidence": [
+        {
+          "feedId": "6",
+          "source": "MarketWatch",
+          "title": "Netflix’s stock remains under pressure as investors balk at forecast and Warner Bros. acquisition",
+          "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 16:11:00 UTC",
+          "quote": "Investors appear unconvinced by Netflix’s effort to acquire Warner Bros. Discovery’s studio and streaming businesses and have registered their discontent over the company’s 2026 guidance."
+        },
+        {
+          "feedId": "3",
+          "source": "MarketWatch",
+          "title": "‘Dr. Google’ is done. AI chatbots like OpenAI and Claude will change how we search for health information.",
+          "link": "https://www.marketwatch.com/story/sorry-dr-google-chatgpt-and-claude-are-now-getting-into-the-business-of-providing-health-advice-426c167e?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 15:32:00 UTC",
+          "quote": "OpenAI and Anthropic are moving into the complicated world of health information. Will ChatGPT help or hurt patient health?"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Netflix's diversification into content and healthcare through acquisitions is expected to stabilize its business model.",
+          "claimB": "Market concerns about AI's role in healthcare information may negatively impact Netflix's stock performance.",
+          "evidenceA": [
+            {
+              "feedId": "6",
+              "source": "MarketWatch",
+              "title": "Netflix’s stock remains under pressure as investors balk at forecast and Warner Bros. acquisition",
+              "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 16:28:00 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "3",
+              "source": "MarketWatch",
+              "title": "‘Dr. Google’ is done. AI chatbots like OpenAI and Claude will change how we search for health information.",
+              "link": "https://www.marketwatch.com/story/sorry-dr-google-chatgpt-and-claude-are-now-getting-into-the-business-of-providing-health-advice-426c167e?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 15:32:00 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments on Netflix's acquisition of Warner Bros. Discovery and its 2026 guidance.",
+        "Market reactions to AI's integration in healthcare, particularly with OpenAI and Anthropic.",
+        "Other tech companies' strategies in AI and diversification efforts.",
+        "Broader economic indicators affecting investor sentiment in the financial sector.",
+        "Potential regulatory responses to AI in healthcare information services."
+      ]
     }
   },
   "globalState": {
     "isOnline": true,
-    "lastChecked": "2026-01-20T19:19:34.872Z",
+    "lastChecked": "2026-01-21T20:23:55.463Z",
     "lastError": null
   }
 }

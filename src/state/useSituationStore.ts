@@ -270,6 +270,13 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
     if (response.ok) {
       const snapshot = await response.json();
       console.log(`Loaded snapshot for date: ${targetDate}`);
+      
+      // Ensure feeds are included - if not present, create empty array
+      if (!snapshot.feeds) {
+        console.log('Feeds missing from snapshot, creating empty feeds array');
+        snapshot.feeds = [];
+      }
+      
       return snapshot;
     }
   } catch (e) {
@@ -290,6 +297,13 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
         if (fallbackResponse.ok) {
           const snapshot = await fallbackResponse.json();
           console.log(`Fallback: Loaded snapshot for date: ${dateStr}`);
+          
+          // Ensure feeds are included
+          if (!snapshot.feeds) {
+            console.log('Feeds missing from fallback snapshot, creating empty feeds array');
+            snapshot.feeds = [];
+          }
+          
           return snapshot;
         }
       } catch (e) {
@@ -306,6 +320,13 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
     if (legacyResponse.ok) {
       const snapshot = await legacyResponse.json();
       console.log('Loaded legacy snapshot.json');
+      
+      // Ensure feeds are included
+      if (!snapshot.feeds) {
+        console.log('Feeds missing from legacy snapshot, creating empty feeds array');
+        snapshot.feeds = [];
+      }
+      
       return snapshot;
     }
   } catch (e) {
@@ -314,6 +335,47 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
 
   return null;
 };
+
+/**
+ * Save snapshot to static JSON file for demo website access
+ * This writes the current state to public/data/snapshot-YYYY-MM-DD.json
+ */
+async function saveSnapshotToFile(date: string) {
+  try {
+    const snapshot = {
+      lastUpdated: globalState.lastUpdated?.toISOString() || new Date().toISOString(),
+      narrative: globalState.narrative,
+      signals: globalState.signals,
+      insights: globalState.insights,
+      feeds: globalState.feeds, // Include feeds for demo website!
+      mapPoints: globalState.mapPoints,
+      foreignRelations: globalState.foreignRelations,
+      dailyMetrics: globalState.dailyMetrics,
+      availableDates: globalState.availableDates,
+      bigPicture: globalState.bigPicture,
+      predictionHistory: globalState.predictionHistory,
+      deepDiveBySignalId: globalState.deepDiveBySignalId,
+      generatedAt: new Date().toISOString(),
+      version: '0.2.0'
+    };
+
+    // Create blob and download via temporary link
+    const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `snapshot-${date}.json`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    console.log(`✅ Saved snapshot to file: snapshot-${date}.json with ${globalState.feeds.length} feeds`);
+  } catch (error) {
+    console.error('Failed to save snapshot to file:', error);
+  }
+}
 
 const defaultState: SituationState = {
   currentDate: getTodayStr(),
@@ -384,6 +446,139 @@ const defaultState: SituationState = {
 
 let globalState: SituationState = { ...defaultState };
 const listeners = new Set<(state: SituationState) => void>();
+
+// Module-level polling manager to prevent multiple instances
+class OllamaPollingManager {
+  private static instance: OllamaPollingManager | null = null;
+  private pollTimeout: number | null = null;
+  private currentPollTime = 2000;
+  private isPolling = false;
+  private pollCount = 0;
+  private instanceCount = 0;
+
+  static getInstance(): OllamaPollingManager {
+    if (!OllamaPollingManager.instance) {
+      OllamaPollingManager.instance = new OllamaPollingManager();
+    }
+    OllamaPollingManager.instance.instanceCount++;
+    return OllamaPollingManager.instance;
+  }
+
+  async startPolling() {
+    if (this.isPolling) {
+      return;
+    }
+    
+    this.isPolling = true;
+    this.scheduleNextPoll();
+  }
+
+  private async scheduleNextPoll() {
+    if (!this.isPolling) return;
+
+    this.pollCount++;
+    
+    try {
+      const { OllamaService } = await import('../ai/runtime/ollama');
+      
+      // Check if Ollama service is running by testing the /api/tags endpoint
+      // This is more reliable than /api/ps which only shows models in GPU memory
+      const response = await fetch(`${OllamaService.getBaseUrl()}/tags`);
+      const isServiceRunning = response.ok;
+      
+      console.log(`Ollama service ${isServiceRunning ? 'IS running' : 'is NOT running'}`);
+      
+      // Update AI status based on service availability
+      const wasOnline = globalState.aiStatus.isOnline;
+      if (isServiceRunning && !wasOnline) {
+        // Ollama service just started
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: true,
+            lastChecked: new Date(),
+            lastError: null
+          }
+        };
+        console.log(`Ollama service just started`);
+      } else if (!isServiceRunning && wasOnline) {
+        // Ollama service just stopped
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: false,
+            lastChecked: new Date(),
+            lastError: 'Ollama service stopped'
+          }
+        };
+        console.log(`Ollama service just stopped`);
+      } else {
+        // No change in status, but still update lastChecked time
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            ...globalState.aiStatus,
+            lastChecked: new Date(),
+            lastError: isServiceRunning ? null : globalState.aiStatus.lastError
+          }
+        };
+      }
+      
+      // Only fetch running models if service is available (for UI display)
+      if (isServiceRunning) {
+        try {
+          const models = await OllamaService.getRunningModels();
+          globalState = { ...globalState, runningModels: models };
+          console.log(`${models.length} models currently in GPU memory`);
+        } catch (e) {
+          // Even if we can't get running models, the service is still running
+          console.log(`Could not get running models, but service is available`);
+        }
+      } else {
+        globalState = { ...globalState, runningModels: [] };
+      }
+      
+      // Notify listeners
+      listeners.forEach(l => l({ ...globalState }));
+      
+      // Adjust polling frequency based on service status (not model status)
+      const newPollTime = isServiceRunning ? 30000 : 2000;
+      if (this.currentPollTime !== newPollTime) {
+        this.currentPollTime = newPollTime;
+      }
+      
+    } catch (e) {
+      const wasOnline = globalState.aiStatus.isOnline;
+      console.error(`Ollama service not available. YOU DO NOT HAVE OLLAMA INSTALLED OR IT IS NOT RUNNING!`);
+      
+      if (wasOnline) {
+        globalState = {
+          ...globalState,
+          runningModels: [],
+          aiStatus: {
+            isOnline: false,
+            lastChecked: new Date(),
+            lastError: e instanceof Error ? e.message : 'Connection error'
+          }
+        };
+        listeners.forEach(l => l({ ...globalState }));
+      }
+      
+      this.currentPollTime = 2000; // Fast polling when service is down
+    }
+    
+    // Schedule next poll
+    this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), this.currentPollTime);
+  }
+
+  stopPolling() {
+    if (this.pollTimeout) {
+      clearTimeout(this.pollTimeout);
+      this.pollTimeout = null;
+    }
+    this.isPolling = false;
+  }
+}
 
 /**
  * Notifies all listeners of state changes without persisting to DB.
@@ -567,22 +762,20 @@ export function useSituationStore() {
         }
       }
 
-      fetchRunningModels();
-      fetchAiStatus();
+      // Initial status will be handled by the polling manager
+      // No need for a separate initial check that could cause race conditions
     };
     init();
 
-    // Poll for running models (Only if NOT in static mode)
+    // Use the singleton polling manager for running models (Only if NOT in static mode)
     const isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     if (!isStatic) {
-      const poll = setInterval(() => {
-        fetchRunningModels();
-      }, 5000);
+      const pollingManager = OllamaPollingManager.getInstance();
+      pollingManager.startPolling();
 
       return () => {
         listeners.delete(setState);
-        clearInterval(poll);
-        fetchRunningModels();
+        pollingManager.stopPolling();
       };
     } else {
       return () => {
@@ -1400,16 +1593,6 @@ export function useSituationStore() {
     }
   }, [refreshSection, clearSectionFailure]);
 
-  const fetchRunningModels = useCallback(async () => {
-    try {
-      const { OllamaService } = await import('../ai/runtime/ollama');
-      const models = await OllamaService.getRunningModels();
-      globalState = { ...globalState, runningModels: models };
-      // Note: We don't call emit() here to avoid saving volatile ps data to DB
-      listeners.forEach(l => l({ ...globalState }));
-    } catch (e) { }
-  }, []);
-
   const fetchAiStatus = useCallback(async () => {
     try {
       const { OllamaService } = await import('../ai/runtime/ollama');
@@ -1491,6 +1674,48 @@ export function useSituationStore() {
     persist();
   }, []);
 
+  const exportSnapshot = useCallback(async () => {
+    try {
+      console.log('🔍 Export Debug - Current feeds:', globalState.feeds);
+      console.log('🔍 Export Debug - Feeds length:', globalState.feeds?.length || 0);
+      console.log('🔍 Export Debug - Current date:', globalState.currentDate);
+      
+      const snapshot = {
+        lastUpdated: globalState.lastUpdated?.toISOString() || new Date().toISOString(),
+        narrative: globalState.narrative,
+        signals: globalState.signals,
+        insights: globalState.insights,
+        feeds: globalState.feeds, // Include feeds!
+        mapPoints: globalState.mapPoints,
+        foreignRelations: globalState.foreignRelations,
+        dailyMetrics: globalState.dailyMetrics,
+        availableDates: globalState.availableDates,
+        bigPicture: globalState.bigPicture,
+        predictionHistory: globalState.predictionHistory,
+        deepDiveBySignalId: globalState.deepDiveBySignalId,
+        generatedAt: new Date().toISOString(),
+        version: '0.2.0'
+      };
+
+      console.log('🔍 Export Debug - Snapshot feeds count:', snapshot.feeds?.length || 0);
+
+      // Create blob and download
+      const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `snapshot-${globalState.currentDate}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      console.log(`Exported snapshot with ${globalState.feeds?.length || 0} feeds`);
+    } catch (error) {
+      console.error('Failed to export snapshot:', error);
+    }
+  }, []);
+
   // Auto-retry mechanism for failed sections
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1523,7 +1748,6 @@ export function useSituationStore() {
     removeRelation,
     fetchAvailableModels,
     updateAiConfig,
-    fetchRunningModels,
     loadDate,
     setJsonError,
     clearJsonError,
@@ -1545,6 +1769,7 @@ export function useSituationStore() {
     clearSectionFailure,
     retryFailedSection,
     setPredictionHistory,
+    exportSnapshot,
     isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   };
 }

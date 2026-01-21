@@ -357,7 +357,10 @@ export class OllamaService {
             const data = await response.json();
             return data.models.map((m: any) => m.name);
         } catch (error) {
-            console.error('Failed to list Ollama models:', error);
+            // Only log errors that aren't connection refused (expected when Ollama is not running)
+            if (error instanceof Error && !error.message.includes('ERR_CONNECTION_REFUSED') && !error.message.includes('Failed to fetch')) {
+                console.error('Unexpected error listing Ollama models:', error);
+            }
             return [];
         }
     }
@@ -368,7 +371,10 @@ export class OllamaService {
             const data = await response.json();
             return data.models || [];
         } catch (error) {
-            console.error('Failed to get running models:', error);
+            // Only log errors that aren't connection refused (expected when Ollama is not running)
+            if (error instanceof Error && !error.message.includes('ERR_CONNECTION_REFUSED') && !error.message.includes('Failed to fetch')) {
+                console.error('Unexpected error getting running models:', error);
+            }
             return [];
         }
     }

@@ -18,7 +18,7 @@ import { LocalAIRequiredModal } from './components/LocalAIRequiredModal'
 import { DisclaimerModal } from './components/DisclaimerModal'
 
 export default function App() {
-  const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig, aiStatus } = useSituationStore()
+  const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig, aiStatus, exportSnapshot } = useSituationStore()
   const [showBigPicture, setShowBigPicture] = useState(false)
   const [showAIModal, setShowAIModal] = useState(false)
   const [showDisclaimer, setShowDisclaimer] = useState(false)
@@ -30,6 +30,8 @@ export default function App() {
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   const todayStr = getLocalTodayStr();
   const isToday = currentDate === todayStr;
@@ -98,9 +100,9 @@ export default function App() {
               <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
                 <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
                 <p className={`text-xs font-mono whitespace-nowrap ${isProcessing ? 'text-accent-secondary' :
-                  (aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
+                  (isLocalhost && aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
                   }`}>
-                  {isProcessing ? 'SCANNING...' : (aiStatus?.isOnline ? 'OLLAMA ONLINE' : 'AI OFFLINE')}
+                  {isProcessing ? 'SCANNING...' : (isLocalhost && aiStatus?.isOnline ? 'OLLAMA ONLINE' : 'AI OFFLINE')}
                 </p>
               </div>
               {lastUpdated ? (
@@ -142,8 +144,8 @@ export default function App() {
                   <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
                     <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-mono whitespace-nowrap ${aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`}>
-                        {aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}
+                      <span className={`text-xs font-mono whitespace-nowrap ${isLocalhost && aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`}>
+                        {isLocalhost && aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}
                       </span>
                     </div>
                   </div>
@@ -200,7 +202,7 @@ export default function App() {
             <span className="sm:hidden">Prev</span>
           </button>
 
-          <div className="bg-accent-primary/10 border border-accent-primary/20 px-6 py-1 rounded-full">
+          <div className="border border-accent-primary/20 px-6 py-1 rounded-full">
             <span className="text-xs font-mono font-bold text-accent-primary tracking-widest">
               {(currentDate || todayStr).replace(/-/g, ' / ')}
             </span>

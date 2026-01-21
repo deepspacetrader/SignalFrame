@@ -112,7 +112,7 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
         if (sectionGenerationTimes.map) {
             badges.push(
                 <SectionBadge key="duration" tone="info">
-                    {formatTime(sectionGenerationTimes.map)}
+                    ⏱️{formatTime(sectionGenerationTimes.map)}
                 </SectionBadge>
             )
         }
@@ -183,6 +183,10 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
                     zoomControl={true}
                     scrollWheelZoom={true}
                     doubleClickZoom={true}
+                    maxBounds={[[-90, -180], [90, 180]]}
+                    maxBoundsViscosity={1.0}
+                    minZoom={2}
+                    maxZoom={18}
                 >
                     <TileLayer
                         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"

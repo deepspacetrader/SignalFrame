@@ -759,6 +759,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                                 narrative: snapshot.narrative,
                                                 signals: snapshot.signals,
                                                 insights: snapshot.insights,
+                                                feeds: snapshot.feeds, // Include RSS feeds in export
                                                 mapPoints: snapshot.mapPoints,
                                                 availableDates: snapshot.availableDates,
                                                 foreignRelations: snapshot.foreignRelations,

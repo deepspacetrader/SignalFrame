@@ -329,10 +329,18 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
             >
               {/* Header with title and sentiment */}
               <div className="flex items-start justify-between gap-3 mb-3">
-                <h3 className="signal-text font-semibold text-text-primary text-base leading-tight">
+                <h3 className="signal-text font-semibold text-xl text-text-primary text-base leading-tight">
                   {signal.title || 'Error generating signal title'}
                 </h3>
                 <div className="flex items-center gap-2">
+                  
+                  <span
+                    className="text-[0.55rem] uppercase tracking-widest px-2 py-1 rounded text-white font-medium shadow-md"
+                    style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
+                  >
+                    {signal.sentiment.replace('-', ' ')}
+                  </span>
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -352,20 +360,19 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                       // On localhost - proceed with deep dive (which generates if needed)
                       generateDeepDive(signal.id || '');
                     }}
-                    className="p-1.5 rounded bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"
+                    className="p-1.5 rounded bg-accent-primary/30 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"
                     title="Deep Intelligence Analyze"
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:scale-110 transition-transform">
-                      <circle cx="11" cy="11" r="8"></circle>
-                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                    <div className="flex items-center gap-1">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:scale-110 transition-transform text-white">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                      <span className="text-[0.55rem] uppercase tracking-widest text-white">Deep Analysis</span>
+                    </div>
+                    
                   </button>
-                  <span
-                    className="text-[0.65rem] uppercase tracking-widest px-2 py-1 rounded text-white font-medium shadow-md"
-                    style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
-                  >
-                    {signal.sentiment.replace('-', ' ')}
-                  </span>
+            
                 </div>
               </div>
 

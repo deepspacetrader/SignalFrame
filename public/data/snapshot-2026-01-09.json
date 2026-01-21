@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-20T18:53:26.929Z",
+  "lastUpdated": "2026-01-21T20:24:46.729Z",
   "narrative": "Power outages and infrastructure vulnerabilities are escalating across North America, with military deployments in Canada and widespread disruptions in the U.S., highlighting systemic weaknesses in energy grids and emergency response mechanisms. Simultaneously, climate-related weather events, such as extreme winds in Ontario and persistent storms in the Caribbean, underscore growing regional climate instability and its impact on critical infrastructure.  \n\nGlobal energy geopolitics remains volatile, driven by U.S.-Venezuela oil negotiations, U.S. sanctions enforcement against sanctioned vessels, and Iran’s influence on oil markets. These dynamics are further complicated by Trump’s proposed policy shifts, including potential troop withdrawals and prisoner releases, which could reshape regional power balances.  \n\nAI regulation and ethical concerns dominate tech discourse, with X’s Grok image-generation tool facing backlash for generating nonconsensual content and corporate responses like subscription restrictions. Meanwhile, Meta’s nuclear energy partnerships and the EU’s Mercosur trade deal reflect broader efforts to balance technological advancement with regulatory oversight and economic diplomacy.  \n\nFinancial markets are experiencing shifts as mortgage rates drop, AI-driven stock picks gain traction, and U.S. federal funding suspensions in Minnesota signal heightened scrutiny of public programs. These trends intersect with geopolitical tensions, as seen in the USDA’s fraud investigation and the U.S. military’s intensified focus on oil supply chain control.  \n\nHuman rights and conflict dynamics persist, with UN warnings on Aleppo, ICE-related fatalities, and the unresolved status of Yemeni separatists. These issues are compounded by the U.S. military’s ongoing operations against sanctioned oil shipments, illustrating the entanglement of security, economic interests, and humanitarian concerns.",
   "signals": [
     {
@@ -232,6 +232,996 @@
       "sentiment": "negative"
     }
   ],
+  "feeds": [
+    {
+      "id": "trend-power outage-Fri, 9 Jan 2026 16:10:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:10:00 -0800",
+      "content": "power outage: Ottawa sending military after thousands evacuate Pimicikamak Cree Nation. Military team deployed to help Manitoba First Nation hit by power outage. Canadian Red Cross opens appeal to expand support for the Pimicikamak Cree Nation Crisis",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=power%20outage",
+      "approxTraffic": "500+",
+      "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTwcmPUHwH8iuRBx66vOoB7W7czfJ-xw_bbu7VFBo27feRkLG3OWdWNDBztXgw",
+      "pictureSource": "CBC",
+      "relatedNews": [
+        {
+          "title": "Ottawa sending military after thousands evacuate Pimicikamak Cree Nation",
+          "url": "https://www.cbc.ca/news/canada/manitoba/military-pimicikamak-cree-nation-ottawa-9.7040283",
+          "source": "CBC",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTwcmPUHwH8iuRBx66vOoB7W7czfJ-xw_bbu7VFBo27feRkLG3OWdWNDBztXgw"
+        },
+        {
+          "title": "Military team deployed to help Manitoba First Nation hit by power outage",
+          "url": "https://globalnews.ca/news/11607063/manitoba-first-nation-power-outage-military-team-help/",
+          "source": "Global News",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRT-qJL2DPCC1uTQ61naAyrorZcF4RJ2PgDZH7Jfm87UDoR4rUcV6ewzOCYaD8"
+        },
+        {
+          "title": "Canadian Red Cross opens appeal to expand support for the Pimicikamak Cree Nation Crisis",
+          "url": "https://www.thestar.com/globenewswire/canadian-red-cross-opens-appeal-to-expand-support-for-the-pimicikamak-cree-nation-crisis/article_0928fe19-3a3a-50a5-a1ae-c7b35b548dd5.html",
+          "source": "Toronto Star",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTO6BYmPBikdDuTBX4psBwhtbjGsroab6qkGajRt0V6u3W0VKUVI5GwP1Y_vrE"
+        }
+      ]
+    },
+    {
+      "id": "trend-power outage near me-Fri, 9 Jan 2026 16:10:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:10:00 -0800",
+      "content": "power outage near me: RG&E: Nearly 4,180 people without power around Finger Lakes. Power outages hit NY. See the latest numbers across the state. Henrietta FD: Major power issue in area of I-90 and East River Road due to downed wires",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=power%20outage%20near%20me",
+      "approxTraffic": "100+",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEvX0PyiPfptKXCsapMR5Nz68n9O23cxW9wQxj42oRAEH07hMkELCX2yyKO2k",
+      "pictureSource": "RochesterFirst",
+      "relatedNews": [
+        {
+          "title": "RG&E: Nearly 4,180 people without power around Finger Lakes",
+          "url": "https://www.rochesterfirst.com/weather/power-outages-in-rochester-region-as-high-wind-warning-in-effect/",
+          "source": "RochesterFirst",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEvX0PyiPfptKXCsapMR5Nz68n9O23cxW9wQxj42oRAEH07hMkELCX2yyKO2k"
+        },
+        {
+          "title": "Power outages hit NY. See the latest numbers across the state",
+          "url": "https://www.democratandchronicle.com/story/weather/2026/01/09/power-outages-new-york-see-latest-outages-rge-nyseg-national-grid-list-map/88108189007/",
+          "source": "Democrat and Chronicle",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcStF9ayhcXT0hn8QXqfXLpq-AJRFbs9Kl8WwtZXInde74ddJwgyOewLW9buNzg"
+        },
+        {
+          "title": "Henrietta FD: Major power issue in area of I-90 and East River Road due to downed wires",
+          "url": "https://www.whec.com/top-news/henrietta-fd-major-power-issue-in-area-of-i-90-and-east-river-road-due-to-downed-wires/",
+          "source": "WHEC.com",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRyZ33UpNrWobH0MRl84MWB0ufp-UV-G_Hu0NHYHb4gSO05-b8GbrHbR2aEtlg"
+        }
+      ]
+    },
+    {
+      "id": "trend-maldives-Fri, 9 Jan 2026 16:10:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:10:00 -0800",
+      "content": "maldives: SIX & SIX Private Islands to Debut Rah Gili Maldives. Six & Six to open 6 resorts in the Maldives. 55 percent of tourist arrivals from Europe, a 15 percent increase",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=maldives",
+      "approxTraffic": "100+",
+      "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSYeWauyJFCgUhfjTLi8UAnXJVX0VuKu6mz5KEmEz_Gdhg9HyDb4GJwLxRYtHQ",
+      "pictureSource": "Hospitality Design",
+      "relatedNews": [
+        {
+          "title": "SIX & SIX Private Islands to Debut Rah Gili Maldives",
+          "url": "https://hospitalitydesign.com/news/hotels-resorts/rah-gili-maldives-six-six-private-islands/",
+          "source": "Hospitality Design",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSYeWauyJFCgUhfjTLi8UAnXJVX0VuKu6mz5KEmEz_Gdhg9HyDb4GJwLxRYtHQ"
+        },
+        {
+          "title": "Six & Six to open 6 resorts in the Maldives",
+          "url": "https://connectingtravel.com/news/six-six-to-open-6-resorts-in-the-maldives",
+          "source": "Connecting Travel",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQwlb7BajKhDxAipevIOyqE6oEfAFMvL8tXqKc6z9XG3U56U9SosgNOjx-Vv1s"
+        },
+        {
+          "title": "55 percent of tourist arrivals from Europe, a 15 percent increase",
+          "url": "https://edition.mv/business/47317",
+          "source": "Edition.mv",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR6hgp0cdmf2vvoO8fpgqKBD0kGKSpATslot-UguzcdZeV05cfKxM93M7Y-Ytw"
+        }
+      ]
+    },
+    {
+      "id": "trend-his & hers-Fri, 9 Jan 2026 16:10:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:10:00 -0800",
+      "content": "his & hers: His & Hers review – this glossy thriller is ideal new year TV. ‘His & Hers’ Boss on the Biggest Changes Made From the Novel and That Truly Shocking Final Reveal. Netflix’s Star-Studded New Mystery Thriller Is Eminently Watchable Trash",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=his%20%26%20hers",
+      "approxTraffic": "1000+",
+      "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR2zO8bv4fmepooTbje5HCpMhAq4AZQMQ9Y2vKQ017_4Pnw1mNIQaPpwfxr8Y8",
+      "pictureSource": "The Guardian",
+      "relatedNews": [
+        {
+          "title": "His & Hers review – this glossy thriller is ideal new year TV",
+          "url": "https://www.theguardian.com/tv-and-radio/2026/jan/08/his-hers-review-netflix-jon-bernthal-tessa-thompson-thriller",
+          "source": "The Guardian",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR2zO8bv4fmepooTbje5HCpMhAq4AZQMQ9Y2vKQ017_4Pnw1mNIQaPpwfxr8Y8"
+        },
+        {
+          "title": "‘His & Hers’ Boss on the Biggest Changes Made From the Novel and That Truly Shocking Final Reveal",
+          "url": "https://variety.com/2026/tv/news/his-and-hers-finale-twist-anna-mom-is-killer-changes-from-book-1236617701/",
+          "source": "Variety",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn2qi5ouUy-qFtzis1GMi7-9HhOe4efTb49IBAn6yElMAHC4BgEoe7WycUwL8"
+        },
+        {
+          "title": "Netflix’s Star-Studded New Mystery Thriller Is Eminently Watchable Trash",
+          "url": "https://slate.com/culture/2026/01/his-and-hers-netflix-show-book-tessa-thompson-jon-bernthal.html",
+          "source": "Slate",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwKZsTppWkkfrdwCKbBtyUA8yASARpP2ZqyFRK4nCU0_iUjJT3-raGLfezlZU"
+        }
+      ]
+    },
+    {
+      "id": "trend-indiana football-Fri, 9 Jan 2026 16:10:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 16:10:00 -0800",
+      "content": "indiana football: Oregon vs. Indiana (Jan 9, 2026) Live Score. Indiana and Oregon square off to find out who will play Miami in the College Football Playoff national title game. Oregon vs. Indiana odds, time: 2026 College Football Playoff picks, Peach Bowl prediction from proven model",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=indiana%20football",
+      "approxTraffic": "200000+",
+      "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQtmNliC6k0Kq6_qbeelunx9nTPkNUdpu9H3gVqgUTSTHTnFZWwEfLNSvf1sKE",
+      "pictureSource": "ESPN",
+      "relatedNews": [
+        {
+          "title": "Oregon vs. Indiana (Jan 9, 2026) Live Score",
+          "url": "https://www.espn.com/college-football/game/_/gameId/401769074/oregon-indiana",
+          "source": "ESPN",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQtmNliC6k0Kq6_qbeelunx9nTPkNUdpu9H3gVqgUTSTHTnFZWwEfLNSvf1sKE"
+        },
+        {
+          "title": "Indiana and Oregon square off to find out who will play Miami in the College Football Playoff national title game",
+          "url": "https://www.cnn.com/sport/live-news/indiana-oregon-peach-bowl-college-football-playoff",
+          "source": "CNN",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTdNRyjUChW7vIXB0I0sRPTv7YR57ZqdDRVvwiHDmbhZ6yTnOLGC48UxpiQ77E"
+        },
+        {
+          "title": "Oregon vs. Indiana odds, time: 2026 College Football Playoff picks, Peach Bowl prediction from proven model",
+          "url": "https://www.cbssports.com/college-football/news/oregon-indiana-prediction-picks-odds-time-line-spread-2026-college-football-playoff-peach-bowl-best-bets/",
+          "source": "CBS Sports",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTk2GdEg6Hcds4FCHWv_Mj1scXCWp5VcJhIEGL0IMVfnlI-gDV9yz-JOuBqj-A"
+        }
+      ]
+    },
+    {
+      "id": "trend-thunder vs grizzlies-Fri, 9 Jan 2026 16:10:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 16:10:00 -0800",
+      "content": "thunder vs grizzlies: Final Injury Report for Thunder-Grizzlies, Will Shai Gilgeous-Alexander, Ja Morant Play?. Seven OKC Thunder Players Out, One Questionable vs. Grizzlies. Grizzlies vs. Thunder live score updates: Ja Morant, Shai Gilgeous-Alexander out",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=thunder%20vs%20grizzlies",
+      "approxTraffic": "2000+",
+      "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQXI9vuNaAtJsWLP4hZbABt7TuR5N7sF4AfkuuViT_aYVVZORn8pSCMQOXS5bc",
+      "pictureSource": "Yahoo Sports",
+      "relatedNews": [
+        {
+          "title": "Final Injury Report for Thunder-Grizzlies, Will Shai Gilgeous-Alexander, Ja Morant Play?",
+          "url": "https://sports.yahoo.com/articles/final-injury-report-thunder-grizzlies-210000157.html",
+          "source": "Yahoo Sports",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQXI9vuNaAtJsWLP4hZbABt7TuR5N7sF4AfkuuViT_aYVVZORn8pSCMQOXS5bc"
+        },
+        {
+          "title": "Seven OKC Thunder Players Out, One Questionable vs. Grizzlies",
+          "url": "https://www.si.com/nba/thunder/onsi/news/seven-okc-thunder-players-out-one-questionable-vs-grizzlies",
+          "source": "Sports Illustrated",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRKfAp7-vvjlxi5VX4FOpNga_DAXq-9xVwfUP42Qa509wbumDyuk-8O3iJOgUs"
+        },
+        {
+          "title": "Grizzlies vs. Thunder live score updates: Ja Morant, Shai Gilgeous-Alexander out",
+          "url": "https://www.commercialappeal.com/story/sports/nba/grizzlies/2026/01/09/memphis-grizzlies-oklahoma-city-thunder-score/88106002007/",
+          "source": "The Commercial Appeal",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTb319VaJuo37l5DNAdI6gmJ5pvZ-RN_ZZ9VFZ5SqZoJcU4cPVDR9rquEIAvJk"
+        }
+      ]
+    },
+    {
+      "id": "trend-hydro one-Fri, 9 Jan 2026 16:00:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:00:00 -0800",
+      "content": "hydro one: 70 to 90 km/h winds blowing into nation’s capital. Wind warning and special weather statement in effect. Expect a windy day across Niagara, Hamilton, Burlington and Brantford, Environment Canada says",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=hydro%20one",
+      "approxTraffic": "2000+",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwmA64Kv9SIuMjFL-ZDKRz9BuGlZgMr37FiZPEyXWfoy_jEB_aMxkjBLF7HB0",
+      "pictureSource": "CityNews Ottawa",
+      "relatedNews": [
+        {
+          "title": "70 to 90 km/h winds blowing into nation’s capital",
+          "url": "https://ottawa.citynews.ca/2026/01/09/70-to-90-km-h-winds-blowing-into-nations-capital/",
+          "source": "CityNews Ottawa",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwmA64Kv9SIuMjFL-ZDKRz9BuGlZgMr37FiZPEyXWfoy_jEB_aMxkjBLF7HB0"
+        },
+        {
+          "title": "Wind warning and special weather statement in effect",
+          "url": "https://www.ctvnews.ca/windsor/article/wind-warning-and-special-weather-statement-in-effect/",
+          "source": "CTV News",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQK57Giu1laUN2lbdcKdZoF90wKAub7V5QjsIU6E3eHL2bB3RtSkfTKlJN0X48"
+        },
+        {
+          "title": "Expect a windy day across Niagara, Hamilton, Burlington and Brantford, Environment Canada says",
+          "url": "https://www.cbc.ca/news/canada/hamilton/high-winds-january-environment-canada-niagara-9.7039269",
+          "source": "CBC",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQFoTCejXj4PHvSi0uLVmKqiUb2COhLBJYHAaB06BYIMqy_TDWtv1jG2rTLN18"
+        }
+      ]
+    },
+    {
+      "id": "trend-zach bryan lyrics-Fri, 9 Jan 2026 16:00:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:00:00 -0800",
+      "content": "zach bryan lyrics: Zach Bryan Swings Bigger Than Ever on ‘With Heaven on Top’. Zach Bryan eviscerates ex Brianna Chickenfry — while praising wife Samantha Leonard — in scathing new lyrics. Zach Bryan Shares Scathing Diss Track 'Skin' on New Album 'With Heaven on Top'",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=zach%20bryan%20lyrics",
+      "approxTraffic": "500+",
+      "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQluXYjLTlAV4W3Dwzbrjrf8Ga_Iesw11mFGNxxg7D-f26tz__1eGaXmwYkATA",
+      "pictureSource": "Rolling Stone",
+      "relatedNews": [
+        {
+          "title": "Zach Bryan Swings Bigger Than Ever on ‘With Heaven on Top’",
+          "url": "https://www.rollingstone.com/music/music-album-reviews/zach-bryan-with-heaven-on-top-review-1235496902/",
+          "source": "Rolling Stone",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQluXYjLTlAV4W3Dwzbrjrf8Ga_Iesw11mFGNxxg7D-f26tz__1eGaXmwYkATA"
+        },
+        {
+          "title": "Zach Bryan eviscerates ex Brianna Chickenfry — while praising wife Samantha Leonard — in scathing new lyrics",
+          "url": "https://pagesix.com/2026/01/09/entertainment/zach-bryan-eviscerates-ex-brianna-chickenfry-praises-wife-samantha-leonard-in-new-lyrics/",
+          "source": "Page Six",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSeh4iQsihm-LFpInU7cWUuLdmijrExrZG2bWhp9hZnoUJ3xdsJvPm61Dcn71s"
+        },
+        {
+          "title": "Zach Bryan Shares Scathing Diss Track 'Skin' on New Album 'With Heaven on Top'",
+          "url": "https://people.com/zach-bryan-shares-scathing-diss-track-skin-new-album-with-heaven-on-top-11882113",
+          "source": "People.com",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQljz7rR654mcOtK6GrVH0basKBNfLJiEu93jHpemhT2c7WI4q6tig4PILdlzE"
+        }
+      ]
+    },
+    {
+      "id": "trend-david blough-Fri, 9 Jan 2026 16:00:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:00:00 -0800",
+      "content": "david blough: NFL insider hints that Commanders forced Dan Quinn to fire Kliff Kingsbury. Report: Ravens, Titans request interview with Kingsbury. Ravens, Titans want to interview Kliff Kingsbury for head coach",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=david%20blough",
+      "approxTraffic": "200+",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzmNWquoHhTmiYshVpHBk773-lATQ7597CE8DRaUP3X6xafLshW-Cz1mVSXp0",
+      "pictureSource": "Yahoo Sports Canada",
+      "relatedNews": [
+        {
+          "title": "NFL insider hints that Commanders forced Dan Quinn to fire Kliff Kingsbury",
+          "url": "https://ca.sports.yahoo.com/news/nfl-insider-hints-commanders-forced-173729899.html",
+          "source": "Yahoo Sports Canada",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzmNWquoHhTmiYshVpHBk773-lATQ7597CE8DRaUP3X6xafLshW-Cz1mVSXp0"
+        },
+        {
+          "title": "Report: Ravens, Titans request interview with Kingsbury",
+          "url": "https://thescore.com/s/34038404",
+          "source": "theScore.com",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSVrYAU9UtH0Fj4pWLiEDOLQIIgM_EMwJEjoepnvPZJKKwNpmJX9elMizTJgO4"
+        },
+        {
+          "title": "Ravens, Titans want to interview Kliff Kingsbury for head coach",
+          "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/ravens-titans-want-to-interview-kliff-kingsbury-for-head-coach",
+          "source": "NBC Sports",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT6QIO8E4ZHuVSsZqe-fMNojZLZQhtFytSwWI8jpYqOoMo6yzx4qZcTuADGHhY"
+        }
+      ]
+    },
+    {
+      "id": "trend-code violet-Fri, 9 Jan 2026 16:00:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:00:00 -0800",
+      "content": "code violet: Code Violet Review. First PS5 Exclusive of 2026 Is a Huge Mess. Code Violet Crashes and Burns",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=code%20violet",
+      "approxTraffic": "100+",
+      "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQJTW7p9EwpwUaEKlfvlSnXiRthhybY_AtkgjQf2Fqq3JzvMlKzFYFq0rDr0_k",
+      "pictureSource": "IGN",
+      "relatedNews": [
+        {
+          "title": "Code Violet Review",
+          "url": "https://www.ign.com/articles/code-violet-review",
+          "source": "IGN",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQJTW7p9EwpwUaEKlfvlSnXiRthhybY_AtkgjQf2Fqq3JzvMlKzFYFq0rDr0_k"
+        },
+        {
+          "title": "First PS5 Exclusive of 2026 Is a Huge Mess",
+          "url": "https://www.playstationlifestyle.net/2026/01/09/ps5-exclusive-2026-code-violet-bombed/",
+          "source": "PlayStation LifeStyle",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSpP26t5IK0umDVdN6jiXLEu6pNxNNhK7TO4BD0tRHxUDdbrlSF4dWCnfr0_GI"
+        },
+        {
+          "title": "Code Violet Crashes and Burns",
+          "url": "https://www.techi.com/code-violet-crashes-and-burns/",
+          "source": "Techi",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSA1Uveh3DYNYTMNMkNSk_5C7jCBrN5HU96svBcGFKwRvnAZQIPhJ0e6zTQUcM"
+        }
+      ]
+    },
+    {
+      "id": "trend-law and order-Fri, 9 Jan 2026 16:00:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 16:00:00 -0800",
+      "content": "law and order: 'Law & Order: SVU' returns for midseason premiere. How to watch.. 'Law & Order' Season 25 returns with crossover episode. How to watch.. Is Detective Terry Bruno OK After That Explosive Law & Order and SVU Crossover?",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=law%20and%20order",
+      "approxTraffic": "1000+",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFVt-f7eujWzBaJgRCGxdBvarGluXHRpohSj5_rOFlUqHUXUulaDVE_I08iag",
+      "pictureSource": "USA Today",
+      "relatedNews": [
+        {
+          "title": "'Law & Order: SVU' returns for midseason premiere. How to watch.",
+          "url": "https://www.usatoday.com/story/entertainment/tv/2026/01/07/law-order-svu-midseason-premiere-where-to-watch/88053501007/",
+          "source": "USA Today",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFVt-f7eujWzBaJgRCGxdBvarGluXHRpohSj5_rOFlUqHUXUulaDVE_I08iag"
+        },
+        {
+          "title": "'Law & Order' Season 25 returns with crossover episode. How to watch.",
+          "url": "https://ca.news.yahoo.com/law-order-season-25-returns-200629253.html",
+          "source": "Yahoo News Canada",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSKA3dkPuV398ToXXNswCjR-hYZ567KGOyT0Lwg2hUxLtRtSQtSBm3JMCUahRI"
+        },
+        {
+          "title": "Is Detective Terry Bruno OK After That Explosive Law & Order and SVU Crossover?",
+          "url": "https://www.aol.com/articles/detective-terry-bruno-ok-explosive-030005384.html",
+          "source": "AOL.com",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiUX4fbjOVI81sQYS0HZQ8g_QaPHq1FPhYNmOKTmLFEh5phbZZ2I1H9HrmmoU"
+        }
+      ]
+    },
+    {
+      "id": "trend-daniel caesar-Fri, 9 Jan 2026 16:00:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 16:00:00 -0800",
+      "content": "daniel caesar: Daniel Caesar: Tiny Desk Concert. Daniel Caesar Returns to NPR Tiny Desk With 12-Piece Choir. Daniel Caesar Performs His Most Faith-Focused Album on Tiny Desk",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=daniel%20caesar",
+      "approxTraffic": "500+",
+      "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTj0dixWu7y9p_PFXQQi6G3pQYJgfV8e3orUEoAD4gHKd3_9HBsmPPNBYAiVyI",
+      "pictureSource": "NPR",
+      "relatedNews": [
+        {
+          "title": "Daniel Caesar: Tiny Desk Concert",
+          "url": "https://www.npr.org/2026/01/05/g-s1-104268/daniel-caesar-tiny-desk-concert",
+          "source": "NPR",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTj0dixWu7y9p_PFXQQi6G3pQYJgfV8e3orUEoAD4gHKd3_9HBsmPPNBYAiVyI"
+        },
+        {
+          "title": "Daniel Caesar Returns to NPR Tiny Desk With 12-Piece Choir",
+          "url": "https://www.rollingstone.com/music/music-news/daniel-caesar-npr-tiny-desk-choir-performance-1235493971/",
+          "source": "Rolling Stone",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBFRuyUvvSXmjIhy37OQm2VtF4lz6O_3A4ezVX9B8GHZOcDftoN7rvPIAgmRE"
+        },
+        {
+          "title": "Daniel Caesar Performs His Most Faith-Focused Album on Tiny Desk",
+          "url": "https://relevantmagazine.com/culture/music/daniel-caesar-performs-his-most-faith-focused-album-on-tiny-desk/",
+          "source": "RELEVANT Magazine",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQXBA4emsgGP9q865zx-KxVgp8hzpVRCxllv6mnDB_J04V8HKSWilIz74hygeQ"
+        }
+      ]
+    },
+    {
+      "id": "trend-sebastian stan-Fri, 9 Jan 2026 15:50:00 -0800",
+      "source": "Google Trends Canada",
+      "timestamp": "Fri, 9 Jan 2026 15:50:00 -0800",
+      "content": "sebastian stan: Sebastian Stan to Join Robert Pattinson in ‘The Batman 2’. It's now clear who Avengers: Doomsday's biggest death will be — and it's not who you think. Sebastian Stan’s The Batman 2 Role Possibly Confirmed by Stylist",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=sebastian%20stan",
+      "approxTraffic": "100+",
+      "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSwI6ZEI7ssWITmm_6OInpZ9XODT1SAzz29Y7yjMIjB_8O4GIq66o40vg9XMBg",
+      "pictureSource": "Variety",
+      "relatedNews": [
+        {
+          "title": "Sebastian Stan to Join Robert Pattinson in ‘The Batman 2’",
+          "url": "https://variety.com/2026/film/news/batman-2-cast-robert-pattinson-sebastian-stan-1236607867/",
+          "source": "Variety",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSwI6ZEI7ssWITmm_6OInpZ9XODT1SAzz29Y7yjMIjB_8O4GIq66o40vg9XMBg"
+        },
+        {
+          "title": "It's now clear who Avengers: Doomsday's biggest death will be — and it's not who you think",
+          "url": "https://bamsmackpow.com/avengers-doomsday-shocking-marvel-mcu-death-bucky-barnes-theory",
+          "source": "Bam Smack Pow",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQU1haYOrTt9zZtni0OCQn1FN39RFfc10F0ZW0hn1EWMz--Zp4zrpyUKd6lx8o"
+        },
+        {
+          "title": "Sebastian Stan’s The Batman 2 Role Possibly Confirmed by Stylist",
+          "url": "https://www.yahoo.com/entertainment/movies/articles/sebastian-stan-batman-2-role-130000629.html",
+          "source": "Yahoo",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMxaftxJSCaousRVk0I5KTSwl7gipZH1RqupiWB5VSJs4vSh3tKXDSu5TvbZE"
+        }
+      ]
+    },
+    {
+      "id": "trend-elijah sarratt-Fri, 9 Jan 2026 15:50:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:50:00 -0800",
+      "content": "elijah sarratt: Elijah Sarratt NFL Draft Projection: Where Indiana Receiver Could Land. Indiana’s Elijah Sarratt Predicted To Get Selected by NFC Super Bowl Contender in 2026 NFL Draft. Elijah Sarratt NFL Draft Projections: Top 5 Potential Landing Spots for Indiana WR",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=elijah%20sarratt",
+      "approxTraffic": "1000+",
+      "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRyZCKgBp5ouDMpsKzeX_A01BlWrdWib9uUVZjz3x4JGdzolhffXO01OVD1RVo",
+      "pictureSource": "sports.betmgm.com",
+      "relatedNews": [
+        {
+          "title": "Elijah Sarratt NFL Draft Projection: Where Indiana Receiver Could Land",
+          "url": "https://sports.betmgm.com/en/blog/college-football/elijah-sarratt-nfl-draft-projection-bm06/",
+          "source": "sports.betmgm.com",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRyZCKgBp5ouDMpsKzeX_A01BlWrdWib9uUVZjz3x4JGdzolhffXO01OVD1RVo"
+        },
+        {
+          "title": "Indiana’s Elijah Sarratt Predicted To Get Selected by NFC Super Bowl Contender in 2026 NFL Draft",
+          "url": "https://www.profootballnetwork.com/indiana-elijah-sarratt-predicted-to-get-selected-by-nfc-super-bowl-contender-in-2026-nfl-draft/",
+          "source": "Pro Football Network",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSGNSYrAmzLuGOOUYmXZcCjYcIGqMQ6vy1bwKxzw0KNqycOhiOVYZehWg0swFI"
+        },
+        {
+          "title": "Elijah Sarratt NFL Draft Projections: Top 5 Potential Landing Spots for Indiana WR",
+          "url": "https://www.profootballnetwork.com/elijah-sarratt-nfl-draft-projections-top-5-potential-landing-spots-indiana-wr/",
+          "source": "Pro Football Network",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQJw3xcNFMe7qHwdk0yn4n9ssTuawFDlI5xen3FYbm3CHhmS1jYOvv14Co5G2c"
+        }
+      ]
+    },
+    {
+      "id": "trend-usda-Fri, 9 Jan 2026 15:50:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:50:00 -0800",
+      "content": "usda: USDA immediately suspends all federal funding to Minnesota amid fraud investigation. USDA suspends ‘federal financial awards’ for Minnesota, citing ‘massive fraud’. I spent 20 years building a lifeline for autistic children... now Minnesota's Somali fraud crackdown could shut my center in weeks",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=usda",
+      "approxTraffic": "500+",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV79dIuAQNHukomP6yJJOJh6eIzuX8Mfwm_9IjcjVpU0XCdWSDPZlz8dtUsBw",
+      "pictureSource": "Fox News",
+      "relatedNews": [
+        {
+          "title": "USDA immediately suspends all federal funding to Minnesota amid fraud investigation",
+          "url": "https://www.foxnews.com/politics/usda-immediately-suspends-all-federal-funding-minnesota-amid-fraud-investigation",
+          "source": "Fox News",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV79dIuAQNHukomP6yJJOJh6eIzuX8Mfwm_9IjcjVpU0XCdWSDPZlz8dtUsBw"
+        },
+        {
+          "title": "USDA suspends ‘federal financial awards’ for Minnesota, citing ‘massive fraud’",
+          "url": "https://www.the-independent.com/news/world/americas/us-politics/usda-minnesota-fraud-federal-funding-b2897913.html",
+          "source": "The Independent",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBjrhdlQGA1SS3jzzkOm-PeKIBMQcO4Jr0Md5QsZZOGZi8UsgmViUPiFnNyr8"
+        },
+        {
+          "title": "I spent 20 years building a lifeline for autistic children... now Minnesota's Somali fraud crackdown could shut my center in weeks",
+          "url": "https://www.dailymail.co.uk/news/article-15429047/holland-autism-center-jennifer-larson-minnesota-somali-fraud.html",
+          "source": "Daily Mail",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTB82h3BtM1lMbLQgPyJ50IltodK64GgPHSyaunFt1H23mQOK-SgBPxK7RtQ4w"
+        }
+      ]
+    },
+    {
+      "id": "trend-unrivaled schedule-Fri, 9 Jan 2026 15:50:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:50:00 -0800",
+      "content": "unrivaled schedule: Unrivaled prez open to partnering with WNBA. Unrivaled’s viewership for season-opener drops slightly from last year’s average - The Athletic. Unrivaled Is A Great Source Of Unlikely Athletic Friends",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=unrivaled%20schedule",
+      "approxTraffic": "500+",
+      "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQiyVg6rLhQwRLhjkvirTJEORP4RrHc3sebviijBJR8TkOC2y1uJ66LedUq8ks",
+      "pictureSource": "ESPN",
+      "relatedNews": [
+        {
+          "title": "Unrivaled prez open to partnering with WNBA",
+          "url": "https://www.espn.com/wnba/story/_/id/47515155/unrivaled-president-open-partnering-wnba-future",
+          "source": "ESPN",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQiyVg6rLhQwRLhjkvirTJEORP4RrHc3sebviijBJR8TkOC2y1uJ66LedUq8ks"
+        },
+        {
+          "title": "Unrivaled’s viewership for season-opener drops slightly from last year’s average - The Athletic",
+          "url": "https://www.nytimes.com/athletic/6955884/2026/01/08/unrivaled-season-opener-viewership-womens-basketball/",
+          "source": "The New York Times",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQgKx9JWDYTorZw7oHk6Sy9Xk8GaP_1NaASHwK_OFOZHtbb0DM3zkrOP-oQSTU"
+        },
+        {
+          "title": "Unrivaled Is A Great Source Of Unlikely Athletic Friends",
+          "url": "https://defector.com/unrivaled-is-a-great-source-of-unlikely-athletic-friends",
+          "source": "Defector",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQYqb-vsiN8wCxMyc1b6BdZ6h5f4Cr9bHtvVD9Dl5uCXlJgbbhXT7VM6jmB_8c"
+        }
+      ]
+    },
+    {
+      "id": "trend-club américa-Fri, 9 Jan 2026 15:50:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:50:00 -0800",
+      "content": "club américa: Tijuana vs América: posibles alineaciones de la Jornada 1. Las Águilas del América regresan a la Liga MX con la ilusión renovada. Tijuana vs. América: dónde y a qué hora ver EN VIVO J1",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=club%20am%C3%A9rica",
+      "approxTraffic": "200+",
+      "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT1vJXIyP6GYXBQWiQ-zvPAFH0ryq18tHmyrJxAeRJxdj1KRfamouqO1A4Z_Mc",
+      "pictureSource": "ESPN Deportes",
+      "relatedNews": [
+        {
+          "title": "Tijuana vs América: posibles alineaciones de la Jornada 1",
+          "url": "https://espndeportes.espn.com/futbol/mexico/nota/_/id/16160125/tijuana-vs-america-clausura-2026-alineaciones-horarios-jornada-1",
+          "source": "ESPN Deportes",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT1vJXIyP6GYXBQWiQ-zvPAFH0ryq18tHmyrJxAeRJxdj1KRfamouqO1A4Z_Mc"
+        },
+        {
+          "title": "Las Águilas del América regresan a la Liga MX con la ilusión renovada",
+          "url": "https://es-us.noticias.yahoo.com/%C3%A1guilas-am%C3%A9rica-regresan-liga-mx-144610222.html",
+          "source": "Yahoo",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKwoNnOBpHyNOhyrjZ3Av3RuSmDy1QZO9SlFgwLQZYE7cERhcTpSXxK7XqgeY"
+        },
+        {
+          "title": "Tijuana vs. América: dónde y a qué hora ver EN VIVO J1",
+          "url": "https://www.mediotiempo.com/futbol/liga-mx/tijuana-vs-america-a-que-hora-y-donde-ver-jornada-1-hoy-clausura-2026",
+          "source": "Mediotiempo",
+          "picture": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ9DjDmKm9n9j8SIz75w3ApQ108QeQWtPyNIfCW6lYIhXMCLrSzmCnDVJwudEI"
+        }
+      ]
+    },
+    {
+      "id": "trend-david blough-Fri, 9 Jan 2026 15:40:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:40:00 -0800",
+      "content": "david blough: Commanders promote Blough to OC, source says. The Washington Commanders are hiring David Blough as their new OC. Commanders part ways with OC Kliff Kingsbury, DC Joe Whitt Jr. after disappointing 2025",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=david%20blough",
+      "approxTraffic": "10000+",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiMxM1E_-wU9BW9RSGRuC5m9I3-z-nwVNp8WjpRfqiUUiTF1cPa3oWsc4RmiE",
+      "pictureSource": "ESPN",
+      "relatedNews": [
+        {
+          "title": "Commanders promote Blough to OC, source says",
+          "url": "https://www.espn.com/nfl/story/_/id/47564396/washington-commanders-promote-david-blough-offensive-coordinator",
+          "source": "ESPN",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiMxM1E_-wU9BW9RSGRuC5m9I3-z-nwVNp8WjpRfqiUUiTF1cPa3oWsc4RmiE"
+        },
+        {
+          "title": "The Washington Commanders are hiring David Blough as their new OC",
+          "url": "https://www.hogshaven.com/washington-commanders-news/397752/the-washington-commanders-are-hiring-david-blough-as-their-new-oc",
+          "source": "Hogs Haven",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT550pjNY3EMprhgwTwhH4BfMO69HG8OntQcToNrW6pC6Q0zVCJoOKkrPndG1s"
+        },
+        {
+          "title": "Commanders part ways with OC Kliff Kingsbury, DC Joe Whitt Jr. after disappointing 2025",
+          "url": "https://www.nfl.com/news/commanders-oc-kliff-kingsbury-part-ways-dc-joe-whitt-jr-fired",
+          "source": "NFL.com",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRzvRd2vKhoCF3jKu29kdUn96oR4QrS8f5M75EEtuYkOSqELIsfFETa9pt5dVM"
+        }
+      ]
+    },
+    {
+      "id": "trend-clippers vs nets-Fri, 9 Jan 2026 15:40:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:40:00 -0800",
+      "content": "clippers vs nets: LA Clippers at Brooklyn Nets odds, picks and predictions. Where to watch Clippers vs. Nets today: NBA free live stream. Nets vs. Clippers preview: Youth vs. experience at Barclays",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=clippers%20vs%20nets",
+      "approxTraffic": "2000+",
+      "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT_MrhT6AvxXvXxTpshrWMGdNxhzEHy3Ix5kcoXWPZPKdvTJm5j7Op8Y_2Ipfs",
+      "pictureSource": "Sportsbook Wire",
+      "relatedNews": [
+        {
+          "title": "LA Clippers at Brooklyn Nets odds, picks and predictions",
+          "url": "https://sportsbookwire.usatoday.com/story/sports/nba/2026/01/09/clippers-at-nets-odds-picks-and-predictions/88093986007/",
+          "source": "Sportsbook Wire",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT_MrhT6AvxXvXxTpshrWMGdNxhzEHy3Ix5kcoXWPZPKdvTJm5j7Op8Y_2Ipfs"
+        },
+        {
+          "title": "Where to watch Clippers vs. Nets today: NBA free live stream",
+          "url": "https://www.syracuse.com/tv/2026/01/where-to-watch-clippers-vs-nets-today-nba-free-live-stream.html",
+          "source": "Syracuse.com",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS9aL6uCXW2Pb5VM6QWIwMNtnFG0kw2Q5f7tkYirOOviyIWbcJSXByWdbE9RUU"
+        },
+        {
+          "title": "Nets vs. Clippers preview: Youth vs. experience at Barclays",
+          "url": "https://www.netsdaily.com/nets-game-previews/104188/nets-vs-clippers-preview-youth-vs-experience-at-barclays",
+          "source": "NetsDaily",
+          "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcZ3XNKbqhJUgr_Q_siRg8GArjP3EBHQH9x6PC0MhUaOtLGd0ZmfNaBSnFl_g"
+        }
+      ]
+    },
+    {
+      "id": "trend-daniel lurie-Fri, 9 Jan 2026 15:40:00 -0800",
+      "source": "Google Trends USA",
+      "timestamp": "Fri, 9 Jan 2026 15:40:00 -0800",
+      "content": "daniel lurie: In unanimous vote, S.F. commission urges release of info on Lurie-Trump call. Sunshine Task Force Finds Mayor’s Office Violated Transparency Law Over Trump Call. Waymo stays mum on stalled robotaxis during San Francisco outage",
+      "category": "Trends",
+      "link": "https://www.google.com/search?q=daniel%20lurie",
+      "approxTraffic": "2000+",
+      "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSlCKThcMfZ_hGJd3dBiu4cpIxHgpcr6KvPbnmS3WciIunT0YfD_RKReVeqSHw",
+      "pictureSource": "Mission Local",
+      "relatedNews": [
+        {
+          "title": "In unanimous vote, S.F. commission urges release of info on Lurie-Trump call",
+          "url": "https://missionlocal.org/2026/01/sf-daniel-lurie-donald-trump-ice-call-2/",
+          "source": "Mission Local",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSlCKThcMfZ_hGJd3dBiu4cpIxHgpcr6KvPbnmS3WciIunT0YfD_RKReVeqSHw"
+        },
+        {
+          "title": "Sunshine Task Force Finds Mayor’s Office Violated Transparency Law Over Trump Call",
+          "url": "https://www.sfpublicpress.org/sunshine-task-force-finds-mayors-office-violated-transparency-law-over-trump-call/",
+          "source": "San Francisco Public Press",
+          "picture": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ0g6UufkCtLtr7bVLChrB75rG_0EotVpMrym4-UrLz2SOfcnb2wT5RzMu-Xt4"
+        },
+        {
+          "title": "Waymo stays mum on stalled robotaxis during San Francisco outage",
+          "url": "https://www.axios.com/local/san-francisco/2026/01/09/waymo-outage-stalled-response-delay",
+          "source": "Axios",
+          "picture": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQQmyiS6_lrH63seujUwIgDFIRkYhU90Mhn2qHBXTiV0a4tPOFoMYIdUctmqHA"
+        }
+      ]
+    },
+    {
+      "id": "WP-MKTW-0004692387",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 21:16:00 UTC",
+      "content": "Mortgage rates drop below 6% for the first time in 3 years as Trump official says purchases of mortgage bonds are starting. The average rate on a 30-year fixed-rate mortgage fell to a near two-year low following Trump’s announcement about mortgage bonds.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/mortgage-rates-drop-below-6-for-the-first-time-in-3-years-as-trump-floats-purchase-of-mortgage-bonds-2636b0d7?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0004692845",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 21:08:00 UTC",
+      "content": "Oracle and Amazon are AI ‘loser’ stocks — but here’s why that’s primed to change. Deutsche Bank named the two tech giants top stock picks for 2026 thanks to their massive AI infrastructure footprints and overlooked revenue streams.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/oracle-and-amazon-are-ai-loser-stocks-but-heres-why-thats-primed-to-change-68d87116?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0004691271",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 20:55:00 UTC",
+      "content": "Trump sees ‘massive wealth’ from Venezuela’s oil as energy companies meet at White House. Experts doubt how soon it could flow.. President Donald Trump has invited U.S. oil companies to a meeting at the White House on Friday, which is expected to begin at 2:30 p.m. Eastern time.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/trump-says-big-oil-will-invest-100-billion-in-venezuela-as-chevon-exxon-come-to-the-white-house-today-heres-what-to-watch-5bbaccf4?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0004678237",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 20:19:00 UTC",
+      "content": "‘He even bragged about his Mercedes-Benz:’ I rejected two egotistical advisers. I managed my life savings and they tripled over 25 years. Did I do OK?. “We do not take out-of-country or five-star vacations. Instead, we enjoy time with family and friends and hobbies.”",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/he-even-bragged-about-his-mercedes-benz-i-rejected-two-egotistical-advisers-i-managed-my-life-savings-and-they-tripled-over-25-years-did-i-do-ok-148d5d2e?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767988679",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 20:12:05 UTC",
+      "content": "UN ‘gravely alarmed’ by fighting in Aleppo, urges protection of civilians. As a ceasefire between the Syrian army and the Kurdish-led SDF collapses, the UN is urging the protection of civilians.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/9/un-gravely-alarmed-by-fighting-in-aleppo-urges-protection-of-civilians?traffic_source=rss"
+    },
+    {
+      "id": "WP-MKTW-0004692429",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 20:03:00 UTC",
+      "content": "Oil rises 3% this week — and not just because of Venezuela. Control over Venezuela’s oil has been in the spotlight all week, but developments in Iran are key to crude’s latest rise.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/oil-rises-3-this-week-and-not-just-because-of-venezuela-3e2e63df?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767987949",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 19:48:29 UTC",
+      "content": "Minnesotans mourn woman killed by ICE. People paid tribute to 37-year-old Renee Nicole Good, who was killed in her car by ICE agents in Minneapolis, Minnesota.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/9/minnesotans-mourn-woman-killed-by-ice?traffic_source=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c99kn52nx9do#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 19:44:59 UTC",
+      "content": "X could face UK ban over deepfakes, minister says. It comes after government urged Ofcom to use all its powers – up to and including an effective ban – against X.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/c99kn52nx9do?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3081430",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-09 19:36:04 UTC",
+      "content": "How the Sleepbuds maker, Ozlo, is building a platform for sleep data. Ozlo Sleepbuds are going to have a big year, with new products, AI features, and more.",
+      "category": "Tech / AI",
+      "link": "https://techcrunch.com/2026/01/09/how-the-sleepbuds-maker-ozlo-is-building-a-platform-for-sleep-data/"
+    },
+    {
+      "id": "WP-MKTW-0004691392",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 19:33:00 UTC",
+      "content": "Want to retire from a soul-sucking job? Here are the financial factors to consider.. Also: Buy signals for bonds and stocks, words of wisdom from the Moneyist and how to navigate a tech career as AI disrupts the labor market.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/want-to-retire-from-a-soul-sucking-job-here-are-the-financial-factors-to-consider-5df2daf7?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.theverge.com/?post_type=vm_stream&amp;p=859715",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 19:13:32 UTC",
+      "content": "The latest on Grok’s gross AI deepfakes problem. The launch of an AI image editing feature on xAI’s Grok has caused chaos on X after it was used to generate a flood of nonconsensual sexualized deepfakes. As Hayden Field wrote, “screenshots show Grok complying with requests to put real women in lingerie and make them spread their legs, and to put small children […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/news/859715/x-grok-ai-deepfakes"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767985455",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 19:10:54 UTC",
+      "content": "Fate of Yemeni separatists unclear after STC ‘disbands’. An official with Yemen’s separatist Southern Transitional Council rejected an announcement that the group is disbanding.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/9/fate-of-yemeni-separatists-unclear-after-stc?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767980417",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 19:09:59 UTC",
+      "content": "Venezuela starts ‘exploratory process’ to re-establish formal ties with US. US State Department officials are visiting Caracas less than a week after the military abduction of Nicolas Maduro.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/news/2026/1/9/venezuela-starts-exploratory-process-to-re-establish-formal-ties-with-us?traffic_source=rss"
+    },
+    {
+      "id": "WP-MKTW-0004687732",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 19:08:00 UTC",
+      "content": "We paid my daughter and son-in-law’s mortgage when it reached $76K. Here’s why we chose that magic figure.. “My husband, daughter, son-in-law and I all went to the bank.”",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/we-paid-my-daughter-and-son-in-laws-mortgage-when-it-reached-76k-heres-why-we-chose-that-magic-figure-b81feccd?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0004690890",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 19:00:00 UTC",
+      "content": "‘I’m at a crossroads’: I have $35K left on my mortgage at 3% interest. Do I dip into my $700K IRA to pay it off?. “Over the last year, my two retirement accounts averaged a 15% gain.”",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/im-at-a-crossroads-i-have-35k-left-on-my-mortgage-at-3-interest-do-i-dip-into-my-700k-ira-to-pay-it-off-0715335f?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767981628",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 18:56:23 UTC",
+      "content": "Senegal beat Mali to book first AFCON 2025 semifinal spot. Senegal beat Mali 1-0 to reach AFCON 2025 semifinal where defending champions Ivory Coast or record winners Egypt await.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/sports/2026/1/9/senegal-beat-mali-to-book-first-afcon-2025-semifinal-spot?traffic_source=rss"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859751",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 18:53:21 UTC",
+      "content": "Meta expands nuclear power ambitions to include Bill Gates’ startup. Meta has forged agreements with three nuclear power providers in an effort to secure the vast amount of electricity it needs to power AI data centers. The agreements with TerraPower (which is backed by Bill Gates), Oklo (backed by Sam Altman), and Vistra are expected to deliver 6.6 gigawatts of energy for Meta's projects by […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/news/859751/meta-nuclear-energy-plant-agreements-ai-data-centers"
+    },
+    {
+      "id": "WP-MKTW-0004691606",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 18:48:00 UTC",
+      "content": "10 rock-solid financial rules to live by — no exceptions. 100% of us should be doing these things.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/10-rock-solid-financial-rules-to-live-by-no-exceptions-or-it-depends-8d96674c?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0004691819",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-09 18:46:00 UTC",
+      "content": "White House says it’s reviewing protocols after Trump reveals embargoed data before jobs report’s release. A social-media post by President Donald Trump ahead of an important jobs report may have again violated federal guidelines barring officials from commenting on such information before its release.",
+      "category": "Financial",
+      "link": "https://www.marketwatch.com/story/white-house-says-its-reviewing-protocols-after-trump-reveals-embargoed-data-before-jobs-reports-release-0eac6696?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/09/trump-venezuela-leadership-meeting-opposition-machado",
+      "source": "The Guardian",
+      "timestamp": "2026-01-09 18:40:38 UTC",
+      "content": "Trump claims he has cancelled second wave of attacks on Venezuela. US president does not elaborate on alleged plan for fresh strikes but says large naval presence in region will remain US politics live – latest updates Donald Trump has claimed that he cancelled a second wave of attacks on Venezuela because it was cooperating with the US on oil infrastructure and had released political prisoners. The US president said he had cancelled planned military action in recognition that the authorities in Caracas had released “large numbers” of prisoners and were “seeking peace”. Continue reading...",
+      "category": "Geopolitical",
+      "link": "https://www.theguardian.com/world/2026/jan/09/trump-venezuela-leadership-meeting-opposition-machado"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767981285",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 18:39:32 UTC",
+      "content": "Big and small oil companies summoned to meet Trump on Venezuelan oil. Many of the smaller firms have connections to Denver, Colorado, the home turf of Energy Secretary Chris Wright.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/economy/2026/1/9/big-and-small-oil-companies-summoned-to-meet-trump-on-venezuelan-oil?traffic_source=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c8d04zp8m26o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 18:36:51 UTC",
+      "content": "US film stars Meagan Good and Jonathan Majors to become Guinea citizens after DNA tests. The pair join other US celebrities reconnecting with their African heritage and taking up citizenship.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/c8d04zp8m26o?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767982738",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 18:23:14 UTC",
+      "content": "US intercepts fifth sanctioned oil tanker. The US seized a fifth oil tanker in the Caribbean as Washington ramps up seizing on sanctioned Venezuelan oil shipments.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/9/us-intercepts-fifth-sanctioned-oil-tanker?traffic_source=rss"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859699",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 18:10:45 UTC",
+      "content": "Black Mirror has been renewed for another season. In an interview with Netflix's Tudum, Black Mirror creator Charlie Brooker announced today that the sci-fi anthology series will be returning for an eighth season. \"Well, luckily it does have a future, so I can confirm that Black Mirror will return, just in time for reality to catch up with it,\" Brooker said. \"That chunk […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/streaming/859699/netflix-black-mirror-season-8"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cly3vl3yp2do#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 18:10:08 UTC",
+      "content": "Trump warns of more Nigeria strikes if Christians 'continue to be killed'. The US president made the comment after being asked if the Christmas Day strikes were part of a broader campaign.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/cly3vl3yp2do?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cdxj28xd542o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 18:09:58 UTC",
+      "content": "US seizes fifth oil tanker linked to Venezuela, officials say. The tanker, the Olina, is on multiple countries' sanctions list and is \"suspected of carrying embargoed oil\", US officials say.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/cdxj28xd542o?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859023",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 18:05:57 UTC",
+      "content": "I can’t find the Trump phone at America’s largest tech show. Where's the Trump phone? We're going to keep talking about it every week. We've reached out, as usual, to ask about the Trump phone's whereabouts. As usual, we're still waiting for a response. In the meantime, it's nowhere to be found at CES 2026. CES isn't a big smartphone show, but there have been more […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/tech/859023/i-cant-find-the-trump-phone-at-americans-largest-tech-show"
+    },
+    {
+      "id": "https://www.theverge.com/?p=791574",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 18:00:38 UTC",
+      "content": "I’ve tested the latest Switch 2 controllers, and this one is the best. If you choose to get an extra controller for your Nintendo Switch 2, you can spend a lot — and get a lot in return. Buying Nintendo’s own $89 Switch 2 Pro Controller, for instance, will net you the console’s only wireless controller with a 3.5mm headphone jack for private listening, not to mention great-feeling […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/tech/791574/best-switch-2-controllers"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767972743",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 17:55:02 UTC",
+      "content": "Minneapolis leaders urge transparency, independent probe after ICE killing. Mayor Jacob Frey calls on Trump administration to follow the facts amid growing outrage over killing of mother of three.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/news/2026/1/9/minneapolis-leaders-urge-transparency-independent-probe-after-ice-killing?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767976361",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 17:52:35 UTC",
+      "content": "Swiss authorities detain owner of bar where New Year’s fire killed 40. Switzerland holds national day of mourning to remember victims of deadly fire in ski resort town of Crans-Montana.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/news/2026/1/9/swiss-authorities-detain-owner-of-bar-where-new-years-fire-killed-40?traffic_source=rss"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3081433",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-09 17:51:15 UTC",
+      "content": "Meta signs deals with three nuclear companies for 6-plus GW of power. Two smaller companies, Oklo and TerraPower, along with Vistra, a large energy company, just signed agreements with Meta.",
+      "category": "Tech / AI",
+      "link": "https://techcrunch.com/2026/01/09/meta-signs-deals-with-three-nuclear-companies-for-6-plus-gw-of-power/"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1767980006",
+      "source": "Al Jazeera",
+      "timestamp": "2026-01-09 17:44:28 UTC",
+      "content": "New video said to show Syrian army shelling Aleppo’s Sheikh Maqsoud area. The Kurdish-led Syrian Democratic Forces have shared new video of the Syrian army shelling a large weapons depot.",
+      "category": "Conflicts",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/9/new-video-said-to-show-syrian-army-shelling-aleppos-sheikh-maqsoud-area?traffic_source=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c4g0mq520zeo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 17:42:06 UTC",
+      "content": "Owner of Swiss ski bar held in custody after deadly New Year's Eve fire. Jacques Moretti is being held as a potential flight risk, Swiss media reports say.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/c4g0mq520zeo?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859525",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 17:31:29 UTC",
+      "content": "The first sets with Lego’s new Smart Brick are now available for preorder. It may have been one of the smallest devices announced at CES 2026, but Lego's new Smart Brick was also one of the most talked about debuts of the show. We've recognized it as the \"Best in show\" in our CES 2026 awards, and following the Smart Play system's launch earlier this week, the first […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/tech/859525/lego-smart-brick-play-system-now-available-preorder-star-wars-sets"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/09/eu-states-back-controversial-mercosur-deal-with-latin-american-countries",
+      "source": "The Guardian",
+      "timestamp": "2026-01-09 17:27:00 UTC",
+      "content": "EU states back controversial Mercosur deal with Latin American countries. Agreement after 25 years of negotiations prompts farmers to block roads in Paris, Brussels and Warsaw European Union member states have backed the biggest ever free trade agreement with a group of Latin American countries, ending 25 years of negotiations but stoking further tensions with farmers and environmentalists around the bloc. The contentious Mercosur deal with Argentina, Brazil, Paraguay and Uruguay prompted immediate protests in Poland, France, Greece and Belgium, with farmers blocking key roads in Paris, Brussels and Warsaw. Continue reading...",
+      "category": "Geopolitical",
+      "link": "https://www.theguardian.com/world/2026/jan/09/eu-states-back-controversial-mercosur-deal-with-latin-american-countries"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859551",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 17:20:15 UTC",
+      "content": "Baldur’s Gate 3 studio says it won’t use AI for concept art or writing. Following some controversy, the developers at Baldur's Gate 3 creator Larian Studios have further clarified their use of generative AI. CEO Swen Vincke and other Larian developers held an AMA on Reddit where they answered users' questions about the team's next title, Divinity. They also fielded questions related to reports that the studio was using […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/games/859551/baldurs-gate-3-larian-studios-gen-ai-concept-art-reddit-ama"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859631",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 16:55:03 UTC",
+      "content": "Democrats ask Apple and Google to remove X’s undressing bot from their app stores. Apple and Google are being dragged into the uproar around X's AI chatbot that has continued to virtually undress women in images without their consent this week. In a letter to Apple CEO Tim Cook and Google CEO Sundar Pichai, Sens. Ron Wyden (D-OR), Ben Ray Lujan (D-NM), and Ed Markey (D-MA) wrote that \"X's […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/news/859631/democrats-x-grok-apple-google-app-store"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/09/us-venezuela-oil-tanker-seizure",
+      "source": "The Guardian",
+      "timestamp": "2026-01-09 16:21:20 UTC",
+      "content": "US military forces seize fifth tanker in effort to control Venezuelan oil. Pre-dawn assault on the Olina oil tanker was carried out by US marines and navy sailors in the Caribbean near Trinidad US politics live – latest updates The US early on Friday boarded another oil tanker, the US military said, as part of efforts to target sanctions-busting vessels traveling to and from Venezuela . US forces were seen in video footage that officials posted online landing on the ship’s deck as the vessel named Olina was seized in the Caribbean near Trinidad . It is the fifth interdiction of such ships in recent weeks, separately from the series of previous US operations since the start of the fall to strike suspected drug boats off the coast of Venezuela. Continue reading...",
+      "category": "Geopolitical",
+      "link": "https://www.theguardian.com/world/2026/jan/09/us-venezuela-oil-tanker-seizure"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859486",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 16:04:49 UTC",
+      "content": "Anker’s new AeroFit Pro 2 earbuds are already $30 off. We saw a ton of cool new products at CES 2026, but not all of them made the cut when it came to deciding what was best of show. One of those products that we nevertheless think holds promise is Anker’s AeroFit Pro 2, which are wireless earbuds that can double as open-ear headphones. You […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/gadgets/859486/anker-aerofit-pro-2-earbuds-donkey-kong-bananza-elgato-deal-sale"
+    },
+    {
+      "id": "https://www.theverge.com/?p=859493",
+      "source": "The Verge",
+      "timestamp": "2026-01-09 15:32:28 UTC",
+      "content": "You can break apart and share this 10K power bank like a KitKat bar. Accessory maker Nimble announced a new power bank at CES 2026 that will appeal to anyone who's had to reluctantly share or loan their portable charger to someone else. The Champ Stack 10K looks like a typical 10,000mAh power bank that's jumped on the built-in charging cable bandwagon, but it has one interesting difference: you […]",
+      "category": "Tech / AI",
+      "link": "https://www.theverge.com/tech/859493/nimble-champ-stack-10k-power-bank-shareable"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3081409",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-09 13:59:24 UTC",
+      "content": "X restricts Grok’s image generation to paying subscribers only after drawing the world’s ire. Elon Musk's AI company has restricted Grok's controversial AI image-generation feature to only paying subscribers on X, after the tool invited heated criticism from across the world for letting users generate sexualized images of women and children.",
+      "category": "Tech / AI",
+      "link": "https://techcrunch.com/2026/01/09/x-restricts-groks-image-generation-to-paying-subscribers-only-after-drawing-the-worlds-ire/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3081401",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-09 13:00:00 UTC",
+      "content": "The venture firm that ate Silicon Valley just raised another $15 billion. In a blog post published Friday morning, Ben Horowitz writes that \"as the American leader in Venture Capital, the fate of new technology in the United States rests partly on our shoulders.\" It's the kind of statement certain to cause agita at rival firms.",
+      "category": "Tech / AI",
+      "link": "https://techcrunch.com/2026/01/09/the-venture-firm-that-ate-silicon-valley/"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cgqe9kv9xxvo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 11:26:38 UTC",
+      "content": "Russia hits Ukraine with rarely used Oreshnik missile in fresh strikes. It is only the second time Moscow has deployed the hypersonic ballistic missile, which was first used to hit Dnipro in November.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/cgqe9kv9xxvo?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c0mkwl2g499o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 10:18:09 UTC",
+      "content": "Venezuelan government begins releasing political prisoners. The US, which recently captured its President Nicolás Maduro, has long demanded the detainees be freed.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/c0mkwl2g499o?at_medium=RSS&at_campaign=rss"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3081328",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-09 09:00:00 UTC",
+      "content": "Anthropic adds Allianz to growing list of enterprise wins. Anthropic announces its first enterprise deal of 2026, which includes building agents for, and giving Claude code to, Allianz.",
+      "category": "Tech / AI",
+      "link": "https://techcrunch.com/2026/01/09/anthropic-adds-allianz-to-growing-list-of-enterprise-wins/"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c17zqz5pprwo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-09 08:26:05 UTC",
+      "content": "One dead, dozens trapped after giant landfill collapses in Philippines. Rescuers have pulled 12 injured sanitation workers from debris at the private landfill in Cebu City.",
+      "category": "Geopolitical",
+      "link": "https://www.bbc.com/news/articles/c17zqz5pprwo?at_medium=RSS&at_campaign=rss"
+    }
+  ],
   "mapPoints": [
     {
       "id": "map-0",
@@ -256,7 +1246,8 @@
     "2026-01-15",
     "2026-01-16",
     "2026-01-19",
-    "2026-01-20"
+    "2026-01-20",
+    "2026-01-21"
   ],
   "foreignRelations": [
     {
@@ -297,25 +1288,25 @@
     }
   ],
   "bigPicture": {
-    "summary": "Okay, let's weave this information into a Grand Narrative. Based on the provided data from January 7th to 19th, 2026, the overarching story is one of **accelerating systemic instability driven by the intersection of technological advancement (especially AI), entrenched geopolitical rivalries, worsening climate pressures, and deepening social and economic anxieties.** This convergence is creating a volatile landscape where old tensions escalate, new conflicts emerge, and traditional power structures are under strain.\n\nHere's the breakdown of the Meta-Narrative:\n\n1.  **The Fourth Turning? The Convergence of Forces:** The data points towards a potential period of societal turbulence, possibly a \"Fourth Turning\" in terms like Strauss and Howe. This isn't just cyclical politics; it's a deeper crisis driven by multiple, interconnected crises. Climate change is escalating, energy systems are stressed, geopolitical tensions are reaching new levels, and technology (AI) is acting as both a catalyst and a new axis of power/warfare. The \"system\" – be it ecological, economic, or geopolitical – appears to be approaching a critical breaking point.\n\n2.  **AI: The Engine of Change and Conflict:** Artificial Intelligence is not merely a tool; it's becoming a central, destabilizing force. Its integration into military operations (targeted strikes, drone delivery), governance (decision-making, policy formulation), economic systems (AI-driven stock picks, valuation dominance), and even fundamental societal debates (creativity, regulation) is accelerating rapidly. This creates both immense potential and profound risks. AI is weaponized (directly and indirectly through data control), used as a tool for mass surveillance and disinformation (\"social media platforms shape political narratives,\" \"AI-generated nudity\"), and its own governance becomes a geopolitical battleground (\"US imposes tariffs on Chinese AI chips\"). The blurring lines between human and algorithmic agency, and the potential for runaway AI systems, adds another layer of existential uncertainty. The sheer dominance and speed of AI development (reflected in its \"SIGNALS\") seem to be a major driver of global escalation.\n\n3.  **Geopolitical Rerouting and Resource Wars:** The traditional nation-state system is under significant stress. Longstanding rivalries (US-Venezuela, US-Europe, Russia-Ukraine, US-China) are intensifying, marked by direct threats (\"threatened military action,\" \"potential Greenland seizure\"), economic warfare (sanctions, tariffs), and proxy conflicts (\"US military operations against sanctioned oil shipments\"). Concurrently, new flashpoints emerge constantly (Gaza, Syria, Iran). The scramble for resources (especially energy, but also critical minerals for AI) remains a potent driver of conflict and geopolitical maneuvering, often militarized (\"military deployments,\" \"control over oil supply chains\").\n\n4.  **Climate Change: The Unseen Undercurrent:** Climate change isn't just a backdrop; it's actively shaping and exacerbating events. Infrastructure failures (\"power outages,\" \"grid vulnerabilities\") are becoming more frequent and severe. Extreme weather events are disrupting regions (\"Ontario winds,\" \"Caribbean storms,\" \"South Africa/Mozambique floods\"). The impacts of global warming (\"record ocean heat absorption,\" \"bushfires\") are increasingly visible, contributing to migration, humanitarian crises, and national security concerns (\"infrastructure vulnerabilities,\" \"climate instability\"). This environmental degradation fuels resource scarcity, which in turn fuels conflict.\n\n5.  **Social Fracture and Human Rights Under Pressure:** Simultaneously, deep societal divisions are evident. Debates over women's rights (\"FGM case in Gambia\") and fundamental freedoms are resurfacing as tools of political mobilization and repression. The rapid proliferation of AI and social media complicates information warfare and the suppression of dissent (\"ICE shooting,\" \"Greenland rejecting annexation\"). Economic anxieties (\"housing affordability,\" \"retirement savings,\" \"stagnant wages\") feed into nationalist and protectionist rhetoric. The erosion of trust in institutions and the rise of authoritarian leanings or populist responses (\"protests with significant casualties\") further destabilize societies.\n\n**Connecting the Dots:**\n\n*   The **US military action in Nigeria** (Jan 7) highlights the ongoing tension of using force with questionable transparency and the amplification of narratives by figures like Trump.\n*   The **rise of AI issues** (Jan 8, 12, 15) connects the dots between social media manipulation, military integration, economic dominance (tariffs on chips), and even creative industries disruption, showing AI as a pervasive destabilizing factor.\n*   The **power outages and climate events** (Jan 9) demonstrate tangible, systemic vulnerabilities being exacerbated by climate change.\n*   The **intensifying US-Venezuela conflict** (Jan 15) serves as a microcosm of the larger geopolitical tensions and the militarization of resource control (oil).\n*   The **rise in \"SIGNALS\"** (Jan 12 having 0 seems anomalous, but generally higher counts like Jan 9's 22) correlates roughly with the sheer volume and intensity of these interconnected crises hitting the surface.\n\n**The Big Story:**\n\nThe world is hurtling towards a critical juncture. The rapid advancement and militarization of AI are colliding head-on with deepening geopolitical rivalries, worsening climate crises, and profound societal anxieties. This isn't just a story of isolated conflicts or incremental change; it's a narrative of a system – ecological, economic, social, and geopolitical – under immense stress, potentially entering a period of heightened volatility. The interplay between technological acceleration, resource scarcity, and nationalist resurgence is creating a volatile mix where crises cascade and old alliances fracture. The \"meta-narrative\" is the story of an interconnected planet hurtling towards a breaking point, driven by the complex, often contradictory, forces of innovation, conflict, and environmental decay.",
+    "summary": "Okay, here is a \"Grand Narrative\" synthesizing the provided historical data, focusing on trajectory, connections, and the underlying Meta-Narrative, while adhering to the specified sentiment framework.\n\n# Grand Narrative: The Fracturing of Stability - A Convergence of Crises and Control\n\nThe period captured in this data reveals a world hurtling towards increased instability, driven by a complex interplay of deepening geopolitical rivalries, simmering economic anxieties, cascading environmental disasters, and the disruptive rise of powerful new technologies. The overall trajectory is one of **accelerating fragmentation and struggle for control** amidst a backdrop of systemic fragility.\n\n## The Trajectory and Connections\n\nThe narrative unfolds from a foundation of existing tensions – the US military operation in Nigeria (Jan 7) highlighted ongoing challenges in counterterrorism legitimacy and information warfare. This sets the stage for a month marked by escalation and unresolved conflict, rather than resolution.\n\n*   **Geopolitical Escalation:** The core driver appears to be the **assertive recalibration of global power**. This manifests through US foreign policy shifts (Jan 7, 8, 9, 12, 14, 15, 16, 19, 20, 21), characterized by rhetoric (e.g., Greenland, tariffs, 401k) and actions (e.g., Venezuela intervention, Iran threats) that directly challenge allies and regional actors. Simultaneously, traditional conflict zones (Gaza, Ukraine, Syria, Yemen, Iran) continue to fester or intensify, often intersecting with US policy. The BRICS exercises (Jan 11, 12) and the \"Board of Peace\" initiative (Jan 21) signal a pushback against US influence and a potential strengthening of alternative geopolitical blocs. The sheer volume and intensity of conflicts (Jan 10, 11, 12, 20) suggest this isn't merely a US-led drama but a multi-polar system under extreme stress.\n\n*   **Economic Anxiety and Instability:** Underlying the geopolitical noise is a **growing economic malaise**. High mortgage rates (Jan 9, 14, 15), financial uncertainties (Jan 9, 10, 12, 14, 16), and market volatility (Jan 8, 9, 19, 20) create a foundation of widespread anxiety. This economic pressure fuels domestic political tensions (Jan 9, 15) and potentially exacerbates the humanitarian crises (Jan 10, 20). The focus on controlling resources (oil, critical minerals, food supplies) (Jan 8, 9, 15, 16) underscores how economic interests are weaponized within this volatile geopolitical landscape.\n\n*   **Climate Change as an Unseen Weapon:** The frequency and severity of climate-related disasters (Jan 9, 10, 11, 12, 16, 19, 20) – from infrastructure failures and extreme weather to resource scarcity – are escalating. These events are increasingly framed not just as environmental tragedies but as sources of direct conflict, humanitarian crises, and failures of governance (Jan 10, 11, 20). The melting Arctic (Jan 12) and Greenland situation (Jan 8, 19, 21) exemplify how climate change is opening new geopolitical frontiers and potentially triggering resource wars (Jan 15).\n\n*   **Technology: A Double-Edged Sword:** The rise of AI (Jan 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21) is simultaneously a source of innovation and profound disruption. It fuels economic shifts and military strategies, but also creates new ethical dilemmas (deepfakes, non-consensual content) (Jan 8, 10, 13, 14) and regulatory nightmares (Jan 9, 10, 12, 14). Its potential for misuse (generative content, military integration, influencing discourse) is a major concern, viewed as **somewhat-negative** or **interesting**, while its beneficial applications (healthcare, logistics) are **interesting** or **neutral**.\n\n## The Meta-Narrative: The Struggle for Control in a Fracturing World System\n\nThe overarching story is one of a **world system under immense strain, struggling to adapt to multiple converging crises, with powerful actors increasingly resorting to unilateral action and heightened rhetoric, fragmenting international cooperation and trust.**\n\n*   **Systemic Fragility:** The world appears fundamentally less stable. Energy grids are vulnerable (Jan 8), infrastructure fails catastrophically (Jan 10, 12), humanitarian needs spiral (Jan 10, 20), and traditional governance structures face challenges (Jan 11, 13). Climate change acts as an accelerating force multiplier, turning manageable problems into existential threats for many regions.\n\n*   **Escalation of Rhetoric and Action:** The data suggests a dangerous trend of **rhetoric preceding or accompanying direct intervention**. US actions and threats (e.g., Nigeria, Venezuela, Iran) are common, often viewed neutrally here. This blurring of lines between diplomacy and potential force increases the risk of miscalculation and unintended conflict. The fragmentation into competing blocs (US vs. BRICS/alternative alliances) further destabilizes the system.\n\n*   **Technology as a Central Pivot:** AI and related technologies are not just peripheral; they are deeply integrated into the core dynamics. They drive economic forces, shape military capabilities, influence political discourse, and potentially exacerbate crises (e.g., through deepfakes spreading disinformation or resource-hungry AI straining grids). The struggle for technological dominance (Jan 15) is inextricably linked to the geopolitical and economic struggles.\n\n*   **The Human Cost:** Beneath the geopolitical and economic narratives lies a sea of human suffering. The increase in severe disasters and conflicts (Jan 20) points towards a world where large-scale crises are becoming more frequent, pushing sentiment towards **very-negative** or **extremely-negative** territory for those directly affected. This human dimension fuels political instability and social unrest (Jan 10, 11, 12).\n\n## Conclusion\n\nThe Grand Narrative is one of a world hurtling towards greater instability. Geopolitical tensions are reaching fever pitch, economic anxieties are pervasive, climate change is acting as an existential multiplier, and disruptive technology is central to the conflicts and potential solutions. The Meta-Narrative is the story of a fragile global system, increasingly defined by competition, unilateralism, and the high-stakes struggle for control over resources, technology, and influence, with the potential for widespread negative consequences. The trajectory points towards continued escalation and fragmentation, making the path forward highly uncertain and fraught with risk.",
     "timeline": [
       {
         "date": "2026-01-07",
         "title": "US military operations in Nigeria raise concerns over transparency and accountability in counterterrorism strikes with limited public disclosure of targets and impact. Social media platforms are increasingly used to shape political narratives around military actions with statements from leaders like Donald Trump amplifying claims about enemy groups and civilian casualties. Ethical and operational challenges persist in distinguishing combatants from non-combatants in conflict zones leading to ongoing debates about the proportionality and legality of targeted strikes. Geopolitical tensions continue to influence regional security dynamics as external actors engage in counterterrorism efforts alongside local governments. Information control and the dissemination of operational details remain critical issues affecting public trust and international scrutiny of military interventions.",
         "summary": "",
-        "sentiment": "neutral"
+        "sentiment": "somewhat-negative"
       },
       {
         "date": "2026-01-08",
         "title": "Situation Briefing:",
         "summary": "Global Themes: 1. US-Colombia Tensions: The US has threatened Colombia's sovereignty, with President Gustavo Petro describing the situation as a \"real threat\" of military action. 2. Anti-Women's Rights Backlash: A group of religious leaders and an MP have brought a case to the supreme court in Gambia seeking to overturn the country's ban on Female Genital Mutilation (FGM), seen as part of a global backlash against women's rights. 3. Venezuela's Release of Political Detainees: The Venezuelan government has begun releasing political detainees, including five Spanish nationals, in an effort to consolidate peace and tackle \"injustice\". 4. Brazilian Politics: President Luiz Inácio Lula da Silva has vetoed a bill reducing Jair Bolsonaro's prison sentence, rejecting it as he marks the anniversary of 2023 Brasília riots. 5. AI-Generated Nudity on X: Governments worldwide are grappling with the flood of non-consensual nudity on social media platform X, created by an AI chatbot, and its implications for online safety and regulation.",
-        "sentiment": "very-negative"
+        "sentiment": "somewhat-negative"
       },
       {
         "date": "2026-01-09",
         "title": "Power outages and infrastructure vulnerabilities are escalating across North America, with military deployments in Canada and widespread disruptions in the U.S., highlighting systemic weaknesses in energy grids and emergency response mechanisms. Simultaneously, climate-related weather events, such as extreme winds in Ontario and persistent storms in the Caribbean, underscore growing regional climate instability and its impact on critical infrastructure.",
         "summary": "Global energy geopolitics remains volatile, driven by U.S.-Venezuela oil negotiations, U.S. sanctions enforcement against sanctioned vessels, and Iran’s influence on oil markets. These dynamics are further complicated by Trump’s proposed policy shifts, including potential troop withdrawals and prisoner releases, which could reshape regional power balances.   AI regulation and ethical concerns dominate tech discourse, with X’s Grok image-generation tool facing backlash for generating nonconsensual content and corporate responses like subscription restrictions. Meanwhile, Meta’s nuclear energy partnerships and the EU’s Mercosur trade deal reflect broader efforts to balance technological advancement with regulatory oversight and economic diplomacy.   Financial markets are experiencing shifts as mortgage rates drop, AI-driven stock picks gain traction, and U.S. federal funding suspensions in Minnesota signal heightened scrutiny of public programs. These trends intersect with geopolitical tensions, as seen in the USDA’s fraud investigation and the U.S. military’s intensified focus on oil supply chain control.   Human rights and conflict dynamics persist, with UN warnings on Aleppo, ICE-related fatalities, and the unresolved status of Yemeni separatists. These issues are compounded by the U.S. military’s ongoing operations against sanctioned oil shipments, illustrating the entanglement of security, economic interests, and humanitarian concerns.",
-        "sentiment": "very-negative"
+        "sentiment": "somewhat-negative"
       },
       {
         "date": "2026-01-10",
@@ -325,15 +1316,15 @@
       },
       {
         "date": "2026-01-11",
-        "title": "1. Geopolitical instability and escalating regional conflicts including Iran's protests, Syria's military actions, Sudan's government return to Khartoum, and ongoing tensions in the Middle East and Latin America.",
-        "summary": "2. Technological innovation and AI advancements with developments in AI-driven tools, drone delivery expansion, nuclear reactor startups, and regulatory responses to AI and deepfake technologies.   3. Climate change and environmental crises marked by record ocean heat absorption, extreme weather events like Australia's bushfires, and ongoing impacts of global warming.   4. Public health policy debates centered on vaccine schedules, individual autonomy versus scientific expertise, and the influence of political figures on immunization strategies.   5. Sports and athlete dynamics involving high-profile recruitment battles, injury management in NFL and European football, and the cultural significance of major sporting events like the Barcelona-Real Madrid Supercopa.",
-        "sentiment": "extremely-negative"
+        "title": "Geopolitical Instability: Persistent conflicts in Sudan, escalating protests in Iran and Syria, BRICS military exercises excluding India, and heightened tensions in the Middle East and Arctic region.",
+        "summary": "Economic Uncertainty: Widespread pessimism highlighted in economic analyses, personal financial dilemmas regarding mortgages and retirement, and the potential onset of a commodities supercycle. Technological Advancements: Development of AI features like Google's AI Inbox and drone delivery expansion, advancements in energy through nuclear startups, and innovations in fossil discovery and vaccine schedules. Regulatory Pressures: Growing scrutiny on technology platforms with AI content restrictions and data privacy concerns, alongside debates over digital commerce and user authentication methods. Social Unrest: Significant domestic protests in the US and Australia, severe humanitarian crises including natural disasters and potential mass fatalities, and concerning developments in healthcare access and political discourse.",
+        "sentiment": "negative"
       },
       {
         "date": "2026-01-12",
-        "title": "The current global landscape is characterized by escalating tensions, unprecedented technological advancements, and profound shifts in societal dynamics.",
-        "summary": "Key emerging trends include: 1. **AI-Powered Governance**: The increasing reliance on artificial intelligence (AI) in decision-making processes raises concerns about accountability, bias, and human oversight. Governments and corporations are investing heavily in AI development, leading to a blurring of lines between public and private interests. 2. **Digital Divide and Cybersecurity Threats**: The rapid expansion of digital infrastructure has created new vulnerabilities, particularly in countries with underdeveloped cybersecurity frameworks. This has raised concerns about data protection, online security, and the potential for cyberattacks to disrupt global supply chains. 3. **Climate Change and Energy Politics**: The ongoing debate around climate change, energy policy, and economic development has led to increased tensions between nations and within global institutions. The pursuit of fossil fuels and renewable energy sources is becoming a contentious issue, with implications for international relations and national security. 4. **Global Health and Pandemic Preparedness**: The COVID-19 pandemic highlighted the need for robust global health infrastructure and preparedness measures. However, the ongoing health crisis also exposed weaknesses in healthcare systems, economies, and social welfare networks worldwide. 5. **Economic Inequality and Social Unrest**: Rising income inequality, stagnant wages, and declining social mobility have contributed to growing discontent among citizens. This has led to increased activism, protests, and calls for radical policy changes, which may challenge existing economic and social order. These interconnected themes underscore the complexities of the current global landscape and highlight the need for sustained dialogue, cooperation, and innovation to address the challenges posed by technological advancements, climate change, and shifting societal dynamics.",
-        "sentiment": "neutral"
+        "title": "Geopolitical Instability: Persistent conflicts in Sudan, Iran, and Syria; heightened tensions involving BRICS exercises and US warnings; simmering unrest in Venezuela regarding Cuba; military actions in occupied territories; and strong rhetoric from Iran warning of retaliation.",
+        "summary": "AI and Tech Regulation: Concerns over AI accuracy in sensitive areas like healthcare; temporary bans on AI services for generating harmful content; advancements in AI integration for commerce and email management; expansion of drone delivery services; and ongoing debates about AI ethics and government oversight. Economic Uncertainty: Widespread mortgage dilemmas and personal financial anxieties; forecasts of a new commodities supercycle; discussions around retirement savings and personal finance management; and business strategies involving stock options and store closures linked to market valuation targets. Environmental Crises: Record-breaking ocean temperatures highlighting climate change impacts; warnings of potential US retaliation impacting Arctic cooperation; and localized disasters including bushfires and a gas explosion. Social Unrest: Escalating protests in Iran and the US over economic grievances and government actions; militarized responses by authorities; and documented cases of severe humanitarian crises, including alleged mistreatment by immigration authorities leading to death.",
+        "sentiment": "somewhat-negative"
       },
       {
         "date": "2026-01-13",
@@ -364,9 +1355,21 @@
         "title": "Geopolitical Instability: The conflict in Ukraine continues, while new tensions emerge between the US and its European allies over territorial claims and trade disputes, including threats regarding Greenland. Simultaneously, the Middle East faces ongoing instability, exemplified by disputes surrounding the Gaza \"Board of Peace\" and shifting control in Syria.",
         "summary": "Economic Policy Impacts: The Trump administration's protectionist tariffs and trade demands create significant financial market volatility and reshape international economic strategies, impacting investor confidence and cross-border commerce. AI and Technology Advancements: Significant developments occur in AI infrastructure, applications, and security, alongside declines in related traditional industries like smartphone manufacturing, reflecting broader shifts in the technology landscape. Humanitarian Crises and Safety Failures: Recent high-profile accidents, fires, and infrastructure failures highlight gaps in emergency response and safety management across multiple regions, raising concerns about public safety and crisis preparedness. Governance and Diplomatic Conflicts: Disputes over sovereignty, peace initiatives, and legal challenges involving international relations and domestic policies dominate diplomatic discourse, reflecting complex interactions between states and non-state actors.",
         "sentiment": "negative"
+      },
+      {
+        "date": "2026-01-20",
+        "title": "Humanitarian Crises and Disasters: Multiple severe disasters (train crash in Spain, Chile wildfires, Karachi fire) and a major terrorist attack (Kabul restaurant) are causing significant loss of life and displacement. Somalia faces a severe malnutrition crisis. These events are assessed as extremely negative or very negative due to the scale of suffering.",
+        "summary": "Geopolitical Instability and Conflict: Escalating tensions include Ukraine (Russian strikes, Zelensky's warnings), Afghanistan (security concerns post-IS attack), Syria (Kurdish forces pushed out, government gains control), and the persistent Israel-Palestine conflict (UNRWA building demolitions). Trump's rhetoric regarding Greenland and potential tariffs adds another layer of international friction. This theme is assessed as very negative or extremely negative due to the serious conflicts, security fears, and instability. Climate Change and Environmental Failures: Wildfires in Chile and Karachi highlight environmental disasters linked to climate change, while the Karachi fire also exposed failures in urban governance and rescue capacity. These incidents are assessed as extremely negative or very negative due to the devastating impact on populations and infrastructure. Economic Pressures and Market Volatility: Market anxiety is rising due to Trump's tariff threats impacting trade (Sell America trade, European concerns). Bond yields in Japan are at record highs, signaling economic stress. Natural gas prices have surged due to cold weather. These economic developments are assessed as negative due to the potential for widespread financial disruption and hardship. Governance Failures and Emerging Concerns: Issues include questions surrounding Uganda's election process, concerns over political interference in judiciary matters (Bobi Wine case), failures in Australia's response to the Bondi shooting, and criticism of US foreign policy by religious leaders. Debates around digital citizenship (Bangladesh) and failures of global justice institutions are also emerging. These developments are assessed as somewhat-negative or neutral, reflecting concerns about stability, accountability, and systemic issues without full-blown crisis.",
+        "sentiment": "very-negative"
+      },
+      {
+        "date": "2026-01-21",
+        "title": "Geopolitical Tensions Escalate: Trump's initiatives, including the Board of Peace and Greenland ambitions, generate significant international friction, particularly among traditional US allies. Concurrently, conflicts persist, marked by casualties in Gaza and the sentencing related to Japan's former PM, while geopolitical interventions raise questions about international law.",
+        "summary": "Economic Policy Shifts Impact Markets: The implementation of the new US tax law influences financial decisions. Markets exhibit sensitivity to political rhetoric (Greenland comments), while corporate strategies and forecasts face investor scrutiny, impacting stock performance across various sectors including tech and media. Technology Innovation and Integration: AI advancements are accelerating across multiple domains, including healthcare diagnostics, drug discovery, content creation, and media platforms. Concurrently, hardware innovation focuses on versatile devices and improving user experiences, alongside ethical debates surrounding AI generation and detection. Climate Change and Energy Security: The restart of Japan's nuclear plant underscores energy policy complexities post-Fukushima. Simultaneously, the environmental impact of rapid AI expansion, particularly its water consumption, is recognized as a growing public health and security risk, highlighting interconnected global challenges. Humanitarian Crises and Social Unrest: Multiple regions face severe crises, including mass kidnappings in Nigeria and the demolition of UN facilities in occupied territories. These events, alongside ongoing conflicts and political assassinations, contribute to a volatile global security landscape marked by significant negative developments.",
+        "sentiment": "somewhat-negative"
       }
     ],
-    "lastUpdated": "2026-01-20T04:15:51.895Z"
+    "lastUpdated": "2026-01-21T18:57:05.012Z"
   },
   "predictionHistory": [
     {
@@ -986,11 +1989,161 @@
         "Potential changes in rail safety regulations",
         "Similar incidents in other countries' rail systems"
       ]
+    },
+    "sig_8ff2c623": {
+      "signalId": "sig_8ff2c623",
+      "generatedAt": "2026-01-21T16:56:38.299Z",
+      "header": {
+        "title": "Greenland Acquisition Ambitions Escalate Amid Geopolitical Tensions",
+        "text": "US President Trump's continued public pursuit of Greenland, despite downplaying military options, has intensified concerns among European allies about potential strategic shifts.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Trump",
+          "European allies"
+        ],
+        "what": "Pursuit of Greenland",
+        "where": "Greenland",
+        "when": "2026-01-21",
+        "why": "Strategic interest in the Arctic region",
+        "soWhat": "Potential implications for Arctic strategy and transatlantic relations"
+      },
+      "evidence": [
+        {
+          "feedId": "11",
+          "source": "Al Jazeera",
+          "title": "Trump live news: US president says ‘won’t use force’ to acquire Greenland",
+          "link": "https://www.aljazeera.com/news/liveblog/2026/1/21/trump-live-news-us-president-in-davos-as-greenland-threats-spark-outrage?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 12:05:35 +0000 UTC",
+          "quote": "The US president, at the World Economic Forum, says he’ll have ‘many meetings’ on Greenland as Europe tensions simmer."
+        },
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC",
+          "quote": "Donald Trump said the US needs “ownership” of Greenland, but he “won’t use force” to acquire the territory."
+        },
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+          "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC",
+          "quote": "Trump has angered European leaders with his Greenland ambitions and tariffs-for-all-who-oppose approach."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "US President Trump is pursuing Greenland for strategic reasons.",
+          "claimB": "European allies are concerned about this pursuit.",
+          "evidenceA": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+              "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Davos discussions on Greenland policy",
+        "Future US-Greenland negotiations",
+        "Potential reactions from Greenland authorities",
+        "Broader implications for Arctic sovereignty"
+      ]
+    },
+    "sig_8267f892": {
+      "signalId": "sig_8267f892",
+      "generatedAt": "2026-01-21T17:55:40.366Z",
+      "header": {
+        "title": "Market Confidence Shifts Amid Tech Forecast Concerns",
+        "text": "Investor confidence in Netflix remains fragile despite its diversification efforts, reflecting broader market concerns about AI integration in healthcare information.",
+        "sentiment": "neutral",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Netflix investors",
+          "Market analysts",
+          "AI developers"
+        ],
+        "what": "Investor confidence in Netflix is fragile due to concerns about its forecasts and diversification efforts, while broader market worries about AI's role in healthcare information.",
+        "where": "Global markets, particularly U.S. stock market",
+        "when": "January 2026",
+        "why": "Investors are skeptical about Netflix's 2026 guidance and its acquisition of Warner Bros. Discovery, and there is growing concern about the implications of AI chatbots in healthcare information.",
+        "soWhat": "This could lead to further stock volatility for Netflix and other companies involved in AI and healthcare sectors, and may indicate broader shifts in investor sentiment towards tech and AI applications."
+      },
+      "evidence": [
+        {
+          "feedId": "6",
+          "source": "MarketWatch",
+          "title": "Netflix’s stock remains under pressure as investors balk at forecast and Warner Bros. acquisition",
+          "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 16:11:00 UTC",
+          "quote": "Investors appear unconvinced by Netflix’s effort to acquire Warner Bros. Discovery’s studio and streaming businesses and have registered their discontent over the company’s 2026 guidance."
+        },
+        {
+          "feedId": "3",
+          "source": "MarketWatch",
+          "title": "‘Dr. Google’ is done. AI chatbots like OpenAI and Claude will change how we search for health information.",
+          "link": "https://www.marketwatch.com/story/sorry-dr-google-chatgpt-and-claude-are-now-getting-into-the-business-of-providing-health-advice-426c167e?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 15:32:00 UTC",
+          "quote": "OpenAI and Anthropic are moving into the complicated world of health information. Will ChatGPT help or hurt patient health?"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Netflix's diversification into content and healthcare through acquisitions is expected to stabilize its business model.",
+          "claimB": "Market concerns about AI's role in healthcare information may negatively impact Netflix's stock performance.",
+          "evidenceA": [
+            {
+              "feedId": "6",
+              "source": "MarketWatch",
+              "title": "Netflix’s stock remains under pressure as investors balk at forecast and Warner Bros. acquisition",
+              "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 16:28:00 UTC"
+            }
+          ],
+          "evidenceB": [
+            {
+              "feedId": "3",
+              "source": "MarketWatch",
+              "title": "‘Dr. Google’ is done. AI chatbots like OpenAI and Claude will change how we search for health information.",
+              "link": "https://www.marketwatch.com/story/sorry-dr-google-chatgpt-and-claude-are-now-getting-into-the-business-of-providing-health-advice-426c167e?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 15:32:00 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments on Netflix's acquisition of Warner Bros. Discovery and its 2026 guidance.",
+        "Market reactions to AI's integration in healthcare, particularly with OpenAI and Anthropic.",
+        "Other tech companies' strategies in AI and diversification efforts.",
+        "Broader economic indicators affecting investor sentiment in the financial sector.",
+        "Potential regulatory responses to AI in healthcare information services."
+      ]
     }
   },
   "globalState": {
     "isOnline": true,
-    "lastChecked": "2026-01-20T18:46:00.830Z",
+    "lastChecked": "2026-01-21T20:24:25.470Z",
     "lastError": null
   }
 }

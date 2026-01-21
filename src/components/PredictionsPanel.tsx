@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { OllamaService } from '../ai/runtime/ollama';
 import { useSituationStore } from '../state/useSituationStore';
-import { StorageService } from '../services/db';
 
 interface Predictions {
     shortTerm: string;
@@ -194,10 +193,9 @@ export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void })
                                         setPredictions(h.data);
                                         setViewingItem({ topic: h.topic, date: h.date });
                                     }}
-                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-slate-400 transition-colors text-left min-w-[120px]"
+                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-slate-400 transition-colors text-left min-w-[240px]"
                                 >
-                                    <span className="text-white font-bold block mb-1 truncate max-w-[100px]">{h.topic}</span>
-                                    <span className="text-[10px]">{h.date}</span>
+                                    <span className="text-white font-bold block mb-1 truncate max-w-[200px]">{h.topic}</span>
                                 </button>
                                 <button
                                     onClick={(e) => removeHistoryItem(e, i)}
