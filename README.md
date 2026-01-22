@@ -59,7 +59,7 @@ src/
 
 ### 1. Install Ollama (Required)
 
-SignalFrame requires **Ollama** to be installed and running on your local machine. Ollama is the local AI engine that powers all intelligence synthesis.
+SignalFrame requires **[Ollama](http://ollama.com/)** to be installed and running on your local machine because Ollama is the local AI model manager that handles AI interactions and processing.
 
 #### Windows:
 1. Download Ollama from [https://ollama.com/download/windows](https://ollama.com/download/windows)
@@ -102,7 +102,7 @@ ollama pull qwen3:8b
 - **Node.js** ≥ 18
 - **Ollama** running locally (Port 11434)
 - **RAM**: Minimum 8GB, recommended 16GB+
-- **GPU (Recommended)**: NVIDIA RTX 3060/4060 or better for smooth 7B-14B model performance
+- **GPU (Recommended)**: NVIDIA RTX 3060/4060 or better for fastest 8B-14B model performance
 - **Storage**: 2GB+ free space for models
 
 ### 5. Launch SignalFrame
@@ -123,17 +123,30 @@ Visit `http://localhost:5173` to initiate your first **Broad Spectrum Scan**.
 - Check that Ollama is accessible at `http://localhost:11434`
 - Restart Ollama: `ollama serve` (Linux/macOS) or restart the Ollama application (Windows)
 
-**Problem**: Model responses are very slow
+-------------------------------------------------------------------------------------------
+
+**Problem**: Model responses are very slow (more than 30 seconds to one min to respond)
 **Solution**:
 - Check if you have a compatible GPU for acceleration
-- Try a smaller model like `llama3.2` instead of 7B models
+- Try a smaller model like `llama3.2` instead of 8B models
 - Close other applications using GPU/RAM resources
+
+Run the following command (while AI is running on some task in SignalFrame)
+```bash
+ollama ps
+```
+If you see 100% GPU usage, it means the model is running on the GPU and everything is fine.
+
+If you see a GPU/CPU usage split it means the model can't fit entirely in GPU memory and is using CPU as fallback. This is a problem because any CPU usage means the processing is going to be running very slowly. You need to reduce context sizes or switch to a smaller model.
+
+-------------------------------------------------------------------------------------------
 
 **Problem**: Out of memory errors
 **Solution**:
-- Use smaller models (`llama3.2` instead of `qwen2.5:7b`)
-- Increase system RAM or close memory-intensive applications
+- Use smaller models
 - Adjust AI parameters in the app settings (reduce context window)
+- Close video memory-intensive applications
+- If all else fails, simply increase your VRAM by buying a better GPU ;)
 
 ---
 
