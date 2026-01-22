@@ -87,17 +87,14 @@ If you see an error like "Error: connect ECONNREFUSED 127.0.0.1:11434", Ollama i
 
 ### 3. Download an AI Model
 
-SignalFrame needs at least one model to function. We recommend these for best performance:
+SignalFrame needs at least one model to function. Thinking models provide better quality results but require more resources. Recommend picking from these ones:
 
 ```bash
-# Recommended: Fast and accurate for JSON structured outputs
-ollama pull qwen2.5:7b
+# Thinking model with high quality results (Recommended)
+ollama pull deepseek-r1:8b
 
-# Alternative: Lightweight and fast
-ollama pull llama3.2
-
-# Optional: Larger model for more detailed analysis (requires more RAM/GPU)
-ollama pull llama3.1:8b
+# Thinking model with good results (Alternative)
+ollama pull qwen3:8b
 ```
 
 ### 4. System Requirements
@@ -156,13 +153,4 @@ SignalFrame is **Local-By-Design**.
 
 ---
 
-## 🤝 Roadmap
-- [x] IndexedDB Daily Persistence
-- [x] Streaming AI Responses
-- [x] Historic Date Navigation
-- [ ] Multi-Source PDF/Document Ingest
-- [ ] Cross-Day Trend Charting
-- [ ] "Deep Dive" specific signal investigation
-
----
 © 2026 DeepSpaceTrader • Experimental Intelligence Framework. Built for those who need to know what's next.
