@@ -118,14 +118,16 @@ Visit `http://localhost:5173` to initiate your first **Broad Spectrum Scan**.
 ### 🔧 Troubleshooting Ollama
 
 **Problem**: "Ollama not found" or connection errors
+
 **Solution**: 
 - Ensure Ollama is installed and running
 - Check that Ollama is accessible at `http://localhost:11434`
 - Restart Ollama: `ollama serve` (Linux/macOS) or restart the Ollama application (Windows)
 
--------------------------------------------------------------------------------------------
+---
 
 **Problem**: Model responses are very slow (more than 30 seconds to one min to respond)
+
 **Solution**:
 - Check if you have a compatible GPU for acceleration
 - Try a smaller model like `llama3.2` instead of 8B models
@@ -139,9 +141,10 @@ If you see 100% GPU usage, it means the model is running on the GPU and everythi
 
 If you see a GPU/CPU usage split it means the model can't fit entirely in GPU memory and is using CPU as fallback. This is a problem because any CPU usage means the processing is going to be running very slowly. You need to reduce context sizes or switch to a smaller model.
 
--------------------------------------------------------------------------------------------
+---
 
 **Problem**: Out of memory errors
+
 **Solution**:
 - Use smaller models
 - Adjust AI parameters in the app settings (reduce context window)
