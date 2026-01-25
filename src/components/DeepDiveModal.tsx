@@ -208,7 +208,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                 </section>
                             </div>
 
-                            {/* Right Column: Evidence & Counterpoints */}
+                            {/* Right Column: Source & Counterpoints */}
                             <div className="space-y-8">
                                 <section>
                                     <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-accent-secondary font-bold mb-4 flex items-center gap-2">
@@ -216,7 +216,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         Source References
                                     </h3>
                                     <div className="space-y-3">
-                                        {data.evidence.map((item, idx) => (
+                                        {data.source.map((item, idx) => (
                                             <div key={idx} className="bg-white/5 border border-white/5 rounded-lg p-4 transition-all hover:bg-white/10">
                                                 <div className="flex justify-between items-start mb-2">
                                                     <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>

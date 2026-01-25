@@ -31,7 +31,7 @@ export type DeltaType =
   | 'disruption'
   | 'other';
 
-export interface EvidenceRef {
+export interface SourceRef {
   feedId: string;
   source?: string;
   title?: string;
@@ -43,8 +43,8 @@ export interface EvidenceRef {
 export interface ContradictionRef {
   claimA: string;
   claimB: string;
-  evidenceA: EvidenceRef[];
-  evidenceB: EvidenceRef[];
+  sourceA: SourceRef[];
+  sourceB: SourceRef[];
 }
 
 export interface DeepDiveData {
@@ -65,12 +65,12 @@ export interface DeepDiveData {
     why?: string;
     soWhat?: string;
   };
-  evidence: EvidenceRef[];
+  source: SourceRef[];
   counterpoints?: {
     claimA: string;
     claimB: string;
-    evidenceA: EvidenceRef[];
-    evidenceB: EvidenceRef[];
+    sourceA: SourceRef[];
+    sourceB: SourceRef[];
   }[];
   watchNext?: string[];
 }
@@ -100,7 +100,7 @@ export interface Signal {
   novelty?: number;
   timeRange?: { start?: string; end?: string };
   location?: { name: string; lat?: number; lng?: number };
-  evidence?: EvidenceRef[];
+  source?: SourceRef[];
   contradictions?: ContradictionRef[];
   explain?: string;
   shareText?: string;
@@ -110,7 +110,7 @@ export interface Signal {
 export interface Insight {
   text: string;
   sentiment: Sentiment;
-  evidence?: EvidenceRef[];
+  source?: SourceRef[];
   signalId?: string; // Optional: tie this insight to a specific signal by its id
 }
 
@@ -165,6 +165,9 @@ export interface AiConfig {
   enableThinking: boolean; // Enable thinking/reasoning trace for supported models
   sentimentProfile?: string; // ID of the sentiment profile to use
   customSentimentWeights?: Record<string, number>; // Custom sentiment weight overrides
+  // Ollama environment variables for performance optimization
+  ollamaFlashAttention?: boolean;
+  ollamaKvCacheType?: 'f16' | 'q8_0' | 'q4_0';
 }
 
 export interface RunningModel {
@@ -263,6 +266,37 @@ const getTodayStr = () => {
  * Load a date-stamped snapshot from static files
  * Attempts to load snapshot for the specific date, falls back to latest available
  */
+const getAvailableSnapshotDates = async (): Promise<string[]> => {
+  try {
+    // Try to fetch a directory listing (this may not work on all static hosts)
+    // As a fallback, try recent dates in reverse order
+    const availableDates: string[] = [];
+    const today = new Date();
+    
+    // Check last 30 days for available snapshots
+    for (let i = 0; i < 30; i++) {
+      const checkDate = new Date(today);
+      checkDate.setDate(checkDate.getDate() - i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+      
+      try {
+        const response = await fetch(`./data/snapshot-${dateStr}.json`);
+        if (response.ok) {
+          availableDates.push(dateStr);
+        }
+      } catch (e) {
+        // Skip dates that don't have snapshots
+        continue;
+      }
+    }
+    
+    return availableDates.sort();
+  } catch (error) {
+    console.warn('Failed to get available snapshot dates:', error);
+    return [];
+  }
+};
+
 const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> => {
   try {
     // First try to load the specific date
@@ -405,7 +439,9 @@ const defaultState: SituationState = {
     baseUrl: 'http://127.0.0.1:11434/api',
     numCtx: DEFAULT_num_ctx,
     numPredict: DEFAULT_num_predict,
-    enableThinking: false
+    enableThinking: false,
+    ollamaFlashAttention: true,
+    ollamaKvCacheType: 'q8_0'
   },
   availableModels: [],
   runningModels: [],
@@ -486,7 +522,7 @@ class OllamaPollingManager {
       const response = await fetch(`${OllamaService.getBaseUrl()}/tags`);
       const isServiceRunning = response.ok;
       
-      console.log(`Ollama service ${isServiceRunning ? 'IS running' : 'is NOT running'}`);
+      // console.log(`Ollama service ${isServiceRunning ? 'IS running' : 'is NOT running'}`);
       
       // Update AI status based on service availability
       const wasOnline = globalState.aiStatus.isOnline;
@@ -529,7 +565,7 @@ class OllamaPollingManager {
         try {
           const models = await OllamaService.getRunningModels();
           globalState = { ...globalState, runningModels: models };
-          console.log(`${models.length} models currently in GPU memory`);
+          // console.log(`${models.length} models currently in GPU memory`);
         } catch (e) {
           // Even if we can't get running models, the service is still running
           console.log(`Could not get running models, but service is available`);
@@ -689,7 +725,15 @@ export function useSituationStore() {
         globalState.predictionHistory = savedPredictionHistory;
       }
 
-      globalState.availableDates = dates.length > 0 ? dates : [today];
+      // Get available dates from IndexedDB, or fall back to snapshots if empty
+      let availableDates = dates.length > 0 ? dates : await getAvailableSnapshotDates();
+      
+      // If still no dates found, at least include today
+      if (availableDates.length === 0) {
+        availableDates = [today];
+      }
+      
+      globalState.availableDates = availableDates;
       globalState.currentDate = today;
 
       if (analysis) {
@@ -701,19 +745,51 @@ export function useSituationStore() {
         if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
 
         if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
-      } else if (defs) {
-        // Hydrate relations from defs if no daily analysis
-        // Try to find last known status for these relations to avoid "No Data" shock
-        const historicalRelations = await getLastKnownRelations();
-        globalState.foreignRelations = defs.map((d: any) => {
-          const history = historicalRelations.find(h => h.id === d.id);
-          return history ? history : {
-            ...d,
-            status: 'Awaiting discovery...',
-            sentiment: 'neutral',
-            lastUpdate: new Date().toISOString()
-          };
-        });
+      } else {
+        // No analysis found in IndexedDB, try to load from snapshot files
+        console.log('No analysis found in IndexedDB, attempting to load from snapshot files...');
+        try {
+          const snapshot = await loadDateStampedSnapshot(today);
+          
+          if (snapshot) {
+            console.log('Successfully loaded snapshot from files for today');
+            // Preserve Global Big Picture if it exists
+            const bp = globalState.bigPicture;
+            Object.assign(globalState, snapshot);
+            if (bp) globalState.bigPicture = bp;
+            
+            if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
+            if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
+          } else if (defs) {
+            // Hydrate relations from defs if no daily analysis and no snapshot
+            // Try to find last known status for these relations to avoid "No Data" shock
+            const historicalRelations = await getLastKnownRelations();
+            globalState.foreignRelations = defs.map((d: any) => {
+              const history = historicalRelations.find(h => h.id === d.id);
+              return history ? history : {
+                ...d,
+                status: 'Awaiting discovery...',
+                sentiment: 'neutral',
+                lastUpdate: new Date().toISOString()
+              };
+            });
+          }
+        } catch (error) {
+          console.warn('Failed to load snapshot from files:', error);
+          if (defs) {
+            // Fallback to relations defs if snapshot loading fails
+            const historicalRelations = await getLastKnownRelations();
+            globalState.foreignRelations = defs.map((d: any) => {
+              const history = historicalRelations.find(h => h.id === d.id);
+              return history ? history : {
+                ...d,
+                status: 'Awaiting discovery...',
+                sentiment: 'neutral',
+                lastUpdate: new Date().toISOString()
+              };
+            });
+          }
+        }
       }
 
       notify();
@@ -997,6 +1073,14 @@ export function useSituationStore() {
       const snapshot = await loadDateStampedSnapshot(dateStr);
       
       if (snapshot) {
+        // Ensure signals have proper source data
+        if (snapshot.signals && Array.isArray(snapshot.signals)) {
+          snapshot.signals = snapshot.signals.map((signal: any) => ({
+            ...signal,
+            source: signal.source || []
+          }));
+        }
+        
         Object.assign(globalState, {
           ...snapshot,
           lastUpdated: snapshot.lastUpdated ? new Date(snapshot.lastUpdated) : new Date(),
@@ -1054,6 +1138,14 @@ export function useSituationStore() {
     const analysis = await StorageService.getAnalysis(dateStr);
 
     if (analysis) {
+      // Ensure signals have proper source data
+      if (analysis.signals && Array.isArray(analysis.signals)) {
+        analysis.signals = analysis.signals.map((signal: any) => ({
+          ...signal,
+          source: signal.source || []
+        }));
+      }
+      
       Object.assign(globalState, analysis);
       if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
 
@@ -1076,22 +1168,83 @@ export function useSituationStore() {
         });
       }
     } else {
-      globalState.narrative = '';
-      globalState.signals = [];
-      globalState.insights = [];
-      globalState.feeds = [];
-      globalState.mapPoints = [];
-      globalState.dailyMetrics = {};
-      globalState.lastUpdated = null;
-      if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+      // No analysis found in IndexedDB, try to load from snapshot files
+      console.log(`No analysis found for date ${dateStr} in IndexedDB, attempting to load from snapshot files...`);
+      try {
+        const snapshot = await loadDateStampedSnapshot(dateStr);
+        
+        if (snapshot) {
+          console.log(`Successfully loaded snapshot from files for date ${dateStr}`);
+          // Ensure signals have proper source data
+          if (snapshot.signals && Array.isArray(snapshot.signals)) {
+            snapshot.signals = snapshot.signals.map((signal: any) => ({
+              ...signal,
+              source: signal.source || []
+            }));
+          }
+          
+          Object.assign(globalState, snapshot);
+          if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
 
-      if (currentDefs) {
-        globalState.foreignRelations = currentDefs.map((d: any) => ({
-          ...d,
-          status: 'No data for this date.',
-          sentiment: 'neutral',
-          lastUpdate: new Date().toISOString()
-        }));
+          // RESTORE Global Big Picture if we want it to be truly global
+          if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+
+          if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
+
+          // Ensure we keep the latest relation definitions even when viewing history
+          if (currentDefs) {
+            const historicalRelations = globalState.foreignRelations;
+            globalState.foreignRelations = currentDefs.map((def: any) => {
+              const historical = historicalRelations.find(h => h.id === def.id);
+              return historical ? { ...def, status: historical.status, sentiment: historical.sentiment, lastUpdate: historical.lastUpdate } : {
+                ...def,
+                status: 'No data for this date.',
+                sentiment: 'neutral',
+                lastUpdate: new Date().toISOString()
+              };
+            });
+          }
+        } else {
+          // Set empty state for dates without snapshots or analysis
+          console.log(`No snapshot found for date ${dateStr}, showing empty state`);
+          globalState.narrative = '';
+          globalState.signals = [];
+          globalState.insights = [];
+          globalState.feeds = [];
+          globalState.mapPoints = [];
+          globalState.dailyMetrics = {};
+          globalState.lastUpdated = null;
+          if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+
+          if (currentDefs) {
+            globalState.foreignRelations = currentDefs.map((d: any) => ({
+              ...d,
+              status: 'No data for this date.',
+              sentiment: 'neutral',
+              lastUpdate: new Date().toISOString()
+            }));
+          }
+        }
+      } catch (error) {
+        console.warn(`Failed to load snapshot for date ${dateStr}:`, error);
+        // Set empty state as fallback
+        globalState.narrative = '';
+        globalState.signals = [];
+        globalState.insights = [];
+        globalState.feeds = [];
+        globalState.mapPoints = [];
+        globalState.dailyMetrics = {};
+        globalState.lastUpdated = null;
+        if (currentBigPicture) globalState.bigPicture = currentBigPicture;
+
+        if (currentDefs) {
+          globalState.foreignRelations = currentDefs.map((d: any) => ({
+            ...d,
+            status: 'No data for this date.',
+            sentiment: 'neutral',
+            lastUpdate: new Date().toISOString()
+          }));
+        }
       }
     }
     notify();

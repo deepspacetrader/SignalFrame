@@ -1,7 +1,7 @@
 
 import { OllamaService } from './ollama';
 import { RawSignal } from '../../services/feedIngest';
-import type { ForeignRelation, AiConfig, DeepDiveData, EvidenceRef, Signal, SituationState } from '../../state/useSituationStore';
+import type { ForeignRelation, AiConfig, DeepDiveData, SourceRef, Signal, SituationState } from '../../state/useSituationStore';
 import { StorageService } from '../../services/db';
 import { getSentimentProfile, generateCustomSentimentGuidelines } from './sentimentEngine';
 
@@ -14,16 +14,6 @@ const CATEGORY_MAP: Record<string, string> = {
   'bigPicture': 'grand strategy analysis'
 };
 
-const SENTIMENT_GUIDELINES = `
-- extremely-negative: Active conflict, major human rights violations, total market collapse, or massive loss of life, disasters, wars.
-- very-negative: Significant escalations in tension, religious/political crackdowns, or major economic downturns, riots.
-- negative: General negative news, minor diplomatic friction, or unfavorable economic indicators, protests.
-- somewhat-negative: Emerging concerns or slight escalations in regional tension, civil unrest.
-- neutral: Raw data points, scheduled events, or shifts without immediate clear impact.
-- interesting: Unpredictable or unusual developments that aren't clearly good or bad.
-- positive: Diplomatic resolutions, medical breakthroughs, signs of economic recovery, justice being served.
-- very-positive: Peaceful resolutions to long-standing conflicts or transformative humanitarian progress, fall of a dictator.
-`;
 
 
 // Global cancellation token manager
@@ -317,7 +307,7 @@ export async function processBigPicture(
 Based on the following historical data of daily briefings, write a "Grand Narrative" that explains the overall trajectory of world events.
 Focus on the connections between days, the escalation of tensions, or the resolution of conflicts.
 This should be a high-level strategic overview, not a day-by-day recount.
-Identify the "Meta-Narrative" - what is the big story happening underneath the noise?${sentimentGuidance}
+Identify the "Meta-Narrative" - what is the big story happening underneath the noise?${sentimentGuidance} 
 
 HISTORY:
 ${context}
@@ -358,7 +348,7 @@ ${context}
 }
 
 function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
-  const wantedIds = new Set((signal.evidence || []).map(e => e.feedId).filter(Boolean));
+  const wantedIds = new Set((signal.source || []).map(e => e.feedId).filter(Boolean));
 
   const scored = feeds
     .map(f => {
@@ -371,13 +361,16 @@ function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
   const selected: RawSignal[] = [];
   const seen = new Set<string>();
 
-  for (const item of feeds) {
-    if (wantedIds.has(item.id) && !seen.has(item.id)) {
-      selected.push(item);
-      seen.add(item.id);
+  // First, try to match by feed index (since AI uses numeric indices for feedId)
+  for (const [idx, feed] of feeds.entries()) {
+    const feedIndexId = String(idx);
+    if (wantedIds.has(feedIndexId) && !seen.has(feed.id)) {
+      selected.push(feed);
+      seen.add(feed.id);
     }
   }
 
+  // Then add remaining feeds by similarity score
   for (const { f } of scored) {
     if (selected.length >= 12) break;
     if (seen.has(f.id)) continue;
@@ -440,18 +433,18 @@ Return EXACTLY one JSON object with this shape:
     "why": string,
     "soWhat": string
   },
-  "evidence": [
+  "source": [
     { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
   ],
   "counterpoints": [
-    { "claimA": string, "claimB": string, "evidenceA": EvidenceRef[], "evidenceB": EvidenceRef[] }
+    { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
   ],
   "watchNext": string[]
 }
 
 Rules:
-- evidence.feedId MUST come from FEED INDEX.
-- Always include at least 1 evidence item.
+- source.feedId MUST come from FEED INDEX.
+- You MUST include at least reference source per signal item.
 - Show as many signals as possible without duplicates or similar enough to each other that a user would consider them the same.
 `;
 }
@@ -541,13 +534,13 @@ export async function generateDeepDive(
       why: fiveWs.why ? String(fiveWs.why) : undefined,
       soWhat: fiveWs.soWhat ? String(fiveWs.soWhat) : undefined
     },
-    evidence: normalizeEvidence(obj.evidence, feedsSubset),
+    source: normalizeSource(obj.source, feedsSubset),
     counterpoints: Array.isArray(obj.counterpoints)
       ? obj.counterpoints.map((c: any) => ({
         claimA: String(c.claimA || ''),
         claimB: String(c.claimB || ''),
-        evidenceA: normalizeEvidence(c.evidenceA, feedsSubset),
-        evidenceB: normalizeEvidence(c.evidenceB, feedsSubset)
+        sourceA: normalizeSource(c.sourceA, feedsSubset),
+        sourceB: normalizeSource(c.sourceB, feedsSubset)
       })).filter((c: any) => c.claimA && c.claimB)
       : undefined,
     watchNext: Array.isArray(obj.watchNext) ? obj.watchNext.map((x: any) => String(x)).filter(Boolean) : undefined
@@ -575,9 +568,10 @@ function generateNarrativePrompt(context: string, aiConfig?: AiConfig) {
     sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing events, interpret them through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the significance and tone of events in your briefing.`;
   }
 
-  return `Analyze these news feeds and provide a short but comprehensive Situation Briefing. 
-Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing.
-Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any additional text and especially do not include any em dashes or other additional formatting. No markdown formatting either. Separate each event or theme with a newline.${sentimentGuidance}
+  return `You are an elite intelligence analyst. Analyze these news feeds and provide a short but comprehensive situational briefing for the day that aims to weave together the recent events and how they shape the current ongoing narrative. Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing. Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any em dashes or other additional formatting. No markdown formatting either. No bullet points or numbered lists. Separate each of the 5 events or themes with a newline.\n\n
+  
+${sentimentGuidance}
+Do not include any sentiment analysis labels directly in the narrative instead use it to guide your tone accordingly.
 
 Feeds:
 ${context}`;
@@ -610,6 +604,10 @@ function generateSignalsPrompt(context: string, feedIndex: any[], recentSignals:
   if (aiConfig?.sentimentProfile) {
     const profile = getSentimentProfile(aiConfig.sentimentProfile);
     customGuidelines = generateCustomSentimentGuidelines(profile);
+  } else {
+    // Default to balanced profile when no profile specified
+    const defaultProfile = getSentimentProfile('balanced');
+    customGuidelines = generateCustomSentimentGuidelines(defaultProfile);
   }
 
   const prompt = `Act as a senior intelligence officer. Examine the following news feeds and identify 5-8 distinct signals by following these rules:
@@ -634,19 +632,15 @@ Your response MUST start with [ and end with ] and contain 5-8 signal objects li
     "sentiment": string,
     "category": "Tech/AI",
     "deltaType": "policy",
-    "importance": number,
-    "novelty": number,
-    "explain": string,
-    "shareText": string,
-    "evidence": [
+    "source": [
       { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
     ],
     "contradictions": [
       {
         "claimA": string,
         "claimB": string,
-        "evidenceA": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }],
-        "evidenceB": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }]
+        "sourceA": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }],
+        "sourceB": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }]
       }
     ]
   }
@@ -656,20 +650,20 @@ Rules:
 - You MUST return exactly 5-8 signals in the array
 - title: MAX ~20 words, shareable headline (e.g., "Crackdown Intensifies Amid Protests")
 - text: 1-2 sentences detailed description of the signal (e.g., "Authorities are escalating violent crackdowns on nationwide protests, with reports of mass arrests and lethal force being used against demonstrators.")
-- importance is 0..100.
 - novelty is 0..100 (lower if similar to RECENT SIGNALS).
 - feedId MUST be the numeric index from FEED INDEX.
-- Always include at least 1 evidence source item.
+- You MUST include at least 1 reference source per signal item. (if you can't match any source feed reference for a signal, skip it)
 - Each signal should cover different topics/events (don't repeat the same Iran story multiple times)
+- Only include contradictions that are clear and relevant to the signal otherwise exclude the contradictions.
 
 SENTIMENT GUIDELINES:
-${customGuidelines || SENTIMENT_GUIDELINES}
+${customGuidelines}
 
 Feeds:
 ${context}`;
 
-  console.log('Signals prompt length:', prompt.length);
-  console.log('Feed index length:', feedIndex.length);
+  // console.log('Signals prompt length:', prompt.length);
+  // console.log('Feed index length:', feedIndex.length);
   return prompt;
 }
 
@@ -682,12 +676,16 @@ function generateInsightsPrompt(context: string, feedIndex: any[], signalsContex
   if (aiConfig?.sentimentProfile) {
     const profile = getSentimentProfile(aiConfig.sentimentProfile);
     customGuidelines = generateCustomSentimentGuidelines(profile);
+  } else {
+    // Default to balanced profile when no profile specified
+    const defaultProfile = getSentimentProfile('balanced');
+    customGuidelines = generateCustomSentimentGuidelines(defaultProfile);
   }
 
   return `You are the lead analyst in an intelligence fusion cell. Derive non-obvious, second-order insights grounded in the provided reporting and signals.
 
 DATA SOURCES:
-FEED INDEX (JSON, use feedId exactly as provided when citing evidence):
+FEED INDEX (JSON, use feedId exactly as provided when citing sources):
 ${JSON.stringify(feedIndex)}
 
 SIGNALS SUMMARY (for cross-referencing):
@@ -705,7 +703,7 @@ OUTPUT FORMAT (STRICT JSON):
     "text": "Observation | Strategic implication",
     "sentiment": "neutral",
     "signalId": "sig_abc123", // Optional: id of the related signal if this insight is derived from a specific signal
-    "evidence": [
+    "source": [
       { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
     ]
   }
@@ -713,16 +711,16 @@ OUTPUT FORMAT (STRICT JSON):
 
 RULES:
 - Return 3-6 distinct insights when the feeds support it. If fewer than three credible insights exist, return only those that are defensible; otherwise return an empty array.
-- Each insight must feature at least one evidence object (prefer two from different sources) that ties the inference to the feed data.
+- Each insight must feature at least one reference source object (prefer two from different sources) that ties the inference to the feed data.
 - If an insight is derived from a specific signal, include its signalId (from the SIGNALS SUMMARY) to enable direct association.
 - Use feedId values from the FEED INDEX verbatim. Never invent ids or cite sources not present in the data.
 - Do not output markdown, commentary, or the example placeholders (e.g., never literally write "INSIGHT | ANALYSIS").
-- Keep evidence quotes under 180 characters and extract meaningful phrases, not entire articles.
+- Keep source quotes under 180 characters and extract meaningful phrases, not entire articles.
 - Sentiment must use the authorized taxonomy.
 - If no credible insight exists, return [] exactly.
 
 SENTIMENT GUIDELINES:
-${customGuidelines || SENTIMENT_GUIDELINES}`;
+${customGuidelines}`;
 }
 
 function generateMapPointsPrompt(context: string, signalsContext: string = '', aiConfig?: AiConfig) {
@@ -731,6 +729,10 @@ function generateMapPointsPrompt(context: string, signalsContext: string = '', a
   if (aiConfig?.sentimentProfile) {
     const profile = getSentimentProfile(aiConfig.sentimentProfile);
     customGuidelines = generateCustomSentimentGuidelines(profile);
+  } else {
+    // Default to balanced profile when no profile specified
+    const defaultProfile = getSentimentProfile('balanced');
+    customGuidelines = generateCustomSentimentGuidelines(defaultProfile);
   }
 
   return `Generate geographical map coordinates for the Signals listed below.
@@ -766,7 +768,7 @@ SIGNALS TO PLOT:
 ${signalsContext}
 
 SENTIMENT GUIDELINES:
-${customGuidelines || SENTIMENT_GUIDELINES}
+${customGuidelines}
 
 Feeds (for reference/coordinates):
 ${context}`;
@@ -794,6 +796,10 @@ function generateRelationsPrompt(
   if (aiConfig?.sentimentProfile) {
     const profile = getSentimentProfile(aiConfig.sentimentProfile);
     customGuidelines = generateCustomSentimentGuidelines(profile);
+  } else {
+    // Default to balanced profile when no profile specified
+    const defaultProfile = getSentimentProfile('balanced');
+    customGuidelines = generateCustomSentimentGuidelines(defaultProfile);
   }
 
   return `Act as a geopolitical analyst. Update status/sentiment for these geopolitical trackers using the provided Intelligence Context, News Feeds, and Historical Context.
@@ -810,7 +816,7 @@ If the provided data does not contain specific information about a pair, you MUS
 Return JSON array: [{"id": "...", "countryA": "...", "countryB": "...", "status": "...", "sentiment": "..."}]
 
 SENTIMENT GUIDELINES (Use these EXACT strings for the sentiment field):
-${customGuidelines || SENTIMENT_GUIDELINES}
+${customGuidelines}
 
 ${deepContext}
 
@@ -1016,7 +1022,7 @@ function normalizeDeltaType(raw: any): 'escalation' | 'deescalation' | 'policy' 
   return allowed.has(lower) ? (lower as any) : undefined;
 }
 
-function normalizeEvidence(raw: any, feeds: RawSignal[]): EvidenceRef[] {
+function normalizeSource(raw: any, feeds: RawSignal[]): SourceRef[] {
   if (!Array.isArray(raw)) return [];
   // Create mapping of IDs and also handle numeric indices for AI reliability
   const feedById = new Map<string, RawSignal>();
@@ -1048,11 +1054,11 @@ function normalizeEvidence(raw: any, feeds: RawSignal[]): EvidenceRef[] {
       link: feed?.link, // CRITICAL: NEVER use AI-generated links (prevents hallucination)
       timestamp: entry?.timestamp ? String(entry.timestamp) : feed?.timestamp,
       quote: entry?.quote ? String(entry.quote) : undefined
-    } as EvidenceRef;
-  }).filter(Boolean) as EvidenceRef[];
+    } as SourceRef;
+  }).filter(Boolean) as SourceRef[];
 
   const seen = new Set<string>();
-  const deduped: EvidenceRef[] = [];
+  const deduped: SourceRef[] = [];
   for (const ref of refs) {
     if (seen.has(ref.feedId)) continue;
     seen.add(ref.feedId);
@@ -1204,11 +1210,11 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
     const title = s.title ? String(s.title) : undefined;
     const category = normalizeCategory(s.category);
     const deltaType = normalizeDeltaType(s.deltaType);
-    const evidence = normalizeEvidence(s.evidence, feeds);
+    const source = normalizeSource(s.source, feeds);
     const contradictions = (Array.isArray(s.contradictions) ? s.contradictions : []).map((c: any) => ({
       ...c,
-      evidenceA: normalizeEvidence(c.evidenceA, feeds),
-      evidenceB: normalizeEvidence(c.evidenceB, feeds)
+      sourceA: normalizeSource(c.sourceA, feeds),
+      sourceB: normalizeSource(c.sourceB, feeds)
     }));
 
 
@@ -1217,7 +1223,7 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
     const novelty = typeof s.novelty === 'number' ? s.novelty :
       typeof s.novelty === 'string' ? parseFloat(s.novelty) : undefined;
 
-    const stableSeed = `${title || ''}|${text}|${category || ''}|${deltaType || ''}|${(evidence[0]?.feedId) || ''}`;
+    const stableSeed = `${title || ''}|${text}|${category || ''}|${deltaType || ''}|${(source[0]?.feedId) || ''}`;
     const id = s.id ? String(s.id) : `sig_${hashString(stableSeed)}`;
 
     return {
@@ -1231,7 +1237,7 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
       novelty,
       explain: s.explain ? String(s.explain) : undefined,
       shareText: s.shareText ? String(s.shareText) : undefined,
-      evidence,
+      source,
       contradictions
     };
   });
@@ -1277,7 +1283,7 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
       text = `${i.trend} | ${i.impact}`;
     } else {
       // Extract text from malformed objects
-      const keys = Object.keys(i).filter(k => k !== 'sentiment' && k !== 'evidence');
+      const keys = Object.keys(i).filter(k => k !== 'sentiment' && k !== 'source');
 
       // Skip if the only remaining keys look like URLs or numbers
       const nonUrlKeys = keys.filter(k => {
@@ -1318,9 +1324,9 @@ function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {
     };
     if (sentimentMap[sentiment]) sentiment = sentimentMap[sentiment];
 
-    const evidence = normalizeEvidence(i.evidence, feeds);
+    const source = normalizeSource(i.source, feeds);
     const signalId = i.signalId ? String(i.signalId) : undefined;
-    return { text, sentiment: sentiment as any, evidence, signalId };
+    return { text, sentiment: sentiment as any, source, signalId };
   }).filter(i => i.text.length > 10);
 }
 

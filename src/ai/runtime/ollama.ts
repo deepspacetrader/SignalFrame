@@ -85,26 +85,47 @@ export class OllamaService {
         options: OllamaOptions = {}
     ): Promise<OllamaThinkingResponse> {
         const url = `${this.baseUrl}/chat`;
+        
+        // Check if model supports thinking mode
+        const thinkingCapableModels = ['deepseek-r1', 'qwen3', 'gpt-oss'];
+        const modelSupportsThinking = thinkingCapableModels.some(supportedModel => 
+            model.toLowerCase().includes(supportedModel.toLowerCase())
+        );
+        
         try {
+            const requestBody = {
+                model,
+                messages: [{ role: 'user', content: prompt }],
+                stream: false,
+                options: {
+                    num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                    num_predict: options.num_predict || DEFAULT_num_predict,
+                    num_gpu: -1,
+                    num_thread: 0
+                }
+            };
+            
+            // Only add think parameter if model supports it
+            if (modelSupportsThinking && options.think !== false) {
+                (requestBody as any).think = true;
+            }
+            
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 signal: options.signal,
-                body: JSON.stringify({
-                    model,
-                    messages: [{ role: 'user', content: prompt }],
-                    stream: false,
-                    think: true,
-                    options: {
-                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
-                        num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: -1,
-                        num_thread: 0
-                    }
-                }),
+                body: JSON.stringify(requestBody),
             });
 
-            if (!response.ok) throw new Error(`Ollama thinking error: ${response.statusText}`);
+            if (!response.ok) {
+                // If thinking mode failed and we tried it, fallback to regular chat
+                if (modelSupportsThinking && options.think !== false) {
+                    console.warn(`Thinking mode failed for ${model}, falling back to regular generation`);
+                    return this.generateWithThinking(model, prompt, { ...options, think: false });
+                }
+                throw new Error(`Ollama thinking error: ${response.statusText}`);
+            }
+            
             const data = await response.json();
             return {
                 response: data.message?.content || '',
@@ -132,26 +153,46 @@ export class OllamaService {
         options: OllamaOptions = {}
     ): Promise<void> {
         const url = `${this.baseUrl}/chat`;
+        
+        // Check if model supports thinking mode
+        const thinkingCapableModels = ['deepseek-r1', 'qwen3', 'gpt-oss'];
+        const modelSupportsThinking = thinkingCapableModels.some(supportedModel => 
+            model.toLowerCase().includes(supportedModel.toLowerCase())
+        );
+        
         try {
+            const requestBody = {
+                model,
+                messages: [{ role: 'user', content: prompt }],
+                stream: true,
+                options: {
+                    num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                    num_predict: options.num_predict || DEFAULT_num_predict,
+                    num_gpu: -1,
+                    num_thread: 0
+                }
+            };
+            
+            // Only add think parameter if model supports it
+            if (modelSupportsThinking && options.think !== false) {
+                (requestBody as any).think = true;
+            }
+            
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 signal: options.signal,
-                body: JSON.stringify({
-                    model,
-                    messages: [{ role: 'user', content: prompt }],
-                    stream: true,
-                    think: true,
-                    options: {
-                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
-                        num_predict: options.num_predict || DEFAULT_num_predict,
-                        num_gpu: -1,
-                        num_thread: 0
-                    }
-                }),
+                body: JSON.stringify(requestBody),
             });
 
-            if (!response.ok) throw new Error(`Ollama thinking stream error: ${response.statusText}`);
+            if (!response.ok) {
+                // If thinking mode failed and we tried it, fallback to regular chat
+                if (modelSupportsThinking && options.think !== false) {
+                    console.warn(`Thinking mode failed for ${model}, falling back to regular streaming`);
+                    return this.streamGenerateWithThinking(model, prompt, onThinking, onContent, { ...options, think: false });
+                }
+                throw new Error(`Ollama thinking stream error: ${response.statusText}`);
+            }
             if (!response.body) throw new Error('Ollama thinking stream body is null');
 
             const reader = response.body.getReader();

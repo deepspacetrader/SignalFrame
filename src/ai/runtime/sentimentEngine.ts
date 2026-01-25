@@ -95,16 +95,16 @@ Prioritize economic equality, social safety nets, and protection of vulnerable p
     guidelines: `
 Sentiment Analysis Guidelines - Balanced Approach:
 
-- extremely-negative: Large-scale humanitarian crises, major disasters, wars with significant casualties
-- very-negative: Serious conflicts, major economic crises, significant political instability
-- negative: Economic downturns, political tensions, concerning developments
-- somewhat-negative: Minor escalations, emerging concerns, slight negative trends
+- extremely-negative: Large-scale humanitarian crises, major disasters, wars with significant casualties, major cyberattacks against a government, massive data breaches, hospitals attacked or destroyed, terrorism
+- very-negative: Serious conflicts, major economic crises, significant political instability, large scale cyberattacks, mass shootings, mass suicides, large explosions, major fires 
+- negative: Economic downturns, rising political tensions, concerning developments, ending of a ceasefire, cyber attacks against a company, data breaches, major CVEs, hospitals failing to function, conflict escalation
+- somewhat-negative: Minor escalations between nations, emerging concerns for the public, cyberattacks against a famous person, hospitals under strain, wildfires
 - neutral: Factual reports, scheduled events, data without clear positive/negative implications
 - interesting: Unusual developments, emerging trends, notable but not clearly positive/negative
 - positive: Economic improvements, diplomatic progress, beneficial developments
 - very-positive: Major breakthroughs, significant peace agreements, transformative positive events
 
-Focus on objective impact assessment rather than emotional or ideological reactions. Developments made by republican leadership especially Trump's own rhetoric and policies should be almost always be viewed as neutral with this approach. Developments made by democratic leadership should also almost always be viewed as neutral with this approach. Favor neither political perspective over the other as both are viewed as equal. Disasters are always negative, very negative or extremely negative meanwhile innovations are always interesting, positive or very positive. Politics are usually neutral with this approach however not everything has to be neutral.`
+Focus on objective impact assessment rather than emotional or ideological reactions. Developments made by republican leadership especially Trump's own rhetoric and policies should be almost always be viewed as neutral with this approach. Developments made by democratic leadership should also almost always be viewed as neutral with this approach. Favor neither political perspective over the other as both are viewed as equal. Disasters are always negative, very negative or extremely negative meanwhile innovations are always interesting, positive or very positive. Politics are usually neutral with this approach however not everything has to be neutral. If its negative its probably neutral unless its very or extremely negative.`
   },
   {
     id: 'conservative',
@@ -114,7 +114,7 @@ Focus on objective impact assessment rather than emotional or ideological reacti
       extremelyNegative: -3,
       veryNegative: -2.5,
       negative: -1.5,
-      somewhatNegative: -0.5,
+      somewhatNegative: -0.25,
       neutral: 0,
       interesting: 0.25,
       positive: 1.5,

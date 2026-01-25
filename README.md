@@ -43,14 +43,22 @@ Define custom "trackers" for specific geopolitical or corporate rivalries. Signa
 ```
 src/
 ├─ ai/
-│  ├─ runtime/   # Streaming Ollama bridge & JSON repair logic
-│  └─ engine.ts  # Multi-pass reasoning prompts & synthesis
+│  └─ runtime/        # AI processing engines
+│     ├─ engine.ts          # Core reasoning & synthesis engine
+│     ├─ ollama.ts          # Streaming Ollama bridge & JSON repair
+│     └─ sentimentEngine.ts # Sentiment analysis
 ├─ services/
-│  ├─ db.ts      # IndexedDB high-capacity daily persistence
-│  └─ ingest.ts  # Real-world signal & feed harvesting
-├─ state/        # Zustand timeline & global config store
-├─ components/   # High-performance React UI components
-└─ App.tsx       # Core orchestration layer
+│  ├─ db.ts           # IndexedDB high-capacity daily persistence
+│  └─ feedIngest.ts   # Real-world signal & feed harvesting
+├─ state/
+│  └─ useSituationStore.ts # Global state management
+├─ components/        # React UI components
+├─ utils/
+│  ├─ timeUtils.ts    # Time formatting and utilities
+│  └─ zzfx.ts         # Audio effects engine
+├─ data/              # Static data and configuration
+├─ images/            # Static image assets
+└─ App.tsx            # Core orchestration layer
 ```
 
 ---

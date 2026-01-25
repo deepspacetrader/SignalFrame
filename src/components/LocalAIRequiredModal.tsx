@@ -133,7 +133,9 @@ export function LocalAIRequiredModal({ isOpen, onClose }: LocalAIRequiredModalPr
                                 </p>
                                 <div className="pl-8 space-y-2">
                                     <div className="bg-black/40 rounded-lg p-3 font-mono text-xs text-blue-300 border border-white/5">
-                                        OLLAMA_ORIGINS="*"
+                                        OLLAMA_ORIGINS="*"<br/>
+                                        {aiConfig?.ollamaFlashAttention && 'OLLAMA_FLASH_ATTENTION="1"'}<br/>
+                                        {aiConfig?.ollamaKvCacheType && `OLLAMA_KV_CACHE_TYPE="${aiConfig.ollamaKvCacheType}"`}
                                     </div>
                                 </div>
                             </div>

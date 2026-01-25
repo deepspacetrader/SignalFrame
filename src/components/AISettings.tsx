@@ -293,7 +293,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                                     <ol className="text-[11px] text-text-secondary space-y-3 ml-4 list-decimal">
                                                         <li><strong>Restart Ollama</strong> with permissions (Copy & Run in PowerShell):
                                                             <div className="bg-black/60 p-2 rounded mt-2 font-mono text-[10px] text-green-400 break-all select-all flex items-center justify-between group cursor-pointer">
-                                                                <span>taskkill /F /IM "ollama.exe" /T; $env:OLLAMA_ORIGINS="https://deepspacetrader.github.io"; ollama serve</span>
+                                                                <span>taskkill /F /IM "ollama.exe" /T; $env:OLLAMA_ORIGINS="https://deepspacetrader.github.io"; {tempConfig.ollamaFlashAttention && `$env:OLLAMA_FLASH_ATTENTION="1"; `}{tempConfig.ollamaKvCacheType && `$env:OLLAMA_KV_CACHE_TYPE="${tempConfig.ollamaKvCacheType}"; ` }ollama serve</span>
                                                             </div>
                                                         </li>
                                                         <li><strong>Refresh this page</strong> and click "Retry Connection".</li>
@@ -445,7 +445,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         <>
                                             <p className="text-[10px] text-text-secondary font-bold pt-2">or select from these installed models:</p>
                                             <div className="flex flex-wrap gap-2">
-                                                {availableModels.slice(0, 5).map(m => (
+                                                {availableModels.map(m => (
                                                     <button
                                                         key={m}
                                                         onClick={() => setTempConfig({ ...tempConfig, model: m })}
@@ -588,6 +588,54 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </p>
                             </div>
                         )}
+
+                        {/* Ollama Performance Settings */}
+                        <div className="pt-6 border-t border-white/10">
+                            <h4 className="text-sm font-medium text-text-primary mb-4 flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                </svg>
+                                Performance Optimization
+                            </h4>
+                            
+                            <div className="space-y-4">
+                                {/* Flash Attention */}
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-medium text-text-primary">Flash Attention</p>
+                                        <p className="text-xs text-text-secondary">Optimize attention mechanism for better performance</p>
+                                    </div>
+                                    <button
+                                        onClick={() => setTempConfig({ ...tempConfig, ollamaFlashAttention: !tempConfig.ollamaFlashAttention })}
+                                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.ollamaFlashAttention
+                                            ? 'bg-accent-primary'
+                                            : 'bg-white/10 border border-white/20'
+                                            }`}
+                                    >
+                                        <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.ollamaFlashAttention ? 'left-8' : 'left-1'
+                                            }`}></div>
+                                    </button>
+                                </div>
+
+                                {/* KV Cache Type */}
+                                <div className="flex items-center justify-between">
+                                    <div className="flex-1 mr-4">
+                                        <p className="text-sm font-medium text-text-primary">KV Cache Quantization</p>
+                                        <p className="text-xs text-text-secondary">Reduce memory usage with quantized K/V cache (requires Flash Attention)</p>
+                                    </div>
+                                    <select
+                                        value={tempConfig.ollamaKvCacheType || 'f16'}
+                                        onChange={(e) => setTempConfig({ ...tempConfig, ollamaKvCacheType: e.target.value as 'f16' | 'q8_0' | 'q4_0' })}
+                                        className="bg-bg-darker border border-white/10 rounded-lg px-3 py-2 text-text-primary text-sm focus:border-accent-primary outline-none transition-all"
+                                    >
+                                        <option value="null">- None -</option>
+                                        <option value="f16">f16 (High Precision)</option>
+                                        <option value="q8_0">q8_0 (8-bit - Recommended)</option>
+                                        <option value="q4_0">q4_0 (4-bit - Max Memory Savings)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Sentiment Analysis Settings */}

@@ -130,7 +130,7 @@ export function SourceFeedList({ onAIRequired }: { onAIRequired?: () => void }) 
                 </svg>
                 Data Feeds
                 <div className="ml-auto flex items-center gap-2">
-                    <button
+                    {/* <button
                         onClick={() => {
                             const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                             if (!isLocalhost) {
@@ -149,7 +149,7 @@ export function SourceFeedList({ onAIRequired }: { onAIRequired?: () => void }) 
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
                         Export
-                    </button>
+                    </button> */}
                     <button
                         onClick={() => {
                             const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';

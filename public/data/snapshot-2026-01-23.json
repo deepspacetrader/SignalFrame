@@ -1,168 +1,1054 @@
 {
-  "lastUpdated": "2026-01-25T01:28:47.853Z",
-  "narrative": "US military operations in Nigeria raise concerns over transparency and accountability in counterterrorism strikes with limited public disclosure of targets and impact. Social media platforms are increasingly used to shape political narratives around military actions with statements from leaders like Donald Trump amplifying claims about enemy groups and civilian casualties. Ethical and operational challenges persist in distinguishing combatants from non-combatants in conflict zones leading to ongoing debates about the proportionality and legality of targeted strikes. Geopolitical tensions continue to influence regional security dynamics as external actors engage in counterterrorism efforts alongside local governments. Information control and the dissemination of operational details remain critical issues affecting public trust and international scrutiny of military interventions.",
+  "lastUpdated": "2026-01-25T01:22:34.761Z",
+  "narrative": "Russia's continued full-scale invasion of Ukraine persists, marked by daily attacks on major cities and ongoing peace talks in Abu Dhabi despite casualties. Simultaneously, the US is shifting defence priorities, offering reduced support to traditional allies while adopting a tougher stance against China and Russia, exemplified by preparations for naval deployments near Iran. This strategic posture coincides with airline disruptions across the Middle East, influenced by heightened rhetoric. These developments underscore a volatile geopolitical landscape where conventional military operations, strategic realignments, and symbolic diplomatic gestures coexist.\n\nParallel to these conflicts, the planet faces escalating climate-related crises. A major winter storm threatens the US with potentially life-threatening conditions, while Indonesia suffers another deadly landslide following previous natural disasters. Elsewhere, volcanic activity adds to the catalogue of extreme weather events. These recurring natural disasters strain resources and highlight vulnerabilities, reinforcing the theme of environmental instability intersecting with geopolitical tensions.\n\nIn the technology sphere, significant advancements and regulatory concerns define the narrative. Innovations like AI breakthroughs, the expansion of electric vehicle capabilities, and novel applications such as blockchain for humanitarian aid in restrictive environments are emerging. However, these developments are counterbalanced by regulatory probes into tech giants, corporate espionage, and intense debates over data privacy and platform control, reflecting a complex interplay between rapid technological progress and societal oversight.\n\nHealth policy and international cooperation face disruption. The US withdrawal from the World Health Organization marks a significant departure from global health governance, potentially impacting crisis response capabilities. Controversies surrounding mandatory vaccinations and the politicization of scientific initiatives further complicate the health landscape. These actions, alongside geopolitical shifts, signal a fragmentation of international institutions and a contested space for scientific collaboration.\n\nFinally, science and business are intrinsically linked in these developments. Scientific figures like Dr. Sanchez, whose agricultural innovations aided global food security, represent positive contributions. Business decisions, such as the US's strategic interest in Greenland's resources, intersect with scientific fields like AI and energy, while corporate actions raise ethical questions. This theme connects scientific progress, economic strategy, and the practical application of innovation, often amidst controversy or geopolitical competition. These diverse threads collectively shape a world marked by persistent tensions, rapid technological change, environmental stress, and contested governance frameworks.",
   "signals": [
     {
-      "id": "sig_3562a945",
-      "title": "US Airstrikes in Nigeria Targeted Unknown Group",
-      "text": "The US conducted airstrikes in Nigeria two weeks ago, but the targeted group's identity and the operation's impact remain unclear despite President Trump's public statements.",
-      "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 75,
-      "novelty": 90,
-      "explain": "Unclear target and minimal transparency raise questions about US military operations.",
-      "shareText": "US strikes in Nigeria lack transparency about targets and impact.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC",
-          "quote": "Very little information has been shared about strikes in Sokoto state."
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_683dae6d",
-      "title": "AI Focus Shifts from Development to Adoption",
-      "text": "OpenAI is pivoting its strategy from AI development towards practical adoption, indicating a new phase in the industry's maturity.",
-      "sentiment": "neutral",
-      "category": "Tech/AI",
-      "importance": 80,
-      "novelty": 60,
-      "explain": "Shift reflects broader industry maturation post-hype phase.",
-      "shareText": "OpenAI shifts focus from AI development to practical adoption.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_625a62dc",
-      "title": "Spain Rail Safety Under Scrutiny After Córdoba Crash",
-      "text": "Spain's deadliest train crash in a decade has prompted national mourning and intense investigation into rail safety and infrastructure maintenance protocols.",
-      "sentiment": "neutral",
-      "category": "Geopolitical",
+      "id": "sig_2b9b133f",
+      "title": "Russia-Ukraine War Escalation During Peace Talks",
+      "text": "Despite ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict, Russia launched strikes on Kyiv and Kharkiv, resulting in at least one death and multiple injuries, marking a severe escalation in the war.",
+      "sentiment": "very-negative",
+      "category": "Conflicts",
       "importance": 90,
       "novelty": 70,
-      "explain": "High-profile disaster raises concerns about systemic safety issues.",
-      "shareText": "Spain mourns 41 killed in deadliest train crash in a decade.",
+      "explain": "Major conflict escalation with casualties during peace negotiations, indicating high instability.",
+      "shareText": "Russia attacks Ukraine during peace talks, causing deaths and injuries.",
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "5",
+          "source": "Al Jazeera",
+          "title": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks",
+          "link": "https://www.aljazeera.com/news/liveblog/2026/1/24/live-kyiv-kharkiv-come-under-attack-amid-russia-ukraine-peace-talks?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 06:04:24 +0000 UTC"
         }
       ],
       "contradictions": []
     },
     {
-      "id": "sig_13aefbcd",
-      "title": "EU Warns Against US Tariff Escalation",
-      "text": "European leaders are voicing strong concerns about President Trump's aggressive tariff policies, framing them as politically motivated and potentially destabilizing.",
+      "id": "sig_21c8957",
+      "title": "US Defense Strategy Shifts Toward Limited Alliances",
+      "text": "A new Pentagon strategy document softens the tone on China and Russia while reducing support for US allies, reflecting a significant change in US global military posture.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "deltaType": "policy",
-      "importance": 95,
-      "novelty": 50,
-      "explain": "Direct challenge to US economic policy by European allies.",
-      "shareText": "EU leaders condemn Trump's tariff threats as destabilizing.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_508c3b63",
-      "title": "Somalia Worsening Nutrition Crisis Questions Official Reports",
-      "text": "Worsening malnutrition rates in Somalia have reached crisis levels, challenging official narratives and raising concerns about regional stability.",
-      "sentiment": "somewhat-negative",
       "category": "Geopolitical",
       "importance": 85,
-      "novelty": 65,
-      "explain": "Humanitarian crisis undermines governance credibility.",
-      "shareText": "Somalia's malnutrition crisis challenges official reports and stability.",
+      "novelty": 80,
+      "explain": "Pivot in defense policy could impact international relations and military commitments.",
+      "shareText": "US reduces defense support for allies in new strategy document.",
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "1",
+          "source": "BBC World",
+          "title": "Pentagon to offer 'more limited' support to US allies in defence strategy shift",
+          "link": "https://www.bbc.com/news/articles/cj9r8ezym3ro?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 07:57:00 UTC"
+        },
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "US army says homeland, curbing China priorities; limited support for allies",
+          "link": "https://www.aljazeera.com/news/2026/1/24/us-army-says-homeland-curbing-china-priorities-limited-support-for-allies?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 07:06:55 +0000 UTC"
         }
       ],
       "contradictions": []
     },
     {
-      "id": "sig_3929ee7a",
-      "title": "Ukraine Reports intensified Russian Missile Attacks",
-      "text": "Ukraine reports intensified Russian missile attacks targeting energy infrastructure, with officials suggesting a strategy to deliberately freeze Kiev amid harsh winter conditions.",
+      "id": "sig_e16b0330",
+      "title": "Greenland-US-NATO Framework Raises Sovereignty Concerns",
+      "text": "US-NATO talks over Greenland's mineral rights and missile defense have intensified under Trump's framework, sparking worries about territorial integrity and economic implications.",
       "sentiment": "neutral",
       "category": "Geopolitical",
-      "importance": 90,
-      "novelty": 50,
-      "explain": "Escalation of winter warfare tactics targeting civilian infrastructure.",
-      "shareText": "Ukraine reports intensified Russian attacks targeting energy infrastructure.",
+      "importance": 80,
+      "novelty": 90,
+      "explain": "Developments in Greenland negotiations could reshape US-NATO relations and regional dynamics.",
+      "shareText": "US and NATO discuss Greenland mineral rights amid Trump's framework.",
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "14",
+          "source": "BBC World",
+          "title": "US braces for 'extremely dangerous' winter storm",
+          "link": "https://www.bbc.com/news/articles/c0r44l05q52o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 03:33:47 UTC"
+        },
+        {
+          "feedId": "16",
+          "source": "BBC World",
+          "title": "TikTok US venture to collect precise user location data",
+          "link": "https://www.bbc.com/news/articles/cvgnj7v2rr5o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 03:06:29 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_b64c6599",
+      "title": "TikTok Privacy Policy Changes Spark Security Fears",
+      "text": "TikTok's new privacy policy allows for precise location data collection, raising alarms about user privacy and regulatory compliance in the US.",
+      "sentiment": "interesting",
+      "category": "Tech/AI",
+      "importance": 70,
+      "novelty": 70,
+      "explain": "Significant update to the app's privacy features could affect user trust and data security landscape.",
+      "shareText": "TikTok now collects precise location data, causing privacy concerns.",
+      "source": [
+        {
+          "feedId": "6",
+          "source": "TechCrunch",
+          "title": "Legal AI giant Harvey acquires Hexus as competition heats up in legal tech",
+          "link": "https://techcrunch.com/2026/01/23/legal-ai-giant-harvey-acquires-hexus-as-competition-heats-up-in-legal-tech/",
+          "timestamp": "2026-01-24 05:27:22 UTC"
+        },
+        {
+          "feedId": "18",
+          "source": "NY Times World",
+          "title": "Trump Says U.S. ‘Armada’ Is Heading to Iran, Raising Pressure on Regime",
+          "link": "https://www.nytimes.com/2026/01/23/world/middleeast/trump-armada-iran-naval-force.html",
+          "timestamp": "2026-01-24 02:25:30 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_cc23280",
+      "title": "Blockchain Innovation Thrives Despite Taliban Restrictions",
+      "text": "A start-up in Afghanistan is developing blockchain-based tools for humanitarian aid, defying the repressive Taliban government's suspicion of the internet and showcasing tech resilience.",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "importance": 60,
+      "novelty": 85,
+      "explain": "Emerging tech adoption in challenging environments could drive humanitarian solutions.",
+      "shareText": "Afghanistan blockchain start-up helps with aid despite government restrictions.",
+      "source": [
+        {
+          "feedId": "7",
+          "source": "BBC World",
+          "title": "Boy, 12, dies from injuries after Sydney shark attack",
+          "link": "https://www.bbc.com/news/articles/c2k98ql703no?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 05:10:24 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_3c393e63",
+      "title": "Winter Storm Disrupts US Travel and Energy Markets",
+      "text": "'Extremely dangerous' winter storm has canceled thousands of flights and spiked natural gas prices, highlighting significant disruptions to transportation and energy sectors.",
+      "sentiment": "somewhat-negative",
+      "category": "Financial",
+      "importance": 65,
+      "novelty": 75,
+      "explain": "Severe weather events continue to strain infrastructure and economic activities.",
+      "shareText": "Winter storm cancels US flights and raises gas prices.",
+      "source": [
+        {
+          "feedId": "10",
+          "source": "TechCrunch",
+          "title": "Apple iPhone just had its best year in India as the smartphone market stays broadly flat",
+          "link": "https://techcrunch.com/2026/01/23/apple-iphone-just-had-its-best-year-in-india-as-the-smartphone-market-stays-broadly-flat/",
+          "timestamp": "2026-01-24 05:00:00 UTC"
+        },
+        {
+          "feedId": "20",
+          "source": "NY Times Health",
+          "title": "Vaccine Panel Chair Says Polio and Other Shots Should Be Optional, Rejecting Decades of Science",
+          "link": "https://www.nytimes.com/2026/01/23/health/milhoan-vaccines-optional-polio.html",
+          "timestamp": "2026-01-24 01:15:23 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_3e34d02a",
+      "title": "US Immigration Crackdown Ignites Business Protests",
+      "text": "Thousands of businesses in Minnesota are closing their doors in response to ICE enforcement raids, reflecting escalating social and economic unrest over immigration policies.",
+      "sentiment": "negative",
+      "category": "Geopolitical",
+      "importance": 70,
+      "novelty": 60,
+      "explain": "Growing opposition to immigration enforcement is affecting local economies and businesses.",
+      "shareText": "US ICE raids lead to thousands of business closures in Minnesota.",
+      "source": [
+        {
+          "feedId": "8",
+          "source": "Al Jazeera",
+          "title": "Seven dead, dozens missing after landslide in Indonesia’s West Bandung",
+          "link": "https://www.aljazeera.com/news/2026/1/24/seven-dead-82-missing-after-landslide-in-indonesias-bandung?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 05:02:22 +0000 UTC"
+        },
+        {
+          "feedId": "19",
+          "source": "The Verge",
+          "title": "Chromebooks train schoolkids to be loyal customers, internal Google document suggests",
+          "link": "https://www.theverge.com/news/867138/google-chromebook-education-expansion-court-filings",
+          "timestamp": "2026-01-24 01:21:41 UTC"
         }
       ],
       "contradictions": []
     }
   ],
-  "insights": [
-    {
-      "text": "TREND | IMPLICATION",
-      "sentiment": "neutral"
-    },
-    {
-      "text": "somewhat-negative",
-      "sentiment": "neutral"
-    }
-  ],
+  "insights": [],
   "feeds": [
     {
-      "id": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-      "source": "The Guardian",
-      "timestamp": "2026-01-08 05:00:03 UTC",
-      "content": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria. Very little information has been shared about strikes in Sokoto state Two weeks after the US carried out Christmas Day airstrikes in north-west Nigeria on what it described as Islamic State fighters, questions remain over the specific group that was targeted and the operation’s impact. In the aftermath of the strikes, Donald Trump said in a post on his Truth Social platform that “ISIS Terrorist Scum in Northwest Nigeria , who have been targeting and viciously killing, primarily, innocent Christians” were hit with “numerous perfect strikes”. Continue reading...",
-      "category": "Geopolitical",
-      "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria"
-    }
-  ],
-  "mapPoints": [
+      "id": "https://www.bbc.com/news/articles/cwyr6p30054o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 07:59:48 UTC",
+      "content": "Russia strikes Ukraine as talks with US to end war continue. One person died and 23 were injured as trilateral discussions in Abu Dhabi were set to resume.",
+      "category": "World",
+      "title": "Russia strikes Ukraine as talks with US to end war continue",
+      "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/fb0c/live/24597b60-f8f7-11f0-a66e-ad6304ba581b.jpg"
+    },
     {
-      "id": "map-0",
-      "lat": 12.6311,
-      "lng": 8.0117,
-      "title": "Nigeria",
-      "sentiment": "negative",
-      "category": "Geopolitical",
-      "description": "US airstrikes in Nigeria raise questions over targeting and impact",
-      "sourceLink": "https://www.theguardian.com/world/2023/dec/25/us-airstrikes-nigeria-questions-targeting-impact"
+      "id": "https://www.bbc.com/news/articles/cj9r8ezym3ro#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 07:57:00 UTC",
+      "content": "Pentagon to offer 'more limited' support to US allies in defence strategy shift. The US will also offer “more limited” support to US allies, according to a new national defence strategy document.",
+      "category": "World",
+      "title": "Pentagon to offer 'more limited' support to US allies in defence strategy shift",
+      "link": "https://www.bbc.com/news/articles/cj9r8ezym3ro?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/ebca/live/3fb6e610-f8dc-11f0-8902-65b5cd997fa5.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769234265",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 07:06:55 +0000 UTC",
+      "content": "US army says homeland, curbing China priorities; limited support for allies. A new Pentagon strategy document softens tone on traditional foes, China and Russia.",
+      "category": "World",
+      "title": "US army says homeland, curbing China priorities; limited support for allies",
+      "link": "https://www.aljazeera.com/news/2026/1/24/us-army-says-homeland-curbing-china-priorities-limited-support-for-allies?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/europe/sovereignty-european-union-nato.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 07:04:31 UTC",
+      "content": "What Europe Learned From the Greenland Crisis. Territorial integrity is a core tenet of Europe that is at risk from Russian and American imperialism. Brussels has fought back.",
+      "category": "World",
+      "title": "What Europe Learned From the Greenland Crisis",
+      "link": "https://www.nytimes.com/2026/01/24/world/europe/sovereignty-european-union-nato.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769225558",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 06:11:01 +0000 UTC",
+      "content": "Air France, KLM pause flights to Middle East, including Dubai, Israel. Air France and KLM announce pauses as Trump says &#039;armada&#039; of US warships heading towards Middle East.",
+      "category": "World",
+      "title": "Air France, KLM pause flights to Middle East, including Dubai, Israel",
+      "link": "https://www.aljazeera.com/news/2026/1/24/air-france-klm-pause-flights-to-middle-east-including-dubai-israel?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769231613",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 06:04:24 +0000 UTC",
+      "content": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks. At least one person has been killed in overnight Russian attacks on the capital and the northeastern city.",
+      "category": "World",
+      "title": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks",
+      "link": "https://www.aljazeera.com/news/liveblog/2026/1/24/live-kyiv-kharkiv-come-under-attack-amid-russia-ukraine-peace-talks?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085827",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 05:27:22 UTC",
+      "content": "Legal AI giant Harvey acquires Hexus as competition heats up in legal tech. Hexus founder and CEO Sakshi Pratap, who previously held engineering roles at Walmart, Oracle, and Google, tells TechCrunch that her San Francisco-based team has already joined Harvey, while the startup's India-based engineers will come onboard once Harvey establishes a Bangalore office.",
+      "category": "Technology",
+      "title": "Legal AI giant Harvey acquires Hexus as competition heats up in legal tech",
+      "link": "https://techcrunch.com/2026/01/23/legal-ai-giant-harvey-acquires-hexus-as-competition-heats-up-in-legal-tech/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c2k98ql703no#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 05:10:24 UTC",
+      "content": "Boy, 12, dies from injuries after Sydney shark attack. Nico Antic was swimming in Sydney Harbour when he was attacked last Sunday.",
+      "category": "World",
+      "title": "Boy, 12, dies from injuries after Sydney shark attack",
+      "link": "https://www.bbc.com/news/articles/c2k98ql703no?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/d2a3/live/77e07e20-f8dc-11f0-b385-5f48925de19a.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769229868",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 05:02:22 +0000 UTC",
+      "content": "Seven dead, dozens missing after landslide in Indonesia’s West Bandung. Latest disaster comes weeks after deadly floods and landslides left more than 1,000 people dead in Indonesia&#039;s west.",
+      "category": "World",
+      "title": "Seven dead, dozens missing after landslide in Indonesia’s West Bandung",
+      "link": "https://www.aljazeera.com/news/2026/1/24/seven-dead-82-missing-after-landslide-in-indonesias-bandung?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/asia/crypto-innovation-afghanistan.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 05:01:08 UTC",
+      "content": "An Unlikely Source of Crypto Innovation: Afghanistan. The repressive Taliban government is suspicious of the internet. But a start-up in the country is building blockchain-based tools to transform humanitarian aid.",
+      "category": "World",
+      "title": "An Unlikely Source of Crypto Innovation: Afghanistan",
+      "link": "https://www.nytimes.com/2026/01/24/world/asia/crypto-innovation-afghanistan.html",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085596",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 05:00:00 UTC",
+      "content": "Apple iPhone just had its best year in India as the smartphone market stays broadly flat. Apple shipped a record 14 million iPhones in India in 2025 and gained market share.",
+      "category": "Technology",
+      "title": "Apple iPhone just had its best year in India as the smartphone market stays broadly flat",
+      "link": "https://techcrunch.com/2026/01/23/apple-iphone-just-had-its-best-year-in-india-as-the-smartphone-market-stays-broadly-flat/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769211383",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 04:38:42 +0000 UTC",
+      "content": "Brazil’s Lula says Trump is attempting to ‘create a new UN’. Lula&#039;s comments come as Trump invites Netanyahu to join &#039;Board of Peace&#039;, with no mention of Gaza in charter.",
+      "category": "World",
+      "title": "Brazil’s Lula says Trump is attempting to ‘create a new UN’",
+      "link": "https://www.aljazeera.com/news/2026/1/24/brazils-lula-says-trump-is-attempting-to-create-a-new-un?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085612",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 04:34:02 UTC",
+      "content": "TikTok users freak out over app’s ‘immigration status’ collection — here’s what it means. TikTok users are freaking out over a mention of \"immigration status\" data collection, but lawyers explain the disclosure is related to state privacy laws.",
+      "category": "Technology",
+      "title": "TikTok users freak out over app’s ‘immigration status’ collection — here’s what it means",
+      "link": "https://techcrunch.com/2026/01/23/tiktok-users-freak-out-over-apps-immigration-status-collection-heres-what-it-means/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c1dk67g4q91o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 03:55:30 UTC",
+      "content": "Hundreds of Minnesota businesses close to protest ICE presence. Thousands of people have joined widespread protests against the weeks-long immigration crackdown in the state.",
+      "category": "World",
+      "title": "Hundreds of Minnesota businesses close to protest ICE presence",
+      "link": "https://www.bbc.com/news/articles/c1dk67g4q91o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/16d2/live/7a70d480-f8b1-11f0-8dad-e74cd65eacb8.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c0r44l05q52o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 03:33:47 UTC",
+      "content": "US braces for 'extremely dangerous' winter storm. The National Weather Service warns the winter blast \"will pose a life-threatening risk of hypothermia\".",
+      "category": "World",
+      "title": "US braces for 'extremely dangerous' winter storm",
+      "link": "https://www.bbc.com/news/articles/c0r44l05q52o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/329b/live/b1004f20-f8b2-11f0-b385-5f48925de19a.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769221670",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 03:18:48 +0000 UTC",
+      "content": "Turkiye’s FM Fidan says Israel ‘looking for opportunity’ to attack Iran. Turkish Foreign Minister Hakan Fidan says he has conveyed concerns of possible Israeli attack to leadership in Tehran.",
+      "category": "World",
+      "title": "Turkiye’s FM Fidan says Israel ‘looking for opportunity’ to attack Iran",
+      "link": "https://www.aljazeera.com/news/2026/1/24/turkiyes-fm-fidan-says-israel-looking-for-opportunity-to-attack-iran?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cvgnj7v2rr5o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 03:06:29 UTC",
+      "content": "TikTok US venture to collect precise user location data. Details on the expanded access to location information was published in a new privacy policy for the popular social media app.",
+      "category": "World",
+      "title": "TikTok US venture to collect precise user location data",
+      "link": "https://www.bbc.com/news/articles/cvgnj7v2rr5o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/84a7/live/bf04a0d0-f8c6-11f0-9647-8187f9f2760e.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769218031",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 02:30:01 +0000 UTC",
+      "content": "Russian ‘shadow fleet’ tanker diverted to French port by naval forces. French prosecutors say Russia-linked tanker &#039;Grinch&#039; under investigation after interception in western Mediterranean.",
+      "category": "World",
+      "title": "Russian ‘shadow fleet’ tanker diverted to French port by naval forces",
+      "link": "https://www.aljazeera.com/news/2026/1/24/russian-shadow-fleet-tanker-diverted-to-french-port-by-naval-forces?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/world/middleeast/trump-armada-iran-naval-force.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 02:25:30 UTC",
+      "content": "Trump Says U.S. ‘Armada’ Is Heading to Iran, Raising Pressure on Regime. President Trump said the United States was “watching Iran” and sending a naval force there, despite also saying that his threats had halted executions.",
+      "category": "World",
+      "title": "Trump Says U.S. ‘Armada’ Is Heading to Iran, Raising Pressure on Regime",
+      "link": "https://www.nytimes.com/2026/01/23/world/middleeast/trump-armada-iran-naval-force.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867138",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 01:21:41 UTC",
+      "content": "Chromebooks train schoolkids to be loyal customers, internal Google document suggests. Internal documents revealed as part of a child safety lawsuit hint at Google's plan to \"onboard kids\" into its ecosystem by investing in schools. In this November 2020 presentation, Google writes that getting kids into its ecosystem \"leads to brand trust and loyalty over their lifetime,\" as reported earlier by NBC News. The heavily-redacted documents, […]",
+      "category": "Technology",
+      "title": "Chromebooks train schoolkids to be loyal customers, internal Google document suggests",
+      "link": "https://www.theverge.com/news/867138/google-chromebook-education-expansion-court-filings",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/health/milhoan-vaccines-optional-polio.html",
+      "source": "NY Times Health",
+      "timestamp": "2026-01-24 01:15:23 UTC",
+      "content": "Vaccine Panel Chair Says Polio and Other Shots Should Be Optional, Rejecting Decades of Science. Dr. Kirk Milhoan, a pediatric cardiologist who leads the Advisory Committee on Immunization Practices, said a person’s right to refuse a vaccine outweighed concerns about illness or death from infectious diseases.",
+      "category": "Health",
+      "title": "Vaccine Panel Chair Says Polio and Other Shots Should Be Optional, Rejecting Decades of Science",
+      "link": "https://www.nytimes.com/2026/01/23/health/milhoan-vaccines-optional-polio.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/world/middleeast/iran-protests-victims-bodies.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 01:13:09 UTC",
+      "content": "As Iran Grieves, Accounts Emerge of Disrespectful Treatment of Protest Victims. Witness testimony and videos from Tehran’s largest cemetery show disrespectful treatment of the dead after a brutal government crackdown.",
+      "category": "World",
+      "title": "As Iran Grieves, Accounts Emerge of Disrespectful Treatment of Protest Victims",
+      "link": "https://www.nytimes.com/2026/01/23/world/middleeast/iran-protests-victims-bodies.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867056",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 01:09:10 UTC",
+      "content": "Leak: Nvidia is about to challenge ‘Intel Inside’ with as many as eight Arm laptops. Intel and AMD have split the Windows laptop market for years, but the x86 players may be getting outnumbered. It's not just Apple MacBooks and MediaTek-based Chromebooks using Arm chips anymore. There are finally competent Qualcomm Snapdragon laptops running Windows, and - as soon as this spring - Nvidia will finally power Windows consumer laptops […]",
+      "category": "Technology",
+      "title": "Leak: Nvidia is about to challenge ‘Intel Inside’ with as many as eight Arm laptops",
+      "link": "https://www.theverge.com/games/867056/leak-nvidia-n1-n1x-laptops-lenovo-dell",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085799",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 00:04:45 UTC",
+      "content": "Who’s behind AMI Labs, Yann LeCun’s ‘world model’ startup. Yann LeCun's new venture, AMI Labs, has drawn intense attention since the AI scientist left Meta to found it.",
+      "category": "Technology",
+      "title": "Who’s behind AMI Labs, Yann LeCun’s ‘world model’ startup",
+      "link": "https://techcrunch.com/2026/01/23/whos-behind-ami-labs-yann-lecuns-world-model-startup/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769202327",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 23:58:25 +0000 UTC",
+      "content": "Russia-Ukraine war: List of key events, day 1,430. These are the key developments from day 1,430 of Russia’s war on Ukraine.",
+      "category": "World",
+      "title": "Russia-Ukraine war: List of key events, day 1,430",
+      "link": "https://www.aljazeera.com/news/2026/1/23/russia-ukraine-war-list-of-key-events-day-1430?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769054046",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 23:44:43 +0000 UTC",
+      "content": "In US ally Thailand, feelings of betrayal after Trump’s visa freeze. Thais who planned to build a life in the US express shock at inclusion on list of blacklisted countries.",
+      "category": "World",
+      "title": "In US ally Thailand, feelings of betrayal after Trump’s visa freeze",
+      "link": "https://www.aljazeera.com/news/2026/1/23/in-us-ally-thailand-feelings-of-betrayal-after-trumps-visa-freeze?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004717892",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 23:30:00 UTC",
+      "content": "My husband’s kids didn’t even show up for his heart surgery. So why is he leaving them his $1 million life insurance?. “Both of us were widowed. We are in our late 60s and retired.”",
+      "category": "Business",
+      "title": "My husband’s kids didn’t even show up for his heart surgery. So why is he leaving them his $1 million life insurance?",
+      "link": "https://www.marketwatch.com/story/i-am-resentful-my-second-husbands-kids-treat-him-like-dirt-so-why-is-he-leaving-them-his-1-million-life-insurance-8fe0f2ae?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004724195",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 23:29:00 UTC",
+      "content": "This is what caused Friday’s sudden spike in the Japanese yen. Friday was a quiet day in markets for the most part, but there was one big move that raised eyebrows: Late in the New York morning, the U.S. dollar suddenly cratered against the Japanese yen.",
+      "category": "Business",
+      "title": "This is what caused Friday’s sudden spike in the Japanese yen",
+      "link": "https://www.marketwatch.com/story/this-is-what-caused-fridays-sudden-spike-in-the-japanese-yen-4b4089bc?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004722150",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 23:10:00 UTC",
+      "content": "Nearly 6,000 U.S. flights have been canceled ahead of winter storm — and the number is growing. U.S. airlines have already canceled nearly 6,000 flights through Sunday ahead of a winter storm expected to wallop two-thirds of the United States over the weekend.",
+      "category": "Business",
+      "title": "Nearly 6,000 U.S. flights have been canceled ahead of winter storm — and the number is growing",
+      "link": "https://www.marketwatch.com/story/nearly-2-000-u-s-flights-have-already-been-canceled-ahead-of-winter-storm-b2f46de3?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769207804",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 23:08:46 +0000 UTC",
+      "content": "One survivor reported, two killed in US boat strike in the eastern Pacific. The latest bombing brings the death toll from US boat strikes to 125 since September, raising human rights concerns.",
+      "category": "World",
+      "title": "One survivor reported, two killed in US boat strike in the eastern Pacific",
+      "link": "https://www.aljazeera.com/news/2026/1/23/one-survivor-reported-two-killed-in-us-boat-strike-in-the-eastern-pacific?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004719174",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 23:05:00 UTC",
+      "content": "I need to spend $15K on my roof. Should I take it from my Roth IRA, 401(k), IRA or money-market account?. “I’m 61 years old, single and still have a job.”",
+      "category": "Business",
+      "title": "I need to spend $15K on my roof. Should I take it from my Roth IRA, 401(k), IRA or money-market account?",
+      "link": "https://www.marketwatch.com/story/i-need-to-spend-15k-on-my-roof-do-i-take-it-from-my-roth-ira-401-k-ira-or-money-market-account-170e36a9?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004721203",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 23:00:00 UTC",
+      "content": "I’m inheriting $250K. Will paying off my student loans and credit-card debt hurt my credit score?. “The money is coming from the proceeds of the sale of a family home.”",
+      "category": "Business",
+      "title": "I’m inheriting $250K. Will paying off my student loans and credit-card debt hurt my credit score?",
+      "link": "https://www.marketwatch.com/story/im-inheriting-250k-will-paying-off-my-student-loans-and-credit-card-debt-hurt-my-credit-score-4679d9ab?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769207060",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 22:30:28 +0000 UTC",
+      "content": "What does the US withdrawal from the WHO mean for global health?. The US completed its withdrawal from the World Health Organization, ending its membership for the first time since 1948.",
+      "category": "World",
+      "title": "What does the US withdrawal from the WHO mean for global health?",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/23/what-does-the-us-withdrawal-from-the-who-mean-for-global-health?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004717982",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 22:27:00 UTC",
+      "content": "Investors should be wary of buying the dip if the S&amp;P 500 falls to this level. If December’s lows are broken during the first quarter of a new year, a bear market often follows.",
+      "category": "Business",
+      "title": "Investors should be wary of buying the dip if the S&amp;P 500 falls to this level",
+      "link": "https://www.marketwatch.com/story/the-s-p-500-is-on-fire-but-a-retreat-to-this-level-would-unleash-the-bears-9739a9d8?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769198618",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 22:16:55 +0000 UTC",
+      "content": "Haiti officials announce plan to oust prime minister, deepening US standoff. Transitional Presidential Council says plans to remove Prime Minister Alix Didier Fils-Aime, flouting warnings from US.",
+      "category": "World",
+      "title": "Haiti officials announce plan to oust prime minister, deepening US standoff",
+      "link": "https://www.aljazeera.com/news/2026/1/23/haiti-officials-announce-plan-to-oust-prime-minister-deepening-us-standoff?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/science/pedro-sanchez-dead.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-23 22:11:35 UTC",
+      "content": "Pedro Sanchez, Who Helped Feed the Developing World, Dies at 85. A soil scientist, he partnered with the United Nations and other organizations to bring productive agricultural practices to uncooperative terrain.",
+      "category": "Science",
+      "title": "Pedro Sanchez, Who Helped Feed the Developing World, Dies at 85",
+      "link": "https://www.nytimes.com/2026/01/23/science/pedro-sanchez-dead.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866977",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 22:08:43 UTC",
+      "content": "Congress doesn’t seem to know if the TikTok deal complies with its law. TikTok finally closed a deal meant to bring it into compliance with the law that should have banned it a year ago, and the lawmakers who passed that law still don't seem to know what's going on. The company announced Tuesday that its US service is now part of the separate TikTok USDS Joint Venture […]",
+      "category": "Technology",
+      "title": "Congress doesn’t seem to know if the TikTok deal complies with its law",
+      "link": "https://www.theverge.com/news/866977/tiktok-deal-congress-china",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769198622",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC",
+      "content": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue. Ukraine&#039;s Volodymyr Zelenskyy says territorial disputes will be central, but Russia must be ready to end war it started.",
+      "category": "World",
+      "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+      "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/gaming/2026/01/tr-49-is-interactive-fiction-for-fans-of-deep-research-rabbit-holes/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 21:52:24 UTC",
+      "content": "TR-49 is interactive fiction for fans of deep research rabbit holes. Dense narrative deduction game tells a compellingly academia-tinged sci-fi tale.",
+      "category": "Technology",
+      "title": "TR-49 is interactive fiction for fans of deep research rabbit holes",
+      "link": "https://arstechnica.com/gaming/2026/01/tr-49-is-interactive-fiction-for-fans-of-deep-research-rabbit-holes/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/4-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/clym2l7d75eo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-23 21:50:47 UTC",
+      "content": "Harry says sacrifices by Nato troops in Afghanistan deserve 'respect'. The US president's comments have been condemned by international allies, including UK veterans and politicians.",
+      "category": "World",
+      "title": "Harry says sacrifices by Nato troops in Afghanistan deserve 'respect'",
+      "link": "https://www.bbc.com/news/articles/clym2l7d75eo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/c3c4/live/af8e9ce0-f895-11f0-b5f7-49f0357294ff.jpg"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085535",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-23 21:50:47 UTC",
+      "content": "Waymo probed by National Transportation Safety Board over illegal school bus behavior. The NTSB joins the National Highway Traffic Safety Administration in investigating Waymo vehicles illegally passing stopped school buses.",
+      "category": "Technology",
+      "title": "Waymo probed by National Transportation Safety Board over illegal school bus behavior",
+      "link": "https://techcrunch.com/2026/01/23/waymo-probed-by-national-transportation-safety-board-over-illegal-school-bus-behavior/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/world/europe/trump-greenland-military-bases.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-23 21:39:36 UTC",
+      "content": "Trump Wants to Build More U.S. Military Bases in Greenland. How Many Are There Now?. The U.S. once maintained more than a dozen. Now it has one. President Trump wants more.",
+      "category": "World",
+      "title": "Trump Wants to Build More U.S. Military Bases in Greenland. How Many Are There Now?",
+      "link": "https://www.nytimes.com/2026/01/23/world/europe/trump-greenland-military-bases.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c3edde1pwx8o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-23 21:33:55 UTC",
+      "content": "High stakes but low expectations for Ukraine talks with Russia and US. Donald Trump is pushing hard for a peace deal - but major issues between Russia and Ukraine are still unresolved, writes Sarah Rainsford.",
+      "category": "World",
+      "title": "High stakes but low expectations for Ukraine talks with Russia and US",
+      "link": "https://www.bbc.com/news/articles/c3edde1pwx8o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/f239/live/171990f0-f87c-11f0-b5f7-49f0357294ff.jpg"
+    },
+    {
+      "id": "WP-MKTW-0004719565",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 21:29:00 UTC",
+      "content": "Natural-gas prices see ‘historic’ surge as U.S. braces for winter storm. What that means for heating bills.. Consumers don’t have to worry yet about the three-session 62% spike in prices",
+      "category": "Business",
+      "title": "Natural-gas prices see ‘historic’ surge as U.S. braces for winter storm. What that means for heating bills.",
+      "link": "https://www.marketwatch.com/story/natural-gas-prices-see-historic-surge-as-u-s-braces-for-winter-storm-what-that-means-for-heating-bills-7e1b9fa2?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004722585",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 21:15:00 UTC",
+      "content": "Why AMD’s stock is charging higher as Intel’s sinks. AMD might be better equipped than Intel to handle a supply crunch.",
+      "category": "Business",
+      "title": "Why AMD’s stock is charging higher as Intel’s sinks",
+      "link": "https://www.marketwatch.com/story/why-amds-stock-is-charging-higher-as-intels-sinks-70394ffd?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085598",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-23 21:13:28 UTC",
+      "content": "The Rippling/Deel corporate spying scandal may have taken another wild turn. The Department of Justice may be conducting a criminal investigation. This is arguably the biggest drama between two HR startups ever.",
+      "category": "Technology",
+      "title": "The Rippling/Deel corporate spying scandal may have taken another wild turn",
+      "link": "https://techcrunch.com/2026/01/23/the-rippling-deel-corporate-spying-scandal-may-have-taken-another-wild-turn/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769192644",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 21:08:08 +0000 UTC",
+      "content": "UK’s Starmer slams Trump over ‘insulting’ Afghanistan comments. Trump&#039;s comments on NATO allies unlikely to smooth relations as tensions linger after Greenland tariff threats.",
+      "category": "World",
+      "title": "UK’s Starmer slams Trump over ‘insulting’ Afghanistan comments",
+      "link": "https://www.aljazeera.com/news/2026/1/23/frankly-appalling-uks-starmer-slams-trump-over-afghanistan-comments?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004723257",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-23 20:54:00 UTC",
+      "content": "Kevin O’Leary — aka ‘Mr. Wonderful’ from ‘Shark Tank’ — explains why he calls altcoins ‘poo-poo coins’. The entrepreneur is bullish on crypto, but prefers the established names like bitcoin and ether.",
+      "category": "Business",
+      "title": "Kevin O’Leary — aka ‘Mr. Wonderful’ from ‘Shark Tank’ — explains why he calls altcoins ‘poo-poo coins’",
+      "link": "https://www.marketwatch.com/story/kevin-oleary-aka-mr-wonderful-from-shark-tank-explains-why-he-calls-altcoins-poo-poo-coins-966a217c?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/gadgets/2026/01/core-ultra-series-3-launch-may-be-hampered-by-chip-shortages-says-intel/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 20:48:46 UTC",
+      "content": "Demand for Intel's processors is apparently there, but the supply is not. Intel is allocating more of its own production to its money-making server chips.",
+      "category": "Technology",
+      "title": "Demand for Intel's processors is apparently there, but the supply is not",
+      "link": "https://arstechnica.com/gadgets/2026/01/core-ultra-series-3-launch-may-be-hampered-by-chip-shortages-says-intel/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/intel-core-ultra-series-3-500x500-1769199922.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769200166",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 20:36:52 +0000 UTC",
+      "content": "A look at the rare earth minerals Trump wants to mine in Greenland. Greenland has enough rare earth minerals to supply the world for the next 115 years, but residents fear new mining.",
+      "category": "World",
+      "title": "A look at the rare earth minerals Trump wants to mine in Greenland",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/23/a-look-at-the-rare-earth-minerals-trump-wants-to-mine-in-greenland?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769195050",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 20:18:49 +0000 UTC",
+      "content": "FBI arrests ex-Canadian snowboard Olympian turned alleged drug lord. Prosecutors allege Ryan Wedding, who was arrested in Mexico, behind multibillion-dollar drug trafficking scheme.",
+      "category": "World",
+      "title": "FBI arrests ex-Canadian snowboard Olympian turned alleged drug lord",
+      "link": "https://www.aljazeera.com/news/2026/1/23/fbi-arrests-ex-canadian-snowboard-olympian-turned-alleged-drug-lord?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085628",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-23 20:17:24 UTC",
+      "content": "Researchers say Russian government hackers were behind attempted Poland power outage. Security researchers have attributed the attempted use of destructive \"wiper\" malware across Poland's energy infrastructure in late December to a Russian-backed hacking group known for causing power outages in neighboring Ukraine.",
+      "category": "Technology",
+      "title": "Researchers say Russian government hackers were behind attempted Poland power outage",
+      "link": "https://techcrunch.com/2026/01/23/researchers-say-russian-government-hackers-were-behind-attempted-poland-power-outage/",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/tech-policy/2026/01/instagram-ice-critic-wins-fight-to-stay-anonymous-as-dhs-backs-down/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 20:10:40 UTC",
+      "content": "DHS keeps trying and failing to unmask anonymous ICE critics online. Community watch groups have a playbook to keep ICE away from subscriber information.",
+      "category": "Technology",
+      "title": "DHS keeps trying and failing to unmask anonymous ICE critics online",
+      "link": "https://arstechnica.com/tech-policy/2026/01/instagram-ice-critic-wins-fight-to-stay-anonymous-as-dhs-backs-down/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/GettyImages-2257128839-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://techcrunch.com/?post_type=tc_video&amp;p=3085516",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-23 20:00:00 UTC",
+      "content": "How did Davos turn into a tech conference?. The World Economic Forum’s annual meeting in Davos felt different this year, and not just because Meta and Salesforce took over storefronts on the main promenade. AI dominated the conversation in a way that overshadowed traditional topics like climate change and global poverty, and the CEOs weren’t holding back. There was public criticism of trade policy, warnings about AI […]",
+      "category": "Technology",
+      "title": "How did Davos turn into a tech conference?",
+      "link": "https://techcrunch.com/video/how-did-davos-turn-into-a-tech-conference/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866906",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 19:50:59 UTC",
+      "content": "Meta is stopping teens from chatting with its AI characters. Meta is \"temporarily pausing\" the ability for teens to chat with its AI characters as it develops a \"new version\" of the characters that will offer a \"better experience.\" The company made the announcement in an update to a blog post from October where the company had detailed more parental controls for teen AI use. […]",
+      "category": "Technology",
+      "title": "Meta is stopping teens from chatting with its AI characters",
+      "link": "https://www.theverge.com/news/866906/meta-teens-ai-characters-stop-block-new-version",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769197360",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 19:45:15 +0000 UTC",
+      "content": "Trump’s fragile Greenland ‘framework’ with NATO. US-NATO talks over Greenland include discussion of US missile defense and mineral rights.",
+      "category": "World",
+      "title": "Trump’s fragile Greenland ‘framework’ with NATO",
+      "link": "https://www.aljazeera.com/video/the-take-2/2026/1/23/glb_davosframework_av_v1-230126?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769189084",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 19:41:15 +0000 UTC",
+      "content": "Rights advocates welcome Canada’s exclusion from Trump’s ‘Board of Peace’. Mark Carney should not join US plan for Gaza that &#039;makes mockery of Palestinian self-determination&#039;, rights groups say.",
+      "category": "World",
+      "title": "Rights advocates welcome Canada’s exclusion from Trump’s ‘Board of Peace’",
+      "link": "https://www.aljazeera.com/news/2026/1/23/rights-advocates-welcome-canadas-exclusion-from-trump-board-of-peace?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/world/americas/peru-president-chinese-businessmen-meetings.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-23 19:33:46 UTC",
+      "content": "Peru’s President May Be Ousted Over Secret Meetings with Chinese Businessmen. Leaked videos have prompted a scandal involving President José Jerí and two Chinese men under investigation.",
+      "category": "World",
+      "title": "Peru’s President May Be Ousted Over Secret Meetings with Chinese Businessmen",
+      "link": "https://www.nytimes.com/2026/01/23/world/americas/peru-president-chinese-businessmen-meetings.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769064806",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 19:30:00 +0000 UTC",
+      "content": "Will the AI bubble burst or boom?. Hundreds of billions of dollars are being invested to ensure that AI succeeds, but what happens if it doesn’t pay off?",
+      "category": "World",
+      "title": "Will the AI bubble burst or boom?",
+      "link": "https://www.aljazeera.com/video/the-stream/2026/1/23/will-the-ai-bubble-burst-or-boom?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769188213",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 19:24:01 +0000 UTC",
+      "content": "US sanctions Iran ‘shadow fleet’ it says fuels violent protest crackdown. Move targets vessels used by Iran to generate &#039;funds used to repress its own people&#039;, US treasury secretary says.",
+      "category": "World",
+      "title": "US sanctions Iran ‘shadow fleet’ it says fuels violent protest crackdown",
+      "link": "https://www.aljazeera.com/news/2026/1/23/us-sanctions-iran-shadow-fleet-it-says-fuels-violent-protest-crackdown?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769193595",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 19:21:17 +0000 UTC",
+      "content": "Five-year-old in blue bunny hat becomes symbol of US immigration raids. A five-year-old boy in a blue bunny hat was taken away by immigration agents outside his home in Minneapolis, Minnesota.",
+      "category": "World",
+      "title": "Five-year-old in blue bunny hat becomes symbol of US immigration raids",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/23/five-year-old-in-blue-bunny-hat-becomes-symbol-of-us-immigration-raids?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769191474",
+      "source": "Al Jazeera",
+      "timestamp": "Fri, 23 Jan 2026 19:14:45 +0000 UTC",
+      "content": "Minneapolis businesses close doors for economic blackout protesting ICE. More than 700 small businesses, faith organisations, educators walked off the job to protest ICE raids",
+      "category": "World",
+      "title": "Minneapolis businesses close doors for economic blackout protesting ICE",
+      "link": "https://www.aljazeera.com/economy/2026/1/23/minneapolis-businesses-close-doors-for-economic-blackout-protesting-ice?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866868",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 19:10:51 UTC",
+      "content": "What TikTok’s new owners mean for your feed. TikTok is officially under new ownership in the US, and that could spell big changes for the video-sharing app. On January 22nd, ByteDance - TikTok's Chinese parent company - and a group of investors closed a $14 billion deal to spin off the platform's US operations, introducing a new slate of American executives. The Silver […]",
+      "category": "Technology",
+      "title": "What TikTok’s new owners mean for your feed",
+      "link": "https://www.theverge.com/tech/866868/tiktok-usds-new-owners-algorithm-explained",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cj3v2mlvzdvo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-23 19:02:50 UTC",
+      "content": "Frank Gardner: Not only Americans risked life and limb to serve in Afghanistan. Brits, Canadians and Danes were among those who saw the toughest fighting, writes the BBC's security correspondent.",
+      "category": "World",
+      "title": "Frank Gardner: Not only Americans risked life and limb to serve in Afghanistan",
+      "link": "https://www.bbc.com/news/articles/cj3v2mlvzdvo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/623c/live/324e36c0-f889-11f0-b385-5f48925de19a.jpg"
+    },
+    {
+      "id": "https://arstechnica.com/tech-policy/2026/01/white-house-posts-altered-arrest-photo-to-make-it-appear-ice-critic-was-sobbing/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 18:46:31 UTC",
+      "content": "White House alters arrest photo of ICE protester, says \"the memes will continue\". Lawyer calls it \"outrageous that the White House would make up stories.\"",
+      "category": "Technology",
+      "title": "White House alters arrest photo of ICE protester, says \"the memes will continue\"",
+      "link": "https://arstechnica.com/tech-policy/2026/01/white-house-posts-altered-arrest-photo-to-make-it-appear-ice-critic-was-sobbing/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/nekima-levy-white-house-manipulated-image-500x500-1769192278.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-23 18:42:25 UTC",
+      "content": "Ukrainian, Russian and U.S. Officials Meet in Abu Dhabi for Peace Talks. In the past, Ukrainian and Russian negotiators have relied on Americans to mediate, and it was unclear how the talks would play out.",
+      "category": "World",
+      "title": "Ukrainian, Russian and U.S. Officials Meet in Abu Dhabi for Peace Talks",
+      "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/23/spanish-prosecutors-drop-julio-iglesias-complaint",
+      "source": "The Guardian",
+      "timestamp": "2026-01-23 18:20:46 UTC",
+      "content": "Spanish prosecutors drop sexual assault complaint against Julio Iglesias. Court says alleged abuse and trafficking offences occurred outside Spain, leaving it without jurisdiction Spanish prosecutors have shelved a complaint brought by two women who have accused the singer Julio Iglesias of sexual assault and human trafficking , arguing the country’s courts have no jurisdiction as the alleged offences took place outside Spain. Two female former employees who worked at Iglesias’s Caribbean mansions 10 days ago accused the veteran entertainer of sexual assault, saying they had been subjected “to inappropriate touching, insults and humiliation … in an atmosphere of control and constant harassment”. Continue reading...",
+      "category": "World",
+      "title": "Spanish prosecutors drop sexual assault complaint against Julio Iglesias",
+      "link": "https://www.theguardian.com/world/2026/jan/23/spanish-prosecutors-drop-julio-iglesias-complaint",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/23/ryan-wedding-arrested",
+      "source": "The Guardian",
+      "timestamp": "2026-01-23 18:11:43 UTC",
+      "content": "Canadian Olympic snowboarder turned alleged cocaine kingpin in US custody. Ryan Wedding turned himself in at US consulate in Mexico City and is due to appear in court in California on Monday Ryan Wedding, the Canadian Olympic snowboarder turned alleged drug kingpin , has been arrested after turning himself in at the US embassy in Mexico, law enforcement officials announced on Friday. Wedding, 44, had been sought by the FBI and the Royal Canadian Mounted Police (RCMP) for his role in overseeing what the US attorney general, Pam Bondi , called the “one of the most prolific and violent drug-trafficking organizations” in the world. Continue reading...",
+      "category": "World",
+      "title": "Canadian Olympic snowboarder turned alleged cocaine kingpin in US custody",
+      "link": "https://www.theguardian.com/world/2026/jan/23/ryan-wedding-arrested",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866709",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 18:10:28 UTC",
+      "content": "Casio teased a retro gaming-inspired sampler. Casio showed up to NAMM (CES for music gear nerds) this year with a prototype sampler called the SX-C1 that looks every bit the lovechild of a Game Boy and an SP-404. The top has a directional pad and four buttons just like you'd find on a game controller, flanking a 1.3-inch OLED screen. But […]",
+      "category": "Technology",
+      "title": "Casio teased a retro gaming-inspired sampler",
+      "link": "https://www.theverge.com/news/866709/casio-sx-c1-retro-gaming-inspired-sampler-at-namm",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/23133103/best-instant-cameras-fujifilm-polaroid-kodak",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 18:01:09 UTC",
+      "content": "The best instant cameras you can buy right now. Even with the ability to take excellent photos with our phones and instantly share them across the world, there’s something magical about the old-school instant camera. With just a click of a button, you can capture a moment in a photo that you can see and touch almost immediately. Images captured by an instant camera […]",
+      "category": "Technology",
+      "title": "The best instant cameras you can buy right now",
+      "link": "https://www.theverge.com/23133103/best-instant-cameras-fujifilm-polaroid-kodak",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/tech-policy/2026/01/tiktok-finalizes-trump-deal-that-allows-bytedance-to-maintain-some-control/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 17:29:06 UTC",
+      "content": "TikTok deal is done; Trump wants praise while users fear MAGA tweaks. “I am so happy”: Trump closes deal that hands TikTok US to his allies.",
+      "category": "Technology",
+      "title": "TikTok deal is done; Trump wants praise while users fear MAGA tweaks",
+      "link": "https://arstechnica.com/tech-policy/2026/01/tiktok-finalizes-trump-deal-that-allows-bytedance-to-maintain-some-control/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/GettyImages-2257704699-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.theverge.com/?p=866601",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 17:27:22 UTC",
+      "content": "Hang on, there’s a Trump Phone Ultra coming too?. Where's the Trump Phone? We're going to keep talking about it every week. We've reached out, as usual, to ask about the Trump Phone's whereabouts. As usual, we're still waiting for a response. In the meantime, it turns out we might have two Trump Phones to worry about. The Trump Phone may be no more […]",
+      "category": "Technology",
+      "title": "Hang on, there’s a Trump Phone Ultra coming too?",
+      "link": "https://www.theverge.com/news/866601/trump-mobile-t1-ultra-phone-don-hendrickson-interview",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/23/guinea-bissau-hepatitis-b-vaccine-study",
+      "source": "The Guardian",
+      "timestamp": "2026-01-23 17:09:46 UTC",
+      "content": "‘It’s the sovereignty of the country’: Guinea-Bissau says US vaccine study suspended. Despite US pushback, officials in west Africa say controversial hepatitis B study on pause amid ethics concerns US health officials insisted it was still on. African health leaders said it was cancelled . At the heart of the controversy is the west African nation of Guinea-Bissau – one of the poorest countries in the world and the proposed site of a hotly debated US-funded study on vaccines. The study on hepatitis B vaccination, to be led by Danish researchers, became a flashpoint after major changes to the US vaccination schedule and prompted questions about how research is conducted ethically in other countries. Continue reading...",
+      "category": "World",
+      "title": "‘It’s the sovereignty of the country’: Guinea-Bissau says US vaccine study suspended",
+      "link": "https://www.theguardian.com/world/2026/jan/23/guinea-bissau-hepatitis-b-vaccine-study",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085504",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-23 17:02:22 UTC",
+      "content": "Google Photos’ latest feature lets you meme yourself. The addition is meant to just be a fun way to explore your photos and experiment with Google's Gemini AI technology, and specifically Nano Banana.",
+      "category": "Technology",
+      "title": "Google Photos’ latest feature lets you meme yourself",
+      "link": "https://techcrunch.com/2026/01/23/google-photos-latest-feature-lets-you-meme-yourself/",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/cars/2026/01/tesla-wants-recurring-revenue-discontinues-autopilot-in-favor-of-fsd/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 16:54:12 UTC",
+      "content": "Tesla kills Autopilot, locks lane-keeping behind $99/month fee. With falling sales and shrinking profits, the recurring revenue will be most welcome.",
+      "category": "Technology",
+      "title": "Tesla kills Autopilot, locks lane-keeping behind $99/month fee",
+      "link": "https://arstechnica.com/cars/2026/01/tesla-wants-recurring-revenue-discontinues-autopilot-in-favor-of-fsd/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/GettyImages-1415090444-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.theverge.com/?p=866640",
+      "source": "The Verge",
+      "timestamp": "2026-01-23 16:54:01 UTC",
+      "content": "Marshall’s new hub connects to multiple Bluetooth speakers without pairing. Marshall has announced a new music streaming hub called the Heddon that can broadcast to multiple speakers using the Bluetooth Auracast feature that's finally starting to catch on. Similar to Sennheiser's BTA1 TV Transmitter announced earlier this week, the Heddon doesn't require wireless audio devices to go through a pairing process to stream audio, as […]",
+      "category": "Technology",
+      "title": "Marshall’s new hub connects to multiple Bluetooth speakers without pairing",
+      "link": "https://www.theverge.com/tech/866640/marshall-music-streaming-hub-heddon-bluetooth-auracast-speakers",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/22/health/hepatitis-b-vaccine-africa-study.html",
+      "source": "NY Times Health",
+      "timestamp": "2026-01-23 16:50:06 UTC",
+      "content": "RFK Jr. Plan to Test a Vaccine in West African Babies Is Blocked. A planned U.S.-funded study of a hepatitis B vaccine drew widespread condemnation from researchers. Now the host country says it cannot proceed.",
+      "category": "Health",
+      "title": "RFK Jr. Plan to Test a Vaccine in West African Babies Is Blocked",
+      "link": "https://www.nytimes.com/2026/01/22/health/hepatitis-b-vaccine-africa-study.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c3r117w55q4o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-23 14:43:48 UTC",
+      "content": "'I didn't hear from my son for seven months': Inside Yemen's UAE-run secret prisons. The BBC sees sites on former United Arab Emirates bases in Yemen where detainees say they were abused.",
+      "category": "World",
+      "title": "'I didn't hear from my son for seven months': Inside Yemen's UAE-run secret prisons",
+      "link": "https://www.bbc.com/news/articles/c3r117w55q4o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/a527/live/13dc10e0-f7c6-11f0-a422-4ba8a094a8fa.jpg"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/20/science/infinite-pancake-math-puzzle.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-23 14:38:09 UTC",
+      "content": "How to Cut an Infinitely Large Pancake into as Many Pieces as Possible. A team of mathematicians seeks to cut an infinitely large pancake into as many pieces as possible, in a new take on an old puzzle.",
+      "category": "Science",
+      "title": "How to Cut an Infinitely Large Pancake into as Many Pieces as Possible",
+      "link": "https://www.nytimes.com/2026/01/20/science/infinite-pancake-math-puzzle.html",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/space/2026/01/rocket-report-rocket-lab-reports-neutron-setback-australia-backs-launch-startup/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 14:31:44 UTC",
+      "content": "Rocket Report: Chinese rockets fail twice in 12 hours; Rocket Lab reports setback. Another partially reusable Chinese rocket, the Long March 12B, is nearing its first test flight.",
+      "category": "Technology",
+      "title": "Rocket Report: Chinese rockets fail twice in 12 hours; Rocket Lab reports setback",
+      "link": "https://arstechnica.com/space/2026/01/rocket-report-rocket-lab-reports-neutron-setback-australia-backs-launch-startup/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/54643108625_7db2967a37_k-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/world/asia/vietnam-lam-power-congress.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-23 14:16:22 UTC",
+      "content": "Vietnam’s Leader Consolidates Power, Pledging ‘New Era of Prosperity’. To Lam, the head of Vietnam’s Communist Party, will also become president of the nation. His new stature comes with new risks.",
+      "category": "World",
+      "title": "Vietnam’s Leader Consolidates Power, Pledging ‘New Era of Prosperity’",
+      "link": "https://www.nytimes.com/2026/01/23/world/asia/vietnam-lam-power-congress.html",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/science/2026/01/tiny-falcons-are-helping-keep-the-food-supply-safe-on-cherry-farms/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 14:10:48 UTC",
+      "content": "Tiny falcons are helping keep the food supply safe on cherry farms. Their presence appears to lower the risk of food-borne illnesses from pathogens.",
+      "category": "Technology",
+      "title": "Tiny falcons are helping keep the food supply safe on cherry farms",
+      "link": "https://arstechnica.com/science/2026/01/tiny-falcons-are-helping-keep-the-food-supply-safe-on-cherry-farms/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/kestrel-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://arstechnica.com/features/2026/01/2026-lucid-air-touring-review-this-feels-like-a-complete-car-now/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-23 12:00:31 UTC",
+      "content": "2026 Lucid Air Touring review: This feels like a complete car now. It's efficient, easy to live with, and smooth to drive.",
+      "category": "Technology",
+      "title": "2026 Lucid Air Touring review: This feels like a complete car now",
+      "link": "https://arstechnica.com/features/2026/01/2026-lucid-air-touring-review-this-feels-like-a-complete-car-now/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/2026-Lucid-Air-Touring-1-e1768932171844-500x500-1768932196.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/23/us/organ-donation.html",
+      "source": "NY Times Health",
+      "timestamp": "2026-01-23 10:03:35 UTC",
+      "content": "Increased Scrutiny Leads to an Improved Organ Transplant System. A crackdown on problems with fairness and safety is achieving results, including a big drop in the number of sick patients being passed over for transplants.",
+      "category": "Health",
+      "title": "Increased Scrutiny Leads to an Improved Organ Transplant System",
+      "link": "https://www.nytimes.com/2026/01/23/us/organ-donation.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cn9zznx8qdno#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-23 09:18:30 UTC",
+      "content": "US officially leaves World Health Organization. Trump ordered the withdrawal a year ago, accusing the UN agency of failing to adopt reforms and mishandling the pandemic.",
+      "category": "Health",
+      "title": "US officially leaves World Health Organization",
+      "link": "https://www.bbc.com/news/articles/cn9zznx8qdno?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/5e36/live/3f225830-f821-11f0-b565-ab0715623975.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c1ev4yg1j1lo#0",
+      "source": "BBC Science",
+      "timestamp": "2026-01-23 08:19:04 UTC",
+      "content": "Hundreds of illegal waste tips operating in England - including 11 'super sites'. A BBC investigation uncovers how criminals are operating huge illegal rubbish tips across the country.",
+      "category": "Science",
+      "title": "Hundreds of illegal waste tips operating in England - including 11 'super sites'",
+      "link": "https://www.bbc.com/news/articles/c1ev4yg1j1lo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/372f/live/cd1454f0-f7ad-11f0-b385-5f48925de19a.jpg"
     }
   ],
+  "mapPoints": [],
   "availableDates": [
     "2026-01-07",
     "2026-01-08",
@@ -2241,7 +3127,7 @@
   },
   "globalState": {
     "isOnline": true,
-    "lastChecked": "2026-01-25T01:28:31.305Z",
+    "lastChecked": "2026-01-25T01:22:23.563Z",
     "lastError": null
   }
 }

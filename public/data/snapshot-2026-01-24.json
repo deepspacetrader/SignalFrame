@@ -1,131 +1,217 @@
 {
-  "lastUpdated": "2026-01-25T01:28:47.853Z",
-  "narrative": "US military operations in Nigeria raise concerns over transparency and accountability in counterterrorism strikes with limited public disclosure of targets and impact. Social media platforms are increasingly used to shape political narratives around military actions with statements from leaders like Donald Trump amplifying claims about enemy groups and civilian casualties. Ethical and operational challenges persist in distinguishing combatants from non-combatants in conflict zones leading to ongoing debates about the proportionality and legality of targeted strikes. Geopolitical tensions continue to influence regional security dynamics as external actors engage in counterterrorism efforts alongside local governments. Information control and the dissemination of operational details remain critical issues affecting public trust and international scrutiny of military interventions.",
+  "lastUpdated": "2026-01-25T01:22:27.422Z",
+  "narrative": "A series of recent events has dominated global discourse, with each contributing to a complex and ever-evolving landscape. The ongoing Russia-Ukraine conflict continues to simmer, with tensions escalating as ceasefire deadlines loom. The situation on the ground remains dire, with thousands of people affected by Russian attacks that have cut off power to millions.\n\nMeanwhile, in Washington, President Trump has continued to flex his muscles, threatening Canada with 100% tariffs over a potential trade deal with China. This development comes amidst growing tensions between the US and its northern neighbor, as well as rising concerns about the impact on global markets.\n\nIn Iran, the leadership is grappling with the consequences of war and unrest, which have taken a toll on the country's ruling system. The bloody crackdown on protesters has raised questions about the stability of the regime, particularly amidst growing tensions between Tehran and its regional rivals.\n\nThe world of tech has seen some notable developments, with wiper malware targeting Poland's energy grid and Gemini's Personal Intelligence being hailed as a major breakthrough. However, concerns about AI-powered advertising have also come to the forefront, with many warning that this technology is on the cusp of an \"ad-pocalypse.\"\n\nIn the realm of business, market trends are shifting as Americans inherit wealth and navigate complex financial situations. The rise of alternative cryptocurrencies has sparked debate among experts, while tech stocks are expected to play a significant role in Q1 earnings.\n\nLooking ahead, scientists continue to push the boundaries of human knowledge, with Edith Flanigen's pioneering work on synthetic materials being recognized. In the health sector, concerns about genetic data and \"race science\" have raised important questions about ethics and accountability.\n\nAs we move forward, it is essential to remain vigilant and aware of these developments, which are shaping the world as we know it today.",
   "signals": [
     {
-      "id": "sig_3562a945",
-      "title": "US Airstrikes in Nigeria Targeted Unknown Group",
-      "text": "The US conducted airstrikes in Nigeria two weeks ago, but the targeted group's identity and the operation's impact remain unclear despite President Trump's public statements.",
+      "id": "sig_14daded3",
+      "title": "Russia launches strikes on Kyiv and Kharkiv, escalating war with Ukraine",
+      "text": "Despite ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict, Russia launched strikes on Kyiv and Kharkiv, resulting in at least one death and multiple injuries. This marks a severe escalation in the war between Russia and Ukraine.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 75,
-      "novelty": 90,
-      "explain": "Unclear target and minimal transparency raise questions about US military operations.",
-      "shareText": "US strikes in Nigeria lack transparency about targets and impact.",
+      "category": "Conflicts",
+      "deltaType": "escalation",
+      "novelty": 0,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC",
-          "quote": "Very little information has been shared about strikes in Sokoto state."
+          "feedId": "15",
+          "source": "BBC World",
+          "title": "Two days of peace talks end as Russia continues Ukraine attacks",
+          "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 16:56:55 UTC"
+        }
+      ],
+      "contradictions": [
+        {
+          "claimA": "Russia-Ukraine talks close with no breakthrough.",
+          "claimB": "Russia launches strikes on Kyiv and Kharkiv, escalating war with Ukraine",
+          "sourceA": [
+            {
+              "feedId": "16",
+              "source": "Al Jazeera",
+              "title": "US-brokered Russia-Ukraine talks close with no breakthrough",
+              "link": "https://www.aljazeera.com/news/2026/1/24/us-federal-agents-shoot-another-person-in-minneapolis-governor?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 16:56:45 +0000 UTC"
+            }
+          ],
+          "sourceB": []
+        }
+      ]
+    },
+    {
+      "id": "sig_a2f07598",
+      "title": "Trump threatens Canada with tariffs over China trade deal",
+      "text": "President Trump said he would impose tariffs if Canada made 'a deal with China,' though there is no sign that those countries are discussing a broad trade agreement.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 0,
+      "source": [
+        {
+          "feedId": "18",
+          "source": "BBC World",
+          "title": "Trump threatens Canada with 100% tariff over China deal",
+          "link": "https://www.bbc.com/news/articles/cy4qww3w72lo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 16:27:18 UTC"
         }
       ],
       "contradictions": []
     },
     {
-      "id": "sig_683dae6d",
-      "title": "AI Focus Shifts from Development to Adoption",
-      "text": "OpenAI is pivoting its strategy from AI development towards practical adoption, indicating a new phase in the industry's maturity.",
+      "id": "sig_58676ff7",
+      "title": "Iran rejects UN rights resolution condemning protest killings",
+      "text": "A prosecutor said at least twice more people were killed in Iran in half the time compared with the Srebrenica genocide.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 0,
+      "source": [
+        {
+          "feedId": "22",
+          "source": "Al Jazeera",
+          "title": "Iran rejects UN rights resolution condemning protest killings",
+          "link": "https://www.aljazeera.com/news/2026/1/24/iran-rejects-un-rights-resolution-condemning-protest-killings?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 15:54:30 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_17a78ce5",
+      "title": "US drops lawsuit against Winklevoss twins' Gemini crypto exchange",
+      "text": "The Securities and Exchange Commission has dropped its lawsuit against Gemini, the crypto exchange founded by Trump backers Cameron and Tyler Winklevoss.",
+      "sentiment": "neutral",
+      "category": "Financial",
+      "novelty": 91,
+      "source": [
+        {
+          "feedId": "9",
+          "source": "TechCrunch",
+          "title": "SEC drops lawsuit against Winklevoss twins’ Gemini crypto exchange",
+          "link": "https://techcrunch.com/2026/01/24/sec-drops-lawsuit-against-winklevoss-twins-gemini-crypto-exchange/",
+          "timestamp": "2026-01-24 18:06:33 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_f7b73e85",
+      "title": "US federal agents shoot and kill another person in Minneapolis",
+      "text": "Federal agents in Minneapolis repeatedly punched a man, forced him to the ground, and then shot him multiple times.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 0,
+      "source": [
+        {
+          "feedId": "17",
+          "source": "The Verge",
+          "title": "ICE has killed another person in Minneapolis",
+          "link": "https://www.theverge.com/news/867245/ice-has-killed-another-person-in-minneapolis",
+          "timestamp": "2026-01-24 16:54:32 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_b8519f07",
+      "title": "Gemini with Personal Intelligence is awfully familiar",
+      "text": "By lots of metrics, Gemini is winning. It has raced ahead of OpenAI, become scarily good at creating convincing imagery, and even won Apple's business.",
       "sentiment": "neutral",
       "category": "Tech/AI",
-      "importance": 80,
-      "novelty": 60,
-      "explain": "Shift reflects broader industry maturation post-hype phase.",
-      "shareText": "OpenAI shifts focus from AI development to practical adoption.",
+      "novelty": 71,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "46",
+          "source": "The Verge",
+          "title": "Gemini with Personal Intelligence is awfully familiar",
+          "link": "https://www.nytimes.com/2026/01/24/world/americas/venezuela-arrests-repression.html",
+          "timestamp": "2026-01-24 10:01:06 UTC"
         }
       ],
       "contradictions": []
     },
     {
-      "id": "sig_625a62dc",
-      "title": "Spain Rail Safety Under Scrutiny After Córdoba Crash",
-      "text": "Spain's deadliest train crash in a decade has prompted national mourning and intense investigation into rail safety and infrastructure maintenance protocols.",
+      "id": "sig_d1e317ba",
+      "title": "Xi Jinping's purge of China’s Military Brings Its Top General Down",
+      "text": "The ouster of Gen. Zhang Youxia, who was second only to Xi Jinping in the military hierarchy, marks 'the total annihilation of the high command,' one analyst said.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 90,
-      "novelty": 70,
-      "explain": "High-profile disaster raises concerns about systemic safety issues.",
-      "shareText": "Spain mourns 41 killed in deadliest train crash in a decade.",
+      "category": "Conflicts",
+      "novelty": 0,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "24",
+          "source": "NY Times World",
+          "title": "Xi’s Purge of China’s Military Brings Its Top General Down",
+          "link": "https://www.nytimes.com/2026/01/24/world/asia/china-top-general-xi-military-purge.html",
+          "timestamp": "2026-01-24 15:47:17 UTC"
         }
       ],
       "contradictions": []
     },
     {
-      "id": "sig_13aefbcd",
-      "title": "EU Warns Against US Tariff Escalation",
-      "text": "European leaders are voicing strong concerns about President Trump's aggressive tariff policies, framing them as politically motivated and potentially destabilizing.",
+      "id": "sig_c2bccf69",
+      "title": "Gmail’s spam filter and automatic sorting are broken",
+      "text": "Some Gmail users have noticed that promotional emails that normally go to their own siloed tab have started flooding their inbox.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "deltaType": "policy",
-      "importance": 95,
-      "novelty": 50,
-      "explain": "Direct challenge to US economic policy by European allies.",
-      "shareText": "EU leaders condemn Trump's tariff threats as destabilizing.",
+      "category": "Tech/AI",
+      "novelty": 0,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "10",
+          "source": "The Verge",
+          "title": "Gmail’s spam filter and automatic sorting are broken",
+          "link": "https://www.theverge.com/tech/867247/gmails-spam-filter-broken",
+          "timestamp": "2026-01-24 17:54:10 UTC"
         }
       ],
       "contradictions": []
     },
     {
-      "id": "sig_508c3b63",
-      "title": "Somalia Worsening Nutrition Crisis Questions Official Reports",
-      "text": "Worsening malnutrition rates in Somalia have reached crisis levels, challenging official narratives and raising concerns about regional stability.",
-      "sentiment": "somewhat-negative",
-      "category": "Geopolitical",
-      "importance": 85,
-      "novelty": 65,
-      "explain": "Humanitarian crisis undermines governance credibility.",
-      "shareText": "Somalia's malnutrition crisis challenges official reports and stability.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_3929ee7a",
-      "title": "Ukraine Reports intensified Russian Missile Attacks",
-      "text": "Ukraine reports intensified Russian missile attacks targeting energy infrastructure, with officials suggesting a strategy to deliberately freeze Kiev amid harsh winter conditions.",
+      "id": "sig_aeef7cf",
+      "title": "US-NATO talks over Greenland's mineral rights and missile defense have intensified",
+      "text": "Under Trump's framework, US-NATO talks over Greenland's mineral rights and missile defense have intensified, sparking worries about territorial integrity and economic implications.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 90,
-      "novelty": 50,
-      "explain": "Escalation of winter warfare tactics targeting civilian infrastructure.",
-      "shareText": "Ukraine reports intensified Russian attacks targeting energy infrastructure.",
+      "category": "Conflicts",
+      "novelty": 9,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "19",
+          "source": "BBC World",
+          "title": "Trump threatens Canada with 100% tariff over China deal",
+          "link": "https://www.aljazeera.com/news/2026/1/24/trump-threatens-100-percent-tariff-on-canada-over-china-deal?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 16:11:38 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_51be1b35",
+      "title": "Chinese President Xi Jinping's Purge of the Military Continues to Intensify",
+      "text": "The purge has led to increased tensions between China and its neighbors, particularly Taiwan.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 85,
+      "source": [
+        {
+          "feedId": "26",
+          "source": "Al Jazeera",
+          "title": "Xi Jinping's Purge of the Military Continues to Intensify",
+          "link": "https://www.marketwatch.com/story/im-retiring-at-62-this-year-with-11-year-old-twins-can-they-claim-social-security-using-my-benefit-78eec54c?mod=mw_rss_topstories",
+          "timestamp": "2026-01-24 15:27:00 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_fb15ecaf",
+      "title": "Thousand of US flights cancelled due to severe winter storm",
+      "text": "More than a dozen states sound the alarm, declaring emergencies or urging people to stay home.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 90,
+      "source": [
+        {
+          "feedId": "33",
+          "source": "Al Jazeera",
+          "title": "Over 8,000 flights cancelled as major winter storm bears down across US",
+          "link": "https://www.aljazeera.com/news/2026/1/24/remote-coercion-what-has-us-approach-been-since-abduction-of-maduro?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 14:24:41 +0000 UTC"
         }
       ],
       "contradictions": []
@@ -133,34 +219,564 @@
   ],
   "insights": [
     {
-      "text": "TREND | IMPLICATION",
-      "sentiment": "neutral"
-    },
-    {
-      "text": "somewhat-negative",
-      "sentiment": "neutral"
+      "text": "Observation | Strategic implication",
+      "sentiment": "neutral",
+      "source": [],
+      "signalId": "sig_a87ad (from the user's message, but it seems incomplete. The user provided a signal ID as "
     }
   ],
   "feeds": [
     {
-      "id": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
+      "id": "https://arstechnica.com/?p=2137210",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-24 19:08:06 UTC",
+      "content": "Wiper malware targeted Poland energy grid, but failed to knock out electricity. Destructive payload unleashed on 10-year anniversary of Russia's attack on Ukraine's grid.",
+      "category": "Technology",
+      "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+      "link": "https://arstechnica.com/?p=2137210",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/data-wiper-malware-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/canada/trump-canada-tariffs.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 18:59:15 UTC",
+      "content": "Trump Threatens Canada With Tariffs as Post-Davos Fallout Continues. President Trump said he would impose tariffs if Canada made “a deal with China,” though there is no sign that those countries are discussing a broad trade agreement.",
+      "category": "World",
+      "title": "Trump Threatens Canada With Tariffs as Post-Davos Fallout Continues",
+      "link": "https://www.nytimes.com/2026/01/24/world/canada/trump-canada-tariffs.html",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711325",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 18:49:00 UTC",
+      "content": "‘People are often unreasonable when money is involved’: My husband, 62, gave me a 5-year life estate. Would I have to pay for a new roof?. “He has included a provision stating that I would be responsible for ‘maintenance and expenses’ during my occupancy.”",
+      "category": "Business",
+      "title": "‘People are often unreasonable when money is involved’: My husband, 62, gave me a 5-year life estate. Would I have to pay for a new roof?",
+      "link": "https://www.marketwatch.com/story/people-are-often-unreasonable-when-money-is-involved-my-husband-62-gave-me-a-5-year-life-estate-would-i-have-to-pay-for-a-new-roof-db4e0efb?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004721203",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 18:46:00 UTC",
+      "content": "I’m inheriting $250K. Will paying off my student loans and credit-card debt hurt my credit score?. “The money is coming from the proceeds of the sale of a family home.”",
+      "category": "Business",
+      "title": "I’m inheriting $250K. Will paying off my student loans and credit-card debt hurt my credit score?",
+      "link": "https://www.marketwatch.com/story/im-inheriting-250k-will-paying-off-my-student-loans-and-credit-card-debt-hurt-my-credit-score-4679d9ab?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/science/2026/01/did-edison-accidentally-make-graphene-in-1879/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-24 18:36:11 UTC",
+      "content": "Did Edison accidentally make graphene in 1879?. Rice University chemists replicated Thomas Edison's seminal experiment and found a surprising byproduct.",
+      "category": "Technology",
+      "title": "Did Edison accidentally make graphene in 1879?",
+      "link": "https://arstechnica.com/science/2026/01/did-edison-accidentally-make-graphene-in-1879/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/edison3-500x500-1769268800.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/europe/ukraine-us-russia-peace-talks.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 18:33:34 UTC",
+      "content": "Ukraine Peace Talks End on Positive Note as Zelensky Teases Future Meeting. President Volodymyr Zelensky of Ukraine said that rare three-way negotiations between Ukrainian, Russian and American teams in Abu Dhabi had been “constructive.”",
+      "category": "World",
+      "title": "Ukraine Peace Talks End on Positive Note as Zelensky Teases Future Meeting",
+      "link": "https://www.nytimes.com/2026/01/24/world/europe/ukraine-us-russia-peace-talks.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769269338",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 18:32:32 +0000 UTC",
+      "content": "US-brokered Russia-Ukraine talks close with no breakthrough. On eve of day 2 of talks in UAE capital, Russian attacks cut off about 1.2 million from power in sub-zero temperatures.",
+      "category": "World",
+      "title": "US-brokered Russia-Ukraine talks close with no breakthrough",
+      "link": "https://www.aljazeera.com/news/2026/1/24/us-brokered-talks-on-ukraine-close-with-no-breakthrough?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3084389",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 18:21:21 UTC",
+      "content": "Former Googlers seek to captivate kids with an AI-powered learning app. Sparkli said that education systems often fall behind in teaching modern concepts. The company wants to teach kids about topics like skills design, financial literacy, and entrepreneurship by creating an AI-powered learning \"expedition.\"",
+      "category": "Technology",
+      "title": "Former Googlers seek to captivate kids with an AI-powered learning app",
+      "link": "https://techcrunch.com/2026/01/24/former-google-trio-is-building-an-interactive-ai-powered-learning-app-for-kids/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866788",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 18:21:02 UTC",
+      "content": "MicroSD Express cards and Anker’s travel adapter rule the deal roost this week. Welcome to the weekend, friends! We’re still in a bit of a deals lull before the Presidents Day and V-Day sales begin, the bulk of which we anticipate kicking off the first week of February. However, for now, we’re still seeing some solid discounts on a few newer gadgets and some old, Verge-approved favorites. Anker’s […]",
+      "category": "Technology",
+      "title": "MicroSD Express cards and Anker’s travel adapter rule the deal roost this week",
+      "link": "https://www.theverge.com/gadgets/866788/anker-nano-travel-adapter-samsung-p9-microsd-express-card-deal-sale",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085837",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 18:06:33 UTC",
+      "content": "SEC drops lawsuit against Winklevoss twins’ Gemini crypto exchange. The Securities and Exchange Commission has dropped its lawsuit against Gemini, the crypto exchange founded by Trump backers Cameron and Tyler Winklevoss.",
+      "category": "Technology",
+      "title": "SEC drops lawsuit against Winklevoss twins’ Gemini crypto exchange",
+      "link": "https://techcrunch.com/2026/01/24/sec-drops-lawsuit-against-winklevoss-twins-gemini-crypto-exchange/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867247",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 17:54:10 UTC",
+      "content": "Gmail’s spam filter and automatic sorting are broken. Some Gmail users have noticed that promotional emails that normally go to their own siloed tab have started flooding their inbox. Reports have been hitting the Google forums and Reddit that messages are bypassing the Updates and Promotional filters and going straight to Gmail inboxes. Some are also reporting seeing a banner at the top […]",
+      "category": "Technology",
+      "title": "Gmail’s spam filter and automatic sorting are broken",
+      "link": "https://www.theverge.com/tech/867247/gmails-spam-filter-broken",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/science/edith-flanigen-dead.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-24 17:45:35 UTC",
+      "content": "Edith Flanigen, Award-Winning Research Chemist, Dies at 96. She and her staff at Union Carbide created synthetic materials that improved various industrial processes, including purifying water. She also developed a way to make emeralds.",
+      "category": "Science",
+      "title": "Edith Flanigen, Award-Winning Research Chemist, Dies at 96",
+      "link": "https://www.nytimes.com/2026/01/24/science/edith-flanigen-dead.html",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004724491",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 17:15:00 UTC",
+      "content": "‘It’s an expensive piece of equipment’: My neighbor asked to borrow my snowblower. Do I say yes?. “The projected snowfall this weekend doesn’t look to be changing too much.”",
+      "category": "Business",
+      "title": "‘It’s an expensive piece of equipment’: My neighbor asked to borrow my snowblower. Do I say yes?",
+      "link": "https://www.marketwatch.com/story/its-an-expensive-piece-of-equipment-my-neighbor-asked-to-borrow-my-snowblower-do-i-say-yes-4ae68f4e?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004674795",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 17:09:00 UTC",
+      "content": "Five key things to know before you sell your silver coins, bars, jewelry or flatware. The precious metal has seen a huge spike in value over the past year, leading many to consider cashing in on what they have.",
+      "category": "Business",
+      "title": "Five key things to know before you sell your silver coins, bars, jewelry or flatware",
+      "link": "https://www.marketwatch.com/story/five-key-things-to-know-before-you-sell-your-silver-coins-bars-jewelry-or-flatware-4c71a9db?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085833",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 17:00:00 UTC",
+      "content": "A new test for AI labs: Are you even trying to make money?. It’s getting hard to tell which AI labs. are actually trying to make money. We created a rating system to help sort it out.",
+      "category": "Technology",
+      "title": "A new test for AI labs: Are you even trying to make money?",
+      "link": "https://techcrunch.com/2026/01/24/a-new-test-for-ai-labs-are-you-even-trying-to-make-money/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cwyr6p30054o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 16:56:55 UTC",
+      "content": "Two days of peace talks end as Russia continues Ukraine attacks. There is no apparent breakthrough as the three-way talks conclude and Russia maintains its bombardment.",
+      "category": "World",
+      "title": "Two days of peace talks end as Russia continues Ukraine attacks",
+      "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/1e52/live/0d3f3e30-f94a-11f0-b385-5f48925de19a.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769272516",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 16:56:45 +0000 UTC",
+      "content": "US federal agents shoot and kill another person in Minneapolis. Minneapolis police chief Brian O&#039;Hara says a 37-year-old man died in hospital after suffering multiple gunshot wounds.",
+      "category": "World",
+      "title": "US federal agents shoot and kill another person in Minneapolis",
+      "link": "https://www.aljazeera.com/news/2026/1/24/us-federal-agents-shoot-another-person-in-minneapolis-governor?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867245",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 16:54:32 UTC",
+      "content": "ICE has killed another person in Minneapolis. Federal agents in Minneapolis repeatedly punched a man, forced him to the ground, and then shot him multiple times. The man was later pronounced dead. This is just the latest incident of deadly violence involving ICE, which has grown increasingly frequent, especially on the streets of Minneapolis. It's been less than three weeks since an […]",
+      "category": "Technology",
+      "title": "ICE has killed another person in Minneapolis",
+      "link": "https://www.theverge.com/news/867245/ice-has-killed-another-person-in-minneapolis",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cy4qww3w72lo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 16:27:18 UTC",
+      "content": "Trump threatens Canada with 100% tariffs over China trade deal. Trump made the threat in a social media post as tensions rise between the US and its northern neighbour.",
+      "category": "World",
+      "title": "Trump threatens Canada with 100% tariffs over China trade deal",
+      "link": "https://www.bbc.com/news/articles/cy4qww3w72lo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/ef43/live/2a5f94f0-f937-11f0-814e-71ff186d4f46.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769266325",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 16:11:38 +0000 UTC",
+      "content": "Trump threatens 100 percent tariff on Canada over China deal. Donald Trump&#039;s threat comes after Canada reached deal with China last week on trade of agriproducts, electric vehicles.",
+      "category": "World",
+      "title": "Trump threatens 100 percent tariff on Canada over China deal",
+      "link": "https://www.aljazeera.com/news/2026/1/24/trump-threatens-100-percent-tariff-on-canada-over-china-deal?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085306",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-24 16:00:00 UTC",
+      "content": "How PopWheels helped a food cart ditch generators for e-bike batteries. PopWheels realized its battery swapping network could be used for more than food delivery workers who need to charge their e-bikes. Now, its planning for an \"aggressive rollout\" this summer.",
+      "category": "Technology",
+      "title": "How PopWheels helped a food cart ditch generators for e-bike batteries",
+      "link": "https://techcrunch.com/2026/01/24/how-popwheels-helped-a-food-cart-ditch-generators-for-e-bike-batteries/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867004",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 16:00:00 UTC",
+      "content": "Gaming’s most fun sales data is full of old and obscure games. Every month, Circana video game analyst Mat Piscatella posts fascinating data about video game sales on Bluesky, highlighting trends like November's historically bad month for game hardware and Battlefield 6's big launch in October. But he doesn't just share data about what is selling the most; as of late, he's also posted delightful lists of […]",
+      "category": "Technology",
+      "title": "Gaming’s most fun sales data is full of old and obscure games",
+      "link": "https://www.theverge.com/games/867004/circana-gaming-sales-data-mat-piscatella-one-copy-obscure-games",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769263199",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 15:54:30 +0000 UTC",
+      "content": "Iran rejects UN rights resolution condemning protest killings. A prosecutor said at least twice more people were killed in Iran in half the time compared with the Srebrenica genocide.",
+      "category": "World",
+      "title": "Iran rejects UN rights resolution condemning protest killings",
+      "link": "https://www.aljazeera.com/news/2026/1/24/iran-rejects-un-rights-resolution-condemning-protest-killings?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/middleeast/iran-protests-ayatollah-revolutionary-guards.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 15:50:27 UTC",
+      "content": "Iran’s Leadership Stumbles After War and Unrest. The bloody crackdown offers hints about growing tensions inside the country’s ruling system as the cleric’s rule comes under strain.",
+      "category": "World",
+      "title": "Iran’s Leadership Stumbles After War and Unrest",
+      "link": "https://www.nytimes.com/2026/01/24/world/middleeast/iran-protests-ayatollah-revolutionary-guards.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/asia/china-top-general-xi-military-purge.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 15:47:17 UTC",
+      "content": "Xi’s Purge of China’s Military Brings Its Top General Down. The ouster of Gen. Zhang Youxia, who was second only to Xi Jinping in the military hierarchy, marks “the total annihilation of the high command,” one analyst said.",
+      "category": "World",
+      "title": "Xi’s Purge of China’s Military Brings Its Top General Down",
+      "link": "https://www.nytimes.com/2026/01/24/world/asia/china-top-general-xi-military-purge.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c8rm135lnneo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 15:39:05 UTC",
+      "content": "Climber delays rope-free skyscraper challenge over rain. Alex Honnold is attempting to scale one of the world's tallest buildings, Taipei 101 in Taiwan.",
+      "category": "World",
+      "title": "Climber delays rope-free skyscraper challenge over rain",
+      "link": "https://www.bbc.com/news/articles/c8rm135lnneo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/e219/live/605fd9d0-f936-11f0-a422-4ba8a094a8fa.png"
+    },
+    {
+      "id": "WP-MKTW-0004723800",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 15:27:00 UTC",
+      "content": "I’m retiring at 62 this year with 11-year-old twins. Can they claim Social Security using my benefit?. “I was told that there’s a benefit for the minor children of retirees receiving Social Security.”",
+      "category": "Business",
+      "title": "I’m retiring at 62 this year with 11-year-old twins. Can they claim Social Security using my benefit?",
+      "link": "https://www.marketwatch.com/story/im-retiring-at-62-this-year-with-11-year-old-twins-can-they-claim-social-security-using-my-benefit-78eec54c?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/jan/24/trump-canada-tariff-threat-venezuela-oil",
       "source": "The Guardian",
-      "timestamp": "2026-01-08 05:00:03 UTC",
-      "content": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria. Very little information has been shared about strikes in Sokoto state Two weeks after the US carried out Christmas Day airstrikes in north-west Nigeria on what it described as Islamic State fighters, questions remain over the specific group that was targeted and the operation’s impact. In the aftermath of the strikes, Donald Trump said in a post on his Truth Social platform that “ISIS Terrorist Scum in Northwest Nigeria , who have been targeting and viciously killing, primarily, innocent Christians” were hit with “numerous perfect strikes”. Continue reading...",
-      "category": "Geopolitical",
-      "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria"
+      "timestamp": "2026-01-24 15:04:15 UTC",
+      "content": "Trump threatens Canada with 100% tariff over possible deal with China. President also claimed US refineries will process seized Venezuelan oil, saying ‘we take the oil’ Donald Trump on Saturday said he would impose a 100% tariff on all Canadian imports if the North American country makes a trade deal with China . Beside that tariff threat, another Trump foreign policy maneuver to make news on Saturday involved the president announcing the US had taken the oil that was on recently seized Venezuelan tankers. Continue reading...",
+      "category": "World",
+      "title": "Trump threatens Canada with 100% tariff over possible deal with China",
+      "link": "https://www.theguardian.com/us-news/2026/jan/24/trump-canada-tariff-threat-venezuela-oil",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004714711",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 15:00:00 UTC",
+      "content": "‘It’s driving me crazy’: My brother-in-law is coercing my husband to cosign a renovation loan. Will we end up paying?. “My husband feels guilty because we received help from my side of the family when purchasing our current home.”",
+      "category": "Business",
+      "title": "‘It’s driving me crazy’: My brother-in-law is coercing my husband to cosign a renovation loan. Will we end up paying?",
+      "link": "https://www.marketwatch.com/story/its-driving-me-crazy-my-brother-in-law-is-coercing-my-husband-to-cosign-a-renovation-loan-how-can-i-stop-this-c7d9c1cf?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866775",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 15:00:00 UTC",
+      "content": "Get ready for the AI ad-pocalypse. I'll confess, with no shame whatsoever, that I really love ads. Artsy ones, funny ones, weird ones, emotional ones - TV commercials were my childhood TikTok before any of us were using terms like \"short-form video.\" But like most creative things in my life, AI is sucking the joy out of it. And it's only […]",
+      "category": "Technology",
+      "title": "Get ready for the AI ad-pocalypse",
+      "link": "https://www.theverge.com/report/866775/ai-generated-ads-slop-human-creativity",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769262834",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 14:49:06 +0000 UTC",
+      "content": "Israeli drone strike kills two children collecting firewood in Gaza. The attack hits civilians gathering firewood near Kamal Adwan Hospital in northern Gaza, sources say.",
+      "category": "World",
+      "title": "Israeli drone strike kills two children collecting firewood in Gaza",
+      "link": "https://www.aljazeera.com/news/2026/1/24/israeli-drone-strike-kills-two-children-collecting-firewood-in-gaza?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004723257",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 14:47:00 UTC",
+      "content": "Kevin O’Leary from ‘Shark Tank’ tells us why he calls altcoins ‘poo-poo coins’. The entrepreneur is bullish on crypto, but prefers the established names like bitcoin and ether.",
+      "category": "Business",
+      "title": "Kevin O’Leary from ‘Shark Tank’ tells us why he calls altcoins ‘poo-poo coins’",
+      "link": "https://www.marketwatch.com/story/kevin-oleary-aka-mr-wonderful-from-shark-tank-explains-why-he-calls-altcoins-poo-poo-coins-966a217c?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004714199",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 14:30:00 UTC",
+      "content": "These 5 tech stocks could be big winners this earnings season. Beyond the “Magnificent Seven” names, Wall Street analysts see opportunities in software and specialized semiconductor plays.",
+      "category": "Business",
+      "title": "These 5 tech stocks could be big winners this earnings season",
+      "link": "https://www.marketwatch.com/story/these-5-tech-stocks-could-be-big-winners-this-earnings-season-0556bf47?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769087546",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 14:24:41 +0000 UTC",
+      "content": "‘Remote coercion’: What has US approach been since abduction of Maduro?. Three weeks since attack, US plans focus on oil, but little clarity emerges, as analysts warn of Venezuela faultlines.",
+      "category": "World",
+      "title": "‘Remote coercion’: What has US approach been since abduction of Maduro?",
+      "link": "https://www.aljazeera.com/news/2026/1/24/remote-coercion-what-has-us-approach-been-since-abduction-of-maduro?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769258802",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 14:20:58 +0000 UTC",
+      "content": "As ceasefire deadline looms, pressure on SDF to integrate with Syrian army. Syria&#039;s foreign ministry denies government forces reached an agreement with SDF on extending the deadline.",
+      "category": "World",
+      "title": "As ceasefire deadline looms, pressure on SDF to integrate with Syrian army",
+      "link": "https://www.aljazeera.com/news/2026/1/24/as-ceasefire-deadline-looms-pressure-on-sdf-to-integrate-with-syrian-army?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c701kr5zqdqo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 14:14:44 UTC",
+      "content": "China places highest-ranking general under investigation. President Xi has been accused of using investigations to purge political rivals.",
+      "category": "World",
+      "title": "China places highest-ranking general under investigation",
+      "link": "https://www.bbc.com/news/articles/c701kr5zqdqo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/0dbc/live/c9bfcd40-f922-11f0-8e3c-b79a1b327384.jpg"
+    },
+    {
+      "id": "WP-MKTW-0004715442",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 14:00:00 UTC",
+      "content": "‘It’s my money’: My $800K inheritance is paying for a $1.6 million house. Shouldn’t I decide where my husband and I live?. ‘My husband and I have been together for 25 years. We have two children’",
+      "category": "Business",
+      "title": "‘It’s my money’: My $800K inheritance is paying for a $1.6 million house. Shouldn’t I decide where my husband and I live?",
+      "link": "https://www.marketwatch.com/story/its-my-money-my-800k-inheritance-is-paying-for-a-1-6-million-house-shouldnt-i-decide-where-my-husband-and-i-live-995dbd0c?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004722062",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-24 14:00:00 UTC",
+      "content": "More Americans are choosing Obamacare plans they can’t afford in first look at ACA without enhanced tax credits. There is little likelihood that a fix will come from Washington, where Republican lawmakers say health insurers are to blame.",
+      "category": "Business",
+      "title": "More Americans are choosing Obamacare plans they can’t afford in first look at ACA without enhanced tax credits",
+      "link": "https://www.marketwatch.com/story/more-americans-are-choosing-obamacare-plans-they-cant-afford-in-first-look-at-aca-without-enhanced-tax-credits-7615353b?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=865082",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 14:00:00 UTC",
+      "content": "This coming-of-age adventure game made me feel a little too seen. There's a lot about Perfect Tides: Station to Station's Mara that I find relatable. Like me, she's recently moved to a place simply called \"the City\" from the middle of nowhere, and like me, she's an avid writer. But these biographical details aren't the important thing; it's the way she's painted by the game's incredibly […]",
+      "category": "Technology",
+      "title": "This coming-of-age adventure game made me feel a little too seen",
+      "link": "https://www.theverge.com/entertainment/865082/perfect-tides-station-to-station-review-steam",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c338jpk8r1vo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-24 13:56:13 UTC",
+      "content": "How Soviet urban planning is helping Russia freeze Ukraine. Thousands of people are affected when heating plants are targeted by Russian forces.",
+      "category": "World",
+      "title": "How Soviet urban planning is helping Russia freeze Ukraine",
+      "link": "https://www.bbc.com/news/articles/c338jpk8r1vo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/d9fc/live/93740900-f93a-11f0-b5f7-49f0357294ff.jpg"
+    },
+    {
+      "id": "https://www.theverge.com/?p=866931",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 13:00:00 UTC",
+      "content": "Gemini with Personal Intelligence is awfully familiar. By lots of metrics, Gemini is winning. It has raced ahead of OpenAI, become scarily good at creating convincing imagery, and even won Apple's business. So last week's news that it was enabling something called Personal Intelligence felt like a victory lap. Personal Intelligence allows Gemini to reference past conversations and access your data in […]",
+      "category": "Technology",
+      "title": "Gemini with Personal Intelligence is awfully familiar",
+      "link": "https://www.theverge.com/tech/866931/gemini-personal-intelligence-ai",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866946",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 13:00:00 UTC",
+      "content": "Get stuff done by yelling at your phone. Hi, friends! Welcome to Installer No. 113, your guide to the best and Verge-iest stuff in the world. (If you're new here, welcome, please send hot cocoa to my freezing-cold house, and also you can read all the old editions at the Installer homepage.) This week, I've been reading about private garbage collectors and vintage […]",
+      "category": "Technology",
+      "title": "Get stuff done by yelling at your phone",
+      "link": "https://www.theverge.com/tech/866946/todoist-ramble-nexphone-crossplay-installe",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769248199",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 12:41:27 +0000 UTC",
+      "content": "Trump’s imperial tantrum. Trump’s imperial rampage - the tweets, the rants, the petulance.",
+      "category": "World",
+      "title": "Trump’s imperial tantrum",
+      "link": "https://www.aljazeera.com/video/the-listening-post/2026/1/24/trumps-imperial-tantrum?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769247443",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 10:44:49 +0000 UTC",
+      "content": "Electoral violence is on the horizon in Kenya. Conditions in Kenya are ripe for the weaponisation of violence in the presidential vote. It is up to Kenyans to stop it.",
+      "category": "World",
+      "title": "Electoral violence is on the horizon in Kenya",
+      "link": "https://www.aljazeera.com/opinions/2026/1/24/electoral-violence-is-on-the-horizon-in-kenya?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769247496",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 10:41:09 +0000 UTC",
+      "content": "Suicide bombing at wedding in northwest Pakistan kills seven. Attack comes as Pakistani military readies for its fight against armed groups in areas along border with Afghanistan.",
+      "category": "World",
+      "title": "Suicide bombing at wedding in northwest Pakistan kills seven",
+      "link": "https://www.aljazeera.com/news/2026/1/24/suicide-bombing-at-wedding-in-northwest-pakistan-kills-seven?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/europe/trump-uk-changes.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 10:01:52 UTC",
+      "content": "How a Year of Trump Changed Britain. Prime Minister Keir Starmer stood firm over Greenland. But his center-left government and the country as a whole have been buffeted by President Trump.",
+      "category": "World",
+      "title": "How a Year of Trump Changed Britain",
+      "link": "https://www.nytimes.com/2026/01/24/world/europe/trump-uk-changes.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/americas/venezuela-arrests-repression.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 10:01:06 UTC",
+      "content": "How a Water Balloon Fight in Venezuela Ended in Charges of Treason. Venezuela’s interim government has been praised by President Trump. It has also maintained its state security apparatus to stamp out any perceived dissent.",
+      "category": "World",
+      "title": "How a Water Balloon Fight in Venezuela Ended in Charges of Treason",
+      "link": "https://www.nytimes.com/2026/01/24/world/americas/venezuela-arrests-repression.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/us/children-genetics-race-science.html",
+      "source": "NY Times Health",
+      "timestamp": "2026-01-24 10:00:11 UTC",
+      "content": "Genetic Data From Over 20,000 U.S. Children Misused for ‘Race Science’. The National Institutes of Health failed to protect brain scans that an international group of fringe researchers used to argue for the intellectual superiority of white people.",
+      "category": "Health",
+      "title": "Genetic Data From Over 20,000 U.S. Children Misused for ‘Race Science’",
+      "link": "https://www.nytimes.com/2026/01/24/us/children-genetics-race-science.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769176645",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 09:59:16 +0000 UTC",
+      "content": "‘Change is inevitable’: What is next for Iran?. Without changes and a deal with US to lift sanctions, Iran could be set for further unrest, analysts say.",
+      "category": "World",
+      "title": "‘Change is inevitable’: What is next for Iran?",
+      "link": "https://www.aljazeera.com/news/2026/1/24/change-is-inevitable-what-is-next-for-iran?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c62v7l4v7gro#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-24 09:28:10 UTC",
+      "content": "NHS cancer gene database to identify patients at risk. Thousands of people in England will be able to check whether they have genes linked to cancer.",
+      "category": "Health",
+      "title": "NHS cancer gene database to identify patients at risk",
+      "link": "https://www.bbc.com/news/articles/c62v7l4v7gro?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/d4e1/live/ab84cda0-f907-11f0-9a4c-df97e82f416e.jpg"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/24/world/europe/sovereignty-european-union-nato.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-24 08:49:49 UTC",
+      "content": "What Europe Learned From the Greenland Crisis. Territorial integrity is a core tenet of Europe that is at risk from Russian and American imperialism. Brussels has fought back.",
+      "category": "World",
+      "title": "What Europe Learned From the Greenland Crisis",
+      "link": "https://www.nytimes.com/2026/01/24/world/europe/sovereignty-european-union-nato.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769239744",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 08:28:15 +0000 UTC",
+      "content": "Over 8,000 flights cancelled as major winter storm bears down across US. More than a dozen states sound the alarm, declaring emergencies or urging people to stay home.",
+      "category": "World",
+      "title": "Over 8,000 flights cancelled as major winter storm bears down across US",
+      "link": "https://www.aljazeera.com/news/2026/1/24/over-8000-flights-cancelled-as-major-winter-storm-bears-down-across-us?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769238653",
+      "source": "Al Jazeera",
+      "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC",
+      "content": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown. Protesters march in icy conditions against Trump administration&#039;s anti-immigration policies, demanding ICE leave city.",
+      "category": "World",
+      "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+      "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/866476/tcls-playcube-projector-is-more-fun-than-a-rubiks-cube",
+      "source": "The Verge",
+      "timestamp": "2026-01-24 08:00:00 UTC",
+      "content": "The Loch Capsule dishwasher is small, fast, and efficient — it even sanitizes gadgets. A dishwasher is a luxury item some people can't live without. It's one of the first major kitchen devices I bought just as soon as I could afford one, and the appliance I thought I'd miss most in my nomadic vanlife pursuits. Loch sent me its $459.99 / €459.99 countertop Capsule dishwasher to review in […]",
+      "category": "Technology",
+      "title": "The Loch Capsule dishwasher is small, fast, and efficient — it even sanitizes gadgets",
+      "link": "https://www.theverge.com/reviews/866476/loch-capsule-review-counter-dishwasher-vanlife-tiny-house",
+      "picture": ""
     }
   ],
   "mapPoints": [
     {
       "id": "map-0",
-      "lat": 12.6311,
-      "lng": 8.0117,
-      "title": "Nigeria",
+      "lat": 43.6532,
+      "lng": -70.851,
+      "title": "Minneapolis ICE Crackdown Protest",
       "sentiment": "negative",
-      "category": "Geopolitical",
-      "description": "US airstrikes in Nigeria raise questions over targeting and impact",
-      "sourceLink": "https://www.theguardian.com/world/2023/dec/25/us-airstrikes-nigeria-questions-targeting-impact"
+      "category": "Conflicts",
+      "description": "Thousands protest ICE enforcement in Minneapolis amid harsh winter conditions.",
+      "sourceLink": "https://www.aljazeera.com/opinions/2024/1/1/thousands-minneapolis-brave-bitter-cold-protest-ice-crackdown"
     }
   ],
   "availableDates": [
@@ -2241,7 +2857,7 @@
   },
   "globalState": {
     "isOnline": true,
-    "lastChecked": "2026-01-25T01:28:31.305Z",
+    "lastChecked": "2026-01-25T01:22:23.563Z",
     "lastError": null
   }
 }

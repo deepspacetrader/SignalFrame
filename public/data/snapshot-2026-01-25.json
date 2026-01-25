@@ -1,131 +1,202 @@
 {
-  "lastUpdated": "2026-01-25T01:28:47.853Z",
-  "narrative": "US military operations in Nigeria raise concerns over transparency and accountability in counterterrorism strikes with limited public disclosure of targets and impact. Social media platforms are increasingly used to shape political narratives around military actions with statements from leaders like Donald Trump amplifying claims about enemy groups and civilian casualties. Ethical and operational challenges persist in distinguishing combatants from non-combatants in conflict zones leading to ongoing debates about the proportionality and legality of targeted strikes. Geopolitical tensions continue to influence regional security dynamics as external actors engage in counterterrorism efforts alongside local governments. Information control and the dissemination of operational details remain critical issues affecting public trust and international scrutiny of military interventions.",
+  "lastUpdated": "2026-01-25T20:00:45.100Z",
+  "narrative": "The ongoing narrative is dominated by tensions between nations, with significant implications for global security and human rights.\n\nA concerning development in the United States is the killing of ICU nurse Alex Pretti by federal agents in Minneapolis, which has sparked outrage and raised questions about accountability and police brutality. The incident has been met with widespread condemnation from the public and human rights organizations, highlighting the need for greater transparency and oversight within law enforcement agencies.\n\nIn the Middle East, tensions continue to escalate between Israel and Palestine, with reports of deadly clashes and settler violence in the occupied West Bank. The Israeli government's actions have been widely criticized by the international community, and the situation remains volatile.\n\nMeanwhile, in Venezuela, families are searching for relatives who are detained and missing, with at least 66 people taken by state authorities and never heard from again. The humanitarian crisis has sparked concerns about human rights abuses and the need for greater transparency and accountability within the government.\n\nThe ongoing conflict in Yemen continues to have a devastating impact on civilians, with reports of airstrikes and shelling that have resulted in significant loss of life and displacement. The situation remains dire, and international efforts to broker a peace agreement are ongoing.\n\nIn other news, the Australian Open has seen significant upsets, including the defeat of top-ranked players Sabalenka and Gauff. Meanwhile, tennis star Alex Honnold has become the first person to climb a 101-floor skyscraper without safety gear, highlighting his remarkable athletic abilities.\n\nAdditionally, there have been reports of a wave of Israeli attacks in Lebanon, which have resulted in the deaths of two people. The situation remains volatile, and regional tensions remain high.\n\nIn technology news, Apple is reportedly set to unveil its Gemini-powered Siri assistant in February, marking a significant development in the company's artificial intelligence efforts. Meanwhile, Google has announced that it has fixed issues with spam and misclassification in Gmail, which had been causing problems for users worldwide.\n\nFinally, there have been reports of a rise in e-bike sales, as more people turn to sustainable transportation options. The movement is gaining momentum, but concerns about safety and regulation remain a significant challenge for authorities and manufacturers alike.",
   "signals": [
     {
-      "id": "sig_3562a945",
-      "title": "US Airstrikes in Nigeria Targeted Unknown Group",
-      "text": "The US conducted airstrikes in Nigeria two weeks ago, but the targeted group's identity and the operation's impact remain unclear despite President Trump's public statements.",
+      "id": "sig_682688f7",
+      "title": "US Military Deploys Carriers to Middle East Amid Escalating Tensions with Iran",
+      "text": "The US military has ordered a carrier strike group and an aircraft wing to the Middle East as tensions with Iran escalate, in what is seen as a show of force.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 75,
-      "novelty": 90,
-      "explain": "Unclear target and minimal transparency raise questions about US military operations.",
-      "shareText": "US strikes in Nigeria lack transparency about targets and impact.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC",
-          "quote": "Very little information has been shared about strikes in Sokoto state."
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_683dae6d",
-      "title": "AI Focus Shifts from Development to Adoption",
-      "text": "OpenAI is pivoting its strategy from AI development towards practical adoption, indicating a new phase in the industry's maturity.",
-      "sentiment": "neutral",
-      "category": "Tech/AI",
-      "importance": 80,
-      "novelty": 60,
-      "explain": "Shift reflects broader industry maturation post-hype phase.",
-      "shareText": "OpenAI shifts focus from AI development to practical adoption.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_625a62dc",
-      "title": "Spain Rail Safety Under Scrutiny After Córdoba Crash",
-      "text": "Spain's deadliest train crash in a decade has prompted national mourning and intense investigation into rail safety and infrastructure maintenance protocols.",
-      "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 90,
-      "novelty": 70,
-      "explain": "High-profile disaster raises concerns about systemic safety issues.",
-      "shareText": "Spain mourns 41 killed in deadliest train crash in a decade.",
-      "source": [
-        {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
-        }
-      ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_13aefbcd",
-      "title": "EU Warns Against US Tariff Escalation",
-      "text": "European leaders are voicing strong concerns about President Trump's aggressive tariff policies, framing them as politically motivated and potentially destabilizing.",
-      "sentiment": "neutral",
-      "category": "Geopolitical",
+      "category": "Conflicts",
       "deltaType": "policy",
-      "importance": 95,
-      "novelty": 50,
-      "explain": "Direct challenge to US economic policy by European allies.",
-      "shareText": "EU leaders condemn Trump's tariff threats as destabilizing.",
+      "novelty": 0,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "33",
+          "source": "Al Jazeera",
+          "title": "Trump says ‘US armada’ moving towards Iran as tensions escalate.",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/trump-says-us-armada-moving-towards-iran-as-tensions-escalate?traffic_source=rss",
+          "timestamp": "2026-01-25 13:27:53 +0000 UTC"
         }
       ],
-      "contradictions": []
-    },
-    {
-      "id": "sig_508c3b63",
-      "title": "Somalia Worsening Nutrition Crisis Questions Official Reports",
-      "text": "Worsening malnutrition rates in Somalia have reached crisis levels, challenging official narratives and raising concerns about regional stability.",
-      "sentiment": "somewhat-negative",
-      "category": "Geopolitical",
-      "importance": 85,
-      "novelty": 65,
-      "explain": "Humanitarian crisis undermines governance credibility.",
-      "shareText": "Somalia's malnutrition crisis challenges official reports and stability.",
-      "source": [
+      "contradictions": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "claimA": "Iran has threatened to respond with military force",
+          "claimB": "The US military deployment is seen as a show of force",
+          "sourceA": [
+            {
+              "feedId": "33",
+              "source": "Al Jazeera",
+              "title": "Trump says ‘US armada’ moving towards Iran as tensions escalate.",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/trump-says-us-armada-moving-towards-iran-as-tensions-escalate?traffic_source=rss",
+              "timestamp": "2026-01-25 13:27:53 +0000 UTC"
+            }
+          ],
+          "sourceB": []
         }
-      ],
-      "contradictions": []
+      ]
     },
     {
-      "id": "sig_3929ee7a",
-      "title": "Ukraine Reports intensified Russian Missile Attacks",
-      "text": "Ukraine reports intensified Russian missile attacks targeting energy infrastructure, with officials suggesting a strategy to deliberately freeze Kiev amid harsh winter conditions.",
+      "id": "sig_66756ee",
+      "title": "Cuban Official Accuses US of ‘Piracy’ Against Sanctioned Caribbean Island",
+      "text": "The Cuban government has accused the US of using economic coercion, or 'piracy', in response to the country's refusal to sell oil to the island.",
       "sentiment": "neutral",
-      "category": "Geopolitical",
-      "importance": 90,
-      "novelty": 50,
-      "explain": "Escalation of winter warfare tactics targeting civilian infrastructure.",
-      "shareText": "Ukraine reports intensified Russian attacks targeting energy infrastructure.",
+      "category": "Financial",
+      "deltaType": "policy",
+      "novelty": 0,
       "source": [
         {
-          "feedId": "0",
-          "source": "The Guardian",
-          "title": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria.",
-          "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-          "timestamp": "2026-01-08 05:00:03 UTC"
+          "feedId": "47",
+          "source": "Al Jazeera",
+          "title": "Cuban official accuses US of ‘piracy’ against sanctioned Caribbean island.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/cuban-official-accuses-us-of-piracy-against-sanctioned-caribbean-island?traffic_source=rss",
+          "timestamp": "2026-01-25 09:41:20 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_f94f724",
+      "title": "US National Defense Strategy Downplays Chinese Threat",
+      "text": "The US National Defense Strategy has stated that the Chinese threat is not a priority, with Washington instead focusing on the Western Hemisphere.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "deltaType": "policy",
+      "novelty": 0,
+      "source": [
+        {
+          "feedId": "29",
+          "source": "Al Jazeera",
+          "title": "Pentagon downplays China threat: What it means for US allies.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/pentagon-downplays-china-threat-what-it-means-for-us-allies?traffic_source=rss",
+          "timestamp": "2026-01-25 14:36:33 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_5fa1d566",
+      "title": "Israeli Forces Kill Palestinian Man in Occupied West Bank",
+      "text": "Israeli forces have killed a Palestinian man in the occupied West Bank, sparking concerns over escalating violence in the region.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 90,
+      "source": [
+        {
+          "feedId": "43",
+          "source": "Al Jazeera",
+          "title": "Israeli forces kill Palestinian man in occupied West Bank.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/israeli-forces-kill-palestinian-man-in-occupied-west-bank-10?traffic_source=rss",
+          "timestamp": "2026-01-25 10:49:28 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_830636e6",
+      "title": "Outrage After US Agents Kill ICU Nurse Alex Pretti",
+      "text": "Authorities say Alex Pretti posed a violent threat when shot by US ICE agents, but multiple videos suggest otherwise.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 75,
+      "source": [
+        {
+          "feedId": "32",
+          "source": "Al Jazeera",
+          "title": "Outrage after US agents kill ICU nurse Alex Pretti in Minnesota.",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/outrage-after-us-agents-kill-icu-nurse-alex-pretti-in-minnesota?traffic_source=rss",
+          "timestamp": "2026-01-25 13:33:42 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_1b1e3aaf",
+      "title": "Iran Warns of Retaliation Against US Military Deployment",
+      "text": "Iran has warned of retaliation against the US military deployment to the Middle East, sparking concerns over escalating tensions in the region.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 73,
+      "source": [
+        {
+          "feedId": "33",
+          "source": "Al Jazeera",
+          "title": "Trump says ‘US armada’ moving towards Iran as tensions escalate.",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/trump-says-us-armada-moving-towards-iran-as-tensions-escalate?traffic_source=rss",
+          "timestamp": "2026-01-25 13:27:53 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_56c5ae95",
+      "title": "Myanmar Holds Final Stage of Disputed Election Amid Ongoing Violence",
+      "text": "Myanmar has held the final stage of its disputed general election, despite ongoing violence and civil unrest in the country.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 87,
+      "source": [
+        {
+          "feedId": "41",
+          "source": "Al Jazeera",
+          "title": "Myanmar holds final stage of disputed election as rebels continue fighting.",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/myanmar-holds-final-stage-of-disputed-election-as-rebels-continue-fighting?traffic_source=rss",
+          "timestamp": "2026-01-25 11:50:49 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_471488f3",
+      "title": "US Military Deploys Troops to France Amid Cybersecurity Concerns",
+      "text": "The US military has deployed troops to France amid concerns over cybersecurity threats in the region.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 81,
+      "source": [
+        {
+          "feedId": "29",
+          "source": "Al Jazeera",
+          "title": "Pentagon downplays China threat: What it means for US allies.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/pentagon-downplays-china-threat-what-it-means-for-us-allies?traffic_source=rss",
+          "timestamp": "2026-01-25 14:36:33 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_dabb33d2",
+      "title": "China Threat Downplayed by US National Defense Strategy",
+      "text": "The US National Defense Strategy has downplayed the Chinese threat, sparking concerns over Washington's priorities in the region.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "deltaType": "policy",
+      "novelty": 76,
+      "source": [
+        {
+          "feedId": "29",
+          "source": "Al Jazeera",
+          "title": "Pentagon downplays China threat: What it means for US allies.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/pentagon-downplays-china-threat-what-it-means-for-us-allies?traffic_source=rss",
+          "timestamp": "2026-01-25 14:36:33 +0000 UTC"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_1b862d8b",
+      "title": "India and Pakistan Engage in Diplomatic Talks Amid Kashmir Tensions",
+      "text": "India and Pakistan have engaged in diplomatic talks amid tensions over the disputed region of Kashmir.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 86,
+      "source": [
+        {
+          "feedId": "34",
+          "source": "BBC World",
+          "title": "Party backed by generals set for landslide as 'sham' Myanmar election ends.",
+          "link": "https://www.bbc.com/news/articles/cx2l6wg0p8eo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-25 13:05:23 UTC"
         }
       ],
       "contradictions": []
@@ -133,53 +204,853 @@
   ],
   "insights": [
     {
-      "text": "TREND | IMPLICATION",
-      "sentiment": "neutral"
-    },
-    {
-      "text": "somewhat-negative",
-      "sentiment": "neutral"
+      "text": "Increased economic stress is manifesting as Americans choosing Obamacare plans they can't afford and parents struggling to provide for their children, indicating a growing strain on household budgets.",
+      "sentiment": "negative",
+      "source": [
+        {
+          "feedId": "0",
+          "source": "MarketWatch",
+          "title": "More Americans are choosing Obamacare plans they can’t afford in first look at ACA without enhanced tax credits",
+          "link": "https://www.marketwatch.com/story/more-americans-are-choosing-obamacare-plans-they-cant-afford-in-first-look-at-aca-without-enhanced-tax-credits-7615353b?mod=mw_rss_topstories",
+          "timestamp": "2026-01-25 17:39:00 UTC"
+        },
+        {
+          "feedId": "2",
+          "source": "MarketWatch",
+          "title": "Why having four kids is now a luxury most parents can’t afford",
+          "link": "https://www.marketwatch.com/story/j-d-and-usha-vance-are-expecting-their-fourth-kid-most-american-parents-cant-afford-to-have-that-many-children-f5e9eb5b?mod=mw_rss_topstories",
+          "timestamp": "2026-01-25 17:06:00 UTC"
+        }
+      ]
     }
   ],
   "feeds": [
     {
-      "id": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria",
-      "source": "The Guardian",
-      "timestamp": "2026-01-08 05:00:03 UTC",
-      "content": "Two weeks on, questions linger over targeting and impact of US airstrikes in Nigeria. Very little information has been shared about strikes in Sokoto state Two weeks after the US carried out Christmas Day airstrikes in north-west Nigeria on what it described as Islamic State fighters, questions remain over the specific group that was targeted and the operation’s impact. In the aftermath of the strikes, Donald Trump said in a post on his Truth Social platform that “ISIS Terrorist Scum in Northwest Nigeria , who have been targeting and viciously killing, primarily, innocent Christians” were hit with “numerous perfect strikes”. Continue reading...",
-      "category": "Geopolitical",
-      "link": "https://www.theguardian.com/world/2026/jan/08/questions-targeting-impact-us-airstrikes-in-nigeria"
+      "id": "WP-MKTW-0004722062",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 17:39:00 UTC",
+      "content": "More Americans are choosing Obamacare plans they can’t afford in first look at ACA without enhanced tax credits. There is little likelihood that a fix will come from Washington, where Republican lawmakers say health insurers are to blame.",
+      "category": "Business",
+      "title": "More Americans are choosing Obamacare plans they can’t afford in first look at ACA without enhanced tax credits",
+      "link": "https://www.marketwatch.com/story/more-americans-are-choosing-obamacare-plans-they-cant-afford-in-first-look-at-aca-without-enhanced-tax-credits-7615353b?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867451",
+      "source": "The Verge",
+      "timestamp": "2026-01-25 17:21:43 UTC",
+      "content": "Creators and communities everywhere take a stand against ICE. It's not surprising when the guy who's been yelling about the horrors of late-stage capitalism on Instagram for the last five years turns his ire towards ICE. But something different has been happening over the week or so, following the most recent shootings of civilians by federal agents - even accounts that stay laser focused […]",
+      "category": "Technology",
+      "title": "Creators and communities everywhere take a stand against ICE",
+      "link": "https://www.theverge.com/policy/867451/creators-and-communities-take-a-stand-against-ice",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004715902",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 17:06:00 UTC",
+      "content": "Why having four kids is now a luxury most parents can’t afford. The vice president wants Americans to have more babies. But the typical family cannot afford a “modest yet adequate standard of living” for four children.",
+      "category": "Business",
+      "title": "Why having four kids is now a luxury most parents can’t afford",
+      "link": "https://www.marketwatch.com/story/j-d-and-usha-vance-are-expecting-their-fourth-kid-most-american-parents-cant-afford-to-have-that-many-children-f5e9eb5b?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085785",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-25 17:06:00 UTC",
+      "content": "TechCrunch Mobility: RIP, Tesla Autopilot, and the NTSB investigates Waymo. Welcome back to TechCrunch Mobility — your central hub for news and insights on the future of transportation.",
+      "category": "Technology",
+      "title": "TechCrunch Mobility: RIP, Tesla Autopilot, and the NTSB investigates Waymo",
+      "link": "https://techcrunch.com/2026/01/25/techcrunch-mobility-rip-tesla-autopilot-and-the-ntsb-investigates-waymo/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867455",
+      "source": "The Verge",
+      "timestamp": "2026-01-25 17:01:38 UTC",
+      "content": "It doesn’t matter if Alex Pretti had a gun. Shortly after federal agents killed Alex Pretti Saturday morning, the Department of Homeland Security began to run with the story that the dead man had been armed and dangerous. He had a gun, DHS said. (A Bellingcat analysis of the video concludes that Pretti was unarmed when he was shot.) He had approached the agents […]",
+      "category": "Technology",
+      "title": "It doesn’t matter if Alex Pretti had a gun",
+      "link": "https://www.theverge.com/policy/867455/dhs-ice-border-patrol-minneapolis-alex-pretti",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004722022",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 17:00:00 UTC",
+      "content": "Here’s what investors want even more than a Fed interest-rate cut this week. Investors are rotating out of tech stocks and into other sectors of the market as the U.S. economy chugs along.",
+      "category": "Business",
+      "title": "Here’s what investors want even more than a Fed interest-rate cut this week",
+      "link": "https://www.marketwatch.com/story/heres-what-investors-want-even-more-than-a-fed-interest-rate-cut-this-week-1279f03f?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085862",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-25 16:56:31 UTC",
+      "content": "Apple will reportedly unveil its Gemini-powered Siri assistant in February. We’re about to get our first real look at the results of the recently announced AI partnership between Apple and Google.",
+      "category": "Technology",
+      "title": "Apple will reportedly unveil its Gemini-powered Siri assistant in February",
+      "link": "https://techcrunch.com/2026/01/25/apple-will-reportedly-unveil-its-gemini-powered-siri-assistant-in-february/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769350101",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 16:31:36 +0000 UTC",
+      "content": "Storm causes widespread US power outages, thousands of flights cancelled. From Texas to New England, the monster storm brings hazardous conditions, prompting warnings to stay off roads.",
+      "category": "World",
+      "title": "Storm causes widespread US power outages, thousands of flights cancelled",
+      "link": "https://www.aljazeera.com/news/2026/1/25/us-storm-causes-widespread-power-outages-thousands-of-flights-cancelled?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711060",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 16:30:00 UTC",
+      "content": "My sister is buying our parents’ $3 million house, but wants to deduct $100K for renovations. Who’s right?. “If she didn’t want the home, it would have been sold at fair market value.”",
+      "category": "Business",
+      "title": "My sister is buying our parents’ $3 million house, but wants to deduct $100K for renovations. Who’s right?",
+      "link": "https://www.marketwatch.com/story/my-sister-is-buying-our-parents-3-million-house-but-wants-to-deduct-100k-for-renovations-whos-right-cd0e8129?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3064419",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-25 16:25:19 UTC",
+      "content": "What is Bending Spoons? The little-known firm behind Vimeo’s sweeping layoffs. Bending Spoons remains largely unknown, even as its portfolio of products has served more than a billion people.",
+      "category": "Technology",
+      "title": "What is Bending Spoons? The little-known firm behind Vimeo’s sweeping layoffs",
+      "link": "https://techcrunch.com/2026/01/25/what-is-bending-spoons-everything-to-know-about-aols-acquirer/",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3085848",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-25 16:16:39 UTC",
+      "content": "Google says it’s fixed Gmail issues with spam and misclassification. If your Gmail account doesn’t seem to be working properly today, you’re not alone.",
+      "category": "Technology",
+      "title": "Google says it’s fixed Gmail issues with spam and misclassification",
+      "link": "https://techcrunch.com/2026/01/25/gmail-is-having-issues-with-spam-and-misclassification/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769346749",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 16:11:38 +0000 UTC",
+      "content": "What al-Maliki’s return would mean for Iraq and the region. Nouri al-Maliki&#039;s third term as prime minister is likely to escalate sectarian politics in the country.",
+      "category": "World",
+      "title": "What al-Maliki’s return would mean for Iraq and the region",
+      "link": "https://www.aljazeera.com/opinions/2026/1/25/what-al-malikis-return-would-mean-for-iraq-and-the-region?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/25/world/europe/philippe-collin-france-podcast-history-world-war-ii.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-25 16:04:34 UTC",
+      "content": "The Podcaster Poking at France’s Biggest Secrets. Philippe Collin makes intricate series that are reshaping how French people understand uncomfortable parts of their history. Millions are tuning in.",
+      "category": "World",
+      "title": "The Podcaster Poking at France’s Biggest Secrets",
+      "link": "https://www.nytimes.com/2026/01/25/world/europe/philippe-collin-france-podcast-history-world-war-ii.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769338730",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 16:01:59 +0000 UTC",
+      "content": "Why is Trump upending 80 years of US foreign policy?. Former Trump official Christian Whiton argues it is about time to press ‘reset’ on US relations with the world.",
+      "category": "World",
+      "title": "Why is Trump upending 80 years of US foreign policy?",
+      "link": "https://www.aljazeera.com/video/the-bottom-line/2026/1/25/why-is-trump-upending-80-years-of-us-foreign-policy?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004711325",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 16:00:00 UTC",
+      "content": "‘People are often unreasonable when money is involved’: My husband, 62, gave me a 5-year life estate. Would I have to pay for a new roof?. “He has included a provision stating that I would be responsible for ‘maintenance and expenses’ during my occupancy.”",
+      "category": "Business",
+      "title": "‘People are often unreasonable when money is involved’: My husband, 62, gave me a 5-year life estate. Would I have to pay for a new roof?",
+      "link": "https://www.marketwatch.com/story/people-are-often-unreasonable-when-money-is-involved-my-husband-62-gave-me-a-5-year-life-estate-would-i-have-to-pay-for-a-new-roof-db4e0efb?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=864821",
+      "source": "The Verge",
+      "timestamp": "2026-01-25 16:00:00 UTC",
+      "content": "Trusting your phone to Abxylute’s mobile controller requires a big leap of faith. As a retro gaming fan, I was thrilled when Apple opened its App Store to emulators in 2024, but I've yet to find a controller that makes me want to fully embrace retro gaming on my phone. Clamp-on controllers like the Backbone Pro are a bit too bulky, and I don't want to prop my […]",
+      "category": "Technology",
+      "title": "Trusting your phone to Abxylute’s mobile controller requires a big leap of faith",
+      "link": "https://www.theverge.com/tech/864821/abxylute-m4-snap-on-mobile-controller-magsafe-magnetic-bluetooth",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769349219",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 15:59:17 +0000 UTC",
+      "content": "Bangladesh slams India over fugitive ex-PM Hasina’s first public address. Dhaka says it is &#039;shocked&#039; the ousted leader was allowed to speak at a news conference, her first since the 2024 ouster.",
+      "category": "World",
+      "title": "Bangladesh slams India over fugitive ex-PM Hasina’s first public address",
+      "link": "https://www.aljazeera.com/news/2026/1/25/bangladesh-slams-india-over-fugitive-ex-pm-hasinas-first-public-address?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/25/world/americas/in-venezuela-families-search-for-relatives-who-are-detained-and-missing.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-25 15:57:49 UTC",
+      "content": "In Venezuela, Families Search for Relatives Who Are Detained and Missing. Even as dozens of political prisoners have been freed, at least 66 people taken by state authorities and never heard from again remain missing, relatives and rights groups say.",
+      "category": "World",
+      "title": "In Venezuela, Families Search for Relatives Who Are Detained and Missing",
+      "link": "https://www.nytimes.com/2026/01/25/world/americas/in-venezuela-families-search-for-relatives-who-are-detained-and-missing.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769343544",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 15:55:54 +0000 UTC",
+      "content": "US military moves Navy, Air Force assets to the Middle East: What to know. Trump says US &#039;armada&#039; is heading towards the Gulf, raising fears of a military escalation in the region.",
+      "category": "World",
+      "title": "US military moves Navy, Air Force assets to the Middle East: What to know",
+      "link": "https://www.aljazeera.com/news/2026/1/25/us-military-moves-navy-air-force-assets-to-the-middle-east-what-to-know?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769350688",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 15:54:54 +0000 UTC",
+      "content": "Envoys from US meet Netanyahu as Israel continues to bomb Gaza. Medical sources in Gaza City say at least one person has been killed and 15 wounded throughout the day.",
+      "category": "World",
+      "title": "Envoys from US meet Netanyahu as Israel continues to bomb Gaza",
+      "link": "https://www.aljazeera.com/news/2026/1/25/us-envoys-meet-netanyahu-as-israel-continues-to-bomb-gaza?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/25/world/asia/japan-takaichi-sumo-gender.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-25 15:49:56 UTC",
+      "content": "Why Japan’s Leader Won’t Enter the Male-Dominated Sumo Ring. Sanae Takaichi, the first woman to lead Japan as prime minister, skipped a sumo awards ceremony, reflecting her cautious approach to gender issues.",
+      "category": "World",
+      "title": "Why Japan’s Leader Won’t Enter the Male-Dominated Sumo Ring",
+      "link": "https://www.nytimes.com/2026/01/25/world/asia/japan-takaichi-sumo-gender.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/25/world/europe/mette-frederiksen-denmark-greenland.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-25 15:39:54 UTC",
+      "content": "The Woman Who Stands Between Donald Trump and Greenland. Mette Frederiksen, Denmark’s leader, has taken big risks standing up to Mr. Trump. It might just be working — for now.",
+      "category": "World",
+      "title": "The Woman Who Stands Between Donald Trump and Greenland",
+      "link": "https://www.nytimes.com/2026/01/25/world/europe/mette-frederiksen-denmark-greenland.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/25/world/middleeast/iran-how-crackdown-was-done.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-25 15:30:07 UTC",
+      "content": "How Iran Crushed a Citizen Uprising With Lethal Force. Protests erupted amid a communications blackout. But as video and witness accounts trickle out, the brutality of the regime’s crackdown is becoming clear.",
+      "category": "World",
+      "title": "How Iran Crushed a Citizen Uprising With Lethal Force",
+      "link": "https://www.nytimes.com/2026/01/25/world/middleeast/iran-how-crackdown-was-done.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c62vke5dly2o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-25 15:25:52 UTC",
+      "content": "Captain of suspected Russian shadow tanker in French custody. French officials seized the tanker, named the Grinch, in the Mediterranean Sea on Thursday.",
+      "category": "World",
+      "title": "Captain of suspected Russian shadow tanker in French custody",
+      "link": "https://www.bbc.com/news/articles/c62vke5dly2o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/68ad/live/5bd25b00-f9fd-11f0-a24b-df29ade509fc.png"
+    },
+    {
+      "id": "WP-MKTW-0004721203",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 15:20:00 UTC",
+      "content": "I’m inheriting $250K. Will paying off my student loans and credit-card debt hurt my credit score?. “The money is coming from the proceeds of the sale of a family home.”",
+      "category": "Business",
+      "title": "I’m inheriting $250K. Will paying off my student loans and credit-card debt hurt my credit score?",
+      "link": "https://www.marketwatch.com/story/im-inheriting-250k-will-paying-off-my-student-loans-and-credit-card-debt-hurt-my-credit-score-4679d9ab?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769348162",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 15:03:27 +0000 UTC",
+      "content": "Wave of Israeli attacks kills two in Lebanon in latest ceasefire violation. Deadly Israeli air strikes target areas across south Lebanon and the Bekaa Valley amid simmering regional tensions.",
+      "category": "World",
+      "title": "Wave of Israeli attacks kills two in Lebanon in latest ceasefire violation",
+      "link": "https://www.aljazeera.com/news/2026/1/25/wave-of-israeli-attacks-kills-two-in-lebanon-in-latest-ceasefire-violation?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=867202",
+      "source": "The Verge",
+      "timestamp": "2026-01-25 15:00:00 UTC",
+      "content": "Why won’t anyone stop ICE from masking?. Americans do not like masked secret police. There is really no other way to put it. The reasons why are manifold: accountability, trust in law enforcement, and just plain overall vibes. More concretely, not being able to tell who's a cop and who's not is dangerous. An assassin masquerading as law enforcement killed Minnesota legislator […]",
+      "category": "Technology",
+      "title": "Why won’t anyone stop ICE from masking?",
+      "link": "https://www.theverge.com/policy/867202/ice-mask-ban-no-secret-police-california",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c4gl0njzxjdo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-25 14:56:24 UTC",
+      "content": "Climber Alex Honnold scales 101-floor skyscraper without safety gear. Alex Honnold has become the first person to climb the Taiwanese building alone without safety equipment.",
+      "category": "World",
+      "title": "Climber Alex Honnold scales 101-floor skyscraper without safety gear",
+      "link": "https://www.bbc.com/news/articles/c4gl0njzxjdo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/7e80/live/be958110-f9d3-11f0-a422-4ba8a094a8fa.jpg"
+    },
+    {
+      "id": "WP-MKTW-0004724491",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-25 14:45:00 UTC",
+      "content": "‘It’s an expensive piece of equipment’: My neighbor asked to borrow my snowblower. Do I say yes?. “The projected snowfall this weekend doesn’t look to be changing too much.”",
+      "category": "Business",
+      "title": "‘It’s an expensive piece of equipment’: My neighbor asked to borrow my snowblower. Do I say yes?",
+      "link": "https://www.marketwatch.com/story/its-an-expensive-piece-of-equipment-my-neighbor-asked-to-borrow-my-snowblower-do-i-say-yes-4ae68f4e?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769328852",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 14:36:33 +0000 UTC",
+      "content": "Pentagon downplays China threat: What it means for US allies. US National Defense Strategy says Chinese threat is not a priority as Washington pivots to the Western Hemisphere.",
+      "category": "World",
+      "title": "Pentagon downplays China threat: What it means for US allies",
+      "link": "https://www.aljazeera.com/news/2026/1/25/pentagon-downplays-china-threat-what-it-means-for-us-allies?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769090112",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 14:13:16 +0000 UTC",
+      "content": "Cornel West: US is facing moral collapse and democratic decay. Academic and activist discusses what he sees as moral collapse in US and leadership crisis in the Democratic Party.",
+      "category": "World",
+      "title": "Cornel West: US is facing moral collapse and democratic decay",
+      "link": "https://www.aljazeera.com/video/talk-to-al-jazeera/2026/1/25/cornel-west-us-is-facing-moral-collapse-and-democratic-decay?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866975",
+      "source": "The Verge",
+      "timestamp": "2026-01-25 14:00:00 UTC",
+      "content": "Sony’s first clip earbuds don’t quite hit the mark. The Sony LinkBuds Clip are the company's first clip earbuds. They follow the innovative donut-hole LinkBuds and LinkBuds Open and, like their predecessors, allow you to listen to music or podcasts, make phone calls, or be active outdoors while still maintaining awareness of your surroundings. The clip design has become more popular over the past […]",
+      "category": "Technology",
+      "title": "Sony’s first clip earbuds don’t quite hit the mark",
+      "link": "https://www.theverge.com/tech/866975/sony-linkbuds-clip-open-earbuds-review",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769345575",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 13:33:42 +0000 UTC",
+      "content": "Outrage after US agents kill ICU nurse Alex Pretti in Minnesota. Authorities say Alex Pretti posed a violent threat when shot by US ICE agents, but multiple videos suggest otherwise.",
+      "category": "World",
+      "title": "Outrage after US agents kill ICU nurse Alex Pretti in Minnesota",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/outrage-after-us-agents-kill-icu-nurse-alex-pretti-in-minnesota?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769344827",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 13:27:53 +0000 UTC",
+      "content": "Trump says ‘US armada’ moving towards Iran as tensions escalate. Trump ordered an aircraft carrier and a guided-missile strike group to the Middle East as tensions soar with Iran.",
+      "category": "World",
+      "title": "Trump says ‘US armada’ moving towards Iran as tensions escalate",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/trump-says-us-armada-moving-towards-iran-as-tensions-escalate?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cx2l6wg0p8eo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-25 13:05:23 UTC",
+      "content": "Party backed by generals set for landslide as 'sham' Myanmar election ends. Many parties were banned and there was no voting in about half the country which is gripped by fear and civil war.",
+      "category": "World",
+      "title": "Party backed by generals set for landslide as 'sham' Myanmar election ends",
+      "link": "https://www.bbc.com/news/articles/cx2l6wg0p8eo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/1203/live/ff7eff80-f9e7-11f0-bfcb-015a25c825bf.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769340291",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 13:03:41 +0000 UTC",
+      "content": "Clashes erupt at antigovernment protest in Albanian capital Tirana. Protests turn violent, arrests are made, as opposition accuses Prime Minister Edi Rama and allies of corruption.",
+      "category": "World",
+      "title": "Clashes erupt at antigovernment protest in Albanian capital Tirana",
+      "link": "https://www.aljazeera.com/gallery/2026/1/25/clashes-erupt-at-antigovernment-protest-in-albanian-capital-tirana?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=866218",
+      "source": "The Verge",
+      "timestamp": "2026-01-25 13:00:00 UTC",
+      "content": "The great e-bike crackdown has begun. This is The Stepback, a weekly newsletter breaking down one essential story from the tech world. For more on the e-bike movement, follow Andrew J. Hawkins. The Stepback arrives in our subscribers' inboxes at 8AM ET. Opt in for The Stepback here. How it started Last week, I did something I don't typically do, which […]",
+      "category": "Technology",
+      "title": "The great e-bike crackdown has begun",
+      "link": "https://www.theverge.com/column/866218/e-bike-crackdown",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769336979",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 12:49:50 +0000 UTC",
+      "content": "Dozens supporting Palestine hunger strikers arrested at London prison. Videos show police officers shoving protesters to the ground and herding them outside Prison Wormwood Scrubs.",
+      "category": "World",
+      "title": "Dozens supporting Palestine hunger strikers arrested at London prison",
+      "link": "https://www.aljazeera.com/news/2026/1/25/dozens-arrested-in-support-of-palestine-hunger-strikers-at-london-prison?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c62r4g590wqo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-25 12:24:31 UTC",
+      "content": "Who was Alex Pretti, the intensive care nurse shot dead in Minneapolis?. He has been described as an avid outdoorsman who loved mountain biking.",
+      "category": "World",
+      "title": "Who was Alex Pretti, the intensive care nurse shot dead in Minneapolis?",
+      "link": "https://www.bbc.com/news/articles/c62r4g590wqo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/1751/live/9fd14180-f9ea-11f0-811c-ad0579c12ce2.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c4nnp4d064do#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-25 12:12:08 UTC",
+      "content": "Sir Mark Tully, the BBC's 'voice of India', dies aged 90. Sir Mark covered some of the defining moments in India's history in a career that spanned decades.",
+      "category": "World",
+      "title": "Sir Mark Tully, the BBC's 'voice of India', dies aged 90",
+      "link": "https://www.bbc.com/news/articles/c4nnp4d064do?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/4121/live/0ed9ada0-1c21-11ef-80aa-699d54c46324.jpg"
+    },
+    {
+      "id": "https://arstechnica.com/culture/2026/01/a-decade-of-star-trek-themed-fart-jokes-the-greatest-generation-podcast-turns-10/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-25 12:00:25 UTC",
+      "content": "A decade of Star Trek-themed fart jokes: The Greatest Generation podcast turns 10. How two podcasters turned a Star Trek side project into a full-time career.",
+      "category": "Technology",
+      "title": "A decade of Star Trek-themed fart jokes: The Greatest Generation podcast turns 10",
+      "link": "https://arstechnica.com/culture/2026/01/a-decade-of-star-trek-themed-fart-jokes-the-greatest-generation-podcast-turns-10/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/ADAM_BEN_L1560319-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769341043",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 11:50:49 +0000 UTC",
+      "content": "Myanmar holds final stage of disputed election as rebels continue fighting. Myanmar’s final stage of its disputed general election is under way despite the ongoing civil war.",
+      "category": "World",
+      "title": "Myanmar holds final stage of disputed election as rebels continue fighting",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/myanmar-holds-final-stage-of-disputed-election-as-rebels-continue-fighting?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/czx11kw42jeo#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-25 11:48:19 UTC",
+      "content": "Cosmetic doctor sorry for picking apart singer Troye Sivan's looks on TikTok. The singer hit out at Dr Zayn Khalid Majeed - who says he will try to have a positive impact with his content.",
+      "category": "World",
+      "title": "Cosmetic doctor sorry for picking apart singer Troye Sivan's looks on TikTok",
+      "link": "https://www.bbc.com/news/articles/czx11kw42jeo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/b1af/live/2102fde0-f7b9-11f0-8a71-ff10b47f652a.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769334031",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 10:49:28 +0000 UTC",
+      "content": "Israeli forces kill Palestinian man in occupied West Bank. Israeli army intensifies its deadly West Bank attacks as settlers rampage across Palestinian lands with impunity.",
+      "category": "World",
+      "title": "Israeli forces kill Palestinian man in occupied West Bank",
+      "link": "https://www.aljazeera.com/news/2026/1/25/israeli-forces-kill-palestinian-man-in-occupied-west-bank-10?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769326852",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 10:28:35 +0000 UTC",
+      "content": "Encountering ICE? Here’s what to know about your legal rights. Experts clarify ICE limits, detailing when agents can stop, detain or enter homes and what rights residents have.",
+      "category": "World",
+      "title": "Encountering ICE? Here’s what to know about your legal rights",
+      "link": "https://www.aljazeera.com/news/2026/1/25/heres-what-to-know-about-your-legal-rights-when-encountered-with-ice?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769328259",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 10:19:10 +0000 UTC",
+      "content": "Syrians greet extended army-SDF ceasefire with guarded optimism. Extension offers a welcome respite as Syrian forces advance towards the last SDF strongholds in the northeast.",
+      "category": "World",
+      "title": "Syrians greet extended army-SDF ceasefire with guarded optimism",
+      "link": "https://www.aljazeera.com/news/2026/1/25/syrians-greet-extended-army-sdf-ceasefire-with-guarded-optimism?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769329628",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 10:15:38 +0000 UTC",
+      "content": "Sabalenka, Alcaraz and Gauff book Australian Open quarterfinals. Sabalenka beats Mboko to advance to quarterfinal against teen sensation Jovic as Gauff drops set but overcomes Muchova.",
+      "category": "World",
+      "title": "Sabalenka, Alcaraz and Gauff book Australian Open quarterfinals",
+      "link": "https://www.aljazeera.com/sports/2026/1/25/sabalenka-alcaraz-and-gauff-book-australian-open-quarterfinals?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769327180",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 09:41:20 +0000 UTC",
+      "content": "Cuban official accuses US of ‘piracy’ against sanctioned Caribbean island. Ambassador Carlos de Cespedes says US pressure &#039;will not subjugate&#039; Cuba as Venezuelan oil exports to island dry out.",
+      "category": "World",
+      "title": "Cuban official accuses US of ‘piracy’ against sanctioned Caribbean island",
+      "link": "https://www.aljazeera.com/news/2026/1/25/cuban-official-accuses-us-of-piracy-against-sanctioned-caribbean-island?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769319759",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 09:35:30 +0000 UTC",
+      "content": "‘Not optimistic’: Ukrainians doubt Russia ready to end war amid talks. Ukrainians have little hope after a US-brokered meeting as they endure bombardments and blackouts.",
+      "category": "World",
+      "title": "‘Not optimistic’: Ukrainians doubt Russia ready to end war amid talks",
+      "link": "https://www.aljazeera.com/news/2026/1/25/not-optimistic-in-ukraine-scepticism-surrounds-russia-war-peace-talks?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769309264",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 09:21:07 +0000 UTC",
+      "content": "Who was Alex Pretti, the nurse shot dead by federal agents in Minneapolis?. Two witnesses said in court filings that the victim did not brandish a gun, refuting claims by the Trump administration.",
+      "category": "World",
+      "title": "Who was Alex Pretti, the nurse shot dead by federal agents in Minneapolis?",
+      "link": "https://www.aljazeera.com/news/2026/1/25/who-was-alex-pretti-the-nurse-shot-dead-by-federal-agents-in-minneapolis?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769322225",
+      "source": "Al Jazeera",
+      "timestamp": "Sun, 25 Jan 2026 08:54:10 +0000 UTC",
+      "content": "Gaza is not a real estate fantasy. Trump and Kushner’s plans for Gaza are bound to fail. Here is why.",
+      "category": "World",
+      "title": "Gaza is not a real estate fantasy",
+      "link": "https://www.aljazeera.com/opinions/2026/1/25/gaza-is-not-a-real-estate-fantasy?traffic_source=rss",
+      "picture": ""
     }
   ],
   "mapPoints": [
     {
       "id": "map-0",
-      "lat": 12.6311,
-      "lng": 8.0117,
-      "title": "Nigeria",
+      "lat": -13.65,
+      "lng": 43.73,
+      "title": "Yemen",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "description": "Escalation of conflict with airstrikes targeting civilians",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-1",
+      "lat": 39.09,
+      "lng": -94.57,
+      "title": "Washington D.C.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "description": "US increases military presence in the region",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-2",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "negative",
+      "category": "Tech/AI",
+      "description": "Tesla Autopilot safety concerns",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-3",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-4",
+      "lat": 39.1,
+      "lng": -77.01,
+      "title": "Washington D.C.",
+      "sentiment": "negative",
+      "category": "Business",
+      "description": "Americans choosing Obamacare plans they can’t afford",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-5",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "positive",
+      "category": "Business",
+      "description": "Investors rotating out of tech stocks",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-6",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "Creator and community response to ICE",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-7",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-8",
+      "lat": 39.09,
+      "lng": -94.57,
+      "title": "Washington D.C.",
       "sentiment": "negative",
       "category": "Geopolitical",
-      "description": "US airstrikes in Nigeria raise questions over targeting and impact",
-      "sourceLink": "https://www.theguardian.com/world/2023/dec/25/us-airstrikes-nigeria-questions-targeting-impact"
+      "description": "US military presence in the Middle East",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-9",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "negative",
+      "category": "Business",
+      "description": "Tesla Autopilot safety concerns",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-10",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-11",
+      "lat": 39.1,
+      "lng": -77.01,
+      "title": "Washington D.C.",
+      "sentiment": "positive",
+      "category": "Business",
+      "description": "Investors rotating out of tech stocks",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-12",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "description": "Creator and community response to ICE",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-13",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-14",
+      "lat": 39.09,
+      "lng": -94.57,
+      "title": "Washington D.C.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "description": "US military presence in the Middle East",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-15",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "neutral",
+      "category": "Business",
+      "description": "Tesla Autopilot safety concerns",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-16",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-17",
+      "lat": 39.1,
+      "lng": -77.01,
+      "title": "Washington D.C.",
+      "sentiment": "positive",
+      "category": "Business",
+      "description": "Investors rotating out of tech stocks",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-18",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "description": "Creator and community response to ICE",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-19",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-20",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "neutral",
+      "category": "Business",
+      "description": "Tesla Autopilot safety concerns",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-21",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-22",
+      "lat": 39.1,
+      "lng": -77.01,
+      "title": "Washington D.C.",
+      "sentiment": "positive",
+      "category": "Business",
+      "description": "Investors rotating out of tech stocks",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-23",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "description": "Creator and community response to ICE",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-24",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-25",
+      "lat": 39.09,
+      "lng": -94.57,
+      "title": "Washington D.C.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "description": "US military presence in the Middle East",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-26",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "neutral",
+      "category": "Business",
+      "description": "Tesla Autopilot safety concerns",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-27",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-28",
+      "lat": 39.1,
+      "lng": -77.01,
+      "title": "Washington D.C.",
+      "sentiment": "positive",
+      "category": "Business",
+      "description": "Investors rotating out of tech stocks",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-29",
+      "lat": 34.05,
+      "lng": -118.24,
+      "title": "Los Angeles",
+      "sentiment": "positive",
+      "category": "Tech/AI",
+      "description": "Creator and community response to ICE",
+      "sourceLink": ""
+    },
+    {
+      "id": "map-30",
+      "lat": 37.45,
+      "lng": -122.15,
+      "title": "San Francisco",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "description": "AI-powered Siri assistant development",
+      "sourceLink": ""
     }
   ],
   "availableDates": [
-    "2026-01-07",
-    "2026-01-08",
-    "2026-01-09",
-    "2026-01-10",
-    "2026-01-11",
-    "2026-01-12",
-    "2026-01-13",
-    "2026-01-14",
-    "2026-01-15",
-    "2026-01-16",
-    "2026-01-19",
-    "2026-01-20",
-    "2026-01-21",
-    "2026-01-22",
-    "2026-01-23",
-    "2026-01-24"
+    "2026-01-24",
+    "2026-01-25"
   ],
   "foreignRelations": [],
   "bigPicture": {
@@ -2237,11 +3108,93 @@
         "Canada-China trade deal",
         "US-China trade relations"
       ]
+    },
+    "sig_682688f7": {
+      "signalId": "sig_682688f7",
+      "generatedAt": "2026-01-25T19:41:05.765Z",
+      "header": {
+        "title": "US Military Deploys Carriers to Middle East Amid Escalating Tensions with Iran",
+        "text": "The US military has ordered a carrier strike group and an aircraft wing to the Middle East as tensions with Iran escalate, in what is seen as a show of force.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "The US military"
+        ],
+        "what": "ordered a carrier strike group and an aircraft wing to the Middle East",
+        "where": "the Middle East",
+        "when": "2026-01-25",
+        "why": "as tensions with Iran escalate"
+      },
+      "source": [
+        {
+          "feedId": "33",
+          "source": "Al Jazeera",
+          "title": "Trump says ‘US armada’ moving towards Iran as tensions escalate.",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/trump-says-us-armada-moving-towards-iran-as-tensions-escalate?traffic_source=rss",
+          "timestamp": "2026-01-25 13:27:53 +0000 UTC"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Iran has threatened to respond with military force",
+          "claimB": "The US military deployment is seen as a show of force",
+          "sourceA": [
+            {
+              "feedId": "33",
+              "source": "Al Jazeera"
+            }
+          ],
+          "sourceB": []
+        }
+      ],
+      "watchNext": [
+        "envoys from US meet Netanyahu as Israel continues to bomb Gaza",
+        "Pentagon downplays China threat: What it means for US allies"
+      ]
+    },
+    "sig_66756ee": {
+      "signalId": "sig_66756ee",
+      "generatedAt": "2026-01-25T19:52:28.954Z",
+      "header": {
+        "title": "Cuban Official Accuses US of ‘Piracy’ Against Sanctioned Caribbean Island",
+        "text": "The Cuban government has accused the US of using economic coercion, or 'piracy', in response to the country's refusal to sell oil to the island.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Cuban government",
+          "US Ambassador Carlos de Cespedes",
+          "Venezuelan oil exports to Cuba dry out"
+        ],
+        "what": "accusations of economic coercion or 'piracy'",
+        "where": "Sanctioned Caribbean island",
+        "when": "2026-01-25"
+      },
+      "source": [
+        {
+          "feedId": "47",
+          "source": "Al Jazeera",
+          "title": "Cuban official accuses US of ‘piracy’ against sanctioned Caribbean island.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/cuban-official-accuses-us-of-piracy-against-sanctioned-caribbean-island?traffic_source=rss",
+          "timestamp": "2026-01-25 09:41:20 +0000 UTC"
+        }
+      ],
+      "counterpoints": [],
+      "watchNext": [
+        "US military moves Navy, Air Force assets to the Middle East: What to know",
+        "Envoys from US meet Netanyahu as Israel continues to bomb Gaza",
+        "Storm causes widespread US power outages, thousands of flights cancelled"
+      ]
     }
   },
   "globalState": {
     "isOnline": true,
-    "lastChecked": "2026-01-25T01:28:31.305Z",
+    "lastChecked": "2026-01-25T20:00:23.514Z",
     "lastError": null
   }
 }

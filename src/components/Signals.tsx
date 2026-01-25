@@ -436,21 +436,22 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                 })}
               </div>
 
-              {/* Evidence on hover */}
+              {/* Source on hover */}
               {hoveredSignalId === (signal.id || `signal-${idx}`) && (
-                <div className="mt-2 w-full max-w-2xl bg-slate-900/100 border border-white/10 rounded-xl shadow-2xl p-4">
-                  {signal.evidence && signal.evidence.length > 0 ? (
+                <>
+                  <div className="mt-2 w-full max-w-2xl bg-slate-900/100 border border-white/10 rounded-xl shadow-2xl p-4">
+                    {signal.source && Array.isArray(signal.source) && signal.source.length > 0 ? (
                     <>
                       <div className="flex justify-between items-start mb-3">
                         <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-accent-primary">
-                          Source ({signal.evidence.length})
+                          Source ({signal.source.length})
                         </p>
                       </div>
                       <ul className="space-y-2">
-                        {signal.evidence.map((item, evidenceIdx) => (
-                          <li key={evidenceIdx} className="text-xs text-text-secondary bg-white/5 rounded p-2 border border-white/10">
+                        {signal.source.map((item, sourceIdx) => (
+                          <li key={sourceIdx} className="text-xs text-text-secondary bg-white/5 rounded p-2 border border-white/10">
                             <div className="flex justify-between items-start gap-2">
-                              <span className="font-medium text-text-primary text-[0.65rem]">{item.source}</span>
+                              <span className="font-medium text-text-primary text-[0.65rem]">{item.source || 'Unknown Source'}</span>
                               {item.timestamp && (
                                 <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary">
                                   {new Date(item.timestamp).toLocaleDateString()}
@@ -483,7 +484,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                     </>
                   ) : (
                     <div className="text-xs text-text-tertiary">
-                      No evidence available for this signal
+                      No source available for this signal
                     </div>
                   )}
 
@@ -508,32 +509,32 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                                 <p className="text-xs text-text-primary flex-1">{contradiction.claimB}</p>
                               </div>
 
-                              {/* Evidence for Claim A */}
-                              {contradiction.evidenceA && contradiction.evidenceA.length > 0 && (
+                              {/* Source for Claim A */}
+                              {contradiction.sourceA && contradiction.sourceA.length > 0 && (
                                 <div className="mt-2">
-                                  <p className="text-[0.55rem] uppercase tracking-widest text-red-400/80 mb-1">Evidence A:</p>
+                                  <p className="text-[0.55rem] uppercase tracking-widest text-red-400/80 mb-1">Source A:</p>
                                   <div className="space-y-1">
-                                    {contradiction.evidenceA.map((evidence, evidenceIdx) => (
-                                      <div key={evidenceIdx} className="text-xs text-text-secondary bg-black/20 rounded p-2 border border-red-500/20">
+                                    {contradiction.sourceA.map((source, sourceIdx) => (
+                                      <div key={sourceIdx} className="text-xs text-text-secondary bg-black/20 rounded p-2 border border-red-500/20">
                                         <div className="flex justify-between items-start gap-2">
-                                          <span className="font-medium text-text-primary text-[0.6rem]">{evidence.source}</span>
-                                          {evidence.timestamp && (
+                                          <span className="font-medium text-text-primary text-[0.6rem]">{source.source}</span>
+                                          {source.timestamp && (
                                             <span className="text-[0.5rem] uppercase tracking-widest text-text-tertiary">
-                                              {new Date(evidence.timestamp).toLocaleDateString()}
+                                              {new Date(source.timestamp).toLocaleDateString()}
                                             </span>
                                           )}
                                         </div>
-                                        {evidence.title && (
-                                          <p className="mt-1 text-text-primary text-xs">{evidence.title}</p>
+                                        {source.title && (
+                                          <p className="mt-1 text-text-primary text-xs">{source.title}</p>
                                         )}
-                                        {evidence.quote && (
+                                        {source.quote && (
                                           <p className="mt-1 italic text-[0.55rem] text-text-secondary">
-                                            "{evidence.quote}"
+                                            "{source.quote}"
                                           </p>
                                         )}
-                                        {evidence.link && (
+                                        {source.link && (
                                           <a
-                                            href={evidence.link}
+                                            href={source.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-accent-primary hover:underline text-[0.6rem] mt-1 inline-block"
@@ -547,32 +548,32 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                                 </div>
                               )}
 
-                              {/* Evidence for Claim B */}
-                              {contradiction.evidenceB && contradiction.evidenceB.length > 0 && (
+                              {/* Source for Claim B */}
+                              {contradiction.sourceB && contradiction.sourceB.length > 0 && (
                                 <div className="mt-2">
-                                  <p className="text-[0.55rem] uppercase tracking-widest text-blue-400/80 mb-1">Evidence B:</p>
+                                  <p className="text-[0.55rem] uppercase tracking-widest text-blue-400/80 mb-1">Source B:</p>
                                   <div className="space-y-1">
-                                    {contradiction.evidenceB.map((evidence, evidenceIdx) => (
-                                      <div key={evidenceIdx} className="text-xs text-text-secondary bg-black/20 rounded p-2 border border-blue-500/20">
+                                    {contradiction.sourceB.map((source, sourceIdx) => (
+                                      <div key={sourceIdx} className="text-xs text-text-secondary bg-black/20 rounded p-2 border border-blue-500/20">
                                         <div className="flex justify-between items-start gap-2">
-                                          <span className="font-medium text-text-primary text-[0.6rem]">{evidence.source}</span>
-                                          {evidence.timestamp && (
+                                          <span className="font-medium text-text-primary text-[0.6rem]">{source.source}</span>
+                                          {source.timestamp && (
                                             <span className="text-[0.5rem] uppercase tracking-widest text-text-tertiary">
-                                              {new Date(evidence.timestamp).toLocaleDateString()}
+                                              {new Date(source.timestamp).toLocaleDateString()}
                                             </span>
                                           )}
                                         </div>
-                                        {evidence.title && (
-                                          <p className="mt-1 text-text-primary text-xs">{evidence.title}</p>
+                                        {source.title && (
+                                          <p className="mt-1 text-text-primary text-xs">{source.title}</p>
                                         )}
-                                        {evidence.quote && (
+                                        {source.quote && (
                                           <p className="mt-1 italic text-[0.55rem] text-text-secondary">
-                                            "{evidence.quote}"
+                                            "{source.quote}"
                                           </p>
                                         )}
-                                        {evidence.link && (
+                                        {source.link && (
                                           <a
-                                            href={evidence.link}
+                                            href={source.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-accent-primary hover:underline text-[0.6rem] mt-1 inline-block"
@@ -592,6 +593,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                     </div>
                   )}
                 </div>
+                </>
               )}
             </div>
           ))}

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-21T20:24:44.097Z",
+  "lastUpdated": "2026-01-25T01:28:38.484Z",
   "narrative": "Geopolitical instability and conflict persist across multiple regions with ongoing military engagements in Syria, escalating tensions in the Russia-Ukraine war, and heightened security risks in Venezuela due to paramilitary activities. Concurrently, global health concerns intensify as bird flu outbreaks spread internationally, while protests in Iran and the Philippines result in significant casualties and humanitarian crises. Technological advancements and regulatory challenges dominate with SpaceX expanding Starlink satellite infrastructure, AI platforms facing legal scrutiny, and open-source initiatives reshaping digital ecosystems. Economic uncertainty and social policy debates escalate, including retirement savings dilemmas, mortgage-related financial decisions, and the aging population’s impact on eldercare systems. Political dynamics and human rights issues remain critical as Venezuela’s leadership navigates U.S. influence, Nicaragua’s prisoner releases linked to external pressures, and protests challenging authoritarian governance in Iran.",
   "signals": [
     {
@@ -13,7 +13,7 @@
       "novelty": 70,
       "explain": "Escalation in US-Venezuela relations, with potential economic and diplomatic risks.",
       "shareText": "Trump pushes for $100bn Venezuela oil fund amid expert warnings.",
-      "evidence": [
+      "source": [
         {
           "feedId": "49",
           "source": "BBC World",
@@ -36,7 +36,7 @@
       "novelty": 60,
       "explain": "Significant escalation in domestic unrest, raising concerns about stability and potential regional fallout.",
       "shareText": "Iran protests intensify, with hundreds killed and hospitals overflowing.",
-      "evidence": [
+      "source": [
         {
           "feedId": "20",
           "source": "BBC World",
@@ -58,7 +58,7 @@
       "novelty": 80,
       "explain": "New regulatory action against AI, emphasizing ethical concerns in technology deployment.",
       "shareText": "Indonesia blocks Grok over deepfake issues, raising AI ethics alarms.",
-      "evidence": [
+      "source": [
         {
           "feedId": "25",
           "source": "TechCrunch",
@@ -81,7 +81,7 @@
       "novelty": 80,
       "explain": "Policy misstep could lead to legal challenges and affect AI innovation.",
       "shareText": "OpenAI demands contractors submit past work, risking IP theft claims.",
-      "evidence": [
+      "source": [
         {
           "feedId": "24",
           "source": "TechCrunch",
@@ -104,7 +104,7 @@
       "novelty": 70,
       "explain": "Escalation in zoonotic disease threats requiring enhanced global health monitoring and response.",
       "shareText": "Bird flu surges globally, prompting health officials to warn of wider risks.",
-      "evidence": [
+      "source": [
         {
           "feedId": "26",
           "source": "NY Times Science",
@@ -127,7 +127,7 @@
       "novelty": 60,
       "explain": "Positive development for scientific research despite administration efforts to reduce funding.",
       "shareText": "Congress boosts science funding, overriding Trump's cuts and enhancing innovation.",
-      "evidence": [
+      "source": [
         {
           "feedId": "27",
           "source": "NY Times Science",
@@ -149,7 +149,7 @@
       "novelty": 80,
       "explain": "Significant advancement in satellite technology could enhance connectivity worldwide.",
       "shareText": "SpaceX launches more Starlink satellites, promising better global internet access.",
-      "evidence": [
+      "source": [
         {
           "feedId": "28",
           "source": "TechCrunch",
@@ -171,7 +171,7 @@
       "novelty": 70,
       "explain": "Growing financial insecurity for aging population, highlighting systemic risks in social welfare programs.",
       "shareText": "Social Security crisis looms, threatening the financial security of US retirees.",
-      "evidence": [
+      "source": [
         {
           "feedId": "42",
           "source": "MarketWatch",
@@ -749,48 +749,14 @@
     "2026-01-16",
     "2026-01-19",
     "2026-01-20",
-    "2026-01-21"
+    "2026-01-21",
+    "2026-01-22",
+    "2026-01-23",
+    "2026-01-24"
   ],
-  "foreignRelations": [
-    {
-      "id": "h17ljtqhi",
-      "countryA": "USA",
-      "countryB": "Iran",
-      "topic": "Threats and tensions between the two nations",
-      "status": "No data for this date.",
-      "sentiment": "neutral",
-      "lastUpdate": "2026-01-20T18:49:34.382Z"
-    },
-    {
-      "id": "uu21ptlrn",
-      "countryA": "Canada",
-      "countryB": "USA",
-      "topic": "Trade tariffs",
-      "status": "No data for this date.",
-      "sentiment": "neutral",
-      "lastUpdate": "2026-01-20T18:49:34.382Z"
-    },
-    {
-      "id": "sqkoq1auy",
-      "countryA": "USA",
-      "countryB": "China",
-      "topic": "AI supremacy race",
-      "status": "No data for this date.",
-      "sentiment": "neutral",
-      "lastUpdate": "2026-01-20T18:49:34.382Z"
-    },
-    {
-      "id": "js1346v09",
-      "countryA": "USA",
-      "countryB": "China",
-      "topic": "Robotics",
-      "status": "No data for this date.",
-      "sentiment": "neutral",
-      "lastUpdate": "2026-01-20T18:49:34.382Z"
-    }
-  ],
+  "foreignRelations": [],
   "bigPicture": {
-    "summary": "Okay, here is a \"Grand Narrative\" synthesizing the provided historical data, focusing on trajectory, connections, and the underlying Meta-Narrative, while adhering to the specified sentiment framework.\n\n# Grand Narrative: The Fracturing of Stability - A Convergence of Crises and Control\n\nThe period captured in this data reveals a world hurtling towards increased instability, driven by a complex interplay of deepening geopolitical rivalries, simmering economic anxieties, cascading environmental disasters, and the disruptive rise of powerful new technologies. The overall trajectory is one of **accelerating fragmentation and struggle for control** amidst a backdrop of systemic fragility.\n\n## The Trajectory and Connections\n\nThe narrative unfolds from a foundation of existing tensions – the US military operation in Nigeria (Jan 7) highlighted ongoing challenges in counterterrorism legitimacy and information warfare. This sets the stage for a month marked by escalation and unresolved conflict, rather than resolution.\n\n*   **Geopolitical Escalation:** The core driver appears to be the **assertive recalibration of global power**. This manifests through US foreign policy shifts (Jan 7, 8, 9, 12, 14, 15, 16, 19, 20, 21), characterized by rhetoric (e.g., Greenland, tariffs, 401k) and actions (e.g., Venezuela intervention, Iran threats) that directly challenge allies and regional actors. Simultaneously, traditional conflict zones (Gaza, Ukraine, Syria, Yemen, Iran) continue to fester or intensify, often intersecting with US policy. The BRICS exercises (Jan 11, 12) and the \"Board of Peace\" initiative (Jan 21) signal a pushback against US influence and a potential strengthening of alternative geopolitical blocs. The sheer volume and intensity of conflicts (Jan 10, 11, 12, 20) suggest this isn't merely a US-led drama but a multi-polar system under extreme stress.\n\n*   **Economic Anxiety and Instability:** Underlying the geopolitical noise is a **growing economic malaise**. High mortgage rates (Jan 9, 14, 15), financial uncertainties (Jan 9, 10, 12, 14, 16), and market volatility (Jan 8, 9, 19, 20) create a foundation of widespread anxiety. This economic pressure fuels domestic political tensions (Jan 9, 15) and potentially exacerbates the humanitarian crises (Jan 10, 20). The focus on controlling resources (oil, critical minerals, food supplies) (Jan 8, 9, 15, 16) underscores how economic interests are weaponized within this volatile geopolitical landscape.\n\n*   **Climate Change as an Unseen Weapon:** The frequency and severity of climate-related disasters (Jan 9, 10, 11, 12, 16, 19, 20) – from infrastructure failures and extreme weather to resource scarcity – are escalating. These events are increasingly framed not just as environmental tragedies but as sources of direct conflict, humanitarian crises, and failures of governance (Jan 10, 11, 20). The melting Arctic (Jan 12) and Greenland situation (Jan 8, 19, 21) exemplify how climate change is opening new geopolitical frontiers and potentially triggering resource wars (Jan 15).\n\n*   **Technology: A Double-Edged Sword:** The rise of AI (Jan 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21) is simultaneously a source of innovation and profound disruption. It fuels economic shifts and military strategies, but also creates new ethical dilemmas (deepfakes, non-consensual content) (Jan 8, 10, 13, 14) and regulatory nightmares (Jan 9, 10, 12, 14). Its potential for misuse (generative content, military integration, influencing discourse) is a major concern, viewed as **somewhat-negative** or **interesting**, while its beneficial applications (healthcare, logistics) are **interesting** or **neutral**.\n\n## The Meta-Narrative: The Struggle for Control in a Fracturing World System\n\nThe overarching story is one of a **world system under immense strain, struggling to adapt to multiple converging crises, with powerful actors increasingly resorting to unilateral action and heightened rhetoric, fragmenting international cooperation and trust.**\n\n*   **Systemic Fragility:** The world appears fundamentally less stable. Energy grids are vulnerable (Jan 8), infrastructure fails catastrophically (Jan 10, 12), humanitarian needs spiral (Jan 10, 20), and traditional governance structures face challenges (Jan 11, 13). Climate change acts as an accelerating force multiplier, turning manageable problems into existential threats for many regions.\n\n*   **Escalation of Rhetoric and Action:** The data suggests a dangerous trend of **rhetoric preceding or accompanying direct intervention**. US actions and threats (e.g., Nigeria, Venezuela, Iran) are common, often viewed neutrally here. This blurring of lines between diplomacy and potential force increases the risk of miscalculation and unintended conflict. The fragmentation into competing blocs (US vs. BRICS/alternative alliances) further destabilizes the system.\n\n*   **Technology as a Central Pivot:** AI and related technologies are not just peripheral; they are deeply integrated into the core dynamics. They drive economic forces, shape military capabilities, influence political discourse, and potentially exacerbate crises (e.g., through deepfakes spreading disinformation or resource-hungry AI straining grids). The struggle for technological dominance (Jan 15) is inextricably linked to the geopolitical and economic struggles.\n\n*   **The Human Cost:** Beneath the geopolitical and economic narratives lies a sea of human suffering. The increase in severe disasters and conflicts (Jan 20) points towards a world where large-scale crises are becoming more frequent, pushing sentiment towards **very-negative** or **extremely-negative** territory for those directly affected. This human dimension fuels political instability and social unrest (Jan 10, 11, 12).\n\n## Conclusion\n\nThe Grand Narrative is one of a world hurtling towards greater instability. Geopolitical tensions are reaching fever pitch, economic anxieties are pervasive, climate change is acting as an existential multiplier, and disruptive technology is central to the conflicts and potential solutions. The Meta-Narrative is the story of a fragile global system, increasingly defined by competition, unilateralism, and the high-stakes struggle for control over resources, technology, and influence, with the potential for widespread negative consequences. The trajectory points towards continued escalation and fragmentation, making the path forward highly uncertain and fraught with risk.",
+    "summary": "Okay, let's synthesize the historical data into a Grand Narrative, focusing on trajectory and connections rather than day-to-day recounting.\n\n## Grand Narrative: The Shattered Axis – A World in Fragile Equilibrium, Navigating Crises and Technological Shifts\n\nThe overarching trajectory depicted in the historical data is one of a world hurtling towards a critical juncture, marked by **deepening geopolitical fragmentation, accelerating technological transformation with profound ethical and strategic implications, and the ever-present, escalating threat of climate change exacerbating existing tensions.** It's a landscape where traditional power structures are eroding, alliances are brittle, and the potential for cascading crises remains high.\n\n### The Core Trajectory: Escalating Tensions and Fragile Stability\n\n1.  **Geopolitical Fragmentation and Power Struggles:** The period is dominated by a volatile interplay of major power competition (implicitly US-China rivalry, explicit US actions against Russia/China proxies), regional conflicts (Middle East, Ukraine, Syria), and the fracturing of traditional alliances. The US, under a specific administration, appears to be a central, often destabilizing, actor. Its rhetoric (\"Greenland ambitions,\" threats against Venezuela) and actions (targeted strikes, sanctions, proposed policy shifts) reverberate across the globe, testing international norms and fueling sovereignty concerns (e.g., Venezuela, Iran). Simultaneously, attempts at diplomacy (UNRWA, USMCA, Abu Dhabi talks) often seem overshadowed by underlying instability and mistrust. The \"Board of Peace\" narrative is ironically juxtaposed with active conflict, suggesting a fundamental disconnect between aspirations for resolution and the reality of simmering violence. This era sees sovereignty increasingly contested, not just by nation-states against external forces, but by internal actors resisting perceived foreign influence or intervention.\n\n2.  **Technology: Driver of Change and Source of Conflict:** Technological advancement, particularly in AI and digital infrastructure (like Starlink), is a defining feature. It drives economic shifts, offers new tools for governance and conflict (AI integration, military networks), and creates novel challenges (deepfakes, non-consensual content, resource intensity). However, this progress is shadowed by intense regulatory pressure, ethical debates (especially around safety and misuse), and concerns about corporate power. The rapid valuation growth of tech companies coexists uneasily with probes, espionage fears, and legislative attempts to curb their influence. AI, while potentially transformative, is increasingly weaponized, integrated into state apparatuses, and itself subject to state control and regulation. It's not merely a tool; it's a *force* reshaping the geopolitical and social landscape.\n\n3.  **Climate Change: The Unseen Co-Pilot of Instability:** Climate change is not just an environmental story; it's an underlying driver of geopolitical tension, economic strain, and humanitarian crises. Extreme weather events (wildfires, floods, storms) are becoming more frequent and severe, causing direct loss of life and straining infrastructure and resources. These events compound existing problems (like energy grid failures) and create new flashpoints (resource scarcity, displacement). The data suggests climate change is acting as a multiplier, making fragile states even more unstable and increasing the likelihood of conflict and displacement. The \"extremely negative\" assessment of major disasters underscores this point.\n\n4.  **Economic Uncertainty and Social Strain:** The economic narrative is one of persistent anxiety. High interest rates, housing market stagnation, and the potential onset of a commodities supercycle create significant pressure points. While AI offers new possibilities (drone delivery, data analysis), its impact is uneven, and it doesn't yet solve fundamental structural issues like inequality or aging populations. The focus on individual financial decisions (mortgages, 401(k)s) reflects a broader societal anxiety about economic security in an unstable environment. The reversal of US health funding, amidst ongoing crises, highlights competing priorities and a potential de-prioritization of domestic social welfare in the face of external pressures and ideological shifts.\n\n### The Meta-Narrative: A World in Transition, Rife with Contested Futures\n\nBeneath the specific events lies a meta-narrative of **profound societal and systemic transition, characterized by instability, contested control over resources and technology, and a growing disconnect between governance aspirations and lived reality.**\n\n*   **Instability as the Norm:** The data consistently shows multiple crises (conflicts, climate, economic, social) occurring simultaneously or in close succession. This suggests a fundamental shift away from the relative stability of previous eras, where major crises were perhaps more sequential or contained. The world is now perceived as inherently more volatile.\n*   **Contested Control:** Power struggles are not confined to nation-states. They involve control over critical resources (oil, rare minerals), technological infrastructure (AI, communication networks), and even narrative (disputed casualty figures, manipulated media). The rise of AI as a strategic asset is paralleled by intense efforts to regulate and control it.\n*   **Fragmentation of Governance:** International institutions (like the WHO, hinted at by the US withdrawal) seem less effective or relevant. Diplomacy appears often reactive or superficial, struggling to address deep-seated conflicts and systemic issues. The \"Board of Peace\" concept feels like a symbolic gesture in a world where power is exercised more directly and unpredictably.\n*   **Technology as a Double-Edged Sword:** Technology is both a solution (enhanced communication, efficiency) and a problem (potential for misuse, job displacement, new vulnerabilities). Its rapid development outpaces societal and regulatory adaptation, leading to a sense of unease. The struggle over AI regulation is emblematic – acknowledging its risks while harnessing its potential.\n*   **Humanity Struggling with Adapting:** Society is grappling with the implications of rapid change – adapting to new economic models, coping with climate impacts, navigating complex geopolitical divides, and dealing with the human cost of conflict and resource scarcity. The sentiment often leans towards negative (\"somewhat-negative,\" \"negative,\" \"very-negative\") as the challenges outpace solutions.\n\n## In Conclusion\n\nThe trajectory points towards a world in the throes of a major transformation, marked by increased instability, intense competition for resources and technological dominance, and the ever-present shadow of climate change. Governance appears overwhelmed or ineffective, while technology races ahead, creating new opportunities and threats. The \"Grand Narrative\" is one of a planet under immense stress, hurtling towards an uncertain future defined by fragmented power, contested narratives, and the high probability of further crises. The challenge for societies is to navigate this transition effectively, fostering cooperation and resilience amidst the prevailing chaos.",
     "timeline": [
       {
         "date": "2026-01-07",
@@ -866,12 +832,30 @@
       },
       {
         "date": "2026-01-21",
-        "title": "Geopolitical Tensions Escalate: Trump's initiatives, including the Board of Peace and Greenland ambitions, generate significant international friction, particularly among traditional US allies. Concurrently, conflicts persist, marked by casualties in Gaza and the sentencing related to Japan's former PM, while geopolitical interventions raise questions about international law.",
-        "summary": "Economic Policy Shifts Impact Markets: The implementation of the new US tax law influences financial decisions. Markets exhibit sensitivity to political rhetoric (Greenland comments), while corporate strategies and forecasts face investor scrutiny, impacting stock performance across various sectors including tech and media. Technology Innovation and Integration: AI advancements are accelerating across multiple domains, including healthcare diagnostics, drug discovery, content creation, and media platforms. Concurrently, hardware innovation focuses on versatile devices and improving user experiences, alongside ethical debates surrounding AI generation and detection. Climate Change and Energy Security: The restart of Japan's nuclear plant underscores energy policy complexities post-Fukushima. Simultaneously, the environmental impact of rapid AI expansion, particularly its water consumption, is recognized as a growing public health and security risk, highlighting interconnected global challenges. Humanitarian Crises and Social Unrest: Multiple regions face severe crises, including mass kidnappings in Nigeria and the demolition of UN facilities in occupied territories. These events, alongside ongoing conflicts and political assassinations, contribute to a volatile global security landscape marked by significant negative developments.",
+        "title": "Geopolitical tensions escalate with Trump’s Greenland ambitions facing opposition, Middle East conflict intensifies with journalist deaths, UNRWA HQ demolished, and Ukraine reconstruction delayed. Climate change looms large with rising temperatures affecting Olympics, UK intelligence warns on nature loss as nuclear power restarts in Japan.",
+        "summary": "AI drives innovation across industries, from healthcare diagnostics and content creation to daily tools, while regulatory challenges emerge as AI’s water demand grows and climate data faces removal. Economic markets stabilize following Trump’s comments, yet tech stocks face pressure and gold attracts retail investors amid tax law changes. Regulatory shifts impact climate data and AI development, reflecting broader tensions between innovation and oversight.",
         "sentiment": "somewhat-negative"
+      },
+      {
+        "date": "2026-01-22",
+        "title": "Geopolitical instability remains pronounced with ongoing conflicts in Ukraine and Gaza, coupled with heightened tensions over territorial claims like Greenland and the establishment of the US Board of Peace. Sovereignty issues, particularly concerning European allies and Middle Eastern nations, continue to surface, reflecting a volatile international landscape where major powers' shifting policies create uncertainty.",
+        "summary": "AI development is accelerating rapidly, marked by significant corporate investments and new features (like Google's AI Mode). However, this progress is shadowed by serious controversies (Grok incident) and significant concerns regarding privacy, data security, and the potential misuse of AI technology, demanding urgent global regulatory attention. Climate change impacts are intensifying, with devastating floods reported across southern Africa and Mozambique causing massive displacement and loss of life. These recurring disasters underscore the escalating humanitarian and economic costs of climate inaction, demanding greater international cooperation and adaptation funding. The technology sector is experiencing intense dynamics, driven by AI advancements, crypto volatility, and corporate restructuring. While AI represents potential economic transformation, its rapid development coexists with market fluctuations (notably Bitcoin) and corporate strategic shifts impacting employment and industry landscapes. Resource scarcity and conflict remain critical themes. Water security issues in Australia post-shooting highlight the intersection of violence and resource management. Meanwhile, the Amazon crackdown on illegal mining demonstrates efforts to combat environmental destruction linked to resource extraction, while also revealing deep-rooted conflicts over control of vital natural resources.",
+        "sentiment": "negative"
+      },
+      {
+        "date": "2026-01-23",
+        "title": "Russia's continued full-scale invasion of Ukraine persists, marked by daily attacks on major cities and ongoing peace talks in Abu Dhabi despite casualties. Simultaneously, the US is shifting defence priorities, offering reduced support to traditional allies while adopting a tougher stance against China and Russia, exemplified by preparations for naval deployments near Iran. This strategic posture coincides with airline disruptions across the Middle East, influenced by heightened rhetoric. These developments underscore a volatile geopolitical landscape where conventional military operations, strategic realignments, and symbolic diplomatic gestures coexist.",
+        "summary": "Parallel to these conflicts, the planet faces escalating climate-related crises. A major winter storm threatens the US with potentially life-threatening conditions, while Indonesia suffers another deadly landslide following previous natural disasters. Elsewhere, volcanic activity adds to the catalogue of extreme weather events. These recurring natural disasters strain resources and highlight vulnerabilities, reinforcing the theme of environmental instability intersecting with geopolitical tensions. In the technology sphere, significant advancements and regulatory concerns define the narrative. Innovations like AI breakthroughs, the expansion of electric vehicle capabilities, and novel applications such as blockchain for humanitarian aid in restrictive environments are emerging. However, these developments are counterbalanced by regulatory probes into tech giants, corporate espionage, and intense debates over data privacy and platform control, reflecting a complex interplay between rapid technological progress and societal oversight. Health policy and international cooperation face disruption. The US withdrawal from the World Health Organization marks a significant departure from global health governance, potentially impacting crisis response capabilities. Controversies surrounding mandatory vaccinations and the politicization of scientific initiatives further complicate the health landscape. These actions, alongside geopolitical shifts, signal a fragmentation of international institutions and a contested space for scientific collaboration. Finally, science and business are intrinsically linked in these developments. Scientific figures like Dr. Sanchez, whose agricultural innovations aided global food security, represent positive contributions. Business decisions, such as the US's strategic interest in Greenland's resources, intersect with scientific fields like AI and energy, while corporate actions raise ethical questions. This theme connects scientific progress, economic strategy, and the practical application of innovation, often amidst controversy or geopolitical competition. These diverse threads collectively shape a world marked by persistent tensions, rapid technological change, environmental stress, and contested governance frameworks.",
+        "sentiment": "very-negative"
+      },
+      {
+        "date": "2026-01-24",
+        "title": "Immigration enforcement actions continue to fuel localized protests in the United States particularly in Minnesota where demonstrators faced harsh winter weather while demanding an end to Immigration and Customs Enforcement operations citing broader national policy directions.",
+        "summary": "Technology companies maintain their innovation trajectories evidenced by consumer electronics advancements like the introduction of the Loch Capsule dishwasher a compact efficient appliance designed for users with mobility constraints or specific living situations highlighting ongoing trends in compact consumer technology. Climate change impacts remain a persistent global concern with recent events including potential wildfire activity adding to the ongoing narrative of environmental instability affecting various regions across the world. International relations continue to navigate complex geopolitical currents with ongoing tensions affecting multiple regions though no major escalations or conflicts have been reported recently suggesting a fragile but present state of global political uncertainty. The economic outlook incorporates persistent inflationary pressures alongside localized responses to supply chain disruptions reflecting broader macroeconomic trends that continue to shape consumer behavior and business investment patterns globally.",
+        "sentiment": "negative"
       }
     ],
-    "lastUpdated": "2026-01-21T18:57:05.012Z"
+    "lastUpdated": "2026-01-24T09:07:06.016Z"
   },
   "predictionHistory": [
     {
@@ -916,7 +900,7 @@
         "why": "Partisan political strategy and personal grievances",
         "soWhat": "Escalation of trade tensions between the US and Europe, affecting global markets and transatlantic relations."
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "0",
           "source": "BBC World",
@@ -938,7 +922,7 @@
         {
           "claimA": "Trump's tariffs are necessary for national security",
           "claimB": "Tariffs are detrimental to the global economy",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "4",
               "source": "NY Times World",
@@ -947,7 +931,7 @@
               "timestamp": "2026-01-19 23:14:17 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "1",
               "source": "BBC World",
@@ -985,7 +969,7 @@
         "why": "Systemic safety concerns in Spain's transport system",
         "soWhat": "This is the deadliest transport accident in Spain in over a decade, leading to national mourning and investigations"
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "1",
           "source": "BBC World",
@@ -1015,7 +999,7 @@
         {
           "claimA": "The crash was caused by a track failure",
           "claimB": "The crash was caused by human error",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "2",
               "source": "NY Times World",
@@ -1024,7 +1008,7 @@
               "timestamp": "2026-01-19 23:11:36 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "5",
               "source": "BBC World",
@@ -1063,7 +1047,7 @@
         "why": "To address legal challenges against the Fed's independence.",
         "soWhat": "This could impact monetary policy and financial markets."
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "9",
           "source": "NY Times World",
@@ -1077,7 +1061,7 @@
         {
           "claimA": "The Supreme Court testimony will reinforce the Fed's independence.",
           "claimB": "The testimony may lead to erosion of the Fed's autonomy.",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "0",
               "source": "MarketWatch",
@@ -1086,7 +1070,7 @@
               "timestamp": "2026-01-19 19:57:00 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "1",
               "source": "Al Jazeera",
@@ -1125,7 +1109,7 @@
         "why": "Trump's geopolitical strategy involving Greenland and perceived slights, including Nobel Peace Prize snub",
         "soWhat": "Significant escalation in US-EU relations, potential economic downturn, and strategic implications for NATO alliance"
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "4",
           "source": "BBC World",
@@ -1155,7 +1139,7 @@
         {
           "claimA": "Trump's tariffs on European goods are solely for strategic reasons related to Greenland",
           "claimB": "The tariffs are a response to Trump's perceived slights, including the Nobel Peace Prize snub",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "4",
               "source": "BBC World",
@@ -1171,7 +1155,7 @@
               "timestamp": "Mon, 19 Jan 2026 20:52:05 +0000 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "5",
               "source": "NY Times World",
@@ -1219,7 +1203,7 @@
         "why": "An immediate investigation is being conducted to determine the cause.",
         "soWhat": "This is one of Europe's worst rail disasters in over a decade, leading to national mourning and significant political implications."
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "6",
           "source": "NY Times World",
@@ -1241,7 +1225,7 @@
         {
           "claimA": "The derailment was caused by a break in the track.",
           "claimB": "The derailment was caused by a technical failure.",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "6",
               "source": "NY Times World",
@@ -1250,7 +1234,7 @@
               "timestamp": "2026-01-19 23:11:36 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "6",
               "source": "NY Times World",
@@ -1291,7 +1275,7 @@
         "why": "Trump links the move to not winning Nobel Peace Prize and global security needs",
         "soWhat": "Escalation of trade disputes between U.S. and EU, potential economic impact and strain on U.S.-EU alliance"
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "1",
           "source": "NY Times World",
@@ -1345,7 +1329,7 @@
         {
           "claimA": "Trump’s tariff threats are justified for national security reasons",
           "claimB": "Trump’s tariff threats are politically motivated and undermine the U.S.-EU alliance",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "2",
               "source": "NY Times World",
@@ -1355,7 +1339,7 @@
               "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "7",
               "source": "Al Jazeera",
@@ -1396,7 +1380,7 @@
         "why": "President Trump's aggressive trade policies",
         "soWhat": "Increased market volatility and potential for economic conflict"
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "0",
           "source": "NY Times World",
@@ -1418,7 +1402,7 @@
         {
           "claimA": "Tariff policies lead to economic conflict",
           "claimB": "Tariff policies may be necessary for national security",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "0",
               "source": "NY Times World",
@@ -1428,7 +1412,7 @@
               "quote": "As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak."
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "22",
               "source": "MarketWatch",
@@ -1468,7 +1452,7 @@
         "why": "Due to a 'gap' in rail safety protocols and infrastructure maintenance",
         "soWhat": "This incident has exposed systemic failures in Spain's rail infrastructure, potentially leading to increased safety regulations and investigations into similar incidents globally."
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "2",
           "source": "BBC World",
@@ -1482,8 +1466,8 @@
         {
           "claimA": "The derailment was caused by a technical failure in the rail system.",
           "claimB": "The derailment was caused by human error.",
-          "evidenceA": [],
-          "evidenceB": []
+          "sourceA": [],
+          "sourceB": []
         }
       ],
       "watchNext": [
@@ -1513,7 +1497,7 @@
         "why": "Strategic interest in the Arctic region",
         "soWhat": "Potential implications for Arctic strategy and transatlantic relations"
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "11",
           "source": "Al Jazeera",
@@ -1543,7 +1527,7 @@
         {
           "claimA": "US President Trump is pursuing Greenland for strategic reasons.",
           "claimB": "European allies are concerned about this pursuit.",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "1",
               "source": "Al Jazeera",
@@ -1552,7 +1536,7 @@
               "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "2",
               "source": "Al Jazeera",
@@ -1592,7 +1576,7 @@
         "why": "Investors are skeptical about Netflix's 2026 guidance and its acquisition of Warner Bros. Discovery, and there is growing concern about the implications of AI chatbots in healthcare information.",
         "soWhat": "This could lead to further stock volatility for Netflix and other companies involved in AI and healthcare sectors, and may indicate broader shifts in investor sentiment towards tech and AI applications."
       },
-      "evidence": [
+      "source": [
         {
           "feedId": "6",
           "source": "MarketWatch",
@@ -1614,7 +1598,7 @@
         {
           "claimA": "Netflix's diversification into content and healthcare through acquisitions is expected to stabilize its business model.",
           "claimB": "Market concerns about AI's role in healthcare information may negatively impact Netflix's stock performance.",
-          "evidenceA": [
+          "sourceA": [
             {
               "feedId": "6",
               "source": "MarketWatch",
@@ -1623,7 +1607,7 @@
               "timestamp": "2026-01-21 16:28:00 UTC"
             }
           ],
-          "evidenceB": [
+          "sourceB": [
             {
               "feedId": "3",
               "source": "MarketWatch",
@@ -1641,11 +1625,1196 @@
         "Broader economic indicators affecting investor sentiment in the financial sector.",
         "Potential regulatory responses to AI in healthcare information services."
       ]
+    },
+    "sig_86c47804": {
+      "signalId": "sig_86c47804",
+      "generatedAt": "2026-01-21T20:28:45.160Z",
+      "header": {
+        "title": "Greenland Becomes Geopolitical Flashpoint",
+        "text": "Trump's proposed 'Board of Peace' includes Greenland, sparking international concern over U.S. intentions and potential conflicts with NATO allies.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "U.S. President Donald Trump",
+          "Trump's administration"
+        ],
+        "what": "Proposed inclusion of Greenland in Trump's 'Board of Peace' and related comments about U.S. 'ownership' of Greenland.",
+        "where": "Greenland, Denmark (as part of the Kingdom of Denmark)",
+        "when": "2026-01-21",
+        "why": "Trump's stated intention to negotiate for U.S. 'ownership' of Greenland, framed as part of a peace initiative.",
+        "soWhat": "This raises concerns about U.S. foreign policy intentions, potential conflict with NATO allies, and implications for Arctic sovereignty and resource control."
+      },
+      "source": [
+        {
+          "feedId": "5",
+          "source": "MarketWatch",
+          "title": "This Trump comment about Greenland at Davos is calming markets. Here’s why.",
+          "link": "https://www.nytimes.com/2026/01/20/world/canada/carney-speech-davos-trump.html",
+          "timestamp": "2026-01-21 16:28:00 UTC",
+          "quote": "Trump said he wouldn’t use force to obtain Greenland and called for negotiations."
+        },
+        {
+          "feedId": "6",
+          "source": "MarketWatch",
+          "title": "This Trump comment about Greenland at Davos is calming markets. Here’s why.",
+          "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 16:28:00 UTC",
+          "quote": "U.S. President Donald Trump on Wednesday said he wouldn’t use force to obtain Greenland and called for negotiations, with his remarks coming during a speech at the World Economic Forum’s annual gathering in Davos, Switzerland."
+        },
+        {
+          "feedId": "8",
+          "source": "Al Jazeera",
+          "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC",
+          "quote": "Donald Trump said the US needs “ownership” of Greenland, but he “won’t use force” to acquire the territory."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's proposal for a 'Board of Peace' that includes Greenland is a strategic move to assert U.S. influence in the Arctic region.",
+          "claimB": "Greenland's inclusion in the Board of Peace may be a diplomatic effort to address global conflicts without resorting to military action.",
+          "sourceA": [
+            {
+              "feedId": "8",
+              "source": "Al Jazeera",
+              "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "NY Times World",
+              "title": "Carney Speech on U.S. ‘Rupture’ and Canada’s Survival Draws Standing Ovation at Davos",
+              "link": "https://www.nytimes.com/2026/01/20/world/canada/carney-speech-davos-trump.html",
+              "timestamp": "2026-01-21 12:32:10 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential reactions from NATO allies regarding U.S. foreign policy shifts.",
+        "Market responses to Trump's comments on Greenland and broader economic policies.",
+        "Broader implications for U.S.-European relations and Arctic sovereignty disputes.",
+        "Potential for similar geopolitical maneuvers in other contested territories."
+      ]
+    },
+    "sig_a9a068aa": {
+      "signalId": "sig_a9a068aa",
+      "generatedAt": "2026-01-21T20:29:29.089Z",
+      "header": {
+        "title": "EU Energy Security Under Threat",
+        "text": "Europe's dependence on U.S. policy regarding Greenland raises concerns about energy security and strategic autonomy.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "European leaders",
+          "U.S. President Donald Trump"
+        ],
+        "what": "Concerns about energy security and strategic autonomy due to U.S. policy on Greenland.",
+        "where": "Greenland, Europe",
+        "when": "2026-01-21",
+        "why": "Trump's ambitions regarding Greenland and his approach towards international relations.",
+        "soWhat": "This could affect transatlantic relations and Europe's energy security if U.S. policies shift."
+      },
+      "source": [
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+          "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC",
+          "quote": "Trump has angered European leaders with his Greenland ambitions and tariffs-for-all-who-oppose approach."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Europe is dependent on U.S. policy regarding Greenland.",
+          "claimB": "Trump's stance on Greenland may not necessarily threaten energy security.",
+          "sourceA": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+              "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "MarketWatch",
+              "title": "This Trump comment about Greenland at Davos is calming markets. Here’s why.",
+              "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 16:28:00 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments in U.S.-Greenland relations",
+        "Reactions from Greenland authorities",
+        "Changes in energy markets if Greenland resources become contested"
+      ]
+    },
+    "sig_f1566085": {
+      "signalId": "sig_f1566085",
+      "generatedAt": "2026-01-21T20:29:47.990Z",
+      "header": {
+        "title": "Nuclear Energy Renaissance Post-Fukushima",
+        "text": "Japan restarts its largest nuclear plant amid ongoing safety concerns following the Fukushima disaster.",
+        "sentiment": "interesting",
+        "deltaType": "event",
+        "category": "Science"
+      },
+      "fiveWs": {
+        "who": [
+          "Japanese government",
+          "Tokyo Electric Power Company"
+        ],
+        "what": "Restart of the largest nuclear reactor in Japan",
+        "where": "Japan",
+        "when": "2026-01-21",
+        "why": "To address climate change pressures and energy needs, despite ongoing safety concerns from the Fukushima disaster",
+        "soWhat": "This could signal a potential global shift toward nuclear energy as climate change pressures mount, but safety concerns remain."
+      },
+      "source": [
+        {
+          "feedId": "8",
+          "source": "BBC World",
+          "title": "Japan restarts world's largest nuclear plant as Fukushima memories loom large",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/killer-of-japans-former-pm-shinzo-abe-sentenced-to-life-in-prison?traffic_source=rss",
+          "timestamp": "2026-01-21 16:03:54 UTC",
+          "quote": "Japan restarts a reactor at the world's largest nuclear plant nearly 15 years after the Fukushima meltdown."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Restarting nuclear plants will help combat climate change by reducing carbon emissions.",
+          "claimB": "Restarting nuclear plants increases the risk of future meltdowns and long-term environmental damage.",
+          "sourceA": [
+            {
+              "feedId": "7",
+              "source": "Al Jazeera",
+              "title": "Key takeaways from Trump’s one-year anniversary briefing",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/key-takeaways-from-trumps-one-year-anniversary-briefing?traffic_source=rss",
+              "timestamp": "2026-01-21 13:01:13 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "BBC World",
+              "title": "Japan restarts world's largest nuclear plant as Fukushima memories loom large",
+              "link": "https://www.bbc.com/news/articles/cq6v0v32rg1o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-21 16:03:54 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Global trends in nuclear energy adoption",
+        "Safety standards for nuclear plants post-Fukushima",
+        "Impact of climate change on energy policies worldwide",
+        "Reactions from international organizations to Japan's decision"
+      ]
+    },
+    "sig_7ad67f9a": {
+      "signalId": "sig_7ad67f9a",
+      "generatedAt": "2026-01-21T20:30:03.599Z",
+      "header": {
+        "title": "AI's Growing Water Appetite",
+        "text": "The rapid expansion of artificial intelligence is creating unprecedented strain on global water supplies, posing a public health risk.",
+        "sentiment": "somewhat-negative",
+        "deltaType": "emerging_concern",
+        "category": "Tech/AI"
+      },
+      "fiveWs": {
+        "who": [
+          "AI developers",
+          "Tech companies"
+        ],
+        "what": "AI's increasing water consumption",
+        "where": "Global scale",
+        "when": "2026",
+        "why": "Rapid expansion of AI infrastructure and training processes",
+        "soWhat": "Potential public health risk and strain on water resources"
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "Al Jazeera",
+          "title": "AI’s growing thirst for water is becoming a public health risk",
+          "link": "https://www.aljazeera.com/opinions/2026/1/21/ais-growing-thirst-for-water-is-becoming-a-public-health-risk?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 12:04:40 +0000 UTC",
+          "quote": "AI’s rapid expansion is placing growing pressure on water supplies and public health."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "AI's water consumption is a minor environmental issue",
+          "claimB": "AI's water usage poses a significant public health risk",
+          "sourceA": [],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "AI’s growing thirst for water is becoming a public health risk",
+              "link": "https://www.aljazeera.com/opinions/2026/1/21/ais-growing-thirst-for-water-is-becoming-a-public-health-risk?traffic_source=rss",
+              "timestamp": "Wed, 20 Jan 2026 12:04:40 UTC",
+              "quote": "AI’s rapid expansion is placing growing pressure on water supplies and public health."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Other environmental impacts of AI technology",
+        "Water scarcity in regions with high AI infrastructure",
+        "Policy responses to AI's resource consumption"
+      ]
+    },
+    "sig_4d60d72b": {
+      "signalId": "sig_4d60d72b",
+      "generatedAt": "2026-01-22T16:58:00.776Z",
+      "header": {
+        "title": "Greenland Deal Escalation: Trump Secured 'Total Access'",
+        "text": "Following his meeting with NATO leaders, President Trump announced securing 'total access' to Greenland, raising concerns among European allies who scrambled to respond to his abrupt policy reversal.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Donald Trump",
+          "NATO leaders"
+        ],
+        "what": "Securing 'total access' to Greenland through a NATO deal",
+        "where": "Greenland, Denmark (as part of the Kingdom of Denmark)",
+        "when": "2026-01-22",
+        "why": "Abrupt policy reversal, concerns among European allies",
+        "soWhat": "Significant geopolitical shift with implications for NATO and U.S.-European relations"
+      },
+      "source": [
+        {
+          "feedId": "52",
+          "source": "Al Jazeera",
+          "title": "Trump claims to have secured ‘total access’ to Greenland in NATO deal",
+          "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-pact-will-demand-allies-boost-arctic-security-nato-chief?traffic_source=rss",
+          "timestamp": "2026-01-22 13:31:28 UTC",
+          "quote": "Trump claims to have secured ‘total access’ to Greenland in NATO deal"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump has secured 'total access' to Greenland",
+          "claimB": "European allies are concerned about this abrupt policy reversal",
+          "sourceA": [
+            {
+              "feedId": "52",
+              "source": "Al Jazeera",
+              "title": "Trump claims to have secured ‘total access’ to Greenland in NATO deal",
+              "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-pact-will-demand-allies-boost-arctic-security-nato-chief?traffic_source=rss",
+              "timestamp": "2026-01-22 13:31:28 UTC",
+              "quote": "Trump claims to have secured ‘total access’ to Greenland in NATO deal"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "4",
+              "source": "NY Times World",
+              "title": "Trump’s Rift With Europe Is Clear. Europe Must Decide What to Do About It.",
+              "link": "https://www.nytimes.com/2026/01/21/world/europe/trump-rift-europe.html",
+              "timestamp": "2026-01-22 15:43:09 UTC",
+              "quote": "After President Trump aired his disdain for Europe, its leaders will gather in Brussels Thursday to take stock of what comes next."
+            },
+            {
+              "feedId": "9",
+              "source": "Al Jazeera",
+              "title": "Trump’s Greenland ‘framework’ deal: What we know about it, what we don’t",
+              "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-framework-deal-what-we-know-about-it-what-we-dont?traffic_source=rss",
+              "timestamp": "2026-01-22 13:50:52 UTC",
+              "quote": "Trump says he reached a ‘framework of a future deal’ on Greenland during a meeting with NATO’s Mark Rutte in Davos."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Reactions from Greenland and Denmark regarding the deal",
+        "Potential implications for NATO's strategic posture in the Arctic",
+        "Broader U.S.-European relations following Trump's recent statements",
+        "Follow-up meetings between Trump administration and European allies"
+      ]
+    },
+    "sig_7e580931": {
+      "signalId": "sig_7e580931",
+      "generatedAt": "2026-01-22T17:27:53.193Z",
+      "header": {
+        "title": "Greenland Deal Escalation",
+        "text": "U.S. President Trump announces a 'framework of future deal' for Greenland, raising concerns among NATO allies about sovereignty and strategic implications.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "U.S. President Trump",
+          "NATO allies"
+        ],
+        "what": "Announcement of a 'framework of future deal' for Greenland",
+        "where": "Greenland",
+        "when": "2026-01-22",
+        "why": "Concerns about sovereignty and strategic implications",
+        "soWhat": "This could alter strategic balances in the North Atlantic region"
+      },
+      "source": [
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Live Updates: Zelensky Criticizes European Allies After Meeting With Trump",
+          "link": "https://www.aljazeera.com/news/2026/1/22/mapping-the-10-countries-with-the-most-overseas-territories?traffic_source=rss",
+          "timestamp": "2026-01-22 16:43:42 UTC",
+          "quote": "Zelensky Criticizes European Allies After Meeting With Trump"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's announcement is a positive move for U.S. interests",
+          "claimB": "The move raises concerns about sovereignty and strategic implications",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Live Updates: Zelensky Criticizes European Allies After Meeting With Trump",
+              "link": "https://www.aljazeera.com/news/2026/1/22/mapping-the-10-countries-with-the-most-overseas-territories?traffic_source=rss",
+              "timestamp": "2026-01-22 16:43:42 UTC",
+              "quote": "Zelensky Criticizes European Allies After Meeting With Trump"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "8",
+              "source": "Al Jazeera",
+              "title": "Trump’s Greenland ‘framework’ deal: What we know about it, what we don’t",
+              "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-framework-deal-what-we-know-about-it-what-we-dont?traffic_source=rss",
+              "timestamp": "2026-01-22 13:50:52 UTC",
+              "quote": "Trump says he reached a 'framework of a future deal' on Greenland during a meeting with NATO's Mark Rutte in Davos."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further details on the deal framework",
+        "Reactions from Greenland and Denmark",
+        "Potential impact on NATO strategy",
+        "Broader implications for U.S.-European relations"
+      ]
+    },
+    "sig_5ec591b0": {
+      "signalId": "sig_5ec591b0",
+      "generatedAt": "2026-01-22T17:29:40.570Z",
+      "header": {
+        "title": "AI Integration of Personal Data",
+        "text": "Tech giants like Google and Spotify are increasingly integrating personal data from email and photo accounts into AI systems, raising privacy concerns.",
+        "sentiment": "neutral",
+        "deltaType": "operational",
+        "category": "Technology"
+      },
+      "fiveWs": {
+        "who": [
+          "Google",
+          "Spotify"
+        ],
+        "what": "Integration of personal data (email and photo accounts) into AI systems.",
+        "where": "United States",
+        "when": "January 2026",
+        "why": "To enable Personal Intelligence and AI Mode for more personalized responses.",
+        "soWhat": "This raises significant privacy concerns and represents a shift in how AI systems are personalized."
+      },
+      "source": [
+        {
+          "feedId": "5",
+          "source": "Ars Technica",
+          "title": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\"",
+          "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+          "timestamp": "2026-01-22 16:35:41 UTC",
+          "quote": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\""
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Integration of personal data into AI systems enhances user experience by providing more personalized services.",
+          "claimB": "Such integration poses significant privacy risks and may lead to misuse of personal data.",
+          "sourceA": [
+            {
+              "feedId": "5",
+              "source": "Ars Technica",
+              "title": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\"",
+              "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+              "timestamp": "2026-01-22 16:35:41 UTC",
+              "quote": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\""
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "Ars Technica",
+              "title": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\"",
+              "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+              "timestamp": "2026-01-22 16:35:41 UTC",
+              "quote": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\""
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "How widespread is this integration across other tech companies?",
+        "What are the regulatory responses to these data privacy concerns?",
+        "What are the potential benefits and risks of Personal Intelligence in AI systems?"
+      ]
+    },
+    "sig_5a25072f": {
+      "signalId": "sig_5a25072f",
+      "generatedAt": "2026-01-22T17:30:13.315Z",
+      "header": {
+        "title": "Bitcoin Market Correction",
+        "text": "Bitcoin prices drop below $90K as large investors sell holdings, signaling growing uncertainty in cryptocurrency markets.",
+        "sentiment": "negative",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Large investors"
+        ],
+        "what": "Bitcoin price drops below $90K due to selling by large investors.",
+        "where": "Global cryptocurrency markets",
+        "when": "January 22, 2026",
+        "why": "Growing uncertainty in cryptocurrency markets.",
+        "soWhat": "This indicates a potential broader market correction and shift in investor confidence away from cryptocurrency as a haven or growth asset."
+      },
+      "source": [
+        {
+          "feedId": "4",
+          "source": "MarketWatch",
+          "title": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere",
+          "link": "https://www.nytimes.com/2026/01/22/world/asia/philippines-cumpio-journalist-prison.html",
+          "timestamp": "2026-01-22 16:39:00 UTC",
+          "quote": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Bitcoin is losing its appeal as a haven or growth asset.",
+          "claimB": "The market correction is temporary and will not affect long-term potential.",
+          "sourceA": [
+            {
+              "feedId": "4",
+              "source": "MarketWatch",
+              "title": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere",
+              "link": "https://www.nytimes.com/2026/01/22/world/asia/philippines-cumpio-journalist-prison.html",
+              "timestamp": "2026-01-22 16:39:00 UTC",
+              "quote": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "7",
+              "source": "MarketWatch",
+              "title": "These 20 stocks are strong choices for momentum investors",
+              "link": "https://www.marketwatch.com/story/these-20-stocks-are-strong-choices-for-momentum-investors-3c9b1ecd?mod=mw_rss_topstories",
+              "timestamp": "2026-01-22 15:26:00 UTC",
+              "quote": "“Big mo” is an “eternal feature” of financial markets worldwide."
+            },
+            {
+              "feedId": "8",
+              "source": "MarketWatch",
+              "title": "This momentum fund has dodged U.S. stocks and trounced the competition",
+              "link": "https://www.marketwatch.com/story/this-momentum-fund-has-dodged-u-s-stocks-and-trounced-the-competition-7bbc28e8?mod=mw_rss_topstories",
+              "timestamp": "2026-01-22 15:52:00 UTC",
+              "quote": "A momentum strategy can be especially useful for investors looking outside the U.S."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Broader cryptocurrency market trends",
+        "Reactions from other digital assets",
+        "Central bank responses to cryptocurrency volatility",
+        "Investor sentiment reports and surveys",
+        "Regulatory updates on cryptocurrency"
+      ]
+    },
+    "sig_a75537c4": {
+      "signalId": "sig_a75537c4",
+      "generatedAt": "2026-01-22T17:31:14.882Z",
+      "header": {
+        "title": "AMD Stock Surge",
+        "text": "AMD's stock reaches unprecedented levels driven by strong demand for its AI-focused processors.",
+        "sentiment": "neutral",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "AMD"
+        ],
+        "what": "Stock surge due to strong demand for AI-focused processors",
+        "where": "Stock market",
+        "when": "2026-01-22",
+        "why": "Strong demand for AI-focused processors",
+        "soWhat": "Indicates strong market confidence in AMD's position in the growing AI processor market"
+      },
+      "source": [
+        {
+          "feedId": "3",
+          "source": "MarketWatch",
+          "title": "AMD’s stock is on a hot streak not seen in six years",
+          "link": "https://www.marketwatch.com/story/amds-stock-is-on-a-hot-streak-not-seen-in-six-years-eae76f1d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-22 16:17:00 UTC",
+          "quote": "AMD’s stock is on a hot streak not seen in six years"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "AMD's stock surge is solely due to AI demand",
+          "claimB": "The surge may also be influenced by broader market trends or competitor actions",
+          "sourceA": [
+            {
+              "feedId": "3",
+              "source": "MarketWatch",
+              "title": "AMD’s stock is on a hot streak not seen in six years",
+              "link": "https://www.marketwatch.com/story/amds-stock-is-on-a-hot-streak-not-seen-in-six-years-eae76f1d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-22 16:17:00 UTC",
+              "quote": "AMD’s stock is on a hot streak not seen in six years"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "1",
+              "source": "MarketWatch",
+              "title": "These 20 stocks are strong choices for momentum investors",
+              "link": "https://www.marketwatch.com/story/these-20-stocks-are-strong-choices-for-momentum-investors-3c9b1ecd?mod=mw_rss_topstories",
+              "timestamp": "2026-01-26 15:26:00 UTC",
+              "quote": "These 20 stocks are strong choices for momentum investors"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "AMD's earnings report",
+        "Competitor Intel's earnings",
+        "Market trends for AI processors"
+      ]
+    },
+    "sig_257aea1d": {
+      "signalId": "sig_257aea1d",
+      "generatedAt": "2026-01-22T17:33:41.128Z",
+      "header": {
+        "title": "Severe Flooding in Mozambique",
+        "text": "Torrential rains cause severe flooding in Mozambique, displacing over 620,000 people and destroying critical infrastructure.",
+        "sentiment": "very-negative",
+        "deltaType": "Crisis",
+        "category": "Humanitarian"
+      },
+      "fiveWs": {
+        "who": [
+          "Residents of Mozambique"
+        ],
+        "what": "Severe flooding displacing people and destroying infrastructure",
+        "where": "Mozambique",
+        "when": "January 2026",
+        "why": "Torrential rains",
+        "soWhat": "Humanitarian crisis with displacement and infrastructure damage"
+      },
+      "source": [
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "Flooding causes widespread damage across southern Africa",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/22/flooding-causes-widespread-damage-across-southern-africa?traffic_source=rss",
+          "timestamp": "Thu, 22 Jan 2026 15:47:31 +0000 UTC",
+          "quote": "Flooding causes widespread damage across southern Africa"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The flooding is solely due to natural causes.",
+          "claimB": "The flooding may be exacerbated by climate change.",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "Flooding causes widespread damage across southern Africa",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/22/flooding-causes-widespread-damage-across-southern-africa?traffic_source=rss",
+              "timestamp": "Thu, 22 Jan 2026 15:47:31 +0000 UTC",
+              "quote": "Flooding causes widespread damage across southern Africa"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "Torrential rains displace thousands in Mozambique as floods wreak havoc",
+              "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+              "timestamp": "Thu, 22 Jan 2026 15:28:28 +0000 UTC",
+              "quote": "More than 620,000 affected by Mozambique floods, as vital infrastructure and tens of thousands of homes are destroyed."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential for disease outbreaks in displaced populations",
+        "Long-term reconstruction efforts and international aid requirements",
+        "Impact on regional stability and migration patterns"
+      ]
+    },
+    "sig_a44b6876": {
+      "signalId": "sig_a44b6876",
+      "generatedAt": "2026-01-24T09:05:02.607Z",
+      "header": {
+        "title": "Russia-Ukraine War Escalation During Peace Talks",
+        "text": "Despite ongoing peace discussions in Abu Dhabi, Russia launched attacks on Kyiv and Kharkiv, resulting in civilian casualties, highlighting a significant worsening of hostilities.",
+        "sentiment": "very-negative",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Russia",
+          "Ukraine"
+        ],
+        "what": "Military attacks and civilian casualties during peace talks",
+        "where": "Kyiv and Kharkiv, Ukraine; Abu Dhabi, UAE",
+        "when": "2026-01-24",
+        "why": "Despite ongoing peace talks, Russia continues military operations",
+        "soWhat": "Escalation of hostilities despite diplomatic efforts, raising concerns about further conflict and humanitarian impact"
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "BBC World",
+          "title": "Russia strikes Ukraine as talks with US to end war continue",
+          "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 07:59:48 UTC",
+          "quote": "One person died and 23 were injured as trilateral discussions in Abu Dhabi were set to resume."
+        },
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks",
+          "link": "https://www.aljazeera.com/news/liveblog/2026/1/24/live-kyiv-kharkiv-come-under-attack-amid-russia-ukraine-peace-talks?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 06:04:24 +0000 UTC",
+          "quote": "At least one person has been killed in overnight Russian attacks on the capital and the northeastern city."
+        },
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Ukrainian, Russian and U.S. Officials Meet in Abu Dhabi for Peace Talks",
+          "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+          "timestamp": "2026-01-23 18:42:25 UTC",
+          "quote": "In the past, Ukrainian and Russian negotiators have relied on Americans to mediate, and it was unclear how the talks would play out."
+        },
+        {
+          "feedId": "6",
+          "source": "BBC World",
+          "title": "High stakes but low expectations for Ukraine talks with Russia and US",
+          "link": "https://www.bbc.com/news/articles/c3edde1pwx8o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-23 21:33:55 UTC",
+          "quote": "Donald Trump is pushing hard for a peace deal - but major issues between Russia and Ukraine are still unresolved, writes Sarah Rainsford."
+        },
+        {
+          "feedId": "7",
+          "source": "Al Jazeera",
+          "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+          "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+          "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC",
+          "quote": "Ukraine's Volodymyr Zelenskyy says territorial disputes will be central, but Russia must be ready to end war it started."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Russia's military operations are necessary for strategic gains",
+          "claimB": "Diplomatic efforts should be prioritized to avoid further escalation",
+          "sourceA": [
+            {
+              "feedId": "6",
+              "source": "BBC World",
+              "title": "High stakes but low expectations for Ukraine talks with Russia and US",
+              "link": "https://www.bbc.com/news/articles/c3edde1pwx8o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-23 21:33:55 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Ukrainian, Russian and U.S. Officials Meet in Abu Dhabi for Peace Talks",
+              "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+              "timestamp": "2026-01-23 18:42:25 UTC"
+            },
+            {
+              "feedId": "7",
+              "source": "Al Jazeera",
+              "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+              "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+              "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments in the peace talks and military actions",
+        "Humanitarian impact of the escalating conflict",
+        "International responses and potential sanctions",
+        "Broader geopolitical implications, including reactions from the US and other nations"
+      ]
+    },
+    "sig_7dd693bf": {
+      "signalId": "sig_7dd693bf",
+      "generatedAt": "2026-01-24T09:07:37.882Z",
+      "header": {
+        "title": "ICE Crackdown in Minneapolis Ignites Protests",
+        "text": "Thousands have gathered in Minneapolis to protest against Immigration and Customs Enforcement actions, with reports of increased enforcement leading to public outcry.",
+        "sentiment": "negative",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "Protesters"
+        ],
+        "what": "ICE crackdown",
+        "where": "Minneapolis",
+        "when": "January 24, 2026",
+        "why": "Increased enforcement by Immigration and Customs Enforcement",
+        "soWhat": "This event highlights rising anti-immigration tensions and could escalate into broader social unrest, drawing national and international attention."
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "Al Jazeera",
+          "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+          "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC",
+          "quote": "Protesters march in icy conditions against Trump administration's anti-immigration policies, demanding ICE leave city."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "ICE crackdowns lead to public protests",
+          "claimB": "ICE actions are necessary for enforcing immigration laws",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+              "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+              "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential escalation of protests to other cities",
+        "Impact on national immigration policy debates",
+        "Response from federal authorities",
+        "International reactions to the crackdown",
+        "Effect on local economy and business operations"
+      ]
+    },
+    "sig_fba1145c": {
+      "signalId": "sig_fba1145c",
+      "generatedAt": "2026-01-24T09:12:42.626Z",
+      "header": {
+        "title": "US Defense Strategy Shifts Toward Limited Ally Support",
+        "text": "The Pentagon is revising its defense strategy to offer 'more limited' support to allies, signaling a potential weakening of traditional alliances amid geopolitical tensions.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "The Pentagon"
+        ],
+        "what": "Revising defense strategy to offer more limited support to allies",
+        "where": "United States",
+        "when": "2026",
+        "why": "Amid geopolitical tensions",
+        "soWhat": "This could weaken traditional alliances and alter global power dynamics"
+      },
+      "source": [
+        {
+          "feedId": "1",
+          "source": "BBC World",
+          "title": "Pentagon to offer 'more limited' support to US allies in defence strategy shift",
+          "link": "https://arstechnica.com/gadgets/2026/01/core-ultra-series-3-launch-may-be-hampered-by-chip-shortages-says-intel/",
+          "timestamp": "2026-01-24 07:57:00 UTC",
+          "quote": "The US will also offer “more limited” support to US allies, according to a new national defence strategy document."
+        },
+        {
+          "feedId": "2",
+          "source": "Ars Technica",
+          "title": "US army says homeland, curbing China priorities; limited support for allies",
+          "link": "https://www.aljazeera.com/news/2026/1/24/us-army-says-homeland-curbing-china-priorities-limited-support-for-allies?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 07:06:55 +0000 UTC",
+          "quote": "A new Pentagon strategy document softens tone on traditional foes, China and Russia."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The US defense strategy shift to limited ally support is a response to geopolitical tensions.",
+          "claimB": "This shift may be due to budget constraints and a focus on domestic security.",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "Ars Technica",
+              "title": "US army says homeland, curbing China priorities; limited support for allies",
+              "link": "https://www.aljazeera.com/news/2026/1/24/us-army-says-homeland-curbing-china-priorities-limited-support-for-allies?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 07:06:55 +000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "11",
+              "source": "Ars Technica",
+              "title": "Tiny falcons are helping keep the food supply safe on cherry farms",
+              "link": "https://arstechnica.com/science/2026/01/tiny-falcons-are-helping-keep-the-food-supply-safe-on-cherry-farms/",
+              "timestamp": "2026-01-23 14:10:48 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Geopolitical implications of the US defense strategy shift",
+        "Reactions from allied nations to the limited support policy",
+        "Potential impact on global power dynamics",
+        "Budgetary details of the new defense strategy",
+        "Specific changes in military commitments to allies"
+      ]
+    },
+    "sig_6d002eb8": {
+      "signalId": "sig_6d002eb8",
+      "generatedAt": "2026-01-24T09:13:13.020Z",
+      "header": {
+        "title": "US Withdrawal from WHO Raises Global Health Concerns",
+        "text": "The US officially withdraws from the World Health Organization, potentially undermining global health coordination and response mechanisms.",
+        "sentiment": "negative",
+        "deltaType": "policy",
+        "category": "Other"
+      },
+      "fiveWs": {
+        "who": [
+          "United States"
+        ],
+        "what": "US withdrawal from WHO",
+        "where": "Global",
+        "when": "2026-01-23",
+        "why": "Accusations of the UN agency failing to adopt reforms and mishandling the pandemic.",
+        "soWhat": "This could impact global health initiatives and diminish US participation in international health governance."
+      },
+      "source": [
+        {
+          "feedId": "19",
+          "source": "Al Jazeera",
+          "title": "What does the US withdrawal from the WHO mean for global health?",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/23/what-does-the-us-withdrawal-from-the-who-mean-for-global-health?traffic_source=rss",
+          "timestamp": "2026-01-24",
+          "quote": "The US completed its withdrawal from the World Health Organization, ending its membership for the first time since 1948."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The US withdrawal will severely damage global health coordination.",
+          "claimB": "The withdrawal may allow the US to focus resources on domestic health issues.",
+          "sourceA": [
+            {
+              "feedId": "19",
+              "source": "Al Jazeera"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "1",
+              "source": "BBC Health",
+              "title": "US officially leaves World Health Organization",
+              "link": "https://www.bbc.com/news/articles/cn9zznx8qdno?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-23 09:18:30 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Impact on global vaccine distribution",
+        "Changes in US domestic health policy",
+        "Reactions from other WHO member states"
+      ]
+    },
+    "sig_2b9b133f": {
+      "signalId": "sig_2b9b133f",
+      "generatedAt": "2026-01-24T09:19:53.862Z",
+      "header": {
+        "title": "Russia-Ukraine War Escalation During Peace Talks",
+        "text": "Despite ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict, Russia launched strikes on Kyiv and Kharkiv, resulting in at least one death and multiple injuries, marking a severe escalation in the war.",
+        "sentiment": "very-negative",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Russia",
+          "Ukraine",
+          "United States"
+        ],
+        "what": "Russia launched airstrikes on Kyiv and Kharkiv during peace talks",
+        "where": "Kyiv, Kharkiv, Abu Dhabi",
+        "when": "January 24, 2026",
+        "why": "To escalate the conflict during ongoing peace negotiations",
+        "soWhat": "This undermines diplomatic efforts and indicates a high level of instability in the region"
+      },
+      "source": [
+        {
+          "feedId": "5",
+          "source": "Al Jazeera",
+          "title": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks",
+          "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 06:04:24 +0000 UTC",
+          "quote": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks. At least one person has been killed in overnight Russian attacks on the capital and the northeastern city."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Russia's attack during peace talks shows a disregard for diplomatic efforts.",
+          "claimB": "The attack may be a tactical move to gain leverage in negotiations.",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "One survivor reported, two killed in US boat strike in the eastern Pacific",
+              "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+              "timestamp": "Fri, 23 Jan 2026 23:08:46 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "Al Jazeera",
+              "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+              "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+              "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Peace talks in Abu Dhabi",
+        "Casualty reports from Kyiv and Kharkiv",
+        "Ukraine's response to the attacks",
+        "Broader implications for Middle East stability"
+      ]
+    },
+    "sig_54a106d6": {
+      "signalId": "sig_54a106d6",
+      "generatedAt": "2026-01-25T00:08:45.617Z",
+      "header": {
+        "title": "Cyberattack Escalates Against Energy Grid",
+        "text": "A wiper malware attack targeted Poland's energy grid, potentially disrupting services amid ongoing global cyber threats.",
+        "sentiment": "negative",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Wiper Malware"
+        ],
+        "what": "Cyberattack on energy grid",
+        "where": "Poland",
+        "when": "2026-01-24",
+        "why": "Ongoing global cyber threats and potential destructive intent",
+        "soWhat": "Significant escalation in cyber warfare, risking critical infrastructure failure and mirroring past destructive attacks."
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "Ars Technica",
+          "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+          "link": "https://arstechnica.com/?p=2137210",
+          "timestamp": "2026-01-24 19:08:06 UTC",
+          "quote": "Wiper malware targeted Poland energy grid, but failed to knock out electricity. Destructive payload unleashed on 10-year anniversary of Russia's attack on Ukraine's grid."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The cyberattack was solely a destructive act with no geopolitical motives.",
+          "claimB": "The attack is part of a broader pattern of state-sponsored cyber warfare targeting critical infrastructure.",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "Ars Technica",
+              "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+              "link": "https://arstechnica.com/?p=2137210",
+              "timestamp": "2026-01-24 19:08:06 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Ars Technica",
+              "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+              "link": "https://arstechnica.com/?p=2137210",
+              "timestamp": "2026-01-24 19:08:06 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further cyberattacks on energy grids in other countries",
+        "Response from international cybersecurity organizations",
+        "Analysis of the malware's origin and capabilities",
+        "Potential links to ongoing geopolitical tensions",
+        "Impact on global energy markets"
+      ]
+    },
+    "sig_14daded3": {
+      "signalId": "sig_14daded3",
+      "generatedAt": "2026-01-25T01:07:43.330Z",
+      "header": {
+        "title": "Russia launches strikes on Kyiv and Kharkiv, escalating war with Ukraine",
+        "text": "Despite ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict, Russia launched strikes on Kyiv and Kharkiv, resulting in at least one death and multiple injuries. This marks a severe escalation in the war between Russia and Ukraine.",
+        "sentiment": "neutral",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Russia",
+          "Ukraine"
+        ],
+        "what": "strikes on Kyiv and Kharkiv",
+        "where": "Abu Dhabi, Kyiv, Kharkiv",
+        "when": "2026-01-24",
+        "why": "Ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict",
+        "soWhat": "Escalation of the war between Russia and Ukraine"
+      },
+      "source": [
+        {
+          "feedId": "15",
+          "source": "BBC World",
+          "title": "Two days of peace talks end as Russia continues Ukraine attacks",
+          "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 16:56:55 UTC"
+        },
+        {
+          "feedId": "6",
+          "source": "Al Jazeera",
+          "title": "US-brokered Russia-Ukraine talks close with no breakthrough",
+          "link": "https://www.theverge.com/gadgets/866788/anker-nano-travel-adapter-samsung-p9-microsd-express-card-deal-sale",
+          "timestamp": "Sat, 24 Jan 2026 18:32:32 +0000 UTC"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Russia launched strikes on Kyiv and Kharkiv",
+          "claimB": "Ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict",
+          "sourceA": [
+            {
+              "feedId": "15",
+              "source": "BBC World"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "6",
+              "source": "Al Jazeera",
+              "title": "MicroSD Express cards and Anker’s travel adapter rule the deal roost this week",
+              "link": "https://www.theverge.com/gadgets/866788/anker-nano-travel-adapter-samsung-p9-microsd-express-card-deal-sale",
+              "timestamp": "2026-01-24 18:21:02 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Russia-Ukraine talks",
+        "US-China trade deal"
+      ]
+    },
+    "sig_69da623": {
+      "signalId": "sig_69da623",
+      "generatedAt": "2026-01-25T01:14:07.443Z",
+      "header": {
+        "title": "Trump threatens Canada with 100% tariffs over China trade deal",
+        "text": "President Trump said he would impose tariffs if Canada made 'a deal with China,' though there is no sign that those countries are discussing a broad trade agreement.",
+        "sentiment": "neutral",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Trump"
+        ],
+        "what": "imposed tariff threat",
+        "where": "Canada",
+        "when": "2026-01-24",
+        "why": "made 'a deal with China'"
+      },
+      "source": [
+        {
+          "feedId": "20",
+          "source": "NY Times World",
+          "title": "Trump Threatens Canada With Tariffs as Post-Davos Fallout Continues",
+          "link": "https://www.nytimes.com/2026/01/24/world/canada/trump-canada-tariffs.html",
+          "timestamp": "2026-01-24 16:00:00 UTC"
+        },
+        {
+          "feedId": "19",
+          "source": "Al Jazeera",
+          "title": "Trump threatens 100 percent tariff on Canada over China deal",
+          "link": "https://www.aljazeera.com/news/2026/1/24/trump-threatens-100-percent-tariff-on-canada-over-china-deal?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 16:11:38 +0000 UTC"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump threatens Canada with 100% tariffs",
+          "claimB": "No sign that those countries are discussing a broad trade agreement",
+          "sourceA": [
+            {
+              "feedId": "20",
+              "source": "NY Times World"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "19",
+              "source": "Al Jazeera"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Canada-China trade deal",
+        "US-China trade relations"
+      ]
     }
   },
   "globalState": {
     "isOnline": true,
-    "lastChecked": "2026-01-21T20:24:25.470Z",
+    "lastChecked": "2026-01-25T01:28:31.305Z",
     "lastError": null
   }
 }
