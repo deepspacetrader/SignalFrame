@@ -352,16 +352,17 @@ function isBlacklisted(text: string): boolean {
     return BLACKLIST_PATTERNS.some(pattern => pattern.test(text));
 }
 
+const INGEST_SERVER_URL = 'http://localhost:3001/api/ingest';
+
 export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]> {
     const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
     const isToday = !targetDate || targetDate === todayStr;
 
     console.log(`Fetching ${isToday ? 'latest' : 'historical'} feeds for ${targetDate || 'Today'}...`);
 
-    const allSignals: RawSignal[] = [];
     let activeFeeds = getActiveFeeds();
 
-    // If historical, add a targeted Google News Search to ensure we find data for that specific day
+    // If historical, add a targeted Google News Search
     if (!isToday && targetDate) {
         const [y, m, d] = targetDate.split('-').map(Number);
         const date = new Date(y, m - 1, d);
@@ -380,42 +381,56 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
         }];
     }
 
+    // Try to use the local ingestion server first (for deep crawling)
+    try {
+        console.log(`Attempting deep ingestion via ${INGEST_SERVER_URL}...`);
+        const response = await fetch(INGEST_SERVER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ feeds: activeFeeds, targetDate }),
+            signal: AbortSignal.timeout(120000) // 2 minute timeout for crawling
+        });
+
+        if (response.ok) {
+            const signals = await response.json();
+            console.log(`Deep ingestion successful. Received ${signals.length} signals.`);
+            return signals;
+        }
+        throw new Error(`Ingest server returned ${response.status}`);
+    } catch (error) {
+        console.warn('Deep ingestion server unreachable or failed, falling back to browser-based RSS fetch:', error);
+    }
+
+    // FALLBACK: Browser-based RSS fetch (same as before)
+    const allSignals: RawSignal[] = [];
+
     // Fetch in parallel
     const feedPromises = activeFeeds.map(async (feed) => {
         try {
-            // Regular RSS feed - use fetchRssFeed with fallback support
             const data = await fetchRssFeed(feed.url);
 
             if (data.status === 'ok' && data.items) {
-                // Return all items, we'll filter by date after aggregation
                 return data.items.map((item: any) => {
-                    // Extract and clean description - strip HTML tags for cleaner AI input
                     const rawDesc = item.description || '';
                     const cleanDesc = rawDesc
-                        .replace(/<[^>]*>/g, ' ')  // Remove HTML tags
+                        .replace(/<[^>]*>/g, ' ')
                         .replace(/&nbsp;/g, ' ')
                         .replace(/&amp;/g, '&')
                         .replace(/&lt;/g, '<')
                         .replace(/&gt;/g, '>')
                         .replace(/&quot;/g, '"')
                         .replace(/&#39;/g, "'")
-                        .replace(/\s+/g, ' ')      // Normalize whitespace
+                        .replace(/\s+/g, ' ')
                         .trim();
 
-                    // Use full description (up to 1500 chars) for much richer context
                     const description = cleanDesc.length > 1500
                         ? cleanDesc.substring(0, 1500) + '...'
                         : cleanDesc;
 
-                    // Handle missing pubDate gracefully
                     const pubDate = item.pubDate || new Date().toISOString();
                     const timestamp = pubDate.includes('UTC') || pubDate.includes('Z') ? pubDate : `${pubDate} UTC`;
 
-                    // Attempt to find and optimize image from various sources
-                    // RSS2JSON uses enclosure.url (not .link), plus thumbnail field
                     let rawPicture = item.enclosure?.url || item.thumbnail || '';
-
-                    // If no thumbnail found, try to extract from description HTML
                     if (!rawPicture && item.description) {
                         const imgMatch = item.description.match(/<img[^>]+src=["']([^"']+)["']/i);
                         if (imgMatch) {
@@ -433,7 +448,7 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
                         category: feed.category,
                         title: item.title || '',
                         link: item.link,
-                        picture // Include the extracted picture
+                        picture
                     };
                 });
             }
@@ -446,14 +461,10 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
     const results = await Promise.all(feedPromises);
     results.forEach(signals => allSignals.push(...signals));
 
-    // Filter by date AND Blacklist
     const filteredSignals = allSignals.filter(s => {
-        // 1. Blacklist Check
         if (isBlacklisted(s.content) || (s.title && isBlacklisted(s.title))) {
             return false;
         }
-
-        // 2. Date Check (if targetDate provided)
         if (targetDate) {
             try {
                 const signalDate = new Date(s.timestamp).toLocaleDateString('en-CA');
@@ -463,6 +474,7 @@ export async function fetchLatestFeeds(targetDate?: string): Promise<RawSignal[]
         return true;
     });
 
-    console.log(`Ingested ${filteredSignals.length} signals for ${targetDate || 'Today'}. (Filtered out noise and duplicates)`);
+    console.log(`Ingested ${filteredSignals.length} signals for ${targetDate || 'Today'}. (Fallback mode)`);
     return filteredSignals.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
+

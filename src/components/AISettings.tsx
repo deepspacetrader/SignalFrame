@@ -801,8 +801,37 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <button
                                         onClick={() => {
                                             const snapshot = fullState;
+                                            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                                            const isBalancedProfile = snapshot.aiConfig.sentimentProfile === 'balanced';
+                                            const shouldNeutralizeSentiments = !isLocalhost || !isBalancedProfile;
+
+                                            // Helper function to neutralize sentiment in an object
+                                            const neutralizeSentiment = (obj: any): any => {
+                                                if (!obj || typeof obj !== 'object') return obj;
+                        
+                                                if (Array.isArray(obj)) {
+                                                    return obj.map(item => neutralizeSentiment(item));
+                                                }
+                        
+                                                const result = { ...obj };
+                        
+                                                // Neutralize sentiment field if it exists
+                                                if (result.sentiment && typeof result.sentiment === 'string') {
+                                                    result.sentiment = 'neutral';
+                                                }
+                        
+                                                // Recursively process all nested properties
+                                                Object.keys(result).forEach(key => {
+                                                    if (typeof result[key] === 'object' && result[key] !== null) {
+                                                        result[key] = neutralizeSentiment(result[key]);
+                                                    }
+                                                });
+                        
+                                                return result;
+                                            };
+
                                             // Create a clean export object with just the data we need
-                                            const exportData = {
+                                            let exportData = {
                                                 lastUpdated: new Date().toISOString(),
                                                 narrative: snapshot.narrative,
                                                 signals: snapshot.signals,
@@ -816,6 +845,11 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                                 deepDiveBySignalId: snapshot.deepDiveBySignalId,
                                                 globalState: snapshot.aiStatus // Optional metadata
                                             };
+
+                                            // Apply sentiment neutralization if needed
+                                            if (shouldNeutralizeSentiments) {
+                                                exportData = neutralizeSentiment(exportData);
+                                            }
 
                                             // Use date-stamped filename based on current date
                                             const currentDate = snapshot.currentDate || new Date().toISOString().split('T')[0];

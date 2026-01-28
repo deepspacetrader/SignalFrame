@@ -4,7 +4,8 @@
   "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run server\" \"vite\"",
+    "server": "nodemon server/index.js",
     "build": "vite build",
     "preview": "vite preview",
     "build-and-export": "powershell -ExecutionPolicy Bypass -File scripts/build-and-export.ps1"
@@ -13,10 +14,18 @@
     "@react-leaflet/core": "2.1.0",
     "@rollup/rollup-win32-x64-msvc": "4.55.1",
     "@types/leaflet": "^1.9.21",
+    "axios": "^1.13.3",
+    "axios-retry": "^4.5.0",
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.6",
+    "crawlee": "^3.15.3",
+    "express": "^5.2.1",
     "leaflet": "^1.9.4",
+    "playwright": "^1.58.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "4.2.1",
+    "rss-parser": "^3.13.0",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

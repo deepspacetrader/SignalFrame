@@ -548,16 +548,49 @@ export async function generateDeepDive(
 }
 
 
-function generateContext(feeds: RawSignal[]) {
+/**
+ * Constructs the intelligence context from raw signals.
+ * Handles enriched full-article crawls with smart truncation to fit within AI context windows.
+ */
+function generateContext(feeds: RawSignal[], maxTotalChars: number = 60000) {
+  if (!feeds || feeds.length === 0) return 'No news data available for the selected period.';
+
   const grouped = feeds.reduce((acc, f) => {
     if (!acc[f.category]) acc[f.category] = [];
-    acc[f.category].push(`[${f.source}] ${f.content}`);
+    acc[f.category].push(f);
     return acc;
-  }, {} as Record<string, string[]>);
+  }, {} as Record<string, RawSignal[]>);
 
-  return Object.entries(grouped)
-    .map(([category, items]) => `### CATEGORY: ${category}\n${items.join('\n')}`)
-    .join('\n\n');
+  let fullContext = '';
+  const charLimitPerArticle = feeds.length > 20 ? 1000 : 3000; // Shrink individual context if we have many articles
+
+  for (const [category, items] of Object.entries(grouped)) {
+    fullContext += `### CATEGORY: ${category}\n`;
+
+    for (const f of items) {
+      const sourceTag = `[${f.source}]`;
+      const titleTag = f.title ? `${f.title}. ` : '';
+
+      // Smart Truncation: Preserve the start of the article for context
+      let content = f.content || '';
+      if (content.length > charLimitPerArticle) {
+        content = content.substring(0, charLimitPerArticle) + '... [content truncated for context optimization]';
+      }
+
+      const itemText = `${sourceTag} ${titleTag}${content}\n\n`;
+
+      // Check if adding this would exceed our hard limit for the entire prompt
+      if ((fullContext.length + itemText.length) > maxTotalChars) {
+        fullContext += `... [Further ${items.length - items.indexOf(f)} articles in ${category} omitted due to context limit]`;
+        break;
+      }
+
+      fullContext += itemText;
+    }
+    fullContext += '\n';
+  }
+
+  return fullContext.trim();
 }
 
 function generateNarrativePrompt(context: string, aiConfig?: AiConfig) {

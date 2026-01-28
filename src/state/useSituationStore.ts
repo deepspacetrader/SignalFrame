@@ -272,13 +272,13 @@ const getAvailableSnapshotDates = async (): Promise<string[]> => {
     // As a fallback, try recent dates in reverse order
     const availableDates: string[] = [];
     const today = new Date();
-    
+
     // Check last 30 days for available snapshots
     for (let i = 0; i < 30; i++) {
       const checkDate = new Date(today);
       checkDate.setDate(checkDate.getDate() - i);
       const dateStr = checkDate.toISOString().split('T')[0];
-      
+
       try {
         const response = await fetch(`./data/snapshot-${dateStr}.json`);
         if (response.ok) {
@@ -289,7 +289,7 @@ const getAvailableSnapshotDates = async (): Promise<string[]> => {
         continue;
       }
     }
-    
+
     return availableDates.sort();
   } catch (error) {
     console.warn('Failed to get available snapshot dates:', error);
@@ -304,13 +304,13 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
     if (response.ok) {
       const snapshot = await response.json();
       console.log(`Loaded snapshot for date: ${targetDate}`);
-      
+
       // Ensure feeds are included - if not present, create empty array
       if (!snapshot.feeds) {
         console.log('Feeds missing from snapshot, creating empty feeds array');
         snapshot.feeds = [];
       }
-      
+
       return snapshot;
     }
   } catch (e) {
@@ -325,19 +325,19 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
       const checkDate = new Date(targetDate);
       checkDate.setDate(checkDate.getDate() - i);
       const dateStr = checkDate.toISOString().split('T')[0];
-      
+
       try {
         const fallbackResponse = await fetch(`./data/snapshot-${dateStr}.json`);
         if (fallbackResponse.ok) {
           const snapshot = await fallbackResponse.json();
           console.log(`Fallback: Loaded snapshot for date: ${dateStr}`);
-          
+
           // Ensure feeds are included
           if (!snapshot.feeds) {
             console.log('Feeds missing from fallback snapshot, creating empty feeds array');
             snapshot.feeds = [];
           }
-          
+
           return snapshot;
         }
       } catch (e) {
@@ -354,13 +354,13 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
     if (legacyResponse.ok) {
       const snapshot = await legacyResponse.json();
       console.log('Loaded legacy snapshot.json');
-      
+
       // Ensure feeds are included
       if (!snapshot.feeds) {
         console.log('Feeds missing from legacy snapshot, creating empty feeds array');
         snapshot.feeds = [];
       }
-      
+
       return snapshot;
     }
   } catch (e) {
@@ -404,7 +404,7 @@ async function saveSnapshotToFile(date: string) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     console.log(`✅ Saved snapshot to file: snapshot-${date}.json with ${globalState.feeds.length} feeds`);
   } catch (error) {
     console.error('Failed to save snapshot to file:', error);
@@ -504,7 +504,7 @@ class OllamaPollingManager {
     if (this.isPolling) {
       return;
     }
-    
+
     this.isPolling = true;
     this.scheduleNextPoll();
   }
@@ -513,17 +513,17 @@ class OllamaPollingManager {
     if (!this.isPolling) return;
 
     this.pollCount++;
-    
+
     try {
       const { OllamaService } = await import('../ai/runtime/ollama');
-      
+
       // Check if Ollama service is running by testing the /api/tags endpoint
       // This is more reliable than /api/ps which only shows models in GPU memory
       const response = await fetch(`${OllamaService.getBaseUrl()}/tags`);
       const isServiceRunning = response.ok;
-      
+
       // console.log(`Ollama service ${isServiceRunning ? 'IS running' : 'is NOT running'}`);
-      
+
       // Update AI status based on service availability
       const wasOnline = globalState.aiStatus.isOnline;
       if (isServiceRunning && !wasOnline) {
@@ -559,7 +559,7 @@ class OllamaPollingManager {
           }
         };
       }
-      
+
       // Only fetch running models if service is available (for UI display)
       if (isServiceRunning) {
         try {
@@ -573,20 +573,20 @@ class OllamaPollingManager {
       } else {
         globalState = { ...globalState, runningModels: [] };
       }
-      
+
       // Notify listeners
       listeners.forEach(l => l({ ...globalState }));
-      
+
       // Adjust polling frequency based on service status (not model status)
       const newPollTime = isServiceRunning ? 30000 : 2000;
       if (this.currentPollTime !== newPollTime) {
         this.currentPollTime = newPollTime;
       }
-      
+
     } catch (e) {
       const wasOnline = globalState.aiStatus.isOnline;
       console.error(`Ollama service not available. YOU DO NOT HAVE OLLAMA INSTALLED OR IT IS NOT RUNNING!`);
-      
+
       if (wasOnline) {
         globalState = {
           ...globalState,
@@ -599,10 +599,10 @@ class OllamaPollingManager {
         };
         listeners.forEach(l => l({ ...globalState }));
       }
-      
+
       this.currentPollTime = 2000; // Fast polling when service is down
     }
-    
+
     // Schedule next poll
     this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), this.currentPollTime);
   }
@@ -727,12 +727,12 @@ export function useSituationStore() {
 
       // Get available dates from IndexedDB, or fall back to snapshots if empty
       let availableDates = dates.length > 0 ? dates : await getAvailableSnapshotDates();
-      
+
       // If still no dates found, at least include today
       if (availableDates.length === 0) {
         availableDates = [today];
       }
-      
+
       globalState.availableDates = availableDates;
       globalState.currentDate = today;
 
@@ -750,14 +750,14 @@ export function useSituationStore() {
         console.log('No analysis found in IndexedDB, attempting to load from snapshot files...');
         try {
           const snapshot = await loadDateStampedSnapshot(today);
-          
+
           if (snapshot) {
             console.log('Successfully loaded snapshot from files for today');
             // Preserve Global Big Picture if it exists
             const bp = globalState.bigPicture;
             Object.assign(globalState, snapshot);
             if (bp) globalState.bigPicture = bp;
-            
+
             if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
             if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
           } else if (defs) {
@@ -802,7 +802,7 @@ export function useSituationStore() {
         try {
           // Load date-stamped snapshot for the current date
           const snapshot = await loadDateStampedSnapshot(globalState.currentDate);
-          
+
           if (snapshot) {
             // Hydrate state with snapshot data
             // We use Object.assign to merge carefully
@@ -1071,7 +1071,7 @@ export function useSituationStore() {
       // In static mode, try to load date-stamped snapshot
       console.log(`Static mode: Loading snapshot for date ${dateStr}`);
       const snapshot = await loadDateStampedSnapshot(dateStr);
-      
+
       if (snapshot) {
         // Ensure signals have proper source data
         if (snapshot.signals && Array.isArray(snapshot.signals)) {
@@ -1080,7 +1080,7 @@ export function useSituationStore() {
             source: signal.source || []
           }));
         }
-        
+
         Object.assign(globalState, {
           ...snapshot,
           lastUpdated: snapshot.lastUpdated ? new Date(snapshot.lastUpdated) : new Date(),
@@ -1145,7 +1145,7 @@ export function useSituationStore() {
           source: signal.source || []
         }));
       }
-      
+
       Object.assign(globalState, analysis);
       if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
 
@@ -1172,7 +1172,7 @@ export function useSituationStore() {
       console.log(`No analysis found for date ${dateStr} in IndexedDB, attempting to load from snapshot files...`);
       try {
         const snapshot = await loadDateStampedSnapshot(dateStr);
-        
+
         if (snapshot) {
           console.log(`Successfully loaded snapshot from files for date ${dateStr}`);
           // Ensure signals have proper source data
@@ -1182,7 +1182,7 @@ export function useSituationStore() {
               source: signal.source || []
             }));
           }
-          
+
           Object.assign(globalState, snapshot);
           if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
 
@@ -1289,18 +1289,10 @@ export function useSituationStore() {
     notify();
 
     try {
-      // Check if we already have feeds for today to avoid rate limiting
-      let newsFeeds = globalState.feeds;
-
-      // Only fetch if we don't have feeds or they're empty
-      if (!newsFeeds || newsFeeds.length === 0) {
-        globalState = { ...globalState, processingStatus: 'Fetching latest feeds...' };
-        notify();
-        newsFeeds = await fetchLatestFeeds(globalState.currentDate);
-      } else {
-        globalState = { ...globalState, processingStatus: 'Using cached feeds...' };
-        notify();
-      }
+      // Always fetch latest feeds for a full scan to ensure we get enriched/crawled content
+      globalState = { ...globalState, processingStatus: 'Fetching latest feeds...' };
+      notify();
+      const newsFeeds = await fetchLatestFeeds(globalState.currentDate);
 
       const result = await processSituation(
         newsFeeds,
@@ -1832,8 +1824,37 @@ export function useSituationStore() {
       console.log('🔍 Export Debug - Current feeds:', globalState.feeds);
       console.log('🔍 Export Debug - Feeds length:', globalState.feeds?.length || 0);
       console.log('🔍 Export Debug - Current date:', globalState.currentDate);
-      
-      const snapshot = {
+
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const isBalancedProfile = globalState.aiConfig.sentimentProfile === 'balanced';
+      const shouldNeutralizeSentiments = !isLocalhost || !isBalancedProfile;
+
+      // Helper function to neutralize sentiment in an object
+      const neutralizeSentiment = (obj: any): any => {
+        if (!obj || typeof obj !== 'object') return obj;
+
+        if (Array.isArray(obj)) {
+          return obj.map(item => neutralizeSentiment(item));
+        }
+
+        const result = { ...obj };
+
+        // Neutralize sentiment field if it exists
+        if (result.sentiment && typeof result.sentiment === 'string') {
+          result.sentiment = 'neutral';
+        }
+
+        // Recursively process all nested properties
+        Object.keys(result).forEach(key => {
+          if (typeof result[key] === 'object' && result[key] !== null) {
+            result[key] = neutralizeSentiment(result[key]);
+          }
+        });
+
+        return result;
+      };
+
+      let snapshot = {
         lastUpdated: globalState.lastUpdated?.toISOString() || new Date().toISOString(),
         narrative: globalState.narrative,
         signals: globalState.signals,
@@ -1850,6 +1871,11 @@ export function useSituationStore() {
         version: '0.2.0'
       };
 
+      // Apply sentiment neutralization if needed
+      if (shouldNeutralizeSentiments) {
+        snapshot = neutralizeSentiment(snapshot);
+      }
+
       console.log('🔍 Export Debug - Snapshot feeds count:', snapshot.feeds?.length || 0);
 
       // Create blob and download
@@ -1862,7 +1888,7 @@ export function useSituationStore() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       console.log(`Exported snapshot with ${globalState.feeds?.length || 0} feeds`);
     } catch (error) {
       console.error('Failed to export snapshot:', error);
