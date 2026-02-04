@@ -64,6 +64,9 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
   const [sortBy, setSortBy] = useState<'none' | 'pos-neg' | 'neg-pos'>('none')
   const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null)
   const isLoading = isProcessingSection.signals && !isProcessing;
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const hasNoData = signals.length === 0 && !isProcessing;
+  const shouldShowLoadingSpinner = !isLocalhost && hasNoData;
   const failure = sectionFailures.signals;
   const hasFailed = failure?.hasFailed;
   const isRetrying = failure?.isRetrying;
@@ -309,7 +312,12 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
         />
       )}
 
-      {isProcessing && signals.length === 0 ? (
+      {shouldShowLoadingSpinner ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <span className="text-[0.6rem] uppercase tracking-widest font-bold text-text-secondary">Loading signal data...</span>
+        </div>
+      ) : isProcessing && signals.length === 0 ? (
         <div className="space-y-4">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => <div key={i} className="loading-skeleton h-20 bg-white/5 animate-pulse rounded-lg"></div>)}
         </div>

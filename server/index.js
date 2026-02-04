@@ -5,6 +5,8 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import say from 'say';
+// import loudness from 'node-loudness';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -195,6 +197,99 @@ app.post('/api/ingest', async (req, res) => {
 
 // Health check endpoint
 app.get('/api/status', (req, res) => res.json({ status: 'online', service: 'SignalFrame Ingestion' }));
+
+// TTS endpoints using say.js
+app.post('/api/tts/speak', (req, res) => {
+    const { text, voice, speed = 1.0 } = req.body;
+    
+    if (!text || !text.trim()) {
+        return res.status(400).json({ error: 'Text is required' });
+    }
+
+    say.speak(text, voice || null, speed, (err) => {
+        if (err) {
+            console.error('TTS speak error:', err);
+            return res.status(500).json({ error: 'Failed to speak text' });
+        }
+        res.json({ success: true, message: 'Text spoken successfully' });
+    });
+});
+
+// Volume control endpoints (commented out for now)
+// app.get('/api/volume', async (req, res) => {
+//     try {
+//         const volume = await loudness.getVolume();
+//         res.json({ volume: volume / 100 }); // Convert to 0-1 range
+//     } catch (error) {
+//         console.error('Get volume error:', error);
+//         res.status(500).json({ error: 'Failed to get system volume' });
+//     }
+// });
+
+// app.post('/api/volume', async (req, res) => {
+//     const { volume } = req.body;
+//     
+//     if (typeof volume !== 'number' || volume < 0 || volume > 1) {
+//         return res.status(400).json({ error: 'Volume must be a number between 0 and 1' });
+//     }
+
+//     try {
+//         const volumePercent = Math.round(volume * 100);
+//         await loudness.setVolume(volumePercent);
+//         res.json({ success: true, message: 'Volume set successfully' });
+//     } catch (error) {
+//         console.error('Set volume error:', error);
+//         res.status(500).json({ error: 'Failed to set system volume' });
+//     }
+// });
+
+app.post('/api/tts/stop', (req, res) => {
+    say.stop((err) => {
+        if (err) {
+            console.error('TTS stop error:', err);
+            return res.status(500).json({ error: 'Failed to stop speech' });
+        }
+        res.json({ success: true, message: 'Speech stopped successfully' });
+    });
+});
+
+app.get('/api/tts/voices', (req, res) => {
+    say.getInstalledVoices((err, voices) => {
+        if (err) {
+            console.error('TTS voices error:', err);
+            return res.status(500).json({ error: 'Failed to get voices' });
+        }
+        res.json({ voices });
+    });
+});
+
+app.post('/api/tts/export', (req, res) => {
+    const { text, voice, speed = 1.0, filename } = req.body;
+    
+    if (!text || !text.trim()) {
+        return res.status(400).json({ error: 'Text is required' });
+    }
+    
+    if (!filename) {
+        return res.status(400).json({ error: 'Filename is required' });
+    }
+
+    const outputPath = path.join(__dirname, 'exports', filename);
+    
+    // Ensure exports directory exists
+    const exportsDir = path.dirname(outputPath);
+    if (!fs.existsSync(exportsDir)) {
+        fs.mkdirSync(exportsDir, { recursive: true });
+    }
+
+    say.export(text, voice || null, speed, outputPath, (err) => {
+        if (err) {
+            console.error('TTS export error:', err);
+            return res.status(500).json({ error: 'Failed to export audio' });
+        }
+        res.json({ success: true, message: 'Audio exported successfully', path: outputPath });
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`SignalFrame COMPREHENSIVE Ingestion Server running at http://localhost:${PORT}`);

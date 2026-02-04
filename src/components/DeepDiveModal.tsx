@@ -158,9 +158,9 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                     </h3>
                                     <div className="space-y-5">
                                         {data.fiveWs.who && data.fiveWs.who.length > 0 && (
-                                            <div className="flex gap-4">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHO</div>
-                                                <div className="flex flex-wrap gap-2 text-text-primary text-sm font-medium">
+                                                <div className="text-text-primary text-sm font-medium leading-snug">
                                                     {data.fiveWs.who.join(', ')}
                                                 </div>
                                             </div>
@@ -168,25 +168,25 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         {data.fiveWs.what && (
                                             <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHAT</div>
-                                                <div className="text-text-primary text-sm leading-snug">{data.fiveWs.what}</div>
+                                                <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.what}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.where && (
                                             <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHERE</div>
-                                                <div className="text-text-primary text-sm font-medium">{data.fiveWs.where}</div>
+                                                <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.where}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.when && (
                                             <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHEN</div>
-                                                <div className="text-text-primary text-sm">{data.fiveWs.when}</div>
+                                                <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.when}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.why && (
                                             <div className="flex flex-col sm:flex-row gap-2">
                                                 <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHY</div>
-                                                <div className="text-text-secondary text-sm italic leading-snug">{data.fiveWs.why}</div>
+                                                <div className="text-text-secondary text-sm font-medium italic leading-snug">{data.fiveWs.why}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.soWhat && (

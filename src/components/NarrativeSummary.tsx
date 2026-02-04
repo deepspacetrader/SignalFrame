@@ -6,6 +6,7 @@ import { SectionCard } from './shared/SectionCard'
 import { SectionHeader } from './shared/SectionHeader'
 import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
 import { SectionBadge } from './shared/SectionBadge'
+import { TTSButton } from './TTSButton'
 
 
 export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void }) {
@@ -24,6 +25,9 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
     sectionGenerationTimes
   } = useSituationStore()
   const isLoading = isProcessingSection.narrative && !isProcessing;
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const hasNoData = !narrative && !isProcessing;
+  const shouldShowLoadingSpinner = !isLocalhost && hasNoData;
   const [isThinkingOpen, setIsThinkingOpen] = useState(false);
 
   const hasThinking = thinkingTrace && thinkingTrace.length > 0;
@@ -52,6 +56,7 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
 
     return (
       <div className="flex items-center gap-2">
+        <TTSButton text={narrative || ''} />
         <SectionRegenerateButton onClick={() => {
           const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           if (!isLocalhost) {
@@ -98,7 +103,12 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
         actions={headerActions}
       />
 
-      {isProcessing && !narrative ? (
+      {shouldShowLoadingSpinner ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <span className="text-[0.6rem] uppercase tracking-widest font-bold text-text-secondary">Loading narrative data...</span>
+        </div>
+      ) : isProcessing && !narrative ? (
         <div className="loading-skeleton h-24 bg-white/5 animate-pulse rounded"></div>
       ) : (
         <>

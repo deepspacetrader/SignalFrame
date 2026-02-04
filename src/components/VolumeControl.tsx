@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom'
 import { useSituationStore } from '../state/useSituationStore'
 import { zzfx } from '../utils/zzfx'
 
+const VOLUME_SERVER_URL = 'http://localhost:3001'
+
 export function VolumeControl() {
   const { soundVolume, setSoundVolume } = useSituationStore()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -17,6 +19,25 @@ export function VolumeControl() {
   // Update ZZFX volume when store volume changes
   useEffect(() => {
     zzfx.setMasterVolume(soundVolume)
+  }, [soundVolume])
+
+  // Sync system volume with store volume
+  useEffect(() => {
+    const setSystemVolume = async () => {
+      try {
+        await fetch(`${VOLUME_SERVER_URL}/api/volume`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ volume: soundVolume }),
+        })
+      } catch (error) {
+        console.warn('Failed to set system volume (server may be offline):', error)
+      }
+    }
+
+    setSystemVolume()
   }, [soundVolume])
 
   // Update button position for fixed positioning

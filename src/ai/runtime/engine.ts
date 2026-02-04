@@ -303,7 +303,7 @@ export async function processBigPicture(
       sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing historical events and their trajectory, interpret them through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the significance, tone, and trajectory of events in your Grand Narrative.`;
     }
 
-    const narrativePrompt = `
+    const bigPicturePrompt = `
 Based on the following historical data of daily briefings, write a "Grand Narrative" that explains the overall trajectory of world events.
 Focus on the connections between days, the escalation of tensions, or the resolution of conflicts.
 This should be a high-level strategic overview, not a day-by-day recount.
@@ -315,12 +315,12 @@ ${context}
 
     let summary = '';
     if (onStream) {
-      await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
+      await OllamaService.streamGenerate(aiConfig.model, bigPicturePrompt, (chunk) => {
         summary += chunk;
         onStream(chunk);
       }, options);
     } else {
-      summary = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
+      summary = await OllamaService.generate(aiConfig.model, bigPicturePrompt, undefined, options);
     }
 
     return {
@@ -601,7 +601,7 @@ function generateNarrativePrompt(context: string, aiConfig?: AiConfig) {
     sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing events, interpret them through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the significance and tone of events in your briefing.`;
   }
 
-  return `You are an elite intelligence analyst. Analyze these news feeds and provide a short but comprehensive situational briefing for the day that aims to weave together the recent events and how they shape the current ongoing narrative. Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing. Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any em dashes or other additional formatting. No markdown formatting either. No bullet points or numbered lists. Separate each of the 5 events or themes with a newline.\n\n
+  return `You are an elite intelligence analyst. Analyze these news feeds and provide a short but comprehensive briefing for the day that aims to weave together recent events and how they shape the current ongoing narrative and situations. Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing. Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any em dashes or other additional formatting. No markdown formatting either. No bullet points or numbered lists. Separate each of the 5 events or themes with a newline. Do not use ** or * for formatting. Do not include a title. Avoid the term "highlights" and focus more on evidence based conclusions by outlining cause and effects. \n\n
   
 ${sentimentGuidance}
 Do not include any sentiment analysis labels directly in the narrative instead use it to guide your tone accordingly.
