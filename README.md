@@ -115,7 +115,7 @@ ollama pull qwen3:8b
 
 ### 5. Launch SignalFrame
 ```bash
-git clone https://github.com/your-repo/signalframe
+git clone https://github.com/deepspacetrader/signalframe
 cd signalframe
 npm install
 npm run dev
