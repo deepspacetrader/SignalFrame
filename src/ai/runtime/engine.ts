@@ -492,6 +492,47 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
 }
 
 
+export async function generateDeepDive(
+  signal: Signal,
+  feeds: RawSignal[],
+  dateStr: string,
+  aiConfig: AiConfig
+): Promise<DeepDiveData> {
+  const prompt = generateDeepDivePrompt(signal, feeds, dateStr, aiConfig);
+  const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+  const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
+  
+  const parsed = parseJsonObjectWithDetection(raw);
+  if (!parsed.success) {
+    throw new Error(parsed.error || 'Deep Dive JSON parsing error');
+  }
+
+  const obj: any = parsed.data;
+  
+  return {
+    signalId: obj.signalId || signal.id || '',
+    generatedAt: new Date().toISOString(),
+    header: {
+      title: obj.header?.title || signal.title || 'Untitled Signal',
+      text: obj.header?.text || signal.text || '',
+      sentiment: obj.header?.sentiment || signal.sentiment || 'neutral',
+      deltaType: obj.header?.deltaType || signal.deltaType,
+      category: obj.header?.category || signal.category
+    },
+    fiveWs: {
+      who: obj.fiveWs?.who || [],
+      what: obj.fiveWs?.what,
+      where: obj.fiveWs?.where,
+      when: obj.fiveWs?.when,
+      why: obj.fiveWs?.why,
+      soWhat: obj.fiveWs?.soWhat
+    },
+    source: obj.source || [],
+    counterpoints: obj.counterpoints || [],
+    watchNext: obj.watchNext || []
+  };
+}
+
 
 export async function generateNarrativePredictions(
   narrative: string,
