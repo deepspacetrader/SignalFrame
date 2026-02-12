@@ -75,6 +75,16 @@ export interface DeepDiveData {
   watchNext?: string[];
 }
 
+export interface NarrativePredictionsSection {
+  title: string;
+  predictions: string[];
+}
+
+export interface NarrativePredictionsData {
+  generatedAt: string;
+  sections: NarrativePredictionsSection[];
+}
+
 export type MetricDefType = 'category' | 'keyword' | 'tracker';
 
 export interface MetricDef {
@@ -182,7 +192,7 @@ export interface AiStatus {
   lastError: string | null;
 }
 
-export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'rss' | 'bigPicture';
+export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'rss' | 'bigPicture' | 'watchFor';
 
 export interface SectionFailureState {
   hasFailed: boolean;
@@ -222,6 +232,7 @@ export interface SituationState {
   mapPoints: MapPoint[];
   foreignRelations: ForeignRelation[];
   thinkingTrace: string; // AI's reasoning trace for narrative generation
+  watchFor: NarrativePredictionsData | null; // AI-generated predictions based on narrative context
   isProcessing: boolean;
   processingStatus: string;
   isProcessingSection: {
@@ -232,6 +243,7 @@ export interface SituationState {
     relations: boolean;
     rss: boolean;
     bigPicture: boolean;
+    watchFor: boolean;
   };
   completedSections: Set<string>;
   bigPicture: BigPictureData | null;
@@ -389,6 +401,7 @@ async function saveSnapshotToFile(date: string) {
       bigPicture: globalState.bigPicture,
       predictionHistory: globalState.predictionHistory,
       deepDiveBySignalId: globalState.deepDiveBySignalId,
+      watchFor: globalState.watchFor,
       generatedAt: new Date().toISOString(),
       version: '0.2.0'
     };
@@ -429,11 +442,13 @@ const defaultState: SituationState = {
     map: false,
     relations: false,
     rss: false,
-    bigPicture: false
+    bigPicture: false,
+    watchFor: false
   },
   completedSections: new Set(),
   bigPicture: null,
   thinkingTrace: '',
+  watchFor: null,
   aiConfig: {
     model: '',
     baseUrl: 'http://127.0.0.1:11434/api',
@@ -474,7 +489,8 @@ const defaultState: SituationState = {
     map: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     relations: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     rss: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
-    bigPicture: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
+    bigPicture: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    watchFor: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
   },
   soundVolume: 0.5,
   predictionHistory: []
@@ -667,6 +683,7 @@ async function persist() {
     feeds: globalState.feeds,
     mapPoints: globalState.mapPoints,
     foreignRelations: globalState.foreignRelations,
+    watchFor: globalState.watchFor,
     dailyMetrics: globalState.dailyMetrics,
     lastUpdated: globalState.lastUpdated
   });
@@ -1281,7 +1298,7 @@ export function useSituationStore() {
       isProcessing: true,
       processingStatus: 'Initializing Intelligence Network...',
       thinkingTrace: '', // Reset thinking trace on new scan
-      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false },
+      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false, watchFor: false },
       completedSections: new Set() // Reset completed sections
     };
     startTimer('full-scan');
@@ -1344,7 +1361,7 @@ export function useSituationStore() {
         feeds: newsFeeds,
         isProcessing: false,
         processingStatus: 'Scan Complete',
-        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, rss: false, bigPicture: false },
+        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, rss: false, bigPicture: false, watchFor: false },
         lastUpdated: new Date()
       };
 
@@ -1813,6 +1830,72 @@ export function useSituationStore() {
     persist();
   }, []);
 
+  const generateNarrativePredictions = useCallback(async () => {
+    if (globalState.isProcessing || globalState.isProcessingSection.watchFor || !globalState.narrative) return;
+
+    globalState = {
+      ...globalState,
+      isProcessingSection: { ...globalState.isProcessingSection, watchFor: true }
+    };
+    notify();
+
+    try {
+      const { generateNarrativePredictions: generateNarrativePredictionsRuntime } = await import('../ai/runtime/engine');
+      const result = await generateNarrativePredictionsRuntime(
+        globalState.narrative,
+        globalState.aiConfig
+      );
+
+      globalState = {
+        ...globalState,
+        watchFor: result,
+        isProcessingSection: { ...globalState.isProcessingSection, watchFor: false }
+      };
+      notify();
+      persist();
+    } catch (error) {
+      console.error('Failed to generate watchFor:', error);
+      globalState = {
+        ...globalState,
+        isProcessingSection: { ...globalState.isProcessingSection, watchFor: false }
+      };
+      notify();
+    }
+  }, []);
+
+  const regenerateNarrativePredictions = useCallback(async () => {
+    if (globalState.isProcessing || globalState.isProcessingSection.watchFor || !globalState.narrative) return;
+
+    globalState = {
+      ...globalState,
+      isProcessingSection: { ...globalState.isProcessingSection, watchFor: true }
+    };
+    notify();
+
+    try {
+      const { generateNarrativePredictions: generateNarrativePredictionsRuntime } = await import('../ai/runtime/engine');
+      const result = await generateNarrativePredictionsRuntime(
+        globalState.narrative,
+        globalState.aiConfig
+      );
+
+      globalState = {
+        ...globalState,
+        watchFor: result,
+        isProcessingSection: { ...globalState.isProcessingSection, watchFor: false }
+      };
+      notify();
+      persist();
+    } catch (error) {
+      console.error('Failed to regenerate watchFor:', error);
+      globalState = {
+        ...globalState,
+        isProcessingSection: { ...globalState.isProcessingSection, watchFor: false }
+      };
+      notify();
+    }
+  }, []);
+
   const setPredictionHistory = useCallback((history: PredictionHistoryItem[]) => {
     globalState = { ...globalState, predictionHistory: history };
     notify();
@@ -1867,6 +1950,7 @@ export function useSituationStore() {
         bigPicture: globalState.bigPicture,
         predictionHistory: globalState.predictionHistory,
         deepDiveBySignalId: globalState.deepDiveBySignalId,
+        watchFor: globalState.watchFor,
         generatedAt: new Date().toISOString(),
         version: '0.2.0'
       };
@@ -1937,6 +2021,8 @@ export function useSituationStore() {
     closeDeepDive,
     generateDeepDive,
     regenerateDeepDive,
+    generateNarrativePredictions,
+    regenerateNarrativePredictions,
     setRawOutput,
     showRawOutput,
     hideRawOutput,

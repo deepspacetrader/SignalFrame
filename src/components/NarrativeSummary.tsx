@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { RawOutputModal } from './RawOutputModal'
+import { NarrativePredictions } from './NarrativePredictions'
 import { formatTime } from '../utils/timeUtils'
 import { SectionCard } from './shared/SectionCard'
 import { SectionHeader } from './shared/SectionHeader'
@@ -204,6 +205,9 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
         sectionId="narrative"
         title="Current Narrative"
       />
+
+      {/* Watch For Component */}
+      <NarrativePredictions onAIRequired={onAIRequired} />
     </SectionCard>
   )
 }

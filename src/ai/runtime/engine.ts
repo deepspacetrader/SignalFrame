@@ -1,7 +1,7 @@
 
 import { OllamaService } from './ollama';
 import { RawSignal } from '../../services/feedIngest';
-import type { ForeignRelation, AiConfig, DeepDiveData, SourceRef, Signal, SituationState } from '../../state/useSituationStore';
+import type { ForeignRelation, AiConfig, DeepDiveData, NarrativePredictionsData, SourceRef, Signal, SituationState } from '../../state/useSituationStore';
 import { StorageService } from '../../services/db';
 import { getSentimentProfile, generateCustomSentimentGuidelines } from './sentimentEngine';
 
@@ -493,60 +493,61 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
 
 
 
-export async function generateDeepDive(
-  signal: Signal,
-  feeds: RawSignal[],
-  dateStr: string,
+export async function generateNarrativePredictions(
+  narrative: string,
   aiConfig: AiConfig
-): Promise<DeepDiveData> {
-  const feedsSubset = selectRelevantFeeds(signal, feeds);
-  const prompt = generateDeepDivePrompt(signal, feedsSubset, dateStr, aiConfig);
+): Promise<NarrativePredictionsData> {
+  const prompt = generateNarrativePredictionsPrompt(narrative, aiConfig);
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
   const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
-
+  
   const parsed = parseJsonObjectWithDetection(raw);
   if (!parsed.success) {
-    throw new Error(parsed.error || 'Deep dive JSON parsing error');
+    throw new Error(parsed.error || 'Watch For JSON parsing error');
   }
 
   const obj: any = parsed.data;
-  const now = new Date().toISOString();
-  console.log(obj);
-
-  const header = obj.header && typeof obj.header === 'object' ? obj.header : {};
-  const fiveWs = obj.fiveWs && typeof obj.fiveWs === 'object' ? obj.fiveWs : {};
-
+  
   return {
-    signalId: String(obj.signalId || signal.id || ''),
-    generatedAt: now,
-    header: {
-      title: String(header.title || signal.title || 'Error generating signal title'),
-      text: String(header.text || signal.text || 'Error generating signal text'),
-      sentiment: String(header.sentiment || signal.sentiment || 'neutral') as any,
-      deltaType: header.deltaType ? String(header.deltaType) as any : signal.deltaType,
-      category: header.category ? String(header.category) as any : signal.category
-    },
-    fiveWs: {
-      who: Array.isArray(fiveWs.who) ? fiveWs.who.map((x: any) => String(x)) : undefined,
-      what: fiveWs.what ? String(fiveWs.what) : undefined,
-      where: fiveWs.where ? String(fiveWs.where) : undefined,
-      when: fiveWs.when ? String(fiveWs.when) : undefined,
-      why: fiveWs.why ? String(fiveWs.why) : undefined,
-      soWhat: fiveWs.soWhat ? String(fiveWs.soWhat) : undefined
-    },
-    source: normalizeSource(obj.source, feedsSubset),
-    counterpoints: Array.isArray(obj.counterpoints)
-      ? obj.counterpoints.map((c: any) => ({
-        claimA: String(c.claimA || ''),
-        claimB: String(c.claimB || ''),
-        sourceA: normalizeSource(c.sourceA, feedsSubset),
-        sourceB: normalizeSource(c.sourceB, feedsSubset)
-      })).filter((c: any) => c.claimA && c.claimB)
-      : undefined,
-    watchNext: Array.isArray(obj.watchNext) ? obj.watchNext.map((x: any) => String(x)).filter(Boolean) : undefined
+    generatedAt: new Date().toISOString(),
+    sections: obj.sections || []
   };
 }
 
+function generateNarrativePredictionsPrompt(narrative: string, aiConfig?: AiConfig): string {
+  return `You are an elite intelligence analyst specializing in predictive analysis. Based on the following narrative summary of current events, analyze what could happen next across the different topics and subjects mentioned.
+
+Your task is to provide forward-looking intelligence predictions that are:
+- Grounded in the current narrative context
+- Broken down by the main topics/subjects identified in the narrative
+- Written as short, concise bullet points
+- Focused on likely developments, not speculative scenarios
+
+Format your response as a JSON object with the following structure:
+{
+  "sections": [
+    {
+      "title": "Topic Name",
+      "predictions": [
+        "Specific prediction about what to expect",
+        "Another specific prediction",
+        "Third prediction if relevant"
+      ]
+    },
+    {
+      "title": "Another Topic",
+      "predictions": [
+        "Prediction for this topic",
+        "Another prediction"
+      ]
+    }
+  ]
+}
+
+Each section should have a clear topic title and 2-4 specific predictions. Keep predictions concise and actionable.
+
+Current Narrative:\\n\\n${narrative}`;
+}
 
 /**
  * Constructs the intelligence context from raw signals.
@@ -603,6 +604,10 @@ function generateNarrativePrompt(context: string, aiConfig?: AiConfig) {
 
   return `You are an elite intelligence analyst. Analyze these news feeds and provide a short but comprehensive briefing for the day that aims to weave together recent events and how they shape the current ongoing narrative and situations. Do not focus on only one event. Instead, synthesize the top 5 most critical global themes currently developing. Keep the tone clinical, objective, and professional. Skip introductions and closings. Do not include any em dashes or other additional formatting. No markdown formatting either. No bullet points or numbered lists. Separate each of the 5 events or themes with a newline. Do not use ** or * for formatting. Do not include a title. Avoid the term "highlights" and focus more on evidence based conclusions by outlining cause and effects. \n\n
   
+  Avoid the repetitive use of the following words in their singular or plural form: demonstrates, emphasizes,  highlights, illustrates, intersection, outlines, reflects, underscores. Be more direct instead of talking on the edge of metaphors and similes.
+
+  And for god's sake, avoid sounding melancholy and pessimistic it's not the end of the world.
+
 ${sentimentGuidance}
 Do not include any sentiment analysis labels directly in the narrative instead use it to guide your tone accordingly.
 

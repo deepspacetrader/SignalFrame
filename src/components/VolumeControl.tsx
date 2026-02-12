@@ -22,23 +22,23 @@ export function VolumeControl() {
   }, [soundVolume])
 
   // Sync system volume with store volume
-  useEffect(() => {
-    const setSystemVolume = async () => {
-      try {
-        await fetch(`${VOLUME_SERVER_URL}/api/volume`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ volume: soundVolume }),
-        })
-      } catch (error) {
-        console.warn('Failed to set system volume (server may be offline):', error)
-      }
-    }
+  // useEffect(() => {
+  //   const setSystemVolume = async () => {
+  //     try {
+  //       await fetch(`${VOLUME_SERVER_URL}/api/volume`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ volume: soundVolume }),
+  //       })
+  //     } catch (error) {
+  //       console.warn('Failed to set system volume (server may be offline):', error)
+  //     }
+  //   }
 
-    setSystemVolume()
-  }, [soundVolume])
+  //   setSystemVolume()
+  // }, [soundVolume])
 
   // Update button position for fixed positioning
   useEffect(() => {

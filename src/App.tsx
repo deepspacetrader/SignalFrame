@@ -240,8 +240,8 @@ export default function App() {
           <div className="w-full">
             <h2 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-4 flex items-center gap-2">
               <span className="w-8 h-[1px] bg-accent-primary"></span>
-              Deep Intelligence Suite
-              <span className="w-full h-[1px] bg-white/5"></span>
+              Deep Intelligence
+              <span className="w-12 h-[1px] bg-white/5"></span>
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <ChatPanel onAIRequired={() => setShowAIModal(true)} />

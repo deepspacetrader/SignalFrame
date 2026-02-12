@@ -247,14 +247,15 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         <div className="space-y-4">
                                             {data.counterpoints.map((cp, idx) => (
                                                 <div key={idx} className="bg-orange-500/5 border border-orange-500/10 rounded-xl p-4">
-                                                    <div className="flex flex-col sm:flex-row gap-4">
-                                                        <div className="flex-1 space-y-2">
-                                                            <p className="text-[0.6rem] uppercase tracking-widest text-red-400 font-bold mb-1">Perspective A</p>
-                                                            <p className="text-xs text-text-primary font-medium leading-snug">{cp.claimA}</p>
+                                                    <div className="flex flex-col sm:flex-col gap-4">
+                                                        <div className="space-y-2">
+                                                            <p className="text-[0.6rem] uppercase tracking-widest text-yellow-400 font-bold mb-1">Perspective A</p>
+                                                            <p className="leading-snug font-bold text-yellow-200">{cp.claimA}</p>
                                                         </div>
-                                                        <div className="flex-1 space-y-2">
-                                                            <p className="text-[0.6rem] uppercase tracking-widest text-blue-400 font-bold mb-1">Perspective B</p>
-                                                            <p className="text-xs text-text-primary font-medium leading-snug">{cp.claimB}</p>
+                                                        <div className="border-t border-white/10"></div>
+                                                        <div className="space-y-2">
+                                                            <p className="text-[0.6rem] uppercase tracking-widest text-orange-400 font-bold mb-1">Perspective B</p>
+                                                            <p className="leading-snug font-bold text-orange-300">{cp.claimB}</p>
                                                         </div>
                                                     </div>
                                                 </div>
