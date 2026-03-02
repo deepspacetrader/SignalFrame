@@ -1,0 +1,15 @@
+{
+    "ignore": [
+        "server/cache/",
+        "server/storage/",
+        "server/crawled-data/",
+        "server/exports/",
+        "storage/",
+        "server/*.wav",
+        "server/*.json"
+    ],
+    "watch": [
+        "server/"
+    ],
+    "ext": "js,mjs"
+}

@@ -6,4 +6,12 @@ export default defineConfig({
     plugins: [
         react(),
     ],
+    server: {
+        proxy: {
+            '/api/nvidia-tts': {
+                target: 'http://localhost:3002',
+                changeOrigin: true,
+            }
+        }
+    }
 })

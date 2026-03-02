@@ -502,7 +502,7 @@ const listeners = new Set<(state: SituationState) => void>();
 // Module-level polling manager to prevent multiple instances
 class OllamaPollingManager {
   private static instance: OllamaPollingManager | null = null;
-  private pollTimeout: number | null = null;
+  private pollTimeout: NodeJS.Timeout | null = null;
   private currentPollTime = 2000;
   private isPolling = false;
   private pollCount = 0;

@@ -127,10 +127,10 @@ export default function App() {
               <div className="flex gap-2">
                 {runningModels && runningModels.length > 0 ? (
                   runningModels.map(m => (
-                    <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
+                    <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
                       <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-white whitespace-nowrap">{m.name.split(':')[0]}</span>
+                        <span className="text-xs font-mono text-white group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200" title={m.name.split(':')[0]}>{m.name.split(':')[0]}</span>
                         <div className="flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 bg-accent-secondary rounded-full animate-pulse shadow-[0_0_5px_var(--accent-secondary)]"></span>
                           <span className="text-[9px] font-mono text-accent-secondary font-bold">
@@ -141,10 +141,10 @@ export default function App() {
                     </div>
                   ))
                 ) : (
-                  <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative">
+                  <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
                     <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-mono whitespace-nowrap ${isLocalhost && aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`}>
+                      <span className={`text-xs font-mono group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200 ${isLocalhost && aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`} title={isLocalhost && aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}>
                         {isLocalhost && aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}
                       </span>
                     </div>
@@ -167,29 +167,27 @@ export default function App() {
 
           <button
             onClick={() => setShowBigPicture(true)}
-            className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group flex-1 md:flex-none justify-center"
+            className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group mr-3 flex-1 md:flex-none justify-center min-w-0"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform flex-shrink-0">
               <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
             </svg>
             <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
           </button>
 
-          <div className="flex flex-col items-center">
-            <button
-              onClick={handleRefresh}
-              disabled={isProcessing}
-              className={`w-full lg:w-auto mt-4 lg:mt-0 group relative overflow-hidden font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] 
-              ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.3)]' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
-            >
-              <span className="flex items-center justify-center gap-2">
-                {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}
-                <svg className={`transition-transform duration-700 ${isProcessing ? 'animate-spin' : 'group-hover:rotate-12'}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                </svg>
-              </span>
-            </button>
-          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={isProcessing}
+            className={`group relative overflow-hidden font-bold py-3 px-6 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] flex-1 md:flex-none justify-center items-center min-w-0
+            ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.3)]' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
+          >
+            <span className="flex items-center justify-center gap-2 whitespace-nowrap">
+              {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}
+              <svg className={`transition-transform duration-700 ${isProcessing ? 'animate-spin' : 'group-hover:rotate-12'} flex-shrink-0`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+            </span>
+          </button>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/5 pt-4">

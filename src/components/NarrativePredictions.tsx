@@ -161,7 +161,7 @@ export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => voi
                     {section.title}
                   </h3>
                   <ul className="space-y-2">
-                    {section.predictions.map((prediction, predictionIdx) => (
+                    {section.predictions && section.predictions.map((prediction, predictionIdx) => (
                       <li key={predictionIdx} className="text-xs text-text-primary flex items-start gap-2">
                         <span className="text-accent-primary mt-0.5">•</span>
                         {prediction}
