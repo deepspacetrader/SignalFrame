@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import { PlaywrightCrawler } from 'crawlee';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -21,7 +20,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const PORT = 3001;
 
-// Blacklist strictly for non-news/noise to keep the focus wide but relevant
+// Noise patterns to filter out irrelevant RSS content
 const NOISE_PATTERNS = [
     /NFL|NBA|MLB|NHL|FIFA|UEFA|vs\.|FA Cup|Super Bowl|World Cup/i,
     /\bFootball\b|\bBasketball\b|\bBaseball\b|\bSoccer\b|\bTennis\b/i,
@@ -108,90 +107,25 @@ app.post('/api/ingest', async (req, res) => {
         }
     }
 
-    // Deduplicate by URL
+    // deduplicate by URL
     const uniqueItems = Array.from(new Map(rssItems.map(item => [item.link, item])).values());
     console.log(`[SignalFrame] Total unique articles to process: ${uniqueItems.length}`);
 
-    // Limit to top 100 articles total for performance (standard for a daily sweep)
-    const itemsToProcess = uniqueItems.slice(0, 100);
-    const fullContentMap = new Map();
+    // Limit to top 500 articles total for performance
+    const finalSignals = uniqueItems.slice(0, 500).map(item => ({
+        id: item.id,
+        source: item.source,
+        timestamp: item.timestamp,
+        content: `${item.title}. ${item.snippet}`,
+        category: item.category,
+        title: item.title,
+        link: item.link,
+        picture: item.picture,
+        hasFullContent: false,
+        url: item.link
+    }));
 
-    // 2. High-Concurrency Crawl for FULL Articles
-    console.log(`[Crawler] Deep crawling ${itemsToProcess.length} articles with high concurrency...`);
-    const crawler = new PlaywrightCrawler({
-        headless: true,
-        maxRequestRetries: 1,
-        requestHandlerTimeoutSecs: 20,
-        // Increased concurrency to handle many items faster
-        minConcurrency: 5,
-        maxConcurrency: 15,
-        launchContext: {
-            launchOptions: {
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-            }
-        },
-        async requestHandler({ request, page, log }) {
-            try {
-                // Quickly wait for text to be present
-                await page.waitForLoadState('domcontentloaded');
-
-                const content = await page.evaluate(() => {
-                    // Deep clean the page to target core narrative
-                    const selectorsToDrop = [
-                        'script', 'style', 'nav', 'footer', 'header', 'aside',
-                        '.ads', '.comments', '.sidebar', '.menu', '.social-share',
-                        '.related-posts', '.newsletter-signup', '.cookie-banner'
-                    ];
-                    selectorsToDrop.forEach(s => document.querySelectorAll(s).forEach(el => el.remove()));
-
-                    // Look for typical article content hubs
-                    const articleBody = document.querySelector('article, [itemprop="articleBody"], .article-content, .post-content, main');
-                    const target = articleBody || document.body;
-
-                    const paragraphs = Array.from(target.querySelectorAll('p'));
-                    return paragraphs
-                        .map(p => p.textContent.trim())
-                        .filter(text => text.length > 60) // High-quality content only
-                        .slice(0, 25) // Capture deep context (up to ~25 paragraphs)
-                        .join('\n\n');
-                });
-
-                if (content && content.length > 200) {
-                    fullContentMap.set(request.url, content);
-                } else {
-                    log.debug(`Insufficient content for ${request.url}`);
-                }
-            } catch (err) {
-                log.error(`Crawl failed for ${request.url}: ${err.message}`);
-            }
-        }
-    });
-
-    if (itemsToProcess.length > 0) {
-        await crawler.run(itemsToProcess.map(it => it.link));
-    }
-
-    // 3. Finalize Enriched Signals
-    const finalSignals = itemsToProcess.map(item => {
-        const fullContent = fullContentMap.get(item.link);
-        // We provide a massive 5000 char window for the AI if content is found
-        const content = fullContent
-            ? `${item.title}. ${fullContent}`.substring(0, 5000)
-            : `${item.title}. ${item.snippet}`;
-
-        return {
-            id: item.id,
-            source: item.source,
-            timestamp: item.timestamp,
-            content,
-            category: item.category,
-            title: item.title,
-            link: item.link,
-            picture: item.picture
-        };
-    });
-
-    console.log(`[SignalFrame] Ingestion complete. enriched ${fullContentMap.size}/${finalSignals.length} items with full crawls.`);
+    console.log(`[SignalFrame] Ingestion complete. Prepared ${finalSignals.length} items from RSS snippets.`);
     res.json(finalSignals);
 });
 
@@ -201,7 +135,7 @@ app.get('/api/status', (req, res) => res.json({ status: 'online', service: 'Sign
 // TTS endpoints using say.js
 app.post('/api/tts/speak', (req, res) => {
     const { text, voice, speed = 1.0 } = req.body;
-    
+
     if (!text || !text.trim()) {
         return res.status(400).json({ error: 'Text is required' });
     }
@@ -265,17 +199,17 @@ app.get('/api/tts/voices', (req, res) => {
 
 app.post('/api/tts/export', (req, res) => {
     const { text, voice, speed = 1.0, filename } = req.body;
-    
+
     if (!text || !text.trim()) {
         return res.status(400).json({ error: 'Text is required' });
     }
-    
+
     if (!filename) {
         return res.status(400).json({ error: 'Filename is required' });
     }
 
     const outputPath = path.join(__dirname, 'exports', filename);
-    
+
     // Ensure exports directory exists
     const exportsDir = path.dirname(outputPath);
     if (!fs.existsSync(exportsDir)) {
