@@ -942,7 +942,9 @@ export function useSituationStore() {
   }, []);
 
   const regenerateDeepDive = useCallback(async (signalId: string) => {
+    // console.log('regenerateDeepDive called with signalId:', signalId);
     const signal = globalState.signals.find(s => (s.id || '') === signalId);
+    // console.log('Found signal:', signal ? { id: signal.id, title: signal.title } : 'NOT FOUND');
     if (!signal) return;
 
     globalState = { ...globalState, isGeneratingDeepDive: true, activeDeepDiveSignalId: signalId };
@@ -956,6 +958,9 @@ export function useSituationStore() {
         globalState.currentDate,
         globalState.aiConfig
       );
+      
+      // console.log('Deep dive result signalId:', result.signalId);
+      // console.log('Storing result with key:', signalId);
 
       globalState = {
         ...globalState,

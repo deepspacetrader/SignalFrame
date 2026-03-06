@@ -192,7 +192,23 @@ export async function processSituation(
       onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
       const recentSignals = await getRecentSignalsForNovelty(7);
       const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json', options);
-      const parsedSignals = applyNoveltyScores(finalizeSignals(parseJsonArray(signalsRaw), feeds), recentSignals);
+      
+      // Debug: Log raw AI output
+      console.log('=== RAW SIGNALS OUTPUT ===');
+      console.log('Raw string:', signalsRaw);
+      
+      const parsedJson = parseJsonArray(signalsRaw);
+      console.log('Parsed JSON:', JSON.stringify(parsedJson, null, 2));
+      
+      const parsedSignals = applyNoveltyScores(finalizeSignals(parsedJson, feeds), recentSignals);
+      console.log('Final processed signals:', JSON.stringify(parsedSignals.map(s => ({ 
+        title: s.title, 
+        text: s.text?.substring(0, 50), 
+        sentiment: s.sentiment,
+        sourceCount: s.source?.length 
+      })), null, 2));
+      console.log('===========================');
+      
       const signalsText = parsedSignals.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
 
       onSectionComplete?.('signals');
@@ -398,7 +414,136 @@ function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateSt
     const profile = getSentimentProfile(aiConfig.sentimentProfile);
     customGuidelines = `\n\nSENTIMENT GUIDELINES:\n${generateCustomSentimentGuidelines(profile)}\n\nWhen analyzing the signal and determining sentiment, apply these guidelines consistently.`;
   }
+  // Check if model is qwen3.5 for simplified prompt
+  /*
+  const isQwen35 = aiConfig?.model?.toLowerCase().includes('qwen3.5');
+  
+  if (isQwen35) {
+    // Prefilter feeds to only include those referenced in the signal
+    const relevantFeeds = feedIndex.filter(feed => {
+      const signalText = (signal.text || '').toLowerCase();
+      const signalTitle = (signal.title || '').toLowerCase();
+      const feedText = (feed.content || '').toLowerCase();
+      const feedTitle = (feed.title || '').toLowerCase();
+      const feedSource = (feed.source || '').toLowerCase();
+      
+      // Check if feed is referenced in signal
+      return signalText.includes(feedTitle.substring(0, 20)) ||
+             signalText.includes(feedSource) ||
+             signalTitle.includes(feedTitle.substring(0, 20)) ||
+             signalTitle.includes(feedSource) ||
+             feedText.includes(signal.title?.substring(0, 20) || '');
+    });
+    
+    // console.log('Using Qwen3.5 prompt...');
+    // console.log('Signal:', JSON.stringify(signal));
+    // console.log('Relevant Feeds:', JSON.stringify(relevantFeeds));
+    // console.log('Date:', JSON.stringify(dateStr));
 
+let qwenprompt = `You are an elite intelligence analyst. Generate a structured Deep Dive analysis for the provided Signal. 
+    Date: ${JSON.stringify(dateStr)} \n
+    Signal: ${JSON.stringify(signal)} \n
+    Feeds: ${JSON.stringify(relevantFeeds)} \n
+
+    REQUIREMENTS: \n
+    - Return ONLY valid JSON. \n
+    - If a field is unknown, omit it (do NOT use null). \n
+    JSON STRUCTURE: \n
+      {
+        "signalId": string,
+        "title": string,
+        "text": string,
+        "sentiment": string,
+        "deltaType": string,
+        "category": string,
+        "who": string[],
+        "what": string,
+        "where": string,
+        "when": string,
+        "why": string,
+        "soWhat": string,
+        "source": [
+          { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
+        ],
+        "counterpoints": [
+          { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
+        ],
+        "watchNext": string[] // 3-5 predictive statements about what events to watch for NEXT (e.g., "Potential retaliatory strikes", "Investigation results"). NO URLs. NO links. NO example.com.
+      }`
+// console.log(qwenprompt);
+    return qwenprompt;
+  }
+  */
+
+/*
+{
+  "signalId": "sig_872a24e9",
+  "header": {
+    "title": "Friendly Fire Incident Grounds US Fleet in Kuwait",
+    "text": "Multiple reports confirm six US F-15 fighter jets were 'mistakenly shot down' by air defenses, with crews recovering safely but raising questions about regional radar safety protocols during the conflict.",
+    "sentiment": "very-negative",
+    "deltaType": "escalation",
+    "category": "Other"
+  },
+  "fiveWs": {
+    "who": ["US military", "Kuwaiti air defenses"],
+    "what": "Six US F-15 fighter jets were mistakenly shot down by Kuwaiti air defenses during a military operation.",
+    "where": "Kuwait",
+    "when": "2026-03-02",
+    "why": "The incident raises concerns about radar safety protocols and potential misidentification of friendly aircraft during the conflict.",
+    "soWhat": "The friendly fire incident could impact US military operations in the region and prompt a review of air defense systems."
+  },
+  "source": [
+    {
+      "feedId": "41",
+      "source": "NY Times World",
+      "title": "3 U.S. Planes Are Shot Down in ‘Friendly Fire’ in Kuwait, U.S. Military Says",
+      "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000",
+      "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
+    },
+    {
+      "feedId": "20",
+      "source": "Al Jazeera",
+      "title": "Three US fighter jets ‘mistakenly’ shot down over Kuwait",
+      "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000",
+      "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
+    }
+  ],
+  "counterpoints": [
+    {
+      "claimA": "The US military claims the jets were mistakenly shot down by Kuwaiti defenses.",
+      "claimB": "Kuwaiti officials are investigating the cause of the incident.",
+      "sourceA": [
+        {
+          "feedId": "41",
+          "source": "NY Times World",
+          "title": "3 U.S. Planes Are Shot Down in ‘Friendly Fire’ in Kuwait, U.S. Military Says",
+          "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000"
+        }
+      ],
+      "sourceB": [
+        {
+          "feedId": "20",
+          "source": "Al Jazeera",
+          "title": "Three US fighter jets ‘mistakenly’ shot down over Kuwait",
+          "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000"
+        }
+      ]
+    }
+  ],
+  "watchNext": [
+    "US-Israel war on Iran – live updates",
+    "What we know so far on day three of the Iran war",
+    "Qatar halts natural gas production after Iranian attacks",
+    "Gas prices soar as QatarEnergy halts LNG production after Iran attacks",
+    "Spain denies US permission to use jointly operated bases to attack Iran"
+  ]
+}
+*/
+
+
+
+  // Original complex prompt for other models
   return `You are an elite intelligence analyst.
 Generate a structured Deep Dive for the provided Signal.
 
@@ -439,13 +584,14 @@ Return EXACTLY one JSON object with this shape:
   "counterpoints": [
     { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
   ],
-  "watchNext": string[]
+  "watchNext": string[] // 3-5 predictive statements about what events/indicators to watch for NEXT (e.g., "Potential retaliatory strikes from Iran", "Watch for CENTCOM investigation results", "Monitor gas price fluctuations")
 }
 
 Rules:
 - source.feedId MUST come from FEED INDEX.
 - You MUST include at least reference source per signal item.
 - Show as many signals as possible without duplicates or similar enough to each other that a user would consider them the same.
+- watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.
 `;
 }
 
@@ -500,20 +646,70 @@ export async function generateDeepDive(
 ): Promise<DeepDiveData> {
   const prompt = generateDeepDivePrompt(signal, feeds, dateStr, aiConfig);
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+  // console.log('=== DeepDive Prompt ===');
+  // console.log('Model:', aiConfig.model);
+  // console.log('Prompt:', prompt);
+  // console.log('Options:', options);
+  // console.log('==============================');
   const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
+  
+  // Log raw response for debugging
+  // console.log('=== DeepDive Raw Response ===');
+  // console.log('Model:', aiConfig.model);
+  // console.log('Raw response:', raw);
+  // console.log('Response length:', raw?.length || 0);
+  // console.log('==============================');
   
   const parsed = parseJsonObjectWithDetection(raw);
   if (!parsed.success) {
+    console.error('DeepDive parsing failed:', parsed.error);
+    console.log(parsed);
     throw new Error(parsed.error || 'Deep Dive JSON parsing error');
   }
 
   const obj: any = parsed.data;
   
+  // console.log('=== DeepDive Debug ===');
+  // console.log('Input signal.id:', signal.id);
+  // console.log('AI returned signalId:', obj.signalId);
+  // console.log('AI returned obj.title:', obj.title);
+  // console.log('AI returned obj.header:', obj.header);
+  
+  // Check if this is flattened qwen3.5 format or standard format
+  const isQwen35Format = obj.title && !obj.header;
+  
+  if (isQwen35Format) {
+    // Convert flattened qwen3.5 format to standard format
+    return {
+      signalId: signal.id || '',
+      generatedAt: new Date().toISOString(),
+      header: {
+        title: signal.title || 'Untitled Signal',
+        text: obj.text || signal.text || '',
+        sentiment: obj.sentiment || signal.sentiment || 'neutral',
+        deltaType: obj.deltaType || signal.deltaType,
+        category: obj.category || signal.category
+      },
+      fiveWs: {
+        who: obj.who || [],
+        what: obj.what,
+        where: obj.where,
+        when: obj.when,
+        why: obj.why,
+        soWhat: obj.soWhat
+      },
+      source: obj.source || [],
+      counterpoints: obj.counterpoints || [],
+      watchNext: obj.watchNext || []
+    };
+  }
+  
+  // Standard format (original)
   return {
-    signalId: obj.signalId || signal.id || '',
+    signalId: signal.id || '',
     generatedAt: new Date().toISOString(),
     header: {
-      title: obj.header?.title || signal.title || 'Untitled Signal',
+      title: signal.title || 'Untitled Signal',
       text: obj.header?.text || signal.text || '',
       sentiment: obj.header?.sentiment || signal.sentiment || 'neutral',
       deltaType: obj.header?.deltaType || signal.deltaType,
@@ -541,9 +737,10 @@ export async function generateNarrativePredictions(
   const prompt = generateNarrativePredictionsPrompt(narrative, aiConfig);
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
   const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
-  
+    
   const parsed = parseJsonObjectWithDetection(raw);
   if (!parsed.success) {
+    console.error('Narrative Predictions parsing failed:', parsed.error);
     throw new Error(parsed.error || 'Watch For JSON parsing error');
   }
 
@@ -703,27 +900,28 @@ ${JSON.stringify(feedIndex)}
 RECENT SIGNALS (last 7 days, for novelty/dedup):
 ${sanitizeRecentSignals(recentSignals)}
 
-Your response MUST start with [ and end with ] and contain 5-8 signal objects like this:
+Your response MUST start with [ and end with ] and contain 5-8 signal objects with EXACTLY these field names:
 [
   {
-    "title": string,
-    "text": string,
-    "sentiment": string,
-    "category": "Tech/AI",
-    "deltaType": "policy",
+    "title": "Concise headline",
+    "text": "Detailed description - use this field name, NOT 'summary' or 'description'",
+    "sentiment": "neutral|positive|negative|very-positive|very-negative|extremely-negative|somewhat-negative|interesting",
+    "category": "Tech/AI|Financial|Conflicts|Geopolitical|Science|Health|Other",
+    "deltaType": "escalation|deescalation|policy|market|breakthrough|disruption|other",
     "source": [
-      { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
-    ],
-    "contradictions": [
-      {
-        "claimA": string,
-        "claimB": string,
-        "sourceA": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }],
-        "sourceB": [{ "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }]
-      }
+      { "feedId": "3", "source": "BBC News", "title": "Iran: Israel Launches Fresh Strikes", "timestamp": "2025-06-19T10:00:00Z", "quote": "Israeli jets struck multiple nuclear research sites" }
     ]
   }
 ]
+
+CRITICAL REQUIREMENTS:
+- Field names MUST be exactly: title, text (not summary), sentiment, category, source
+- The "text" field MUST contain the detailed description (1-2 sentences)
+- The "sentiment" field is REQUIRED - analyze the tone and provide one of the allowed values
+- The "source" array is REQUIRED - cite at least one feed using the numeric feedId from FEED INDEX
+- You MUST include at least one source citation per signal
+- Do NOT use "summary" or "description" as field names - use "text"
+- The example above shows the EXACT format to use
 
 Rules:
 - You MUST return exactly 5-8 signals in the array
@@ -1083,7 +1281,7 @@ function hashString(input: string): string {
   return (hash >>> 0).toString(16);
 }
 
-function normalizeCategory(raw: any): 'Tech/AI' | 'Financial' | 'Conflicts' | 'Geopolitical' | 'Other' | undefined {
+function normalizeCategory(raw: any): string | undefined {
   if (!raw) return undefined;
   const value = String(raw).trim();
   const lower = value.toLowerCase();
@@ -1091,7 +1289,8 @@ function normalizeCategory(raw: any): 'Tech/AI' | 'Financial' | 'Conflicts' | 'G
   if (lower.includes('fin')) return 'Financial';
   if (lower.includes('conflict') || lower.includes('war') || lower.includes('security')) return 'Conflicts';
   if (lower.includes('geo') || lower.includes('diplom')) return 'Geopolitical';
-  return value ? 'Other' : undefined;
+  // Preserve original category if provided (e.g., 'Science', 'Health', etc.)
+  return value || undefined;
 }
 
 function normalizeDeltaType(raw: any): 'escalation' | 'deescalation' | 'policy' | 'market' | 'breakthrough' | 'disruption' | 'other' | undefined {
@@ -1111,27 +1310,34 @@ function normalizeSource(raw: any, feeds: RawSignal[]): SourceRef[] {
   });
 
   const refs = raw.map((entry: any) => {
+    if (!entry || typeof entry !== 'object') return null;
 
-
-    const feedId = entry?.feedId ? String(entry.feedId) : '';
+    // Handle various field name variations from AI
+    const feedId = entry?.feedId || entry?.feed_id || entry?.id || '';
     if (!feedId) return null;
 
-    let feed = feedById.get(feedId);
+    let feed = feedById.get(String(feedId));
 
     // Fuzzy fallback: If ID fails, try matching by Title similarity
-    if (!feed && entry.title) {
-      const entryTitleLower = entry.title.toLowerCase();
+    const entryTitle = entry?.title || entry?.headline || entry?.name || '';
+    if (!feed && entryTitle) {
+      const entryTitleLower = String(entryTitle).toLowerCase();
       feed = feeds.find(f =>
         f.title?.toLowerCase() === entryTitleLower ||
         (f.title && calculateTextSimilarity(f.title.toLowerCase(), entryTitleLower) > 0.8)
       );
     }
+
+    const feedSource = feed?.source || 'Unknown Source';
+    const feedTitle = feed?.title || entryTitle || 'Untitled';
+    const feedTimestamp = feed?.timestamp || new Date().toISOString();
+
     return {
-      feedId,
-      source: entry?.source ? String(entry.source) : feed?.source,
-      title: entry?.title ? String(entry.title) : feed?.title,
+      feedId: String(feedId),
+      source: entry?.source ? String(entry.source) : feedSource,
+      title: entry?.title ? String(entry.title) : feedTitle,
       link: feed?.link, // CRITICAL: NEVER use AI-generated links (prevents hallucination)
-      timestamp: entry?.timestamp ? String(entry.timestamp) : feed?.timestamp,
+      timestamp: entry?.timestamp ? String(entry.timestamp) : feedTimestamp,
       quote: entry?.quote ? String(entry.quote) : undefined
     } as SourceRef;
   }).filter(Boolean) as SourceRef[];
@@ -1227,6 +1433,9 @@ function calculateTextSimilarity(text1: string, text2: string): number {
 }
 
 function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
+  // console.log('=== FINALIZE SIGNALS ===');
+  // console.log('Input raw data sample:', JSON.stringify(raw[0], null, 2));
+  
   // Check if the raw data contains actual error objects (not signal objects)
   const hasError = raw.some(item =>
     typeof item === 'object' &&
@@ -1252,8 +1461,10 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
 
     if (s.text) {
       text = s.text;
-    } else if (s.title) {
-      text = s.title;
+    } else if (s.summary) {
+      text = s.summary;
+    } else if (s.description) {
+      text = s.description;
     } else if (s.content) {
       text = s.content;
     } else if (s.event) {
@@ -1286,15 +1497,52 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
 
     const finalSentiment = allowedSentiments.has(sentiment) ? sentiment : 'neutral';
 
-    const title = s.title ? String(s.title) : undefined;
+    const title = s.title ? String(s.title) : (s.signal ? String(s.signal) : (s.headline ? String(s.headline) : undefined));
     const category = normalizeCategory(s.category);
     const deltaType = normalizeDeltaType(s.deltaType);
-    const source = normalizeSource(s.source, feeds);
+    let source = normalizeSource(s.source, feeds);
+    
+    // Fallback: Auto-assign sources based on text similarity if AI didn't provide them
+    if (!source || source.length === 0) {
+      // console.log(`No sources provided for signal "${title}", attempting auto-assignment...`);
+      const signalText = `${title || ''} ${text || ''}`.toLowerCase();
+      // console.log(`Signal text for matching: "${signalText.substring(0, 80)}..."`);
+      
+      const scoredFeeds = feeds.map((f, idx) => {
+        const feedText = `${f.title || ''} ${f.content || ''}`.toLowerCase();
+        const score = calculateTextSimilarity(signalText, feedText);
+        return { feed: f, idx, score };
+      }).sort((a, b) => b.score - a.score);
+      
+      // console.log(`Top 3 matches:`, scoredFeeds.slice(0, 3).map(s => ({ title: s.feed.title?.substring(0, 40), score: s.score.toFixed(2) })));
+      
+      const viableMatches = scoredFeeds.filter(s => s.score > 0.15);
+      if (viableMatches.length > 0) {
+        const topMatch = viableMatches[0];
+        source = [{
+          feedId: String(topMatch.idx),
+          source: topMatch.feed.source || 'Unknown',
+          title: topMatch.feed.title || 'Untitled',
+          link: topMatch.feed.link,
+          timestamp: topMatch.feed.timestamp || new Date().toISOString()
+        }];
+        // console.log(`Auto-assigned source: ${topMatch.feed.title} (score: ${topMatch.score.toFixed(2)})`);
+      } else {
+        console.warn(`No feed match found for signal "${title}"`);
+      }
+    }
+    
     const contradictions = (Array.isArray(s.contradictions) ? s.contradictions : []).map((c: any) => ({
       ...c,
       sourceA: normalizeSource(c.sourceA, feeds),
       sourceB: normalizeSource(c.sourceB, feeds)
     }));
+
+    // Safeguard: prevent text from being set to title
+    if (text === s.title || text === title) {
+      console.warn('Text was set to title value, clearing to prevent duplication');
+      text = '';
+    }
 
 
     const importance = typeof s.importance === 'number' ? s.importance :
@@ -1321,12 +1569,25 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
     };
   });
 
-  console.log(`Processed ${processedSignals.length} signals`);
-  if (processedSignals.length > 0) {
-    console.log('First signal:', processedSignals[0].title);
-  }
+  // console.log(`Processed ${processedSignals.length} signals`);
+  
+  // Filter out signals without at least one source
+  const signalsWithSources = processedSignals.filter(s => {
+    const hasSource = s.source && s.source.length > 0;
+    // if (!hasSource) {
+    //   console.warn(`Filtering out signal "${s.title}" - no source references`);
+    // }
+    return hasSource;
+  });
+  
+  // console.log(`${signalsWithSources.length} signals have sources (${processedSignals.length - signalsWithSources.length} filtered out)`);
+  
+  // if (signalsWithSources.length > 0) {
+  //   console.log('First processed signal:', JSON.stringify(signalsWithSources[0], null, 2));
+  // }
+  // console.log('=== END FINALIZE SIGNALS ===');
 
-  return deduplicateSignals(processedSignals);
+  return deduplicateSignals(signalsWithSources);
 }
 
 function finalizeInsights(raw: any[], feeds: RawSignal[] = []) {

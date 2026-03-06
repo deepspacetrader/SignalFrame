@@ -387,20 +387,22 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
 
 
               {/* Signal text - only show if different from title */}
-              <p className="signal-text text-text-secondary text-sm leading-relaxed mb-3">
-                {signal.text || 'Error generating signal text'}
-              </p>
+              {signal.text && signal.text.trim() && signal.text !== signal.title && (
+                <p className="signal-text text-text-secondary text-sm leading-relaxed mb-3">
+                  {signal.text || 'Missing signal text'}
+                </p>
+              )}
 
               {/* Category and delta type */}
               <div className="flex flex-wrap gap-2 mb-3">
                 {signal.category && (
                   <span className="px-2 py-1 rounded bg-slate-500/20 text-slate-300 text-[0.65rem] uppercase tracking-widest">
-                    {signal.category}
+                    {signal.category || 'Unknown category'}
                   </span>
                 )}
                 {signal.deltaType && (
                   <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-300 text-[0.65rem] uppercase tracking-widest">
-                    {signal.deltaType}
+                    {signal.deltaType || 'Unknown delta type'}
                   </span>
                 )}
               </div>
@@ -414,7 +416,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                   <div>
                     <p className="text-[0.6rem] uppercase tracking-widest text-text-tertiary mb-1">Insight:</p>
                     <p className="text-text-secondary text-sm leading-relaxed">
-                      {signal.explain}
+                      {signal.explain || 'Missing insight explanation'}
                     </p>
                   </div>
                 )}
@@ -629,6 +631,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
         isGenerating={isGeneratingDeepDive}
         onAIRequired={onAIRequired}
         regenerateDeepDive={regenerateDeepDive}
+        activeSignalId={activeDeepDiveSignalId}
       />
     </SectionCard>
   )

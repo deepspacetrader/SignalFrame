@@ -14,6 +14,49 @@ const NVIDIA_VOICES: Voice[] = [
   { name: 'Isabela', id: 'Magpie-Multilingual.EN-US.Isabela' },
 ]
 
+const NVIDIA_EMOTIONS: Voice[] = [
+  { name: 'Default', id: 'default' },
+  { name: 'Happy', id: 'happy' },
+  { name: 'Neutral', id: 'neutral' },
+  { name: 'Calm', id: 'calm' },
+  { name: 'Angry', id: 'angry' },
+  { name: 'Fearful', id: 'fearful' },
+]
+
+// Voice-emotion compatibility mapping based on official NVIDIA NIM documentation
+// Format: Magpie-Multilingual.{LOCALE}.{Speaker}[.{Emotion}]
+// Only specific speakers have emotional variants in EN-US
+const VOICE_EMOTION_COMPATIBILITY: Record<string, string[]> = {
+  // Base voices (no emotion)
+  'Magpie-Multilingual.EN-US.Aria': ['default'],
+  'Magpie-Multilingual.EN-US.Sofia': ['default'],
+  'Magpie-Multilingual.EN-US.Mia': ['default'],
+  'Magpie-Multilingual.EN-US.Louise': ['default'], // No emotional variants
+  'Magpie-Multilingual.EN-US.Isabela': ['default'], // No emotional variants in EN-US
+  
+  // Aria (EN-US) - 6 emotions: Angry, Calm, Fearful, Happy, Neutral, Sad
+  'Magpie-Multilingual.EN-US.Aria.Angry': ['angry'],
+  'Magpie-Multilingual.EN-US.Aria.Calm': ['calm'],
+  'Magpie-Multilingual.EN-US.Aria.Fearful': ['fearful'],
+  'Magpie-Multilingual.EN-US.Aria.Happy': ['happy'],
+  'Magpie-Multilingual.EN-US.Aria.Neutral': ['neutral'],
+  'Magpie-Multilingual.EN-US.Aria.Sad': ['sad'],
+  
+  // Sofia (EN-US) - 5 emotions (excluding Sad)
+  'Magpie-Multilingual.EN-US.Sofia.Angry': ['angry'],
+  'Magpie-Multilingual.EN-US.Sofia.Calm': ['calm'],
+  'Magpie-Multilingual.EN-US.Sofia.Fearful': ['fearful'],
+  'Magpie-Multilingual.EN-US.Sofia.Happy': ['happy'],
+  'Magpie-Multilingual.EN-US.Sofia.Neutral': ['neutral'],
+  
+  // Mia (EN-US) - 5 emotions (excluding Sad)
+  'Magpie-Multilingual.EN-US.Mia.Angry': ['angry'],
+  'Magpie-Multilingual.EN-US.Mia.Calm': ['calm'],
+  'Magpie-Multilingual.EN-US.Mia.Fearful': ['fearful'],
+  'Magpie-Multilingual.EN-US.Mia.Happy': ['happy'],
+  'Magpie-Multilingual.EN-US.Mia.Neutral': ['neutral'],
+}
+
 interface TTSButtonProps {
   text: string
   className?: string
@@ -28,10 +71,57 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedVoice, setSelectedVoice] = useState(voice)
+  const [selectedEmotion, setSelectedEmotion] = useState('default')
   const [useFallback, setUseFallback] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const speechTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const fallbackSpeechRef = useRef<SpeechSynthesisUtterance | null>(null)
+
+  // Check if there's selected text
+  const hasSelection = () => {
+    const selection = window.getSelection()
+    return selection && selection.toString().trim().length > 0
+  }
+
+  const getButtonText = () => {
+    if (isSpeaking) return 'Stop'
+    if (hasSelection()) return 'Speak Selection'
+    return 'Speak'
+  }
+
+  const getButtonTitle = () => {
+    if (isSpeaking) return 'Stop speaking'
+    if (hasSelection()) return 'Speak selected text with NVIDIA Magpie TTS'
+    return 'Speak with NVIDIA Magpie TTS'
+  }
+
+  const getAvailableEmotions = () => {
+    const voiceKey = (selectedVoice as string) || 'Magpie-Multilingual.EN-US.Sofia'
+    
+    // Check if the base voice supports emotions
+    const supportedEmotions = VOICE_EMOTION_COMPATIBILITY[voiceKey] || ['default']
+    
+    // If base voice only supports default, check for emotion-specific voice names
+    if (supportedEmotions.length === 1 && supportedEmotions[0] === 'default') {
+      // Look for emotion-specific voice names for this base voice
+      const emotionVoices = Object.keys(VOICE_EMOTION_COMPATIBILITY)
+        .filter(voiceName => voiceName.startsWith(voiceKey + '.'))
+        .map(voiceName => VOICE_EMOTION_COMPATIBILITY[voiceName][0])
+        .filter(Boolean)
+      
+      if (emotionVoices.length > 0) {
+        // This voice has emotion-specific variants
+        return NVIDIA_EMOTIONS.filter(emotion => 
+          emotion.id === 'default' || emotionVoices.includes(emotion.id || '')
+        )
+      }
+    }
+    
+    // Use the supported emotions from the base voice mapping
+    return NVIDIA_EMOTIONS.filter(emotion => 
+      supportedEmotions.includes(emotion.id || '')
+    )
+  }
 
   // Cleanup timeout and audio on unmount
   useEffect(() => {
@@ -46,12 +136,28 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
     }
   }, [])
 
+  const getSelectedText = () => {
+    const selection = window.getSelection()
+    if (selection && selection.toString().trim()) {
+      return selection.toString().trim()
+    }
+    return ''
+  }
+
   const handleSpeak = async () => {
-    if (!text.trim() || isSpeaking || isLoading) return
+    const selectedText = getSelectedText()
+    const textToSpeak = selectedText || text
+    
+    if (!textToSpeak.trim() || isSpeaking || isLoading) return
 
     setIsSpeaking(true)
     setIsLoading(true)
     setUseFallback(false)
+    
+    // Clear selection after using it
+    if (selectedText) {
+      window.getSelection()?.removeAllRanges()
+    }
     
     try {
       // First check if NVIDIA TTS server is running
@@ -65,9 +171,11 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
       
       console.log('[NVIDIA TTS] Server health OK, requesting audio...')
       console.log('[NVIDIA TTS] Request data:', {
-        text: text.substring(0, 50) + '...',
+        text: textToSpeak.substring(0, 50) + '...',
         voice: selectedVoice || 'Magpie-Multilingual.EN-US.Aria',
-        languageCode: 'en-US'
+        languageCode: 'en-US',
+        emotion: selectedEmotion,
+        usingSelection: !!selectedText
       })
 
       const response = await fetch(`${NVIDIA_TTS_SERVER_URL}/api/nvidia-tts`, {
@@ -76,9 +184,10 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: text,
+          text: textToSpeak,
           voice: selectedVoice || 'Magpie-Multilingual.EN-US.Aria',
-          languageCode: 'en-US'
+          languageCode: 'en-US',
+          emotion: selectedEmotion
         })
       })
 
@@ -164,13 +273,13 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
         URL.revokeObjectURL(audioUrl)
         audioRef.current = null
         // Fallback to Web Speech API
-        useWebSpeechFallback(text)
+        useWebSpeechFallback(textToSpeak)
       }
       
     } catch (error) {
       console.warn('[NVIDIA TTS] API error, using fallback:', error)
       // Fallback to Web Speech API
-      useWebSpeechFallback(text)
+      useWebSpeechFallback(textToSpeak)
     }
   }
 
@@ -247,18 +356,35 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
         ))}
       </select>
 
+      {/* Emotion Selector Dropdown */}
+      <select
+        value={selectedEmotion || ''}
+        onChange={(e) => setSelectedEmotion(e.target.value || 'default')}
+        disabled={isSpeaking}
+        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary"
+        title="Select NVIDIA Magpie emotion for text-to-speech (uses SSML)"
+      >
+        {getAvailableEmotions().map((emotionOption: Voice) => (
+          <option key={emotionOption.id || 'default'} value={emotionOption.id || ''}>
+            {emotionOption.name}
+          </option>
+        ))}
+      </select>
+
       {/* TTS Button */}
       <button
         onClick={isSpeaking ? handleStop : handleSpeak}
-        disabled={!text.trim() && !isSpeaking}
+        disabled={(!text.trim() && !hasSelection()) && !isSpeaking}
         className={`text-[0.6rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded transition-all flex items-center gap-2 ${
           isSpeaking 
             ? 'bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30' 
+            : hasSelection()
+            ? 'bg-blue-500/20 border border-blue-500/30 text-blue-300 hover:bg-blue-500/30'
             : 'bg-green-500/20 border border-green-500/30 text-green-300 hover:bg-green-500/30'
         } ${
-          !text.trim() && !isSpeaking ? 'opacity-50 cursor-not-allowed' : ''
+          (!text.trim() && !hasSelection()) && !isSpeaking ? 'opacity-50 cursor-not-allowed' : ''
         }`}
-        title={isSpeaking ? 'Stop speaking' : 'Speak with NVIDIA Magpie TTS'}
+        title={getButtonTitle()}
       >
         {isSpeaking ? (
           <>
@@ -275,7 +401,7 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
             </svg>
-            <span>Speak</span>
+            <span>{getButtonText()}</span>
           </>
         )}
       </button>

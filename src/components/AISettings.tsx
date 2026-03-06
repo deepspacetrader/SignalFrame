@@ -562,7 +562,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </label>
                                 <p className="text-[10px] text-text-secondary leading-relaxed">
                                     Uses chain-of-thought reasoning for deeper analysis.
-                                    Requires a thinking-capable model (deepseek-r1, qwen3, gpt-oss).
+                                    Requires a thinking-capable model (deepseek-r1, qwen3, qwen3.5).
                                 </p>
                             </div>
                             <button

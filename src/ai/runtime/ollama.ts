@@ -87,10 +87,11 @@ export class OllamaService {
         const url = `${this.baseUrl}/chat`;
         
         // Check if model supports thinking mode
-        const thinkingCapableModels = ['deepseek-r1', 'qwen3', 'gpt-oss'];
+        const thinkingCapableModels = ['deepseek-r1', 'qwen3', 'qwen3.5'];
         const modelSupportsThinking = thinkingCapableModels.some(supportedModel => 
             model.toLowerCase().includes(supportedModel.toLowerCase())
         );
+
         
         try {
             const requestBody = {
@@ -104,6 +105,7 @@ export class OllamaService {
                     num_thread: 0
                 }
             };
+            console.log('Model supports thinking:', modelSupportsThinking);
             
             // Only add think parameter if model supports it
             if (modelSupportsThinking && options.think !== false) {
@@ -118,6 +120,7 @@ export class OllamaService {
             });
 
             if (!response.ok) {
+                console.log('Ollama thinking generation failed:', response);
                 // If thinking mode failed and we tried it, fallback to regular chat
                 if (modelSupportsThinking && options.think !== false) {
                     console.warn(`Thinking mode failed for ${model}, falling back to regular generation`);
@@ -155,7 +158,7 @@ export class OllamaService {
         const url = `${this.baseUrl}/chat`;
         
         // Check if model supports thinking mode
-        const thinkingCapableModels = ['deepseek-r1', 'qwen3', 'gpt-oss'];
+        const thinkingCapableModels = ['deepseek-r1', 'qwen3', 'qwen3.5'];
         const modelSupportsThinking = thinkingCapableModels.some(supportedModel => 
             model.toLowerCase().includes(supportedModel.toLowerCase())
         );
@@ -172,6 +175,7 @@ export class OllamaService {
                     num_thread: 0
                 }
             };
+            console.log('Model supports streaming and thinking:', modelSupportsThinking);
             
             // Only add think parameter if model supports it
             if (modelSupportsThinking && options.think !== false) {

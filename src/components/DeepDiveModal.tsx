@@ -11,6 +11,7 @@ interface DeepDiveModalProps {
     isGenerating?: boolean;
     onAIRequired?: () => void;
     regenerateDeepDive?: (signalId: string) => void;
+    activeSignalId?: string | null;
 }
 
 const getSentimentColor = (sentiment: string) => {
@@ -27,7 +28,7 @@ const getSentimentColor = (sentiment: string) => {
     }
 }
 
-export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired, regenerateDeepDive }: DeepDiveModalProps) {
+export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired, regenerateDeepDive, activeSignalId }: DeepDiveModalProps) {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
     // If in demo mode and no data is available, show demo modal instead
@@ -56,16 +57,18 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                     </button>
 
                     {/* Regenerate button - only show when data exists and not generating */}
-                    {data && !isGenerating && regenerateDeepDive && (
+                    {data && !isGenerating && regenerateDeepDive && activeSignalId && (
                         <div className="absolute top-4 right-12 sm:top-6 sm:right-16 z-10">
                             <SectionRegenerateButton
                                 onClick={() => {
+                                    // console.log('Regenerate button clicked, activeSignalId:', activeSignalId);
                                     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                                     if (!isLocalhost) {
                                         onAIRequired?.();
                                         return;
                                     }
-                                    regenerateDeepDive(data.signalId);
+                                    // console.log('Calling regenerateDeepDive with:', activeSignalId);
+                                    regenerateDeepDive(activeSignalId);
                                 }}
                                 disabled={isGenerating}
                             />
