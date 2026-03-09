@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo, useCallback, memo } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { RawSignal } from '../services/feedIngest'
+import { zzfx } from '../utils/zzfx'
 
 
 const FeedItem = memo(({ item }: { item: RawSignal }) => {
@@ -157,6 +158,7 @@ export function SourceFeedList({ onAIRequired }: { onAIRequired?: () => void }) 
                                 onAIRequired?.();
                                 return;
                             }
+                            zzfx.playRegeneration();
                             refreshFeeds();
                         }}
                         disabled={isProcessing}

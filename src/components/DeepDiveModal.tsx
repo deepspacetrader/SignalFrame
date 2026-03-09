@@ -274,7 +274,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                             Watch For
                                         </h3>
                                         <ul className="space-y-2">
-                                            {data.watchNext.map((item, idx) => (
+                                            {(Array.isArray(data.watchNext) ? data.watchNext : []).map((item, idx) => (
                                                 <li key={idx} className="text-xs text-text-primary flex items-start gap-2">
                                                     <span className="text-accent-primary mt-0.5">•</span>
                                                     {item}

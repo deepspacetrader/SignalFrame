@@ -553,6 +553,12 @@ class OllamaPollingManager {
           }
         };
         console.log(`Ollama service just started`);
+        
+        // Play success sound when AI service comes online
+        if (globalState.soundVolume > 0) {
+          zzfx.setMasterVolume(globalState.soundVolume);
+          zzfx.playSuccess();
+        }
       } else if (!isServiceRunning && wasOnline) {
         // Ollama service just stopped
         globalState = {
@@ -1445,6 +1451,13 @@ export function useSituationStore() {
         retryCount: globalState.jsonError.retryCount
       }
     };
+    
+    // Play notification sound when JSON error occurs
+    if (globalState.soundVolume > 0) {
+      zzfx.setMasterVolume(globalState.soundVolume);
+      zzfx.playNotification();
+    }
+    
     notify();
   }, []);
 
@@ -1573,7 +1586,8 @@ export function useSituationStore() {
             zzfx.playCompletion();
           }
         } else {
-          zzfx.playCompletion();
+          // Use ping sound for other section completions
+          zzfx.playPing();
         }
       }
 
@@ -1807,7 +1821,12 @@ export function useSituationStore() {
 
     try {
       await refreshSection(sectionId, true);
-      // Success - error should already be cleared by clearJsonError() at the start
+      // Success - play success sound and clear error
+      if (globalState.soundVolume > 0) {
+        zzfx.setMasterVolume(globalState.soundVolume);
+        zzfx.playSuccess();
+      }
+      // Error should already be cleared by clearJsonError() at the start
     } catch (error) {
       // If retry fails, set error state again with updated retry count
       globalState = {
@@ -1824,6 +1843,13 @@ export function useSituationStore() {
           [sectionId]: false
         }
       };
+      
+      // Play notification sound when retry fails
+      if (globalState.soundVolume > 0) {
+        zzfx.setMasterVolume(globalState.soundVolume);
+        zzfx.playNotification();
+      }
+      
       notify();
     }
   }, [refreshSection, clearJsonError]);

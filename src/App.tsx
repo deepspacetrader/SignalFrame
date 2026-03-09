@@ -16,6 +16,7 @@ import { formatTime } from './utils/timeUtils'
 import { getSentimentProfile } from './ai/runtime/sentimentEngine'
 import { LocalAIRequiredModal } from './components/LocalAIRequiredModal'
 import { DisclaimerModal } from './components/DisclaimerModal'
+// import { SoundTestPanel } from './components/SoundTestPanel'
 
 export default function App() {
   const { isProcessing, lastUpdated, refresh, currentDate, availableDates, loadDate, runningModels, sectionGenerationTimes, aiConfig, aiStatus, exportSnapshot } = useSituationStore()
@@ -282,6 +283,7 @@ export default function App() {
       <BigPictureModal isOpen={showBigPicture} onClose={() => setShowBigPicture(false)} onAIRequired={() => setShowAIModal(true)} />
       <LocalAIRequiredModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} />
       <DisclaimerModal isOpen={showDisclaimer} onClose={() => setShowDisclaimer(false)} />
+      {/* <SoundTestPanel /> */}
     </div>
   )
 }

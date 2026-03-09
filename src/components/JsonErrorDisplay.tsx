@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { zzfx } from '../utils/zzfx'
 
 interface JsonErrorProps {
   error: string
@@ -63,6 +64,7 @@ export function JsonErrorDisplay({ error, onRetry, onCancel, countdown = 5, isRe
       setIsCountingDown(false)
       setTimeLeft(0)
     }
+    zzfx.playRegeneration();
     onRetry()
   }
 

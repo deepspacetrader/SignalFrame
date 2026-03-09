@@ -106,8 +106,12 @@ export class Zzfx {
     let b = [];
     let c = 0;
 
+    // Calculate total duration and buffer size
+    const totalDuration = attack + sustain + release;
+    const bufferSize = Math.floor(44100 * totalDuration);
+
     // Generate the sound
-    for (let i = 0; i < 44100; ++i) {
+    for (let i = 0; i < bufferSize; ++i) {
       if (c < i) {
         c = i;
         let sample = 0;
@@ -237,6 +241,38 @@ export class Zzfx {
         this.playPing();
       }, i * 150); // 150ms between pings
     }
+  }
+
+  playRegeneration(): void {
+    this.play({
+      volume: 1,
+      frequency: 600, // Low sub-bass start
+      attack: 0.5, // Slower fade in
+      sustain: 0.5, // Hold for 3 seconds (increased from 1.5)
+      release: 0.5, // Longer fade out (increased from 1.2)
+      slide: 0.02, // Rapid pitch rise
+      modulation: 15, // Heavy modulation for digital feel
+      tremolo: 0.3, // Pulsing effect
+      lowpass: 0.3, // Muffled start
+      decay: 0.1 // Slight decay
+    });
+  }
+
+  playDeepAnalysis(): void {
+    this.play({
+      volume: 0.1,
+      frequency: 25,
+      attack: 0.03,
+      sustain: 0.25,
+      release: 2.5,
+      slide: 0.005,
+      modulation: 100,
+      tremolo: 2,
+      lowpass: 6,
+      decay: 0,
+      repeatTime: 0,
+      delay: 0
+    });
   }
 }
 

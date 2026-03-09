@@ -377,18 +377,17 @@ function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
   const selected: RawSignal[] = [];
   const seen = new Set<string>();
 
-  // First, try to match by feed index (since AI uses numeric indices for feedId)
-  for (const [idx, feed] of feeds.entries()) {
-    const feedIndexId = String(idx);
-    if (wantedIds.has(feedIndexId) && !seen.has(feed.id)) {
+  // First, try to match by actual feedId from signal.source
+  for (const feed of feeds) {
+    if (wantedIds.has(feed.id) && !seen.has(feed.id)) {
       selected.push(feed);
       seen.add(feed.id);
     }
   }
 
-  // Then add remaining feeds by similarity score
+  // Then add remaining feeds by similarity score - LIMIT TO 6 for DeepDive
   for (const { f } of scored) {
-    if (selected.length >= 12) break;
+    if (selected.length >= 6) break; // Reduced from 12 to 6
     if (seen.has(f.id)) continue;
     selected.push(f);
     seen.add(f.id);
@@ -398,15 +397,39 @@ function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
 }
 
 function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateStr: string, aiConfig?: AiConfig) {
-  const feedIndex = feedsSubset.map((f, idx) => ({
-    feedId: String(idx),
-    source: f.source,
-    title: f.title,
-    // link omitted to prevent hallucination
-    timestamp: f.timestamp,
-    category: f.category,
-    content: f.content
-  }));
+  // Use aggressive truncation to stay under 9,000 byte limit
+  const maxContentLength = 600; // Further reduced
+  const maxTotalChars = 6000; // Much smaller to stay safe
+  
+  let feedContent = '';
+  for (const f of feedsSubset) {
+    const sourceTag = `[${f.source}]`;
+    const titleTag = f.title ? `${f.title}. ` : '';
+    
+    let content = f.content || '';
+    if (content.length > maxContentLength) {
+      content = content.substring(0, maxContentLength) + '... [truncated]';
+    }
+    
+    const itemText = `${sourceTag} ${titleTag}${content}\n\n`;
+    
+    if ((feedContent.length + itemText.length) > maxTotalChars) {
+      feedContent += `... [Further feeds omitted due to context limit]`;
+      break;
+    }
+    
+    feedContent += itemText;
+  }
+
+  // Create minimal signal representation to save space
+  const minimalSignal = {
+    id: signal.id,
+    title: signal.title,
+    text: signal.text,
+    sentiment: signal.sentiment,
+    deltaType: signal.deltaType,
+    category: signal.category
+  };
 
   // Get custom sentiment guidelines if profile is specified
   let customGuidelines = '';
@@ -414,66 +437,56 @@ function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateSt
     const profile = getSentimentProfile(aiConfig.sentimentProfile);
     customGuidelines = `\n\nSENTIMENT GUIDELINES:\n${generateCustomSentimentGuidelines(profile)}\n\nWhen analyzing the signal and determining sentiment, apply these guidelines consistently.`;
   }
-  // Check if model is qwen3.5 for simplified prompt
-  /*
-  const isQwen35 = aiConfig?.model?.toLowerCase().includes('qwen3.5');
-  
-  if (isQwen35) {
-    // Prefilter feeds to only include those referenced in the signal
-    const relevantFeeds = feedIndex.filter(feed => {
-      const signalText = (signal.text || '').toLowerCase();
-      const signalTitle = (signal.title || '').toLowerCase();
-      const feedText = (feed.content || '').toLowerCase();
-      const feedTitle = (feed.title || '').toLowerCase();
-      const feedSource = (feed.source || '').toLowerCase();
-      
-      // Check if feed is referenced in signal
-      return signalText.includes(feedTitle.substring(0, 20)) ||
-             signalText.includes(feedSource) ||
-             signalTitle.includes(feedTitle.substring(0, 20)) ||
-             signalTitle.includes(feedSource) ||
-             feedText.includes(signal.title?.substring(0, 20) || '');
-    });
-    
-    // console.log('Using Qwen3.5 prompt...');
-    // console.log('Signal:', JSON.stringify(signal));
-    // console.log('Relevant Feeds:', JSON.stringify(relevantFeeds));
-    // console.log('Date:', JSON.stringify(dateStr));
 
-let qwenprompt = `You are an elite intelligence analyst. Generate a structured Deep Dive analysis for the provided Signal. 
-    Date: ${JSON.stringify(dateStr)} \n
-    Signal: ${JSON.stringify(signal)} \n
-    Feeds: ${JSON.stringify(relevantFeeds)} \n
+  // Use the same prompt for all models
+  return `You are an elite intelligence analyst.
+Generate a structured Deep Dive for the provided Signal.
 
-    REQUIREMENTS: \n
-    - Return ONLY valid JSON. \n
-    - If a field is unknown, omit it (do NOT use null). \n
-    JSON STRUCTURE: \n
-      {
-        "signalId": string,
-        "title": string,
-        "text": string,
-        "sentiment": string,
-        "deltaType": string,
-        "category": string,
-        "who": string[],
-        "what": string,
-        "where": string,
-        "when": string,
-        "why": string,
-        "soWhat": string,
-        "source": [
-          { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
-        ],
-        "counterpoints": [
-          { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
-        ],
-        "watchNext": string[] // 3-5 predictive statements about what events to watch for NEXT (e.g., "Potential retaliatory strikes", "Investigation results"). NO URLs. NO links. NO example.com.
-      }`
-// console.log(qwenprompt);
-    return qwenprompt;
-  }
-  */
+CRITICAL JSON REQUIREMENTS:
+- Return ONLY strict JSON. No markdown. No prose outside JSON.
+- All strings must be valid JSON strings.
+- If a field is unknown, omit it (do NOT use null).
+
+DATE: ${dateStr}
+
+SIGNAL:
+${JSON.stringify(minimalSignal)}
+
+FEED CONTENT:
+${feedContent}${customGuidelines}
+
+Return EXACTLY one JSON object with this shape:
+{
+  "signalId": string,
+  "header": {
+    "title": string,
+    "text": string,
+    "sentiment": string,
+    "deltaType": string,
+    "category": string
+  },
+  "fiveWs": {
+    "who": string[],
+    "what": string,
+    "where": string,
+    "when": string,
+    "why": string,
+    "soWhat": string
+  },
+  "source": [
+    { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
+  ],
+  "counterpoints": [
+    { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
+  ],
+  "watchNext": string[] // 3-5 predictive statements about what events/indicators to watch for NEXT (e.g., "Potential retaliatory strikes from Iran", "Watch for CENTCOM investigation results", "Monitor gas price fluctuations")
+}
+
+Rules:
+- Use provided FEED CONTENT as source material
+- Include relevant quotes from feed content in your analysis
+- watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.
+`;
 
 /*
 {
@@ -555,10 +568,10 @@ CRITICAL JSON REQUIREMENTS:
 DATE: ${dateStr}
 
 SIGNAL:
-${JSON.stringify(signal)}
+${JSON.stringify(minimalSignal)}
 
-FEED INDEX (for citations):
-${JSON.stringify(feedIndex)}${customGuidelines}
+FEED CONTENT:
+${feedContent}${customGuidelines}
 
 Return EXACTLY one JSON object with this shape:
 {
@@ -588,9 +601,8 @@ Return EXACTLY one JSON object with this shape:
 }
 
 Rules:
-- source.feedId MUST come from FEED INDEX.
-- You MUST include at least reference source per signal item.
-- Show as many signals as possible without duplicates or similar enough to each other that a user would consider them the same.
+- Use the provided FEED CONTENT as source material
+- Include relevant quotes from the feed content in your analysis
 - watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.
 `;
 }
@@ -616,6 +628,16 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
         return JSON.parse(jsonStr);
       }
       throw new Error('JSON extraction failed');
+    },
+    () => {
+      // Try to extract JSON array if object parsing fails
+      const start = cleanText.indexOf('[');
+      const end = cleanText.lastIndexOf(']');
+      if (start !== -1 && end !== -1 && end > start) {
+        const jsonStr = cleanText.substring(start, end + 1);
+        return JSON.parse(jsonStr);
+      }
+      throw new Error('JSON array extraction failed');
     }
   ];
 
@@ -623,10 +645,10 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
   for (const strat of strategies) {
     try {
       const obj = strat();
-      if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+      if (obj && typeof obj === 'object') {
         return { success: true, data: obj, canRetry: false };
       }
-      throw new Error('Parsed value was not a JSON object');
+      throw new Error('Parsed value was not a valid JSON');
     } catch (e) {
       lastError = e as Error;
     }
@@ -644,26 +666,85 @@ export async function generateDeepDive(
   dateStr: string,
   aiConfig: AiConfig
 ): Promise<DeepDiveData> {
-  const prompt = generateDeepDivePrompt(signal, feeds, dateStr, aiConfig);
+  // Select relevant feeds for this signal
+  const relevantFeeds = selectRelevantFeeds(signal, feeds);
+  const prompt = generateDeepDivePrompt(signal, relevantFeeds, dateStr, aiConfig);
   const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
-  // console.log('=== DeepDive Prompt ===');
-  // console.log('Model:', aiConfig.model);
-  // console.log('Prompt:', prompt);
-  // console.log('Options:', options);
-  // console.log('==============================');
-  const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
   
-  // Log raw response for debugging
-  // console.log('=== DeepDive Raw Response ===');
-  // console.log('Model:', aiConfig.model);
-  // console.log('Raw response:', raw);
-  // console.log('Response length:', raw?.length || 0);
-  // console.log('==============================');
+  // Check if prompt is too large for context window
+  const promptSize = new Blob([prompt]).size;
+  const contextWindow = aiConfig.numCtx || 12000;
+  const maxPromptSize = contextWindow * 0.75; // Use 75% of context window for safety
+  
+  if (promptSize > maxPromptSize) {
+    console.warn(`DeepDive prompt size (${promptSize} bytes) exceeds safe limit (${maxPromptSize} bytes). May cause empty responses.`);
+  }
+  
+  // Add detailed debugging
+  console.log('=== DeepDive Debug Info ===');
+  console.log('Model:', aiConfig.model);
+  console.log('Prompt size (bytes):', promptSize);
+  console.log('Context window:', contextWindow);
+  console.log('Safe limit (75%):', maxPromptSize);
+  console.log('Prompt preview (first 300 chars):', prompt?.substring(0, 300) + '...');
+  console.log('Options:', options);
+  console.log('==============================');
+  
+  let raw;
+  let retryCount = 0;
+  const maxRetries = 2;
+  
+  while (retryCount < maxRetries) {
+    try {
+      raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
+      console.log(`Ollama service call successful on attempt ${retryCount + 1}`);
+      break; // Success, exit retry loop
+    } catch (error) {
+      console.error(`Ollama service error on attempt ${retryCount + 1}:`, error);
+      retryCount++;
+      
+      if (retryCount >= maxRetries) {
+        raw = ''; // Final failure
+      } else {
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
   
   const parsed = parseJsonObjectWithDetection(raw);
   if (!parsed.success) {
     console.error('DeepDive parsing failed:', parsed.error);
-    console.log(parsed);
+    console.log('Raw response that failed:', raw);
+    console.log('Parsed result:', parsed);
+    
+    // If we got an empty response, try to provide a fallback
+    if (parsed.error?.includes('Empty response') || !raw || raw.trim() === '') {
+      console.warn('Empty response from AI, providing fallback DeepDive');
+      return {
+        signalId: signal.id || '',
+        generatedAt: new Date().toISOString(),
+        header: {
+          title: signal.title || 'Signal Analysis',
+          text: signal.text || 'Unable to generate detailed analysis at this time.',
+          sentiment: signal.sentiment || 'neutral',
+          deltaType: signal.deltaType,
+          category: signal.category
+        },
+        fiveWs: {
+          who: [],
+          what: signal.text || 'Signal analysis unavailable',
+          where: '',
+          when: dateStr,
+          why: 'AI service temporarily unavailable',
+          soWhat: 'Manual analysis may be required'
+        },
+        source: [],
+        counterpoints: [],
+        watchNext: [] // Ensure this is always an array
+      };
+    }
+    
     throw new Error(parsed.error || 'Deep Dive JSON parsing error');
   }
 
@@ -674,6 +755,48 @@ export async function generateDeepDive(
   // console.log('AI returned signalId:', obj.signalId);
   // console.log('AI returned obj.title:', obj.title);
   // console.log('AI returned obj.header:', obj.header);
+  
+  // Handle case where AI returns an array instead of object
+  if (Array.isArray(obj)) {
+    console.warn('DeepDive: AI returned array instead of expected object, attempting to convert...', obj);
+    
+    // Try to extract meaningful data from the array
+    if (obj.length > 0 && obj[0].headline) {
+      // This looks like a news headlines array - create a basic DeepDive structure
+      const firstItem = obj[0];
+      return {
+        signalId: signal.id || '',
+        generatedAt: new Date().toISOString(),
+        header: {
+          title: signal.title || firstItem.headline || 'Untitled Signal',
+          text: firstItem.summary || signal.text || firstItem.headline || '',
+          sentiment: signal.sentiment || 'neutral',
+          deltaType: signal.deltaType,
+          category: firstItem.category || signal.category
+        },
+        fiveWs: {
+          who: [],
+          what: firstItem.summary || firstItem.headline || '',
+          where: '',
+          when: dateStr,
+          why: '',
+          soWhat: ''
+        },
+        source: obj.slice(0, 3).map((item: any, idx: number) => ({
+          feedId: String(idx),
+          source: item.source || 'Unknown',
+          title: item.headline || '',
+          timestamp: new Date().toISOString(),
+          quote: item.summary || ''
+        })),
+        counterpoints: [],
+        watchNext: []
+      };
+    }
+    
+    console.error('DeepDive: Unable to convert array to expected object format', obj);
+    throw new Error('AI returned invalid format: expected object, got array');
+  }
   
   // Check if this is flattened qwen3.5 format or standard format
   const isQwen35Format = obj.title && !obj.header;
