@@ -283,29 +283,10 @@ const getTodayStr = () => {
  */
 const getAvailableSnapshotDates = async (): Promise<string[]> => {
   try {
-    // Try to fetch a directory listing (this may not work on all static hosts)
-    // As a fallback, try recent dates in reverse order
-    const availableDates: string[] = [];
-    const today = new Date();
-
-    // Check last 30 days for available snapshots
-    for (let i = 0; i < 30; i++) {
-      const checkDate = new Date(today);
-      checkDate.setDate(checkDate.getDate() - i);
-      const dateStr = checkDate.toISOString().split('T')[0];
-
-      try {
-        const response = await fetch(`./data/snapshot-${dateStr}.json`);
-        if (response.ok) {
-          availableDates.push(dateStr);
-        }
-      } catch (e) {
-        // Skip dates that don't have snapshots
-        continue;
-      }
-    }
-
-    return availableDates.sort();
+    // In static mode (GitHub Pages), only return today's date to avoid 429 errors
+    // The user can select other dates via the UI, which will load on-demand
+    const today = getTodayStr();
+    return [today];
   } catch (error) {
     console.warn('Failed to get available snapshot dates:', error);
     return [];
@@ -330,37 +311,6 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
     }
   } catch (e) {
     console.warn(`Failed to load snapshot for ${targetDate}:`, e);
-  }
-
-  // If specific date not found, try to find the latest available snapshot
-  try {
-    // Try to fetch a directory listing (this may not work on all static hosts)
-    // As a fallback, try recent dates in reverse order
-    for (let i = 0; i < 30; i++) { // Check last 30 days
-      const checkDate = new Date(targetDate);
-      checkDate.setDate(checkDate.getDate() - i);
-      const dateStr = checkDate.toISOString().split('T')[0];
-
-      try {
-        const fallbackResponse = await fetch(`./data/snapshot-${dateStr}.json`);
-        if (fallbackResponse.ok) {
-          const snapshot = await fallbackResponse.json();
-          console.log(`Fallback: Loaded snapshot for date: ${dateStr}`);
-
-          // Ensure feeds are included
-          if (!snapshot.feeds) {
-            console.log('Feeds missing from fallback snapshot, creating empty feeds array');
-            snapshot.feeds = [];
-          }
-
-          return snapshot;
-        }
-      } catch (e) {
-        // Continue to next date
-      }
-    }
-  } catch (e) {
-    console.warn('Fallback snapshot search failed:', e);
   }
 
   // Finally, try the legacy snapshot.json for backward compatibility
