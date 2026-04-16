@@ -7,9 +7,9 @@ interface Voice {
 }
 
 const NVIDIA_VOICES: Voice[] = [
+  { name: 'Mia', id: 'Magpie-Multilingual.EN-US.Mia' },
   { name: 'Sofia', id: 'Magpie-Multilingual.EN-US.Sofia' },
   { name: 'Aria', id: 'Magpie-Multilingual.EN-US.Aria' },
-  { name: 'Mia', id: 'Magpie-Multilingual.EN-US.Mia' },
   { name: 'Louise', id: 'Magpie-Multilingual.EN-US.Louise' },
   { name: 'Isabela', id: 'Magpie-Multilingual.EN-US.Isabela' },
 ]
@@ -66,7 +66,7 @@ interface TTSButtonProps {
 
 const NVIDIA_TTS_SERVER_URL = '' // Use relative URL to work with base path
 
-export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.EN-US.Sofia', speed = 1.0 }: TTSButtonProps) {
+export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.EN-US.Mia', speed = 1.0 }: TTSButtonProps) {
   const { soundVolume } = useSituationStore()
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isLoading, setIsLoading] = useState(false)

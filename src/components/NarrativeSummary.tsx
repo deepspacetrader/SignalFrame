@@ -53,11 +53,10 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
   }, [aiConfig.enableThinking, sectionGenerationTimes.narrative])
 
   const headerActions = useMemo(() => {
-    if (!narrative || isProcessing) return null
-
+    // Show regenerate button even without narrative so users can start a scan
     return (
       <div className="flex items-center gap-2">
-        <TTSButton text={narrative || ''} />
+        {narrative && !isProcessing && <TTSButton text={narrative || ''} />}
         <SectionRegenerateButton onClick={() => {
           const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           if (!isLocalhost) {
@@ -69,7 +68,7 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
           // On localhost - proceed with refresh (it will fail naturally if AI is offline)
           refreshSection('narrative', true);
         }} />
-        {rawOutputs.narrative && (
+        {narrative && rawOutputs.narrative && (
           <button
             onClick={() => showRawOutput('narrative')}
             className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-all"

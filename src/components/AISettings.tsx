@@ -4,6 +4,12 @@ import { Modal } from './shared/Modal'
 import { useSituationStore } from '../state/useSituationStore'
 import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai/runtime/sentimentEngine'
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
+import { LMStudioService } from '../ai/runtime/lmstudio'
+
+const DEFAULT_URLS = {
+    ollama: 'http://127.0.0.1:11434/api',
+    lmstudio: 'http://127.0.0.1:1234/v1'
+};
 
 export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     const fullState = useSituationStore();
@@ -17,23 +23,50 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
         (aiConfig as any).customSentimentWeights || null
     )
 
+    const [lmStudioModels, setLmStudioModels] = useState<string[]>([])
+    const [lmStudioError, setLmStudioError] = useState<string | null>(null)
+
     useEffect(() => {
         if (isOpen) {
-            const checkOllamaStatus = async () => {
-                try {
-                    await fetchAvailableModels();
-                    setOllamaError(null);
-                } catch (error) {
-                    setOllamaError('Ollama service is not running or not accessible');
+            const checkStatus = async () => {
+                if (tempConfig.provider === 'lmstudio') {
+                    try {
+                        // Set the base URL for LM Studio
+                        if (tempConfig.baseUrl) {
+                            LMStudioService.setBaseUrl(tempConfig.baseUrl);
+                        }
+                        const models = await LMStudioService.listModels();
+                        setLmStudioModels(models);
+                        setLmStudioError(null);
+                    } catch (error) {
+                        setLmStudioError('LM Studio is not running or not accessible');
+                        setLmStudioModels([]);
+                    }
+                } else {
+                    // Check Ollama
+                    try {
+                        await fetchAvailableModels();
+                        setOllamaError(null);
+                    } catch (error) {
+                        setOllamaError('Ollama service is not running or not accessible');
+                    }
                 }
             };
 
-            checkOllamaStatus();
+            checkStatus();
+        }
+    }, [isOpen, fetchAvailableModels, tempConfig.provider, tempConfig.baseUrl]);
+
+    useEffect(() => {
+        if (isOpen) {
             setTempConfig(aiConfig);
         }
-    }, [isOpen, fetchAvailableModels, aiConfig]);
+    }, [isOpen, aiConfig]);
 
-    const isModelInstalled = availableModels.length === 0 || availableModels.some(m => {
+    const currentAvailableModels = tempConfig.provider === 'lmstudio' ? lmStudioModels : availableModels;
+    const currentError = tempConfig.provider === 'lmstudio' ? lmStudioError : ollamaError;
+
+    const isModelInstalled = currentAvailableModels.length === 0 || !tempConfig.model || currentAvailableModels.some(m => {
         const normalizedInput = tempConfig.model.toLowerCase().trim();
         const normalizedModel = m.toLowerCase();
         return normalizedModel === normalizedInput ||
@@ -42,7 +75,11 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     });
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(`ollama pull ${tempConfig.model}`);
+        if (tempConfig.provider === 'lmstudio') {
+            navigator.clipboard.writeText(tempConfig.model);
+        } else {
+            navigator.clipboard.writeText(`ollama pull ${tempConfig.model}`);
+        }
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     }
@@ -120,8 +157,8 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                 </h3>
 
                 <div className="space-y-6">
-                    {/* Ollama Setup Guide */}
-                    {ollamaError && (
+                    {/* AI Service Setup Guide */}
+                    {currentError && (
                         <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl">
                             <div className="flex items-start gap-3 mb-4">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400 flex-shrink-0 mt-0.5">
@@ -130,8 +167,12 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <line x1="12" y1="16" x2="12.01" y2="16" />
                                 </svg>
                                 <div>
-                                    <h4 className="text-sm text-red-400 font-semibold mb-1">Ollama Not Detected</h4>
-                                    <p className="text-xs text-red-300">SignalFrame requires Ollama to be installed and running on your local machine</p>
+                                    <h4 className="text-sm text-red-400 font-semibold mb-1">
+                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio Not Detected' : 'Ollama Not Detected'}
+                                    </h4>
+                                    <p className="text-xs text-red-300">
+                                        SignalFrame requires {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'} to be running on your local machine
+                                    </p>
                                 </div>
                             </div>
 
@@ -324,7 +365,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                     )}
 
                     {/* No Models Available Alert */}
-                    {!ollamaError && availableModels.length === 0 && (
+                    {!currentError && currentAvailableModels.length === 0 && (
                         <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                             <p className="text-sm text-yellow-400 font-semibold flex items-center gap-2">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -332,40 +373,100 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <line x1="12" y1="8" x2="12" y2="12" />
                                     <line x1="12" y1="16" x2="12.01" y2="16" />
                                 </svg>
-                                No AI models detected in Ollama
+                                No AI models detected in {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'}
                             </p>
                             <p className="text-xs text-yellow-300 mt-2">
-                                Install models using: <code className="bg-black/40 px-2 py-1 rounded text-xs">ollama pull &lt;model-name&gt;</code>
+                                {tempConfig.provider === 'lmstudio' 
+                                    ? 'Load a model in LM Studio and ensure the server is running on port 1234.'
+                                    : 'Install models using: ollama pull <model-name>'}
                             </p>
                         </div>
                     )}
 
                     <div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <div className="flex items-center gap-2 mb-2">
-                                    <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Ollama Base URL</label>
-                                    <div className="group relative">
-                                        <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
-                                            <span className="text-[8px] text-accent-primary font-bold">i</span>
+                        {/* Provider Selection */}
+                        <div className="mb-6">
+                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-3">
+                                AI Provider
+                            </label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    onClick={() => setTempConfig({ 
+                                        ...tempConfig, 
+                                        provider: 'ollama',
+                                        baseUrl: DEFAULT_URLS.ollama
+                                    })}
+                                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                        tempConfig.provider === 'ollama' || !tempConfig.provider
+                                            ? 'bg-accent-primary/20 border-accent-primary'
+                                            : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                            tempConfig.provider === 'ollama' || !tempConfig.provider
+                                                ? 'border-accent-primary'
+                                                : 'border-white/30'
+                                        }`}>
+                                            {(tempConfig.provider === 'ollama' || !tempConfig.provider) && (
+                                                <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                                            )}
                                         </div>
-                                        <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
-                                            <p className="text-[11px] text-text-primary leading-relaxed">
-                                                The API endpoint for your Ollama instance. Default is http://127.0.0.1:11434/api.
-                                                If using a tunnel (like Cloudflare or Tailscale), enter your public URL here.
-                                            </p>
-                                            <div className="absolute right-full top-4 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-bg-darker"></div>
+                                        <div>
+                                            <p className="font-semibold text-text-primary">Ollama</p>
+                                            <p className="text-xs text-text-secondary">Open-source local LLM runner</p>
                                         </div>
                                     </div>
-                                </div>
-                                <input
-                                    type="text"
-                                    value={tempConfig.baseUrl || ''}
-                                    onChange={(e) => setTempConfig({ ...tempConfig, baseUrl: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
-                                    placeholder="http://127.0.0.1:11434/api"
-                                />
+                                </button>
+                                <button
+                                    onClick={() => setTempConfig({ 
+                                        ...tempConfig, 
+                                        provider: 'lmstudio',
+                                        baseUrl: DEFAULT_URLS.lmstudio
+                                    })}
+                                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                        tempConfig.provider === 'lmstudio'
+                                            ? 'bg-accent-primary/20 border-accent-primary'
+                                            : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                            tempConfig.provider === 'lmstudio'
+                                                ? 'border-accent-primary'
+                                                : 'border-white/30'
+                                        }`}>
+                                            {tempConfig.provider === 'lmstudio' && (
+                                                <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-text-primary">LM Studio</p>
+                                            <p className="text-xs text-text-secondary">GUI for local LLMs</p>
+                                        </div>
+                                    </div>
+                                </button>
                             </div>
+                        </div>
+
+                        {/* Base URL Display (Read-only) */}
+                        <div className="mb-4 p-3 bg-bg-darker/50 rounded-lg border border-white/5">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">
+                                        API Endpoint
+                                    </span>
+                                    <span className="text-[10px] text-text-tertiary px-2 py-0.5 bg-white/5 rounded">
+                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'}
+                                    </span>
+                                </div>
+                                <span className="text-xs font-mono text-text-primary">
+                                    {tempConfig.baseUrl || (tempConfig.provider === 'lmstudio' ? DEFAULT_URLS.lmstudio : DEFAULT_URLS.ollama)}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
 
                             <div>
                                 <div className="flex items-center gap-2 mb-2">
@@ -376,29 +477,34 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         </div>
                                         <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
                                             <p className="text-[11px] text-text-primary leading-relaxed mb-3">
-                                                Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.
+                                                {tempConfig.provider === 'lmstudio'
+                                                    ? 'The model ID loaded in LM Studio. Use the model identifier shown in LM Studio (e.g., "nvidia/nemotron-3-nano-4b").'
+                                                    : 'Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.'
+                                                }
                                             </p>
-                                            <div className="border-t border-white/10 pt-2">
-                                                <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
-                                                <div className="space-y-1">
-                                                    <div className="flex justify-between text-[10px]">
-                                                        <span className="text-text-secondary">8GB VRAM:</span>
-                                                        <span className="text-text-primary font-mono">llama3.2:3b, qwen2.5:3b</span>
-                                                    </div>
-                                                    <div className="flex justify-between text-[10px]">
-                                                        <span className="text-text-secondary">12GB VRAM:</span>
-                                                        <span className="text-text-primary font-mono">llama3.2:7b, qwen2.5:7b</span>
-                                                    </div>
-                                                    <div className="flex justify-between text-[10px]">
-                                                        <span className="text-text-secondary">16GB VRAM:</span>
-                                                        <span className="text-text-primary font-mono">llama3.2:13b, qwen2.5:14b</span>
-                                                    </div>
-                                                    <div className="flex justify-between text-[10px]">
-                                                        <span className="text-text-secondary">24GB+ VRAM:</span>
-                                                        <span className="text-text-primary font-mono">llama3.2:70b, qwen2.5:32b</span>
+                                            {tempConfig.provider !== 'lmstudio' && (
+                                                <div className="border-t border-white/10 pt-2">
+                                                    <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
+                                                    <div className="space-y-1">
+                                                        <div className="flex justify-between text-[10px]">
+                                                            <span className="text-text-secondary">8GB VRAM:</span>
+                                                            <span className="text-text-primary font-mono">llama3.2:3b, qwen2.5:3b</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-[10px]">
+                                                            <span className="text-text-secondary">12GB VRAM:</span>
+                                                            <span className="text-text-primary font-mono">llama3.2:7b, qwen2.5:7b</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-[10px]">
+                                                            <span className="text-text-secondary">16GB VRAM:</span>
+                                                            <span className="text-text-primary font-mono">llama3.2:13b, qwen2.5:14b</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-[10px]">
+                                                            <span className="text-text-secondary">24GB+ VRAM:</span>
+                                                            <span className="text-text-primary font-mono">llama3.2:70b, qwen2.5:32b</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            )}
                                             <div className="absolute right-full top-4 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-bg-darker"></div>
                                         </div>
                                     </div>
@@ -408,55 +514,59 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     value={tempConfig.model}
                                     onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
                                     className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
-                                    placeholder="llama3.2, qwen3:8b, deepseek-r1:8b"
+                                    placeholder={tempConfig.provider === 'lmstudio' ? 'nvidia/nemotron-3-nano-4b' : 'llama3.2, qwen3:8b, deepseek-r1:8b'}
                                 />
                             </div>
                         </div>
-                        {!isModelInstalled && (
+                        {/* Model Not Installed / Available Models Dropdown */}
+                        {(!isModelInstalled || !tempConfig.model) && currentAvailableModels.length > 0 && (
                             <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20 rounded-lg">
                                 <p className="text-xs text-accent-alert mb-2 font-semibold flex items-center gap-2">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-                                    AI model not detected locally
+                                    {!tempConfig.model ? 'Select a model' : 'AI model not detected'}
                                 </p>
                                 <div className="space-y-2">
-                                    <p className="text-[10px] text-text-secondary font-bold">You can view / download models from Ollama using the terminal:</p>
-                                    <div className="relative group/copy">
-                                        <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
-                                            ollama list
-                                        </code>
-
-                                        <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
-                                            ollama pull modelName:size
-                                        </code>
-                                        <button
-                                            onClick={handleCopy}
-                                            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent-primary transition-colors p-1.5 bg-bg-card/50 rounded-md"
-                                            title="Copy to clipboard"
-                                        >
-                                            {copied ? (
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="text-accent-secondary animate-in zoom-in duration-300"><polyline points="20 6 9 17 4 12" /></svg>
-                                            ) : (
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-                                            )}
-                                        </button>
-                                    </div>
-
-                                    {availableModels.length > 0 && (
-                                        <>
-                                            <p className="text-[10px] text-text-secondary font-bold pt-2">or select from these installed models:</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {availableModels.map(m => (
-                                                    <button
-                                                        key={m}
-                                                        onClick={() => setTempConfig({ ...tempConfig, model: m })}
-                                                        className="text-[9px] bg-white/5 hover:bg-accent-primary/20 border border-white/10 rounded px-2 py-1 text-text-primary transition-all"
-                                                    >
-                                                        {m}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </>
+                                    {tempConfig.provider !== 'lmstudio' && (
+                                        <p className="text-[10px] text-text-secondary font-bold">
+                                            You can view / download models from Ollama using the terminal:
+                                        </p>
                                     )}
+                                    {tempConfig.provider !== 'lmstudio' && (
+                                        <div className="relative group/copy">
+                                            <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                                ollama list
+                                            </code>
+                                            <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                                ollama pull modelName:size
+                                            </code>
+                                            <button
+                                                onClick={handleCopy}
+                                                className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent-primary transition-colors p-1.5 bg-bg-card/50 rounded-md"
+                                                title="Copy to clipboard"
+                                            >
+                                                {copied ? (
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="text-accent-secondary animate-in zoom-in duration-300"><polyline points="20 6 9 17 4 12" /></svg>
+                                                ) : (
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                                                )}
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <p className="text-[10px] text-text-secondary font-bold pt-2">
+                                        {tempConfig.provider === 'lmstudio' ? 'Available models:' : 'or select from these installed models:'}
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {currentAvailableModels.map(m => (
+                                            <button
+                                                key={m}
+                                                onClick={() => setTempConfig({ ...tempConfig, model: m })}
+                                                className="text-[9px] bg-white/5 hover:bg-accent-primary/20 border border-white/10 rounded px-2 py-1 text-text-primary transition-all"
+                                            >
+                                                {m}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -589,53 +699,55 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                             </div>
                         )}
 
-                        {/* Ollama Performance Settings */}
-                        <div className="pt-6 border-t border-white/10">
-                            <h4 className="text-sm font-medium text-text-primary mb-4 flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                                </svg>
-                                Performance Optimization
-                            </h4>
-                            
-                            <div className="space-y-4">
-                                {/* Flash Attention */}
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-text-primary">Flash Attention</p>
-                                        <p className="text-xs text-text-secondary">Optimize attention mechanism for better performance</p>
+                        {/* Ollama Performance Settings - only show for Ollama */}
+                        {tempConfig.provider !== 'lmstudio' && (
+                            <div className="pt-6 border-t border-white/10">
+                                <h4 className="text-sm font-medium text-text-primary mb-4 flex items-center gap-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    </svg>
+                                    Performance Optimization
+                                </h4>
+                                
+                                <div className="space-y-4">
+                                    {/* Flash Attention */}
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm font-medium text-text-primary">Flash Attention</p>
+                                            <p className="text-xs text-text-secondary">Optimize attention mechanism for better performance</p>
+                                        </div>
+                                        <button
+                                            onClick={() => setTempConfig({ ...tempConfig, ollamaFlashAttention: !tempConfig.ollamaFlashAttention })}
+                                            className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.ollamaFlashAttention
+                                                ? 'bg-accent-primary'
+                                                : 'bg-white/10 border border-white/20'
+                                                }`}
+                                        >
+                                            <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.ollamaFlashAttention ? 'left-8' : 'left-1'
+                                                }`}></div>
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => setTempConfig({ ...tempConfig, ollamaFlashAttention: !tempConfig.ollamaFlashAttention })}
-                                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.ollamaFlashAttention
-                                            ? 'bg-accent-primary'
-                                            : 'bg-white/10 border border-white/20'
-                                            }`}
-                                    >
-                                        <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.ollamaFlashAttention ? 'left-8' : 'left-1'
-                                            }`}></div>
-                                    </button>
-                                </div>
 
-                                {/* KV Cache Type */}
-                                <div className="flex items-center justify-between">
-                                    <div className="flex-1 mr-4">
-                                        <p className="text-sm font-medium text-text-primary">KV Cache Quantization</p>
-                                        <p className="text-xs text-text-secondary">Reduce memory usage with quantized K/V cache (requires Flash Attention)</p>
+                                    {/* KV Cache Type */}
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex-1 mr-4">
+                                            <p className="text-sm font-medium text-text-primary">KV Cache Quantization</p>
+                                            <p className="text-xs text-text-secondary">Reduce memory usage with quantized K/V cache (requires Flash Attention)</p>
+                                        </div>
+                                        <select
+                                            value={tempConfig.ollamaKvCacheType || 'f16'}
+                                            onChange={(e) => setTempConfig({ ...tempConfig, ollamaKvCacheType: e.target.value as 'f16' | 'q8_0' | 'q4_0' })}
+                                            className="bg-bg-darker border border-white/10 rounded-lg px-3 py-2 text-text-primary text-sm focus:border-accent-primary outline-none transition-all"
+                                        >
+                                            <option value="null">- None -</option>
+                                            <option value="f16">f16 (High Precision)</option>
+                                            <option value="q8_0">q8_0 (8-bit - Recommended)</option>
+                                            <option value="q4_0">q4_0 (4-bit - Max Memory Savings)</option>
+                                        </select>
                                     </div>
-                                    <select
-                                        value={tempConfig.ollamaKvCacheType || 'f16'}
-                                        onChange={(e) => setTempConfig({ ...tempConfig, ollamaKvCacheType: e.target.value as 'f16' | 'q8_0' | 'q4_0' })}
-                                        className="bg-bg-darker border border-white/10 rounded-lg px-3 py-2 text-text-primary text-sm focus:border-accent-primary outline-none transition-all"
-                                    >
-                                        <option value="null">- None -</option>
-                                        <option value="f16">f16 (High Precision)</option>
-                                        <option value="q8_0">q8_0 (8-bit - Recommended)</option>
-                                        <option value="q4_0">q4_0 (4-bit - Max Memory Savings)</option>
-                                    </select>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* Sentiment Analysis Settings */}

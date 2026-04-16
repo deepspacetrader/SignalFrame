@@ -19,7 +19,6 @@
     "axios-retry": "^4.5.0",
     "concurrently": "^9.2.1",
     "cors": "^2.8.6",
-    "crawlee": "^3.16.0",
     "dotenv": "^16.4.5",
     "express": "^5.2.1",
     "leaflet": "^1.9.4",
@@ -29,12 +28,14 @@
     "react-leaflet": "4.2.1",
     "rss-parser": "^3.13.0",
     "say": "^0.16.0",
+    "zod": "^4.3.6",
+    "zod-to-json-schema": "^3.25.1",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.2.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.4.23",
     "lightningcss": "^1.30.2",
     "lightningcss-win32-x64-msvc": "^1.30.2",
@@ -42,6 +43,6 @@
     "sass": "^1.97.2",
     "tailwindcss": "3.4",
     "typescript": "^5.3.3",
-    "vite": "^7.3.1"
+    "vite": "^8.0.1"
   }
 }

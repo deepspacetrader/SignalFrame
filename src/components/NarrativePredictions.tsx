@@ -7,6 +7,20 @@ import { SectionBadge } from './shared/SectionBadge'
 import { formatTime } from '../utils/timeUtils'
 import { StorageService } from '../services/db'
 
+const getSentimentColor = (sentiment: string) => {
+  switch (sentiment) {
+    case 'extremely-negative': return 'var(--crit-bright-red)';
+    case 'very-negative': return 'var(--crit-red)';
+    case 'negative': return 'var(--crit-orange)';
+    case 'somewhat-negative': return 'var(--crit-yellow)';
+    case 'neutral': return 'var(--crit-gray)';
+    case 'interesting': return 'var(--crit-blue)';
+    case 'positive': return 'var(--crit-green)';
+    case 'very-positive': return 'var(--crit-bright-green)';
+    default: return 'var(--crit-gray)';
+  }
+}
+
 export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => void }) {
   const {
     watchFor,
@@ -153,7 +167,10 @@ export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => voi
             <div className="animate-in slide-in-from-top-2 duration-300">
               {watchFor?.sections.map((section, idx) => (
                 <section key={idx} className="bg-accent-primary/5 border border-accent-primary/20 rounded-xl p-5">
-                  <h3 className="text-[0.65rem] uppercase tracking-widest text-accent-primary font-bold mb-4 flex items-center gap-2">
+                  <h3
+                    className="text-[0.65rem] uppercase tracking-widest font-bold mb-4 flex items-center gap-2"
+                    style={{ color: getSentimentColor(section.sentiment || 'neutral') }}
+                  >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
@@ -162,7 +179,7 @@ export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => voi
                   </h3>
                   <ul className="space-y-2">
                     {section.predictions && section.predictions.map((prediction, predictionIdx) => (
-                      <li key={predictionIdx} className="text-xs text-text-primary flex items-start gap-2">
+                      <li key={predictionIdx} className="text-sm text-text-primary flex items-start gap-2">
                         <span className="text-accent-primary mt-0.5">•</span>
                         {prediction}
                       </li>

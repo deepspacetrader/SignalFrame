@@ -18,3 +18,6 @@ storage/*
 .vscode/*
 ./venv/*
 /public/data/*
+server/*.wav
+server/test-crawler.js
+server/test-multi-crawler.js

@@ -34,6 +34,50 @@ export class OllamaService {
     }
 
     /**
+     * Generation with structured JSON schema format
+     * Uses the /api/chat endpoint with format schema for reliable structured outputs
+     */
+    static async generateWithStructuredFormat(
+        model: string,
+        messages: { role: string; content: string }[],
+        format: object,
+        options: OllamaOptions = {}
+    ): Promise<string> {
+        const url = `${this.baseUrl}/chat`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                signal: options.signal,
+                body: JSON.stringify({
+                    model,
+                    messages,
+                    stream: false,
+                    format,
+                    options: {
+                        num_ctx: options.num_ctx || DEFAULT_num_ctx,
+                        num_predict: options.num_predict || DEFAULT_num_predict,
+                        temperature: options.temperature || 0,
+                        num_gpu: -1,
+                        num_thread: 0
+                    }
+                }),
+            });
+
+            if (!response.ok) throw new Error(`Ollama structured format error: ${response.statusText}`);
+            const data = await response.json();
+            return data.message?.content || '';
+        } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Ollama structured generation cancelled');
+                throw new Error('Structured generation cancelled');
+            }
+            console.error('Ollama Structured Format Error:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Standard non-streaming generation
      */
     static async generate(

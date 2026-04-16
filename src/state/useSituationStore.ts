@@ -77,6 +77,7 @@ export interface DeepDiveData {
 
 export interface NarrativePredictionsSection {
   title: string;
+  sentiment: string;
   predictions: string[];
 }
 
@@ -168,10 +169,12 @@ export interface PredictionHistoryItem {
 }
 
 export interface AiConfig {
+  provider: 'ollama' | 'lmstudio';
   model: string;
-  baseUrl?: string; // Custom Ollama base URL (e.g., for tunnels or remote servers)
-  numCtx: number;
-  numPredict: number;
+  baseUrl?: string; // Custom base URL (provider-specific)
+  numCtx: number; // Ollama-specific
+  numPredict: number; // Ollama-specific
+  maxTokens?: number; // LM Studio-specific
   enableThinking: boolean; // Enable thinking/reasoning trace for supported models
   sentimentProfile?: string; // ID of the sentiment profile to use
   customSentimentWeights?: Record<string, number>; // Custom sentiment weight overrides
@@ -450,6 +453,7 @@ const defaultState: SituationState = {
   thinkingTrace: '',
   watchFor: null,
   aiConfig: {
+    provider: 'ollama' as const,
     model: '',
     baseUrl: 'http://127.0.0.1:11434/api',
     numCtx: DEFAULT_num_ctx,
@@ -518,9 +522,11 @@ class OllamaPollingManager {
 
   async startPolling() {
     if (this.isPolling) {
+      console.log('[Poll] Already polling, skipping start');
       return;
     }
 
+    console.log('[Poll] Starting polling for provider:', globalState.aiConfig.provider);
     this.isPolling = true;
     this.scheduleNextPoll();
   }
@@ -529,6 +535,63 @@ class OllamaPollingManager {
     if (!this.isPolling) return;
 
     this.pollCount++;
+
+    // Check if we're using LM Studio - if so, skip Ollama polling
+    if (globalState.aiConfig.provider === 'lmstudio') {
+      console.log('[Poll] LM Studio mode - checking availability...');
+      try {
+        const { LMStudioService } = await import('../ai/runtime/lmstudio');
+        // console.log('[Poll] Fetching LM Studio models from:', LMStudioService.getBaseUrl());
+        const models = await LMStudioService.listModels();
+        // console.log('[Poll] LM Studio models found:', models.length, models);
+        const isAvailable = models.length > 0;
+        
+        if (isAvailable) {
+          // console.log('[Poll] LM Studio is ONLINE with', models.length, 'models');
+          globalState = {
+            ...globalState,
+            aiStatus: {
+              isOnline: true,
+              lastChecked: new Date(),
+              lastError: null
+            },
+            runningModels: models.map(m => ({
+              name: m,
+              size: 0,
+              size_vram: 0
+            }))
+          };
+          listeners.forEach(l => l({ ...globalState }));
+        } else {
+          console.log('[Poll] LM Studio is OFFLINE - no models');
+          globalState = {
+            ...globalState,
+            aiStatus: {
+              isOnline: false,
+              lastChecked: new Date(),
+              lastError: 'No models loaded in LM Studio'
+            },
+            runningModels: []
+          };
+          listeners.forEach(l => l({ ...globalState }));
+        }
+      } catch (e) {
+        console.error('[Poll] LM Studio error:', e);
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: false,
+            lastChecked: new Date(),
+            lastError: 'LM Studio not responding'
+          },
+          runningModels: []
+        };
+        listeners.forEach(l => l({ ...globalState }));
+      }
+      
+      this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), 30000);
+      return;
+    }
 
     try {
       const { OllamaService } = await import('../ai/runtime/ollama');
@@ -607,7 +670,11 @@ class OllamaPollingManager {
 
     } catch (e) {
       const wasOnline = globalState.aiStatus.isOnline;
-      console.error(`Ollama service not available. YOU DO NOT HAVE OLLAMA INSTALLED OR IT IS NOT RUNNING!`);
+      
+      // Only log Ollama error if we're actually using Ollama
+      if (globalState.aiConfig.provider !== 'lmstudio') {
+        console.error(`Ollama service not available. YOU DO NOT HAVE OLLAMA INSTALLED OR IT IS NOT RUNNING!`);
+      }
 
       if (wasOnline) {
         globalState = {
@@ -735,8 +802,19 @@ export function useSituationStore() {
 
       if (config) {
         globalState.aiConfig = config;
-        const { OllamaService } = await import('../ai/runtime/ollama');
-        if (config.baseUrl) OllamaService.setBaseUrl(config.baseUrl);
+        // console.log('[Init] Loaded AI config:', config);
+        if (config.baseUrl) {
+          if (config.provider === 'lmstudio') {
+            const { LMStudioService } = await import('../ai/runtime/lmstudio');
+            LMStudioService.setBaseUrl(config.baseUrl);
+            console.log('[Init] Set LM Studio base URL:', config.baseUrl);
+          } else {
+            const { OllamaService } = await import('../ai/runtime/ollama');
+            OllamaService.setBaseUrl(config.baseUrl);
+          }
+        }
+      } else {
+        console.log('[Init] No AI config found, using default:', globalState.aiConfig);
       }
       if (savedBigPicture) globalState.bigPicture = savedBigPicture; // Load Global Big Picture
       if (savedMetricDefs && Array.isArray(savedMetricDefs)) globalState.metricDefs = savedMetricDefs;
@@ -760,10 +838,18 @@ export function useSituationStore() {
       globalState.currentDate = today;
 
       if (analysis) {
+        // Preserve AI status and running models before loading analysis
+        const currentAiStatus = globalState.aiStatus;
+        const currentRunningModels = globalState.runningModels;
+        
         // Load daily analysis but Preserve Global Big Picture if it exists
         const bp = globalState.bigPicture;
         Object.assign(globalState, analysis);
         if (bp) globalState.bigPicture = bp;
+        
+        // Restore AI status and running models
+        globalState.aiStatus = currentAiStatus;
+        globalState.runningModels = currentRunningModels;
 
         if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
 
@@ -776,10 +862,18 @@ export function useSituationStore() {
 
           if (snapshot) {
             console.log('Successfully loaded snapshot from files for today');
+            // Preserve AI status and running models before loading snapshot
+            const currentAiStatus = globalState.aiStatus;
+            const currentRunningModels = globalState.runningModels;
+            
             // Preserve Global Big Picture if it exists
             const bp = globalState.bigPicture;
             Object.assign(globalState, snapshot);
             if (bp) globalState.bigPicture = bp;
+            
+            // Restore AI status and running models
+            globalState.aiStatus = currentAiStatus;
+            globalState.runningModels = currentRunningModels;
 
             if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
             if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
@@ -1083,8 +1177,11 @@ export function useSituationStore() {
     return [];
   };
 
-  const loadDate = useCallback(async (dateStr: string) => {
-    if (globalState.isProcessing) return;
+  const loadDate = useCallback(async (dateStr: string, force: boolean = false) => {
+    if (globalState.isProcessing && !force) {
+      console.log('[loadDate] Blocked - currently processing');
+      return;
+    }
 
     // Check if we're in static mode
     const isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
@@ -1711,18 +1808,32 @@ export function useSituationStore() {
 
   const fetchAvailableModels = useCallback(async () => {
     try {
-      const { OllamaService } = await import('../ai/runtime/ollama');
-      const models = await OllamaService.listModels();
-      globalState = { ...globalState, availableModels: models };
-      notify();
-    } catch (e) { }
+      if (globalState.aiConfig.provider === 'lmstudio') {
+        const { LMStudioService } = await import('../ai/runtime/lmstudio');
+        const models = await LMStudioService.listModels();
+        globalState = { ...globalState, availableModels: models };
+        notify();
+      } else {
+        const { OllamaService } = await import('../ai/runtime/ollama');
+        const models = await OllamaService.listModels();
+        globalState = { ...globalState, availableModels: models };
+        notify();
+      }
+    } catch (e) { 
+      console.error('[fetchAvailableModels] Error:', e);
+    }
   }, []);
 
   const updateAiConfig = useCallback(async (config: Partial<AiConfig>) => {
     globalState = { ...globalState, aiConfig: { ...globalState.aiConfig, ...config } };
     if (config.baseUrl) {
-      const { OllamaService } = await import('../ai/runtime/ollama');
-      OllamaService.setBaseUrl(config.baseUrl);
+      if (globalState.aiConfig.provider === 'lmstudio') {
+        const { LMStudioService } = await import('../ai/runtime/lmstudio');
+        LMStudioService.setBaseUrl(config.baseUrl);
+      } else {
+        const { OllamaService } = await import('../ai/runtime/ollama');
+        OllamaService.setBaseUrl(config.baseUrl);
+      }
     }
     notify();
     persist();
@@ -1775,6 +1886,44 @@ export function useSituationStore() {
   }, [refreshSection, clearSectionFailure]);
 
   const fetchAiStatus = useCallback(async () => {
+    // Check if using LM Studio
+    if (globalState.aiConfig.provider === 'lmstudio') {
+      try {
+        const { LMStudioService } = await import('../ai/runtime/lmstudio');
+        const models = await LMStudioService.listModels();
+        const isAvailable = models.length > 0;
+        
+        globalState = {
+          ...globalState,
+          availableModels: models,
+          runningModels: models.map(m => ({
+            name: m,
+            size: 0,
+            size_vram: 0
+          })),
+          aiStatus: {
+            isOnline: isAvailable,
+            lastChecked: new Date(),
+            lastError: isAvailable ? null : 'No models loaded in LM Studio'
+          }
+        };
+        listeners.forEach(l => l({ ...globalState }));
+      } catch (error) {
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: false,
+            lastChecked: new Date(),
+            lastError: error instanceof Error ? error.message : 'LM Studio not responding'
+          },
+          runningModels: []
+        };
+        listeners.forEach(l => l({ ...globalState }));
+      }
+      return;
+    }
+    
+    // Ollama status check
     try {
       const { OllamaService } = await import('../ai/runtime/ollama');
       const [models, running] = await Promise.all([

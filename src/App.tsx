@@ -92,7 +92,7 @@ export default function App() {
                   Deep Intelligence Node Active
                 </span>
               </div>
-              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.4.0</span></h1>
+              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.5.0</span></h1>
             </div>
 
             <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>
@@ -103,7 +103,7 @@ export default function App() {
                 <p className={`text-xs font-mono whitespace-nowrap ${isProcessing ? 'text-accent-secondary' :
                   (isLocalhost && aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
                   }`}>
-                  {isProcessing ? 'SCANNING...' : (isLocalhost && aiStatus?.isOnline ? 'OLLAMA ONLINE' : 'AI OFFLINE')}
+                  {isProcessing ? 'SCANNING...' : (isLocalhost && aiStatus?.isOnline ? (aiConfig?.provider === 'lmstudio' ? 'LM STUDIO ONLINE' : 'OLLAMA ONLINE') : 'AI OFFLINE')}
                 </p>
               </div>
               {lastUpdated ? (
@@ -127,20 +127,35 @@ export default function App() {
 
               <div className="flex gap-2">
                 {runningModels && runningModels.length > 0 ? (
-                  runningModels.map(m => (
-                    <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
+                  aiConfig?.provider === 'lmstudio' ? (
+                    // For LM Studio, only show the currently selected model
+                    <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
                       <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-white group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200" title={m.name.split(':')[0]}>{m.name.split(':')[0]}</span>
+                        <span className="text-xs font-mono text-white group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200" title={aiConfig?.model || 'Unknown'}>{aiConfig?.model || 'Unknown'}</span>
                         <div className="flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 bg-accent-secondary rounded-full animate-pulse shadow-[0_0_5px_var(--accent-secondary)]"></span>
-                          <span className="text-[9px] font-mono text-accent-secondary font-bold">
-                            {Math.round(m.size_vram / 1024 / 1024 / 1024 * 10) / 10}GB
-                          </span>
+                          <span className="text-[9px] font-mono text-accent-secondary font-bold">LM Studio</span>
                         </div>
                       </div>
                     </div>
-                  ))
+                  ) : (
+                    // For Ollama, show all running models
+                    runningModels.map(m => (
+                      <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
+                        <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono text-white group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200" title={m.name.split(':')[0]}>{m.name.split(':')[0]}</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 bg-accent-secondary rounded-full animate-pulse shadow-[0_0_5px_var(--accent-secondary)]"></span>
+                            <span className="text-[9px] font-mono text-accent-secondary font-bold">
+                              {Math.round(m.size_vram / 1024 / 1024 / 1024 * 10) / 10}GB
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )
                 ) : (
                   <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
                     <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>

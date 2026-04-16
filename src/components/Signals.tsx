@@ -343,7 +343,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                 <div className="flex items-center gap-2">
                   
                   <span
-                    className="text-[0.55rem] uppercase tracking-widest px-2 py-1 rounded text-white font-medium shadow-md"
+                    className="text-[0.55rem] uppercase tracking-wide px-2 py-1 rounded text-white font-medium shadow-md"
                     style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
                   >
                     {signal.sentiment.replace('-', ' ')}

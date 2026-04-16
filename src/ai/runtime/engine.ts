@@ -1,9 +1,134 @@
 
 import { OllamaService } from './ollama';
+import { LMStudioService, LMStudioMessage } from './lmstudio';
 import { RawSignal } from '../../services/feedIngest';
 import type { ForeignRelation, AiConfig, DeepDiveData, NarrativePredictionsData, SourceRef, Signal, SituationState } from '../../state/useSituationStore';
 import { StorageService } from '../../services/db';
 import { getSentimentProfile, generateCustomSentimentGuidelines } from './sentimentEngine';
+import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+
+// Service wrapper functions that route to the appropriate backend based on provider
+function getOptionsForProvider(aiConfig: AiConfig, signal?: AbortSignal) {
+  if (aiConfig.provider === 'lmstudio') {
+    return {
+      max_tokens: aiConfig.maxTokens || aiConfig.numPredict || 16384,
+      temperature: 0,
+      signal,
+      // LM Studio doesn't accept num_ctx per request, but we pass it for prompt truncation
+      contextWindow: aiConfig.numCtx || 32000
+    };
+  }
+  // Ollama default
+  return {
+    num_ctx: aiConfig.numCtx,
+    num_predict: aiConfig.numPredict,
+    temperature: 0,
+    signal
+  };
+}
+
+async function generateWithProvider(
+  aiConfig: AiConfig,
+  prompt: string,
+  format?: 'json',
+  systemPrompt?: string
+): Promise<string> {
+  const options = getOptionsForProvider(aiConfig);
+  
+  if (aiConfig.provider === 'lmstudio') {
+    // For LM Studio with limited context, use simpler prompts for JSON
+    let finalPrompt = prompt;
+    
+    // If JSON format and prompt is very long, truncate aggressively
+    if (format === 'json' && prompt.length > 2000) {
+      // Keep only essential parts - instructions and minimal context
+      const lines = prompt.split('\n');
+      const essentialLines = lines.slice(0, 50); // Keep first 50 lines
+      finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
+    }
+    
+    // For JSON format, add strong instruction to the system prompt
+    const finalSystemPrompt = format === 'json' 
+      ? `${systemPrompt || ''}\n\nCRITICAL: You MUST respond with ONLY valid JSON. No markdown, no explanations, no text outside the JSON.`.trim()
+      : systemPrompt;
+    
+    const result = await LMStudioService.generate(aiConfig.model, finalPrompt, finalSystemPrompt, options);
+    
+    // If empty result for JSON, log warning
+    if (format === 'json' && (!result || result.trim() === '')) {
+      console.warn('LM Studio returned empty response for JSON request. Context may be insufficient.');
+    }
+    
+    return result;
+  }
+  
+  return OllamaService.generate(aiConfig.model, prompt, format, options);
+}
+
+async function streamGenerateWithProvider(
+  aiConfig: AiConfig,
+  prompt: string,
+  onChunk: (text: string) => void,
+  systemPrompt?: string
+): Promise<void> {
+  const options = getOptionsForProvider(aiConfig);
+  
+  if (aiConfig.provider === 'lmstudio') {
+    return LMStudioService.streamGenerate(aiConfig.model, prompt, onChunk, systemPrompt, options);
+  }
+  
+  return OllamaService.streamGenerate(aiConfig.model, prompt, onChunk, options);
+}
+
+async function generateWithThinkingWithProvider(
+  aiConfig: AiConfig,
+  prompt: string,
+  systemPrompt?: string
+): Promise<{ response: string; thinking?: string }> {
+  const options = getOptionsForProvider(aiConfig);
+  
+  if (aiConfig.provider === 'lmstudio') {
+    return LMStudioService.generateWithThinking(aiConfig.model, prompt, systemPrompt, options);
+  }
+  
+  return OllamaService.generateWithThinking(aiConfig.model, prompt, options);
+}
+
+async function streamGenerateWithThinkingWithProvider(
+  aiConfig: AiConfig,
+  prompt: string,
+  onThinking: (text: string) => void,
+  onContent: (text: string) => void,
+  systemPrompt?: string
+): Promise<void> {
+  const options = getOptionsForProvider(aiConfig);
+  
+  if (aiConfig.provider === 'lmstudio') {
+    return LMStudioService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, systemPrompt, options);
+  }
+  
+  return OllamaService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, options);
+}
+
+async function chatWithProvider(
+  aiConfig: AiConfig,
+  messages: { role: string; content: string }[],
+  onChunk: (text: string) => void,
+  signal?: AbortSignal
+): Promise<void> {
+  const options = getOptionsForProvider(aiConfig, signal);
+  
+  if (aiConfig.provider === 'lmstudio') {
+    const lmMessages: LMStudioMessage[] = messages.map(m => ({
+      role: m.role as 'system' | 'user' | 'assistant',
+      content: m.content
+    }));
+    return LMStudioService.streamChat(aiConfig.model, lmMessages, onChunk, options);
+  }
+  
+  return OllamaService.chat(aiConfig.model, messages, onChunk, options);
+}
 
 const CATEGORY_MAP: Record<string, string> = {
   'narrative': 'narrative briefing',
@@ -152,9 +277,12 @@ export async function processSituation(
   const controller = cancellationTokenManager.createController(jobId);
 
   try {
-    const context = generateContext(feeds);
+    // Use context limit based on aiConfig.numCtx for LM Studio (default 60000 for Ollama)
+    const maxContextChars = aiConfig.provider === 'lmstudio' 
+      ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)  // ~2 chars per token, cap at 15000
+      : 60000;
+    const context = generateContext(feeds, maxContextChars);
     const feedIndex = generateFeedIndex(feeds);
-    const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict, signal: controller.signal };
 
     try {
       onProgress?.(`Generating ${CATEGORY_MAP.narrative}...`);
@@ -166,8 +294,9 @@ export async function processSituation(
       if (aiConfig.enableThinking) {
         // Use thinking-enabled streaming for narrative
         onProgress?.(`Deep reasoning (thinking mode)...`);
-        await OllamaService.streamGenerateWithThinking(
-          aiConfig.model,
+        console.log('[Narrative] Using thinking mode for', aiConfig.provider);
+        await streamGenerateWithThinkingWithProvider(
+          aiConfig,
           narrativePrompt,
           (thinkChunk) => {
             thinkingTrace += thinkChunk;
@@ -176,29 +305,34 @@ export async function processSituation(
           (contentChunk) => {
             narrative += contentChunk;
             onNarrativeChunk?.(narrative);
-          },
-          options
+          }
         );
-      } else if (onNarrativeChunk) {
-        await OllamaService.streamGenerate(aiConfig.model, narrativePrompt, (chunk) => {
+      } else if (onNarrativeChunk && aiConfig.provider !== 'lmstudio') {
+        // Use streaming for Ollama only - LM Studio has streaming format issues
+        console.log('[Narrative] Using streaming mode for Ollama');
+        await streamGenerateWithProvider(aiConfig, narrativePrompt, (chunk) => {
           narrative += chunk;
           onNarrativeChunk(narrative);
-        }, options);
+        });
       } else {
-        narrative = await OllamaService.generate(aiConfig.model, narrativePrompt, undefined, options);
+        // Non-streaming for LM Studio or when no narrative chunk callback
+        console.log('[Narrative] Using non-streaming mode for', aiConfig.provider);
+        narrative = await generateWithProvider(aiConfig, narrativePrompt);
+        console.log('[Narrative] Result length:', narrative?.length, 'First 100 chars:', narrative?.substring(0, 100));
+        if (onNarrativeChunk) onNarrativeChunk(narrative);
       }
 
       onSectionComplete?.('narrative');
       onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
       const recentSignals = await getRecentSignalsForNovelty(7);
-      const signalsRaw = await OllamaService.generate(aiConfig.model, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json', options);
+      const signalsRaw = await generateWithProvider(aiConfig, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json');
       
       // Debug: Log raw AI output
-      console.log('=== RAW SIGNALS OUTPUT ===');
-      console.log('Raw string:', signalsRaw);
+      // console.log('=== RAW SIGNALS OUTPUT ===');
+      // console.log('Raw string:', signalsRaw);
       
       const parsedJson = parseJsonArray(signalsRaw);
-      console.log('Parsed JSON:', JSON.stringify(parsedJson, null, 2));
+      // console.log('Parsed JSON:', JSON.stringify(parsedJson, null, 2));
       
       const parsedSignals = applyNoveltyScores(finalizeSignals(parsedJson, feeds), recentSignals);
       console.log('Final processed signals:', JSON.stringify(parsedSignals.map(s => ({ 
@@ -213,16 +347,16 @@ export async function processSituation(
 
       onSectionComplete?.('signals');
       onProgress?.(`Identifying ${CATEGORY_MAP.insights}...`);
-      const insightsRaw = await OllamaService.generate(aiConfig.model, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals, aiConfig), 'json', options);
+      const insightsRaw = await generateWithProvider(aiConfig, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals, aiConfig), 'json');
 
       onSectionComplete?.('insights');
       onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
-      const mapPointsRaw = await OllamaService.generate(aiConfig.model, generateMapPointsPrompt(context, signalsText, aiConfig), 'json', options);
+      const mapPointsRaw = await generateWithProvider(aiConfig, generateMapPointsPrompt(context, signalsText, aiConfig), 'json');
 
       onSectionComplete?.('map');
       onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
       const historicalContext = await getHistoricalRelationsContext(foreignRelations);
-      const relationsRaw = await OllamaService.generate(aiConfig.model, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext, aiConfig), 'json', options);
+      const relationsRaw = await generateWithProvider(aiConfig, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext, aiConfig), 'json');
 
       onSectionComplete?.('relations');
 
@@ -278,7 +412,6 @@ export async function processBigPicture(
   try {
     // Construct context for the Grand Narrative
     const context = history.map(h => `DATE: ${h.date}\nSUMMARY: ${h.narrative}\nSIGNALS: ${h.signals.length} detected.`).join('\n\n');
-    const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict, signal: controller.signal };
 
     // 1. Construct Timeline PRECISELY from existing history (Deterministic)
     const timeline = history.map((h: any) => {
@@ -331,12 +464,12 @@ ${context}
 
     let summary = '';
     if (onStream) {
-      await OllamaService.streamGenerate(aiConfig.model, bigPicturePrompt, (chunk) => {
+      await streamGenerateWithProvider(aiConfig, bigPicturePrompt, (chunk) => {
         summary += chunk;
         onStream(chunk);
-      }, options);
+      });
     } else {
-      summary = await OllamaService.generate(aiConfig.model, bigPicturePrompt, undefined, options);
+      summary = await generateWithProvider(aiConfig, bigPicturePrompt);
     }
 
     return {
@@ -438,9 +571,9 @@ function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateSt
     customGuidelines = `\n\nSENTIMENT GUIDELINES:\n${generateCustomSentimentGuidelines(profile)}\n\nWhen analyzing the signal and determining sentiment, apply these guidelines consistently.`;
   }
 
-  // Use the same prompt for all models
+  // Use optimized prompt for regular JSON generation
   return `You are an elite intelligence analyst.
-Generate a structured Deep Dive for the provided Signal.
+Generate a comprehensive Deep Dive analysis for the provided Signal.
 
 CRITICAL JSON REQUIREMENTS:
 - Return ONLY strict JSON. No markdown. No prose outside JSON.
@@ -477,16 +610,15 @@ Return EXACTLY one JSON object with this shape:
     { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
   ],
   "counterpoints": [
-    { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
+    { "claimA": string, "claimB": string, "sourceA": array, "sourceB": array }
   ],
-  "watchNext": string[] // 3-5 predictive statements about what events/indicators to watch for NEXT (e.g., "Potential retaliatory strikes from Iran", "Watch for CENTCOM investigation results", "Monitor gas price fluctuations")
+  "watchNext": string[]
 }
 
 Rules:
 - Use provided FEED CONTENT as source material
 - Include relevant quotes from feed content in your analysis
-- watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.
-`;
+- watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.`;
 
 /*
 {
@@ -660,6 +792,40 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
 }
 
 
+// Zod schema for DeepDive structured output - simplified for Ollama compatibility
+const DeepDiveSchema = z.object({
+  signalId: z.string(),
+  header: z.object({
+    title: z.string(),
+    text: z.string(),
+    sentiment: z.string(),
+    deltaType: z.string().optional(),
+    category: z.string().optional()
+  }),
+  fiveWs: z.object({
+    who: z.array(z.string()),
+    what: z.string(),
+    where: z.union([z.string(), z.array(z.string())]), // Accept both string and array
+    when: z.string(),
+    why: z.string(),
+    soWhat: z.string()
+  }),
+  source: z.array(z.object({
+    feedId: z.string().optional(),
+    source: z.string(),
+    title: z.string(),
+    timestamp: z.string(),
+    quote: z.string()
+  })),
+  counterpoints: z.array(z.object({
+    claimA: z.string(),
+    claimB: z.string(),
+    sourceA: z.array(z.any()).optional(),
+    sourceB: z.array(z.any()).optional()
+  })),
+  watchNext: z.array(z.string())
+});
+
 export async function generateDeepDive(
   signal: Signal,
   feeds: RawSignal[],
@@ -669,7 +835,10 @@ export async function generateDeepDive(
   // Select relevant feeds for this signal
   const relevantFeeds = selectRelevantFeeds(signal, feeds);
   const prompt = generateDeepDivePrompt(signal, relevantFeeds, dateStr, aiConfig);
-  const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
+  
+  // Convert Zod schema to JSON schema (disabled for now due to compatibility issues)
+  // const deepDiveJsonSchema = zodToJsonSchema(DeepDiveSchema as any);
+  // console.log('JSON Schema being sent to Ollama:', JSON.stringify(deepDiveJsonSchema, null, 2));
   
   // Check if prompt is too large for context window
   const promptSize = new Blob([prompt]).size;
@@ -681,26 +850,30 @@ export async function generateDeepDive(
   }
   
   // Add detailed debugging
-  console.log('=== DeepDive Debug Info ===');
-  console.log('Model:', aiConfig.model);
-  console.log('Prompt size (bytes):', promptSize);
-  console.log('Context window:', contextWindow);
-  console.log('Safe limit (75%):', maxPromptSize);
-  console.log('Prompt preview (first 300 chars):', prompt?.substring(0, 300) + '...');
-  console.log('Options:', options);
-  console.log('==============================');
+  // console.log('=== DeepDive Debug Info ===');
+  // console.log('Model:', aiConfig.model);
+  // console.log('Prompt size (bytes):', promptSize);
+  // console.log('Context window:', contextWindow);
+  // console.log('Safe limit (75%):', maxPromptSize);
+  // console.log('Prompt preview (first 300 chars):', prompt?.substring(0, 300) + '...');
+  // console.log('Using regular JSON generation with Zod validation');
+  // console.log('==============================');
   
-  let raw;
+  let raw: string = '';
   let retryCount = 0;
   const maxRetries = 2;
   
   while (retryCount < maxRetries) {
     try {
-      raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
-      console.log(`Ollama service call successful on attempt ${retryCount + 1}`);
+      // First attempt without format parameter (some models don't support it well)
+      if (retryCount === 0) {
+        raw = await generateWithProvider(aiConfig, prompt, undefined, 'You are an elite intelligence analyst. Generate structured JSON responses.');
+      } else {
+        // Second attempt with explicit JSON instruction
+        raw = await generateWithProvider(aiConfig, prompt, 'json', 'You must respond with valid JSON only.');
+      }
       break; // Success, exit retry loop
     } catch (error) {
-      console.error(`Ollama service error on attempt ${retryCount + 1}:`, error);
       retryCount++;
       
       if (retryCount >= maxRetries) {
@@ -712,14 +885,107 @@ export async function generateDeepDive(
     }
   }
   
-  const parsed = parseJsonObjectWithDetection(raw);
-  if (!parsed.success) {
-    console.error('DeepDive parsing failed:', parsed.error);
-    console.log('Raw response that failed:', raw);
-    console.log('Parsed result:', parsed);
+  // Parse and validate with Zod
+  try {
+    // console.log('Raw response from Ollama:', raw);
+    // console.log('Raw response type:', typeof raw);
+    // console.log('Raw response length:', raw?.length);
     
-    // If we got an empty response, try to provide a fallback
-    if (parsed.error?.includes('Empty response') || !raw || raw.trim() === '') {
+    // If we have an empty response, provide the standard fallback DeepDive
+    if (!raw || raw.trim() === '') {
+      console.warn('Empty response from both structured and regular JSON, providing fallback DeepDive');
+      return {
+        signalId: signal.id || '',
+        generatedAt: new Date().toISOString(),
+        header: {
+          title: signal.title || 'Signal Analysis',
+          text: signal.text || 'Unable to generate detailed analysis at this time.',
+          sentiment: signal.sentiment || 'neutral',
+          deltaType: signal.deltaType,
+          category: signal.category
+        },
+        fiveWs: {
+          who: [],
+          what: signal.text || 'Signal analysis unavailable',
+          where: '',
+          when: dateStr,
+          why: 'AI service temporarily unavailable',
+          soWhat: 'Manual analysis may be required'
+        },
+        source: [],
+        counterpoints: [],
+        watchNext: []
+      };
+    }
+    
+    const parsedData = JSON.parse(raw);
+    // console.log('Parsed JSON data:', parsedData);
+    
+    // Check if we're using fallback (regular JSON) or structured format
+    const isFallback = raw === '' || 
+                      (parsedData && Object.keys(parsedData).length === 0) || 
+                      (parsedData && parsedData.error && parsedData.error.includes('Internal Server Error'));
+    
+    if (isFallback) {
+      console.log('Using fallback parsing without Zod validation');
+      // Use the original parsing logic for fallback
+      const fallbackParsed = parseJsonObjectWithDetection(raw);
+      if (!fallbackParsed.success) {
+        throw new Error(fallbackParsed.error || 'Fallback parsing failed');
+      }
+      
+      const obj = fallbackParsed.data;
+      return {
+        signalId: signal.id || '',
+        generatedAt: new Date().toISOString(),
+        header: {
+          title: signal.title || 'Untitled Signal',
+          text: obj.header?.text || signal.text || '',
+          sentiment: obj.header?.sentiment || signal.sentiment || 'neutral',
+          deltaType: obj.header?.deltaType || signal.deltaType,
+          category: obj.header?.category || signal.category
+        },
+        fiveWs: obj.fiveWs || { who: [], what: '', where: '', when: '', why: '', soWhat: '' },
+        source: obj.source || [],
+        counterpoints: obj.counterpoints || [],
+        watchNext: obj.watchNext || []
+      };
+    }
+    
+    const validatedData = DeepDiveSchema.parse(parsedData);
+    // console.log('Validated data:', validatedData);
+    
+    // Convert to DeepDiveData format
+    return {
+      signalId: validatedData.signalId || signal.id || '',
+      generatedAt: new Date().toISOString(),
+      header: {
+        title: validatedData.header.title || signal.title || 'Untitled Signal',
+        text: validatedData.header.text || signal.text || '',
+        sentiment: validatedData.header.sentiment as any || signal.sentiment || 'neutral',
+        deltaType: validatedData.header.deltaType as any || signal.deltaType,
+        category: validatedData.header.category as any || signal.category
+      },
+      fiveWs: {
+        ...validatedData.fiveWs,
+        where: Array.isArray(validatedData.fiveWs.where) 
+          ? validatedData.fiveWs.where.join(', ') 
+          : validatedData.fiveWs.where
+      },
+      source: validatedData.source.map(s => ({ ...s, feedId: s.feedId || '' })) as any,
+      counterpoints: validatedData.counterpoints.map(cp => ({
+        ...cp,
+        sourceA: cp.sourceA || [],
+        sourceB: cp.sourceB || []
+      })) as any,
+      watchNext: validatedData.watchNext
+    };
+  } catch (error) {
+    console.error('DeepDive Zod validation failed:', error);
+    console.log('Raw response that failed:', raw);
+    
+    // If validation fails, try to provide a fallback
+    if (!raw || raw.trim() === '') {
       console.warn('Empty response from AI, providing fallback DeepDive');
       return {
         signalId: signal.id || '',
@@ -741,115 +1007,12 @@ export async function generateDeepDive(
         },
         source: [],
         counterpoints: [],
-        watchNext: [] // Ensure this is always an array
-      };
-    }
-    
-    throw new Error(parsed.error || 'Deep Dive JSON parsing error');
-  }
-
-  const obj: any = parsed.data;
-  
-  // console.log('=== DeepDive Debug ===');
-  // console.log('Input signal.id:', signal.id);
-  // console.log('AI returned signalId:', obj.signalId);
-  // console.log('AI returned obj.title:', obj.title);
-  // console.log('AI returned obj.header:', obj.header);
-  
-  // Handle case where AI returns an array instead of object
-  if (Array.isArray(obj)) {
-    console.warn('DeepDive: AI returned array instead of expected object, attempting to convert...', obj);
-    
-    // Try to extract meaningful data from the array
-    if (obj.length > 0 && obj[0].headline) {
-      // This looks like a news headlines array - create a basic DeepDive structure
-      const firstItem = obj[0];
-      return {
-        signalId: signal.id || '',
-        generatedAt: new Date().toISOString(),
-        header: {
-          title: signal.title || firstItem.headline || 'Untitled Signal',
-          text: firstItem.summary || signal.text || firstItem.headline || '',
-          sentiment: signal.sentiment || 'neutral',
-          deltaType: signal.deltaType,
-          category: firstItem.category || signal.category
-        },
-        fiveWs: {
-          who: [],
-          what: firstItem.summary || firstItem.headline || '',
-          where: '',
-          when: dateStr,
-          why: '',
-          soWhat: ''
-        },
-        source: obj.slice(0, 3).map((item: any, idx: number) => ({
-          feedId: String(idx),
-          source: item.source || 'Unknown',
-          title: item.headline || '',
-          timestamp: new Date().toISOString(),
-          quote: item.summary || ''
-        })),
-        counterpoints: [],
         watchNext: []
       };
     }
     
-    console.error('DeepDive: Unable to convert array to expected object format', obj);
-    throw new Error('AI returned invalid format: expected object, got array');
+    throw new Error(`Deep Dive validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
-  
-  // Check if this is flattened qwen3.5 format or standard format
-  const isQwen35Format = obj.title && !obj.header;
-  
-  if (isQwen35Format) {
-    // Convert flattened qwen3.5 format to standard format
-    return {
-      signalId: signal.id || '',
-      generatedAt: new Date().toISOString(),
-      header: {
-        title: signal.title || 'Untitled Signal',
-        text: obj.text || signal.text || '',
-        sentiment: obj.sentiment || signal.sentiment || 'neutral',
-        deltaType: obj.deltaType || signal.deltaType,
-        category: obj.category || signal.category
-      },
-      fiveWs: {
-        who: obj.who || [],
-        what: obj.what,
-        where: obj.where,
-        when: obj.when,
-        why: obj.why,
-        soWhat: obj.soWhat
-      },
-      source: obj.source || [],
-      counterpoints: obj.counterpoints || [],
-      watchNext: obj.watchNext || []
-    };
-  }
-  
-  // Standard format (original)
-  return {
-    signalId: signal.id || '',
-    generatedAt: new Date().toISOString(),
-    header: {
-      title: signal.title || 'Untitled Signal',
-      text: obj.header?.text || signal.text || '',
-      sentiment: obj.header?.sentiment || signal.sentiment || 'neutral',
-      deltaType: obj.header?.deltaType || signal.deltaType,
-      category: obj.header?.category || signal.category
-    },
-    fiveWs: {
-      who: obj.fiveWs?.who || [],
-      what: obj.fiveWs?.what,
-      where: obj.fiveWs?.where,
-      when: obj.fiveWs?.when,
-      why: obj.fiveWs?.why,
-      soWhat: obj.fiveWs?.soWhat
-    },
-    source: obj.source || [],
-    counterpoints: obj.counterpoints || [],
-    watchNext: obj.watchNext || []
-  };
 }
 
 
@@ -858,9 +1021,49 @@ export async function generateNarrativePredictions(
   aiConfig: AiConfig
 ): Promise<NarrativePredictionsData> {
   const prompt = generateNarrativePredictionsPrompt(narrative, aiConfig);
-  const options = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict };
-  const raw = await OllamaService.generate(aiConfig.model, prompt, 'json', options);
-    
+  
+  let raw: string = '';
+  let retryCount = 0;
+  const maxRetries = 2;
+  
+  while (retryCount < maxRetries) {
+    try {
+      // First attempt without format parameter
+      if (retryCount === 0) {
+        raw = await generateWithProvider(aiConfig, prompt, undefined, 'You are an elite intelligence analyst specializing in predictive analysis.');
+      } else {
+        // Second attempt with explicit JSON instruction
+        raw = await generateWithProvider(aiConfig, prompt, 'json', 'You must respond with valid JSON only.');
+      }
+      break; // Success, exit retry loop
+    } catch (error) {
+      console.error(`Narrative service error on attempt ${retryCount + 1}:`, error);
+      retryCount++;
+      
+      if (retryCount >= maxRetries) {
+        raw = ''; // Final failure
+      } else {
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
+  
+  // If we have an empty response, provide a standard fallback
+  if (!raw || raw.trim() === '') {
+    console.warn('Empty response from narrative predictions, providing fallback');
+    return {
+      generatedAt: new Date().toISOString(),
+      sections: [
+        {
+          title: 'Predictions Unavailable',
+          sentiment: 'neutral',
+          predictions: ['AI service temporarily unavailable for narrative predictions. Please try again later.']
+        }
+      ]
+    };
+  }
+  
   const parsed = parseJsonObjectWithDetection(raw);
   if (!parsed.success) {
     console.error('Narrative Predictions parsing failed:', parsed.error);
@@ -876,6 +1079,13 @@ export async function generateNarrativePredictions(
 }
 
 function generateNarrativePredictionsPrompt(narrative: string, aiConfig?: AiConfig): string {
+  // Get custom sentiment guidelines if profile is specified
+  let sentimentGuidance = '';
+  if (aiConfig?.sentimentProfile) {
+    const profile = getSentimentProfile(aiConfig.sentimentProfile);
+    sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing the sentiment of each prediction topic, interpret it through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the sentiment of each topic.`;
+  }
+
   return `You are an elite intelligence analyst specializing in predictive analysis. Based on the following narrative summary of current events, analyze what could happen next across the different topics and subjects mentioned.
 
 Your task is to provide forward-looking intelligence predictions that are:
@@ -883,12 +1093,14 @@ Your task is to provide forward-looking intelligence predictions that are:
 - Broken down by the main topics/subjects identified in the narrative
 - Written as short, concise bullet points
 - Focused on likely developments, not speculative scenarios
+- Each section should include a sentiment assessment${sentimentGuidance}
 
 Format your response as a JSON object with the following structure:
 {
   "sections": [
     {
       "title": "Topic Name",
+      "sentiment": "positive|negative|neutral|interesting|very-positive|very-negative|extremely-negative|somewhat-negative",
       "predictions": [
         "Specific prediction about what to expect",
         "Another specific prediction",
@@ -897,6 +1109,7 @@ Format your response as a JSON object with the following structure:
     },
     {
       "title": "Another Topic",
+      "sentiment": "positive|negative|neutral|interesting|very-positive|very-negative|extremely-negative|somewhat-negative",
       "predictions": [
         "Prediction for this topic",
         "Another prediction"
@@ -905,7 +1118,7 @@ Format your response as a JSON object with the following structure:
   ]
 }
 
-Each section should have a clear topic title and 2-4 specific predictions. Keep predictions concise and actionable.
+Each section should have a clear topic title, a sentiment assessment, and 2-4 specific predictions. Keep predictions concise and actionable.
 
 Current Narrative:\\n\\n${narrative}`;
 }
@@ -1965,17 +2178,24 @@ export async function processSingleSection(
       };
     }
 
-    const context = generateContext(feeds);
+    // Use context limit based on aiConfig.numCtx for LM Studio (default 60000 for Ollama)
+    const maxContextChars = aiConfig.provider === 'lmstudio' 
+      ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)  // ~2 chars per token, cap at 15000
+      : 60000;
+    const context = generateContext(feeds, maxContextChars);
     const feedIndex = generateFeedIndex(feeds);
-    const opt = { num_ctx: aiConfig.numCtx, num_predict: aiConfig.numPredict, signal: controller.signal };
 
     if (sectionId === 'narrative') {
       let narrative = '';
       const prompt = generateNarrativePrompt(context, aiConfig);
-      if (onStream) {
-        await OllamaService.streamGenerate(aiConfig.model, prompt, (c) => { narrative += c; onStream(narrative); }, opt);
+      if (onStream && aiConfig.provider !== 'lmstudio') {
+        // Streaming for Ollama (LM Studio has format issues with streaming)
+        await streamGenerateWithProvider(aiConfig, prompt, (c) => { narrative += c; onStream(narrative); });
       } else {
-        narrative = await OllamaService.generate(aiConfig.model, prompt, undefined, opt);
+        // Non-streaming for LM Studio or when no stream callback
+        console.log('[Narrative] Using non-streaming mode for', aiConfig.provider);
+        narrative = await generateWithProvider(aiConfig, prompt);
+        if (onStream) onStream(narrative);
       }
       const rawOutputs: Record<string, string> = { narrative: narrative || '' };
       return {
@@ -2009,11 +2229,9 @@ export async function processSingleSection(
     let res;
     let parseResult: JsonParseResult;
     if (sectionId === 'relations') {
-      // console.log('Processing relations section');
-      res = await OllamaService.generate(aiConfig.model, await prompts.relations(), 'json', opt);
+      res = await generateWithProvider(aiConfig, await prompts.relations(), 'json', 'You must respond with valid JSON only.');
       parseResult = parseJsonArrayWithDetection(res);
     } else if (sectionId === 'signals') {
-      // console.log('Processing signals section');
       let lastRes = '';
       let lastParse: JsonParseResult = { success: false, data: [], error: 'No attempt made', canRetry: true };
 
@@ -2023,10 +2241,7 @@ export async function processSingleSection(
           ? ''
           : `\n\nFINAL CHECK (MANDATORY): Output ONLY a JSON array with 5-8 signal objects. If you produced a single object, wrap it in an array and add additional distinct signals until there are 5-8 total. Do not output any prose or markdown.`;
 
-        // NOTE: Do NOT use Ollama's JSON mode here.
-        // In practice it often biases the model into emitting a single JSON object,
-        // which is the exact failure mode we're trying to avoid for signals.
-        lastRes = await OllamaService.generate(aiConfig.model, `${basePrompt}${strictSuffix}`, undefined, opt);
+        lastRes = await generateWithProvider(aiConfig, `${basePrompt}${strictSuffix}`, undefined, 'You are an elite intelligence analyst.');
 
         lastParse = parseJsonArrayWithDetection(lastRes);
         if (!lastParse.success) continue;
@@ -2041,8 +2256,7 @@ export async function processSingleSection(
       res = lastRes;
       parseResult = lastParse;
     } else {
-      // console.log('Processing section:', sectionId);
-      res = await OllamaService.generate(aiConfig.model, prompts[sectionId], 'json', opt);
+      res = await generateWithProvider(aiConfig, prompts[sectionId], 'json', 'You must respond with valid JSON only.');
       parseResult = parseJsonArrayWithDetection(res);
     }
 

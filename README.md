@@ -1,4 +1,4 @@
-# 📡 SignalFrame v0.4.0
+# 📡 SignalFrame v0.5.0
 **The Local-First Situation Awareness Framework**
 
 SignalFrame is an intelligence dashboard designed to transform raw feeds into situational awareness. It moves beyond traditional "dashboards" by using AI to generate narratives, identify critical key insights, and maintain a list of changes overtime all running locally for FREE on your own hardware.
