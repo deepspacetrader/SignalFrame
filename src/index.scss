@@ -278,3 +278,27 @@ button:hover {
 .text-xxs {
     font-size: 0.5em;
 }
+
+/* AI badge for generated images */
+.ai-generated-image {
+    position: relative;
+}
+
+.ai-generated-image::after {
+    content: 'AI';
+    position: absolute;
+    top: 0.25em;
+    right: 0.25em;
+    background: #334155;
+    color: white;
+    padding: 0.25em 0.5em;
+    font-size: 0.6em;
+    font-weight: 700;
+    text-transform: uppercase;
+    transform-origin: top right;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    z-index: 10;
+    line-height: 1;
+    opacity: 0.5;
+}

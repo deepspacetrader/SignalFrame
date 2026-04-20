@@ -66,10 +66,10 @@ export function LoadingOverlay() {
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-8 pointer-events-none animate-in fade-in duration-500">
-      <div className="bg-bg-darker/60 backdrop-blur-xl border border-white/10 p-20 rounded-[3rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center max-w-3xl w-full pointer-events-auto">
+      <div className="bg-bg-darker/60 backdrop-blur-xl border border-white/10 p-20 shadow-[0_0_100px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center max-w-3xl w-full pointer-events-auto">
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-accent-primary/30 blur-[100px] rounded-full animate-pulse"></div>
-          <div className="relative w-24 h-24 border-t-2 border-r-2 border-accent-primary rounded-full animate-spin shadow-[0_0_50px_rgba(59,130,246,0.3)]"></div>
+          <div className="relative w-24 h-24 border-t-2 border-r-2 border-accent-primary animate-spin shadow-[0_0_50px_rgba(59,130,246,0.3)]"></div>
           <div className="absolute inset-0 flex items-center justify-center text-accent-primary">
             <svg
               width="40"

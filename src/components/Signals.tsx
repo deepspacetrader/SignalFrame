@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { DeepDiveModal } from './DeepDiveModal'
 import { JsonErrorDisplay } from './JsonErrorDisplay'
@@ -8,6 +8,7 @@ import { SectionCard } from './shared/SectionCard'
 import { SectionHeader } from './shared/SectionHeader'
 import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
 import { SectionBadge } from './shared/SectionBadge'
+import { MediaGenerationButtons } from './MediaGenerationButtons'
 
 const getSentimentColor = (sentiment: string) => {
   switch (sentiment) {
@@ -42,6 +43,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
     isProcessing,
     isProcessingSection,
     refreshSection,
+    aiConfig,
     aiStatus,
     jsonError,
     clearJsonError,
@@ -59,11 +61,25 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
     closeDeepDive,
     deepDiveBySignalId,
     activeDeepDiveSignalId,
-    isGeneratingDeepDive
+    isGeneratingDeepDive,
+    mediaUrls,
+    updateMediaUrls
   } = useSituationStore()
   const [sortBy, setSortBy] = useState<'none' | 'pos-neg' | 'neg-pos'>('none')
   const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null)
   const isLoading = isProcessingSection.signals && !isProcessing;
+
+  // Use mediaUrls from globalState instead of localStorage
+  const signalImages = useMemo(() => {
+    const images: Record<string, string> = {}
+    signals.forEach((signal, idx) => {
+      const cacheKey = signal.id || `signal-${idx}`
+      if (mediaUrls[cacheKey]) {
+        images[cacheKey] = mediaUrls[cacheKey]
+      }
+    })
+    return images
+  }, [signals, mediaUrls])
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const hasNoData = signals.length === 0 && !isProcessing;
   const shouldShowLoadingSpinner = !isLocalhost && hasNoData;
@@ -107,10 +123,10 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
 
   const headerActions = useMemo(() => {
     const sortControls = signals.length > 0 && !hasFailed && (
-      <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+      <div className="flex p-1">
         <button
           onClick={() => setSortBy('none')}
-          className={`text-[0.55rem] px-2 py-1 mx-1 rounded font-medium transition-all ${sortBy === 'none'
+          className={`text-[0.55rem] px-2 py-1 mx-1 font-medium transition-all ${sortBy === 'none'
             ? 'bg-gray-500 text-white'
             : 'text-white hover:text-text-primary'
             }`}
@@ -248,7 +264,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
       isLoading={isLoading && !hasFailed}
       loadingOverlayContent={
         <>
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-2"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Processing Deltas...</span>
         </>
       }
@@ -258,7 +274,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
           <div className="flex flex-col items-center gap-2">
             {isRetrying ? (
               <>
-                <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent animate-spin"></div>
                 <span className="text-[0.6rem] uppercase tracking-widest font-bold text-yellow-400">Retrying...</span>
                 <span className="text-[0.5rem] text-yellow-300/80">Attempt {failure.retryCount + 1}</span>
               </>
@@ -272,13 +288,13 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={() => retryFailedSection('signals')}
-                    className="text-[0.55rem] px-2 py-1 bg-blue-500/20 text-blue-400 rounded border border-blue-500/30 hover:bg-blue-500/30 transition-colors"
+                    className="text-[0.55rem] px-2 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-colors"
                   >
                     Retry Now
                   </button>
                   <button
                     onClick={() => clearSectionFailure('signals')}
-                    className="text-[0.55rem] px-2 py-1 bg-gray-500/20 text-gray-400 rounded border border-gray-500/30 hover:bg-gray-500/30 transition-colors"
+                    className="text-[0.55rem] px-2 py-1 bg-gray-500/20 text-gray-400 border border-gray-500/30 hover:bg-gray-500/30 transition-colors"
                   >
                     Dismiss
                   </button>
@@ -314,19 +330,19 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
 
       {shouldShowLoadingSpinner ? (
         <div className="flex flex-col items-center justify-center py-12">
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-4"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-text-secondary">Loading signal data...</span>
         </div>
       ) : isProcessing && signals.length === 0 ? (
         <div className="space-y-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => <div key={i} className="loading-skeleton h-20 bg-white/5 animate-pulse rounded-lg"></div>)}
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => <div key={i} className="loading-skeleton h-20 bg-white/5 animate-pulse"></div>)}
         </div>
       ) : (
         <div className="space-y-4">
           {sortedSignals.map((signal, idx) => (
             <div
               key={signal.id || `signal-${idx}`}
-              className="relative bg-white/5 border-l-4 p-4 rounded-r-lg transition-all hover:bg-white/10"
+              className="relative bg-white/5 border-l-4 p-4 transition-all hover:bg-white/10"
               style={{ borderColor: getSentimentColor(signal.sentiment) }}
               onMouseEnter={() => {
                 setHoveredSignalId(signal.id || `signal-${idx}`);
@@ -335,73 +351,175 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                 setHoveredSignalId(null);
               }}
             >
-              {/* Header with title and sentiment */}
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <h3 className="signal-text font-semibold text-xl text-text-primary text-base leading-tight">
-                  {signal.title || 'Error generating signal title'}
-                </h3>
-                <div className="flex items-center gap-2">
-                  
-                  <span
-                    className="text-[0.55rem] uppercase tracking-wide px-2 py-1 rounded text-white font-medium shadow-md"
-                    style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
-                  >
-                    {signal.sentiment.replace('-', ' ')}
-                  </span>
+              {/* Two-column layout when image is present */}
+              {signalImages[signal.id || `signal-${idx}`] ? (
+                <>
+                  <div className="mb-3">
+                    {/* Image floats left */}
+                    <div className="float-left mr-4 mb-2 relative ai-generated-image" style={{ 
+                        width: `${(aiConfig as any).signalsImageSize || 128}px`, 
+                        height: `${(aiConfig as any).signalsImageSize || 128}px`
+                    }}>
+                      <img
+                        src={signalImages[signal.id || `signal-${idx}`]}
+                        alt={`Generated image for ${signal.title}`}
+                        className="border border-white/10 w-full h-full"
+                        style={{ objectFit: 'cover' }}
+                        onError={() => {
+                          // Clear cached image if it fails to load - will be removed on next persist
+                          const cacheKey = signal.id || `signal-${idx}`
+                          // The image will be removed from globalState.mediaUrls on next save
+                          console.log('Image failed to load, will be removed on next persist:', cacheKey)
+                        }}
+                      />
+                    </div>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                      const hasDeepDiveData = deepDiveBySignalId[signal.id || ''];
+                    {/* Content wraps around image */}
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="signal-text font-semibold text-xl text-text-primary text-base leading-tight flex-1">
+                          {signal.title || 'Error generating signal title'}
+                        </h3>
+                        
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                              const hasDeepDiveData = deepDiveBySignalId[signal.id || ''];
 
-                      if (!isLocalhost) {
-                        if (hasDeepDiveData) {
-                          // Allow viewing static/cached data in demo mode
-                          generateDeepDive(signal.id || '');
-                        } else {
-                          onAIRequired();
-                        }
-                        return;
-                      }
+                              if (!isLocalhost) {
+                                if (hasDeepDiveData) {
+                                  // Allow viewing static/cached data in demo mode
+                                  generateDeepDive(signal.id || '');
+                                } else {
+                                  onAIRequired();
+                                }
+                                return;
+                              }
 
-                      // On localhost - proceed with deep dive (which generates if needed)
-                      generateDeepDive(signal.id || '');
-                    }}
-                    className="p-1.5 rounded bg-accent-primary/30 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"
-                    title="Deep Intelligence Analyze"
-                  >
-                    <div className="flex items-center gap-1">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:scale-110 transition-transform text-white">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                      </svg>
-                      <span className="text-[0.55rem] uppercase tracking-widest text-white">Deep Analysis</span>
+                              // On localhost - proceed with deep dive (which generates if needed)
+                              generateDeepDive(signal.id || '');
+                            }}
+                            className="p-1.5 rounded bg-accent-primary/30 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"
+                            title="Deep Intelligence Analyze"
+                          >
+                            <div className="flex items-center gap-1">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:scale-110 transition-transform text-white">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                              </svg>
+                              <span className="text-[0.55rem] uppercase tracking-widest text-white">Deep Analysis</span>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Signal text - only show if different from title */}
+                      {signal.text && signal.text.trim() && signal.text !== signal.title && (
+                        <p className="signal-text text-text-secondary text-sm leading-relaxed">
+                          {signal.text || 'Missing signal text'}
+                        </p>
+                      )}
+
+                      {/* Generation buttons */}
+                      <div className="mt-2">
+                        <MediaGenerationButtons
+                          text={signal.title || signal.text || ''}
+                          imageSize={(aiConfig as any).signalsImageSize || 128}
+                          cacheKey={signal.id || `signal-${idx}`}
+                          onImageGenerated={(imageUrl) => {
+                            updateMediaUrls({ [signal.id || `signal-${idx}`]: imageUrl })
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Clearfix to handle float */}
+                  <div className="clear-both"></div>
+                </>
+              ) : (
+                /* Original layout when no image */
+                <>
+                  {/* Header with title and sentiment */}
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex-1">
+                      <h3 className="signal-text font-semibold text-xl text-text-primary text-base leading-tight">
+                        {signal.title || 'Error generating signal title'}
+                      </h3>
                     </div>
                     
-                  </button>
-            
-                </div>
-              </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                          const hasDeepDiveData = deepDiveBySignalId[signal.id || ''];
 
+                          if (!isLocalhost) {
+                            if (hasDeepDiveData) {
+                              // Allow viewing static/cached data in demo mode
+                              generateDeepDive(signal.id || '');
+                            } else {
+                              onAIRequired();
+                            }
+                            return;
+                          }
 
+                          // On localhost - proceed with deep dive (which generates if needed)
+                          generateDeepDive(signal.id || '');
+                        }}
+                        className="p-1.5 rounded bg-accent-primary/30 text-accent-primary hover:bg-accent-primary/20 transition-all border border-accent-primary/20 group/btn shadow-lg"
+                        title="Deep Intelligence Analyze"
+                      >
+                        <div className="flex items-center gap-1">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:scale-110 transition-transform text-white">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                          <span className="text-[0.55rem] uppercase tracking-widest text-white">Deep Analysis</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Signal text - only show if different from title */}
-              {signal.text && signal.text.trim() && signal.text !== signal.title && (
-                <p className="signal-text text-text-secondary text-sm leading-relaxed mb-3">
-                  {signal.text || 'Missing signal text'}
-                </p>
+                  {/* Signal text - only show if different from title */}
+                  {signal.text && signal.text.trim() && signal.text !== signal.title && (
+                    <p className="signal-text text-text-secondary text-sm leading-relaxed mb-3">
+                      {signal.text || 'Missing signal text'}
+                    </p>
+                  )}
+
+                  {/* Generation buttons - only show when no image */}
+                  <div className="mt-2">
+                    <MediaGenerationButtons
+                      text={signal.title || signal.text || ''}
+                      imageSize={(aiConfig as any).signalsImageSize || 128}
+                      cacheKey={signal.id || `signal-${idx}`}
+                      onImageGenerated={(imageUrl) => {
+                        updateMediaUrls({ [signal.id || `signal-${idx}`]: imageUrl })
+                      }}
+                    />
+                  </div>
+                </>
               )}
 
-              {/* Category and delta type */}
-              <div className="flex flex-wrap gap-2 mb-3">
+              {/* Sentiment, Category and delta type */}
+              <div className="flex flex-wrap gap-2 mb-2 mt-2">
+                <span
+                  className="text-[0.55rem] uppercase tracking-wide px-2 py-1 text-white font-medium shadow-md"
+                  style={{ backgroundColor: getSentimentColor(signal.sentiment) }}
+                >
+                  {signal.sentiment.replace('-', ' ')}
+                </span>
                 {signal.category && (
-                  <span className="px-2 py-1 rounded bg-slate-500/20 text-slate-300 text-[0.65rem] uppercase tracking-widest">
+                  <span className="px-2 py-1  bg-slate-500/20 text-slate-300 text-[0.65rem] uppercase tracking-widest">
                     {signal.category || 'Unknown category'}
                   </span>
                 )}
                 {signal.deltaType && (
-                  <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-300 text-[0.65rem] uppercase tracking-widest">
+                  <span className="px-2 py-1  bg-slate-500/20 text-slate-300 text-[0.65rem] uppercase tracking-widest">
                     {signal.deltaType || 'Unknown delta type'}
                   </span>
                 )}
@@ -427,7 +545,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                   const observation = parts[0];
                   const implication = parts[1];
                   return (
-                    <div key={iIdx} className="bg-accent-secondary/5 border-l-2 border-accent-secondary/40 p-3 rounded-r-lg mt-2">
+                    <div key={iIdx} className="bg-accent-secondary/5 border-l-2 border-accent-secondary/40 p-3 mt-2">
                       <p className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-secondary mb-2">Implication</p>
                       {implication ? (
                         <div className="space-y-2">
@@ -449,7 +567,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
               {/* Source on hover */}
               {hoveredSignalId === (signal.id || `signal-${idx}`) && (
                 <>
-                  <div className="mt-2 w-full max-w-2xl bg-slate-900/100 border border-white/10 rounded-xl shadow-2xl p-4">
+                  <div className="mt-2 w-full max-w-2xl bg-slate-900/100 border border-white/10 shadow-2xl p-4">
                     {signal.source && Array.isArray(signal.source) && signal.source.length > 0 ? (
                     <>
                       <div className="flex justify-between items-start mb-3">
@@ -459,7 +577,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                       </div>
                       <ul className="space-y-2">
                         {signal.source.map((item, sourceIdx) => (
-                          <li key={sourceIdx} className="text-xs text-text-secondary bg-white/5 rounded p-2 border border-white/10">
+                          <li key={sourceIdx} className="text-xs text-text-secondary bg-white/5 p-2 border border-white/10 rounded-none">
                             <div className="flex justify-between items-start gap-2">
                               <span className="font-medium text-text-primary text-[0.65rem]">{item.source || 'Unknown Source'}</span>
                               {item.timestamp && (
@@ -508,7 +626,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                       </div>
                       <div className="space-y-3">
                         {signal.contradictions.map((contradiction, contradictionIdx) => (
-                          <div key={contradictionIdx} className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3">
+                          <div key={contradictionIdx} className="bg-orange-500/10 border border-orange-500/20 p-3">
                             <div className="space-y-2">
                               <div className="flex items-start gap-2">
                                 <span className="text-[0.6rem] font-medium text-red-400">Claim A:</span>
@@ -525,7 +643,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                                   <p className="text-[0.55rem] uppercase tracking-widest text-red-400/80 mb-1">Source A:</p>
                                   <div className="space-y-1">
                                     {contradiction.sourceA.map((source, sourceIdx) => (
-                                      <div key={sourceIdx} className="text-xs text-text-secondary bg-black/20 rounded p-2 border border-red-500/20">
+                                      <div key={sourceIdx} className="text-xs text-text-secondary bg-black/20 p-2 border border-red-500/20 rounded-none">
                                         <div className="flex justify-between items-start gap-2">
                                           <span className="font-medium text-text-primary text-[0.6rem]">{source.source}</span>
                                           {source.timestamp && (
@@ -564,7 +682,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                                   <p className="text-[0.55rem] uppercase tracking-widest text-blue-400/80 mb-1">Source B:</p>
                                   <div className="space-y-1">
                                     {contradiction.sourceB.map((source, sourceIdx) => (
-                                      <div key={sourceIdx} className="text-xs text-text-secondary bg-black/20 rounded p-2 border border-blue-500/20">
+                                      <div key={sourceIdx} className="text-xs text-text-secondary bg-black/20 p-2 border border-blue-500/20 rounded-none">
                                         <div className="flex justify-between items-start gap-2">
                                           <span className="font-medium text-text-primary text-[0.6rem]">{source.source}</span>
                                           {source.timestamp && (
@@ -609,7 +727,7 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
           ))}
 
           {!isProcessing && signals.length === 0 && !jsonError.hasError && (
-            <div className="py-8 text-center border-2 border-dashed border-white/5 rounded-xl">
+            <div className="py-8 text-center border-2 border-dashed border-white/5">
               <p className="text-text-secondary italic">No critical signals identified in this period.</p>
             </div>
           )}

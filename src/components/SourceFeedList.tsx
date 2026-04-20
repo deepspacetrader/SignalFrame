@@ -34,13 +34,13 @@ const FeedItem = memo(({ item }: { item: RawSignal }) => {
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group block bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 p-3 rounded-lg transition-all duration-200 hover:border-white/10 will-change-transform"
+            className="group block bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 p-3 transition-all duration-200 hover:border-white/10 will-change-transform rounded-md"
         >
             <div className="flex justify-between items-start gap-4">
                 <div className="flex-1 flex items-start gap-3">
                     {/* Thumbnail if available */}
                     {item.picture ? (
-                        <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                        <div className="w-32 h-32 overflow-hidden flex-shrink-0 bg-white/5">
                             <img
                                 ref={imageRef}
                                 src={item.picture}
@@ -59,7 +59,7 @@ const FeedItem = memo(({ item }: { item: RawSignal }) => {
                             )}
                         </div>
                     ) : (
-                        <div className="w-32 h-32 rounded-lg bg-white/5 flex-shrink-0 flex items-center justify-center">
+                        <div className="w-32 h-32 bg-white/5 flex-shrink-0 flex items-center justify-center">
                             <svg className="text-white/10 w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
@@ -121,9 +121,9 @@ export function SourceFeedList({ onAIRequired }: { onAIRequired?: () => void }) 
     // This allows users to see the export button and regenerate feeds
 
     return (
-        <section className="bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20">
+        <section className="bg-bg-card backdrop-blur-xl border border-white/10 p-6 transition-all hover:border-white/20 rounded-none">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-3 text-text-primary font-display">
-                <div className="w-1 h-5 bg-text-secondary rounded-full"></div>
+                <div className="w-1 h-5 bg-text-secondary"></div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M4 11a9 9 0 0 1 9 9"></path>
                     <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -209,7 +209,7 @@ export function SourceFeedList({ onAIRequired }: { onAIRequired?: () => void }) 
                         {items.length > ITEMS_PER_CATEGORY && (
                             <button
                                 onClick={() => toggleCategory(category)}
-                                className="mt-3 text-xs text-white hover:text-accent-tertiary/80 transition-colors font-medium"
+                                className="mt-3 text-xs text-white hover:text-accent-tertiary/80 transition-colors font-medium rounded px-2 py-1"
                             >
                                 {expandedCategories.has(category) ? `Show less (${items.length - ITEMS_PER_CATEGORY} items hidden)` : `Show ${items.length - ITEMS_PER_CATEGORY} more items`}
                             </button>

@@ -1,23 +1,53 @@
+# Environment variables
 .env
+
+# Node.js dependencies
 node_modules
-node_modules/*
 package-lock.json
 bun.lock
+
+# Build output
 dist
 dist/*
-dist/assets
-dist/assets/*
-dist/index.html
+
+# Python
+.venv
+venv
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Large model weights (users can download these)
+ext_weights/
+weights/
+audio-gen/backend/ext_weights/
+audio-gen/backend/weights/
+
+# Generated outputs (users can generate these)
+generated_images/
+audio-gen/output_sfx/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+notes/*
+storage/*
+/public/data/*
+server/*.wav
+server/test-crawler.js
+server/test-multi-crawler.js
+
+# Old/deprecated files
 src/components/OLD_HiddenInsights.tsx
 PLANv1.md
 PLANv2.md
 PLANv2_ACTION_PROMPT.md
 TODO.txt
-notes/*
-storage/*
-.vscode/*
-./venv/*
-/public/data/*
-server/*.wav
-server/test-crawler.js
-server/test-multi-crawler.js

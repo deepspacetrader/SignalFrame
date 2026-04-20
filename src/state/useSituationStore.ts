@@ -181,6 +181,14 @@ export interface AiConfig {
   // Ollama environment variables for performance optimization
   ollamaFlashAttention?: boolean;
   ollamaKvCacheType?: 'f16' | 'q8_0' | 'q4_0';
+  // Media generation settings
+  narrativeImageSize?: number;
+  signalsImageSize?: number;
+  narrativeAudioDuration?: number;
+  signalsAudioDuration?: number;
+  // Generation tracking for model loading UI
+  isGeneratingImage?: boolean;
+  isGeneratingAudio?: boolean;
 }
 
 export interface RunningModel {
@@ -256,6 +264,7 @@ export interface SituationState {
   aiStatus: AiStatus;
   lastUpdated: Date | null;
   jsonError: JsonErrorState;
+  mediaUrls: Record<string, string>; // Generated media URLs keyed by signal/narrative ID
   metricDefs: MetricDef[];
   dailyMetrics: Record<string, number>;
   deepDiveBySignalId: Record<string, DeepDiveData>;
@@ -283,17 +292,102 @@ const getTodayStr = () => {
  */
 const getAvailableSnapshotDates = async (): Promise<string[]> => {
   try {
-    // In static mode (GitHub Pages), only return today's date to avoid 429 errors
-    // The user can select other dates via the UI, which will load on-demand
     const today = getTodayStr();
-    return [today];
+    const dates = [today];
+
+    // Scan backwards from today, checking every date
+    // We'll do this in batches to avoid overwhelming the network
+    const d = new Date();
+    const maxDays = 120; // Scan up to 120 days back
+    const batchSize = 20;
+
+    for (let batchStart = 0; batchStart < maxDays; batchStart += batchSize) {
+      const batchEnd = Math.min(batchStart + batchSize, maxDays);
+      const batchPromises = [];
+
+      for (let i = batchStart; i < batchEnd; i++) {
+        d.setDate(d.getDate() - 1);
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        batchPromises.push(
+          (async () => {
+            try {
+              const response = await fetch(`./data/snapshot-${dateStr}.json`, { method: 'HEAD' });
+              if (response.ok) {
+                return dateStr;
+              }
+            } catch {
+              // File doesn't exist
+            }
+            return null;
+          })()
+        );
+      }
+
+      const results = await Promise.all(batchPromises);
+      results.forEach(dateStr => {
+        if (dateStr) dates.push(dateStr);
+      });
+    }
+
+    console.log(`Found ${dates.length} available snapshot dates:`, dates);
+    return dates.reverse(); // Return in chronological order
   } catch (error) {
     console.warn('Failed to get available snapshot dates:', error);
-    return [];
+    return [getTodayStr()];
   }
 };
 
-const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> => {
+// Helper function to find the previous available snapshot from a given date
+export const findPreviousSnapshot = async (fromDate: string): Promise<string | null> => {
+  try {
+    const [y, m, d] = fromDate.split('-').map(Number);
+    let date = new Date(y, m - 1, d);
+
+    // Try up to 120 days back, checking in batches of 20
+    const maxDays = 120;
+    const batchSize = 20;
+
+    for (let batchStart = 0; batchStart < maxDays; batchStart += batchSize) {
+      const batchEnd = Math.min(batchStart + batchSize, maxDays);
+      const batchPromises = [];
+
+      for (let i = batchStart; i < batchEnd; i++) {
+        date.setDate(date.getDate() - 1);
+        const prevY = date.getFullYear();
+        const prevM = String(date.getMonth() + 1).padStart(2, '0');
+        const prevD = String(date.getDate()).padStart(2, '0');
+        const dateStr = `${prevY}-${prevM}-${prevD}`;
+
+        batchPromises.push(
+          (async () => {
+            try {
+              const response = await fetch(`./data/snapshot-${dateStr}.json`);
+              if (response.ok) {
+                return dateStr;
+              }
+            } catch {
+              // File doesn't exist
+            }
+            return null;
+          })()
+        );
+      }
+
+      const results = await Promise.all(batchPromises);
+      for (const dateStr of results) {
+        if (dateStr) return dateStr;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.warn('Failed to find previous snapshot:', error);
+    return null;
+  }
+};
+
+const loadDateStampedSnapshot = async (targetDate: string): Promise<{ snapshot: any; actualDate: string } | null> => {
   try {
     // First try to load the specific date
     const response = await fetch(`./data/snapshot-${targetDate}.json`);
@@ -307,10 +401,37 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
         snapshot.feeds = [];
       }
 
-      return snapshot;
+      return { snapshot, actualDate: targetDate };
     }
   } catch (e) {
     console.warn(`Failed to load snapshot for ${targetDate}:`, e);
+  }
+
+  // If specific date fails, try to find the most recent snapshot by checking backwards from target date
+  console.log(`Trying to find most recent available snapshot from ${targetDate}...`);
+  const [y, m, d] = targetDate.split('-').map(Number);
+  let searchDate = new Date(y, m - 1, d);
+
+  // Check the past 120 days for any snapshot
+  for (let i = 1; i <= 120; i++) {
+    searchDate.setDate(searchDate.getDate() - 1);
+    const searchStr = `${searchDate.getFullYear()}-${String(searchDate.getMonth() + 1).padStart(2, '0')}-${String(searchDate.getDate()).padStart(2, '0')}`;
+
+    try {
+      const response = await fetch(`./data/snapshot-${searchStr}.json`);
+      if (response.ok) {
+        const snapshot = await response.json();
+        console.log(`Found fallback snapshot for date: ${searchStr}`);
+
+        if (!snapshot.feeds) {
+          snapshot.feeds = [];
+        }
+
+        return { snapshot, actualDate: searchStr };
+      }
+    } catch {
+      // Continue searching
+    }
   }
 
   // Finally, try the legacy snapshot.json for backward compatibility
@@ -320,13 +441,11 @@ const loadDateStampedSnapshot = async (targetDate: string): Promise<any | null> 
       const snapshot = await legacyResponse.json();
       console.log('Loaded legacy snapshot.json');
 
-      // Ensure feeds are included
       if (!snapshot.feeds) {
-        console.log('Feeds missing from legacy snapshot, creating empty feeds array');
         snapshot.feeds = [];
       }
 
-      return snapshot;
+      return { snapshot, actualDate: targetDate };
     }
   } catch (e) {
     console.warn('Failed to load legacy snapshot:', e);
@@ -427,6 +546,7 @@ const defaultState: SituationState = {
     sectionId: null,
     retryCount: 0
   },
+  mediaUrls: {},
 
   metricDefs: [],
   dailyMetrics: {},
@@ -452,6 +572,7 @@ const defaultState: SituationState = {
 
 let globalState: SituationState = { ...defaultState };
 const listeners = new Set<(state: SituationState) => void>();
+let configLoaded = false; // Flag to track when config is loaded from storage
 
 // Module-level polling manager to prevent multiple instances
 class OllamaPollingManager {
@@ -472,11 +593,8 @@ class OllamaPollingManager {
 
   async startPolling() {
     if (this.isPolling) {
-      console.log('[Poll] Already polling, skipping start');
       return;
     }
-
-    console.log('[Poll] Starting polling for provider:', globalState.aiConfig.provider);
     this.isPolling = true;
     this.scheduleNextPoll();
   }
@@ -484,66 +602,39 @@ class OllamaPollingManager {
   private async scheduleNextPoll() {
     if (!this.isPolling) return;
 
+    // Skip polling if config hasn't been loaded yet
+    if (!configLoaded) {
+      this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), 2000);
+      return;
+    }
+
     this.pollCount++;
 
-    // Check if we're using LM Studio - if so, skip Ollama polling
+    // Check if we're using LM Studio - skip polling, models are fetched only when AISettings is opened
     if (globalState.aiConfig.provider === 'lmstudio') {
-      console.log('[Poll] LM Studio mode - checking availability...');
-      try {
-        const { LMStudioService } = await import('../ai/runtime/lmstudio');
-        // console.log('[Poll] Fetching LM Studio models from:', LMStudioService.getBaseUrl());
-        const models = await LMStudioService.listModels();
-        // console.log('[Poll] LM Studio models found:', models.length, models);
-        const isAvailable = models.length > 0;
-        
-        if (isAvailable) {
-          // console.log('[Poll] LM Studio is ONLINE with', models.length, 'models');
-          globalState = {
-            ...globalState,
-            aiStatus: {
-              isOnline: true,
-              lastChecked: new Date(),
-              lastError: null
-            },
-            runningModels: models.map(m => ({
-              name: m,
-              size: 0,
-              size_vram: 0
-            }))
-          };
-          listeners.forEach(l => l({ ...globalState }));
-        } else {
-          console.log('[Poll] LM Studio is OFFLINE - no models');
-          globalState = {
-            ...globalState,
-            aiStatus: {
-              isOnline: false,
-              lastChecked: new Date(),
-              lastError: 'No models loaded in LM Studio'
-            },
-            runningModels: []
-          };
-          listeners.forEach(l => l({ ...globalState }));
+      // console.log('[Poll] LM Studio mode - skipping polling (models fetched in AISettings)');
+      // Just update lastChecked timestamp without making API calls
+      globalState = {
+        ...globalState,
+        aiStatus: {
+          ...globalState.aiStatus,
+          lastChecked: new Date()
         }
-      } catch (e) {
-        console.error('[Poll] LM Studio error:', e);
-        globalState = {
-          ...globalState,
-          aiStatus: {
-            isOnline: false,
-            lastChecked: new Date(),
-            lastError: 'LM Studio not responding'
-          },
-          runningModels: []
-        };
-        listeners.forEach(l => l({ ...globalState }));
-      }
-      
+      };
+      listeners.forEach(l => l({ ...globalState }));
       this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), 30000);
       return;
     }
 
     try {
+      // Only poll Ollama if using Ollama provider
+      if (globalState.aiConfig.provider !== 'ollama') {
+        // Skip polling for LM Studio - it doesn't need service polling
+        listeners.forEach(l => l({ ...globalState }));
+        this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), 30000);
+        return;
+      }
+
       const { OllamaService } = await import('../ai/runtime/ollama');
 
       // Check if Ollama service is running by testing the /api/tags endpoint
@@ -621,8 +712,8 @@ class OllamaPollingManager {
     } catch (e) {
       const wasOnline = globalState.aiStatus.isOnline;
       
-      // Only log Ollama error if we're actually using Ollama
-      if (globalState.aiConfig.provider !== 'lmstudio') {
+      // Only log Ollama error if we're actually using Ollama and it was previously online
+      if (globalState.aiConfig.provider !== 'lmstudio' && wasOnline) {
         console.error(`Ollama service not available. YOU DO NOT HAVE OLLAMA INSTALLED OR IT IS NOT RUNNING!`);
       }
 
@@ -708,7 +799,8 @@ async function persist() {
     foreignRelations: globalState.foreignRelations,
     watchFor: globalState.watchFor,
     dailyMetrics: globalState.dailyMetrics,
-    lastUpdated: globalState.lastUpdated
+    lastUpdated: globalState.lastUpdated,
+    mediaUrls: globalState.mediaUrls || {}
   });
 
   // Save AI Config and Global relations list (Definitions) separately
@@ -751,13 +843,24 @@ export function useSituationStore() {
       ]);
 
       if (config) {
+        // Migration: Fix old baseUrl values
+        if (config.baseUrl && config.provider === 'lmstudio') {
+          const oldBaseUrl = config.baseUrl;
+          // If baseUrl ends with /v1, remove it (should just be host now)
+          if (oldBaseUrl.endsWith('/v1')) {
+            config.baseUrl = oldBaseUrl.replace(/\/v1$/, '');
+            console.log('[Init] Migrated LM Studio baseUrl from', oldBaseUrl, 'to', config.baseUrl);
+            // Save the migrated config
+            await StorageService.saveGlobal('ai_config', config);
+          }
+        }
         globalState.aiConfig = config;
+        configLoaded = true; // Mark config as loaded
         // console.log('[Init] Loaded AI config:', config);
         if (config.baseUrl) {
           if (config.provider === 'lmstudio') {
             const { LMStudioService } = await import('../ai/runtime/lmstudio');
             LMStudioService.setBaseUrl(config.baseUrl);
-            console.log('[Init] Set LM Studio base URL:', config.baseUrl);
           } else {
             const { OllamaService } = await import('../ai/runtime/ollama');
             OllamaService.setBaseUrl(config.baseUrl);
@@ -765,6 +868,7 @@ export function useSituationStore() {
         }
       } else {
         console.log('[Init] No AI config found, using default:', globalState.aiConfig);
+        configLoaded = true; // Mark as loaded even if using default
       }
       if (savedBigPicture) globalState.bigPicture = savedBigPicture; // Load Global Big Picture
       if (savedMetricDefs && Array.isArray(savedMetricDefs)) globalState.metricDefs = savedMetricDefs;
@@ -791,15 +895,22 @@ export function useSituationStore() {
         // Preserve AI status and running models before loading analysis
         const currentAiStatus = globalState.aiStatus;
         const currentRunningModels = globalState.runningModels;
-        
+
         // Load daily analysis but Preserve Global Big Picture if it exists
         const bp = globalState.bigPicture;
         Object.assign(globalState, analysis);
         if (bp) globalState.bigPicture = bp;
-        
+
         // Restore AI status and running models
         globalState.aiStatus = currentAiStatus;
         globalState.runningModels = currentRunningModels;
+
+        // Restore media URLs
+        if (analysis.mediaUrls) {
+          globalState.mediaUrls = analysis.mediaUrls;
+        } else {
+          globalState.mediaUrls = {};
+        }
 
         if (!globalState.dailyMetrics) globalState.dailyMetrics = {};
 
@@ -808,9 +919,10 @@ export function useSituationStore() {
         // No analysis found in IndexedDB, try to load from snapshot files
         console.log('No analysis found in IndexedDB, attempting to load from snapshot files...');
         try {
-          const snapshot = await loadDateStampedSnapshot(today);
+          const result = await loadDateStampedSnapshot(today);
 
-          if (snapshot) {
+          if (result) {
+            const { snapshot } = result;
             console.log('Successfully loaded snapshot from files for today');
             // Preserve AI status and running models before loading snapshot
             const currentAiStatus = globalState.aiStatus;
@@ -868,9 +980,10 @@ export function useSituationStore() {
         console.log('Static Mode detected. Loading date-stamped snapshot...');
         try {
           // Load date-stamped snapshot for the current date
-          const snapshot = await loadDateStampedSnapshot(globalState.currentDate);
+          const result = await loadDateStampedSnapshot(globalState.currentDate);
 
-          if (snapshot) {
+          if (result) {
+            const { snapshot } = result;
             // Hydrate state with snapshot data
             // We use Object.assign to merge carefully
             Object.assign(globalState, {
@@ -1140,14 +1253,16 @@ export function useSituationStore() {
     const currentDefs = await StorageService.getGlobal('relation_defs');
     const currentBigPicture = globalState.bigPicture;
 
-    globalState.currentDate = dateStr;
-
     if (isStatic) {
       // In static mode, try to load date-stamped snapshot
       console.log(`Static mode: Loading snapshot for date ${dateStr}`);
-      const snapshot = await loadDateStampedSnapshot(dateStr);
+      const result = await loadDateStampedSnapshot(dateStr);
 
-      if (snapshot) {
+      if (result) {
+        const { snapshot, actualDate } = result;
+        // Only update currentDate if we successfully loaded a snapshot
+        globalState.currentDate = actualDate;
+
         // Ensure signals have proper source data
         if (snapshot.signals && Array.isArray(snapshot.signals)) {
           snapshot.signals = snapshot.signals.map((signal: any) => ({
@@ -1185,25 +1300,8 @@ export function useSituationStore() {
         notify();
         return;
       } else {
-        console.log(`No snapshot found for date ${dateStr}, showing empty state`);
-        // Set empty state for dates without snapshots
-        globalState.narrative = '';
-        globalState.signals = [];
-        globalState.insights = [];
-        globalState.feeds = [];
-        globalState.mapPoints = [];
-        globalState.dailyMetrics = {};
-        globalState.lastUpdated = null;
-        if (currentBigPicture) globalState.bigPicture = currentBigPicture;
-
-        if (currentDefs) {
-          globalState.foreignRelations = currentDefs.map((d: any) => ({
-            ...d,
-            status: 'No data for this date.',
-            sentiment: 'neutral',
-            lastUpdate: new Date().toISOString()
-          }));
-        }
+        console.log(`No snapshot found for date ${dateStr} or any previous date, keeping current date`);
+        // Don't change currentDate if snapshot doesn't exist
         notify();
         return;
       }
@@ -1213,6 +1311,9 @@ export function useSituationStore() {
     const analysis = await StorageService.getAnalysis(dateStr);
 
     if (analysis) {
+      // Only update currentDate if we successfully loaded data
+      globalState.currentDate = dateStr;
+
       // Ensure signals have proper source data
       if (analysis.signals && Array.isArray(analysis.signals)) {
         analysis.signals = analysis.signals.map((signal: any) => ({
@@ -1223,6 +1324,13 @@ export function useSituationStore() {
 
       Object.assign(globalState, analysis);
       if (globalState.lastUpdated) globalState.lastUpdated = new Date(globalState.lastUpdated);
+
+      // Restore media URLs
+      if (analysis.mediaUrls) {
+        globalState.mediaUrls = analysis.mediaUrls;
+      } else {
+        globalState.mediaUrls = {};
+      }
 
       // RESTORE Global Big Picture if we want it to be truly global
       if (currentBigPicture) globalState.bigPicture = currentBigPicture;
@@ -1246,10 +1354,14 @@ export function useSituationStore() {
       // No analysis found in IndexedDB, try to load from snapshot files
       console.log(`No analysis found for date ${dateStr} in IndexedDB, attempting to load from snapshot files...`);
       try {
-        const snapshot = await loadDateStampedSnapshot(dateStr);
+        const result = await loadDateStampedSnapshot(dateStr);
 
-        if (snapshot) {
-          console.log(`Successfully loaded snapshot from files for date ${dateStr}`);
+        if (result) {
+          const { snapshot, actualDate } = result;
+          console.log(`Successfully loaded snapshot from files for date ${actualDate}`);
+          // Only update currentDate if we successfully loaded data
+          globalState.currentDate = actualDate;
+
           // Ensure signals have proper source data
           if (snapshot.signals && Array.isArray(snapshot.signals)) {
             snapshot.signals = snapshot.signals.map((signal: any) => ({
@@ -1759,17 +1871,16 @@ export function useSituationStore() {
   const fetchAvailableModels = useCallback(async () => {
     try {
       if (globalState.aiConfig.provider === 'lmstudio') {
-        const { LMStudioService } = await import('../ai/runtime/lmstudio');
-        const models = await LMStudioService.listModels();
-        globalState = { ...globalState, availableModels: models };
-        notify();
+        // LM Studio models are fetched directly in AISettings when opened, skip here
+        console.log('[fetchAvailableModels] LM Studio mode - skipping (handled in AISettings)');
+        return;
       } else {
         const { OllamaService } = await import('../ai/runtime/ollama');
         const models = await OllamaService.listModels();
         globalState = { ...globalState, availableModels: models };
         notify();
       }
-    } catch (e) { 
+    } catch (e) {
       console.error('[fetchAvailableModels] Error:', e);
     }
   }, []);
@@ -2032,6 +2143,12 @@ export function useSituationStore() {
     persist();
   }, []);
 
+  const updateMediaUrls = useCallback((urls: Record<string, string>) => {
+    globalState = { ...globalState, mediaUrls: { ...globalState.mediaUrls, ...urls } };
+    notify();
+    persist();
+  }, []);
+
   const exportSnapshot = useCallback(async () => {
     try {
       console.log('🔍 Export Debug - Current feeds:', globalState.feeds);
@@ -2162,6 +2279,7 @@ export function useSituationStore() {
     sectionFailures: globalState.sectionFailures,
     setSectionFailure,
     clearSectionFailure,
+    updateMediaUrls,
     retryFailedSection,
     setPredictionHistory,
     exportSnapshot,

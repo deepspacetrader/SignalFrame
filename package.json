@@ -4,9 +4,12 @@
   "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run nvidia-tts\" \"vite\"",
+    "dev": "concurrently \"npm run server\" \"npm run nvidia-tts\" \"npm run image-gen\" \"npm run audio-gen\" \"npm run image-gen-python\" \"vite\"",
     "server": "nodemon server/index.js",
     "nvidia-tts": "nodemon server/nvidia-tts.js",
+    "image-gen": "cd image-gen/server && npx tsx index.ts",
+    "audio-gen": "conda run -n audio --no-capture-output python audio-gen/backend/run_server.py",
+    "image-gen-python": "python image-gen/image-gen.py",
     "build": "vite build",
     "preview": "vite preview",
     "build-and-export": "powershell -ExecutionPolicy Bypass -File scripts/build-and-export.ps1"

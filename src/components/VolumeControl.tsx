@@ -3,8 +3,6 @@ import { createPortal } from 'react-dom'
 import { useSituationStore } from '../state/useSituationStore'
 import { zzfx } from '../utils/zzfx'
 
-const VOLUME_SERVER_URL = 'http://localhost:3001'
-
 export function VolumeControl() {
   const { soundVolume, setSoundVolume } = useSituationStore()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -161,7 +159,7 @@ export function VolumeControl() {
       {isExpanded && createPortal(
         <div 
           data-volume-panel
-          className="fixed w-64 bg-slate-900 border border-white/10 rounded-lg shadow-xl p-4 z-[9999]"
+          className="fixed w-64 bg-slate-900 border border-white/10 shadow-xl p-4 z-[9999]"
           style={{
             top: `${buttonPosition.top + 8}px`,
             right: `${buttonPosition.right}px`
@@ -173,7 +171,7 @@ export function VolumeControl() {
               <h3 className="text-sm font-semibold text-text-primary">Sound Effects</h3>
               <button
                 onClick={() => setIsExpanded(false)}
-                className="text-text-secondary hover:text-text-primary transition-colors"
+                className="text-text-secondary hover:text-text-primary transition-colors rounded p-1"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18"></line>

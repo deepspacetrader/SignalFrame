@@ -22,7 +22,7 @@ export function SectionHeader({
   return (
     <div className={`flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 ${className}`}>
       <div className="flex items-start gap-3">
-        <div className={`w-1 h-5 rounded-full mt-1 ${accentClassName}`}></div>
+        <div className={`w-1 h-5 mt-1 ${accentClassName}`}></div>
         <div>
           <div className="flex items-center gap-3 text-text-primary font-display text-xl font-semibold">
             {icon && (

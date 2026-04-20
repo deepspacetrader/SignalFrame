@@ -119,12 +119,12 @@ export function BigPictureModal({ isOpen, onClose, onAIRequired }: BigPictureMod
             modalId="big-picture-modal"
             backdropClassName="fixed big-picture inset-0 z-50 flex items-center justify-center p-8 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
         >
-            <div className="w-full max-w-7xl h-[90vh] bg-[#0a0f18] border border-white/10 rounded-2xl flex flex-col overflow-hidden shadow-2xl relative ">
+            <div className="w-full max-w-7xl h-[90vh] bg-[#0a0f18] border border-white/10 flex flex-col overflow-hidden shadow-2xl relative ">
 
                 {/* Header */}
                 <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/2">
                     <div className="flex items-center gap-4">
-                        <div className="p-2 bg-accent-primary/20 rounded-lg">
+                        <div className="p-2 bg-accent-primary/20">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent-primary">
                                 <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
                             </svg>
@@ -171,9 +171,9 @@ export function BigPictureModal({ isOpen, onClose, onAIRequired }: BigPictureMod
                         <div className="relative border-l border-white/10 ml-3 space-y-8">
                             {hasData ? [...bigPicture.timeline].reverse().map((item, idx) => (
                                 <div key={idx} className="pl-6 relative group">
-                                    <div className={`absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full ${SENTIMENT_COLORS[item.sentiment] || 'bg-gray-500'} ring-4 ring-[#0a0f18] transition-all group-hover:scale-125`}></div>
+                                    <div className={`absolute -left-[5px] top-1.5 w-2.5 h-2.5 ${SENTIMENT_COLORS[item.sentiment] || 'bg-gray-500'} ring-4 ring-[#0a0f18] transition-all group-hover:scale-125`}></div>
                                     <div className="mb-1 flex items-center gap-2">
-                                        <span className="text-[10px] font-mono font-bold text-accent-secondary bg-accent-secondary/10 px-1.5 py-0.5 rounded">{item.date}</span>
+                                        <span className="text-[10px] font-mono font-bold text-accent-secondary bg-accent-secondary/10 px-1.5 py-0.5">{item.date}</span>
                                     </div>
                                     <h4 className="text-sm font-bold text-gray-200 mb-1 leading-snug">{item.title}</h4>
                                     <p className="text-xs text-text-secondary leading-relaxed line-clamp-2 hover:line-clamp-none transition-all">{item.summary}</p>
@@ -188,13 +188,13 @@ export function BigPictureModal({ isOpen, onClose, onAIRequired }: BigPictureMod
                     <div className="flex-1 overflow-y-auto p-8 lg:p-12 relative">
                         {isGenerating ? (
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0f18]/80 backdrop-blur-sm z-20">
-                                <div className="w-16 h-16 border-4 border-accent-primary/30 border-t-accent-primary rounded-full animate-spin mb-4"></div>
+                                <div className="w-16 h-16 border-4 border-accent-primary/30 border-t-accent-primary animate-spin mb-4"></div>
                                 <p className="text-accent-primary font-mono text-sm animate-pulse">INGESTING TELESCOPIC DATA...</p>
                             </div>
                         ) : null}
 
                         <div className="max-w-3xl mx-auto">
-                            <div className="mb-8 p-6 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-white/10 rounded-2xl relative overflow-hidden">
+                            <div className="mb-8 p-6 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-white/10 relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-20">
                                     <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-white">
                                         <circle cx="12" cy="12" r="10" />
@@ -219,11 +219,11 @@ export function BigPictureModal({ isOpen, onClose, onAIRequired }: BigPictureMod
                             {/* Footer Stats */}
                             {hasData && (
                                 <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-white/10">
-                                    <div className="bg-white/5 rounded-lg p-4 text-center">
+                                    <div className="bg-white/5 p-4 text-center">
                                         <div className="text-2xl font-bold text-white">{bigPicture.timeline.length}</div>
                                         <div className="text-[10px] uppercase tracking-widest text-gray-500">Days Analyzed</div>
                                     </div>
-                                    <div className="bg-white/5 rounded-lg p-4 text-center">
+                                    <div className="bg-white/5 p-4 text-center">
                                         <div className="text-2xl font-bold text-accent-secondary">
                                             {bigPicture.timeline.filter(t => t.sentiment.includes('negative')).length}
                                         </div>

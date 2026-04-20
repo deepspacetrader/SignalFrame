@@ -132,6 +132,188 @@ app.post('/api/ingest', async (req, res) => {
 // Health check endpoint
 app.get('/api/status', (req, res) => res.json({ status: 'online', service: 'SignalFrame Ingestion' }));
 
+// Image Prompt Enhancement Endpoint
+app.post('/api/enhance-image-prompt', async (req, res) => {
+  try {
+    const { prompt, model, provider, baseUrl } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+    if (!model) {
+      return res.status(400).json({ error: "Model is required. Please configure an AI model in AI Settings." });
+    }
+    if (!provider) {
+      return res.status(400).json({ error: "Provider is required. Please configure an AI provider in AI Settings." });
+    }
+    if (!baseUrl) {
+      return res.status(400).json({ error: "Base URL is required. Please configure an AI provider in AI Settings." });
+    }
+
+    console.log(`Enhancing image prompt: "${prompt}" via ${provider} with model: ${model}...`);
+
+    // Construct full URL based on provider
+    const fullUrl = provider === 'ollama' 
+      ? `${baseUrl}/chat`
+      : `${baseUrl}/api/v1/chat`;
+
+    const payload = {
+      model: model,
+      system_prompt: "You are an expert at crafting detailed, evocative prompts for AI image generation models like SDXL. Your task is to take a simple user input and transform it into a rich, visually descriptive prompt that will produce stunning, high-quality images. Focus on: 1) Adding specific visual details (colors, textures, lighting), 2) Describing the artistic style and mood, 3) Including compositional elements, 4) Suggesting atmospheric qualities. Keep the enhanced prompt concise (1-2 sentences) but packed with visual information. Output ONLY the enhanced prompt, no explanations or extra text.",
+      input: `Transform this simple concept into a detailed image generation prompt: "${prompt}"`
+    };
+
+    const response = await axios.post(fullUrl, payload, {
+      headers: { "Content-Type": "application/json" }
+    }).catch(err => {
+      console.error("Connection to AI provider failed:", err.message);
+      throw new Error(`Connection to ${provider} failed at ${fullUrl}. Is the AI service running?`);
+    });
+
+    if (response.status !== 200) {
+      const errorText = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+      console.error("AI provider returned an error:", errorText);
+      throw new Error(`${provider} error (${response.status}): ${errorText}`);
+    }
+
+    const data = response.data;
+    let extractedContent = "";
+
+    // Handle LM Studio's specific format with output array
+    if (data.output && Array.isArray(data.output)) {
+      const messageObj = data.output.find((item) => item.type === 'message');
+      extractedContent = messageObj?.content || data.output[data.output.length - 1]?.content || JSON.stringify(data.output);
+    }
+    // Handle stringified JSON
+    else if (typeof data === 'string') {
+      try {
+        const parsedData = JSON.parse(data);
+        if (Array.isArray(parsedData)) {
+          const messageObj = parsedData.find((item) => item.type === 'message');
+          extractedContent = messageObj?.content || parsedData[parsedData.length - 1]?.content || JSON.stringify(parsedData);
+        } else {
+          extractedContent = data;
+        }
+      } catch {
+        extractedContent = data;
+      }
+    }
+    // Handle direct array format
+    else if (Array.isArray(data)) {
+      const messageObj = data.find((item) => item.type === 'message');
+      extractedContent = messageObj?.content || data[data.length - 1]?.content || JSON.stringify(data);
+    }
+    // Handle other formats
+    else if (data.output) {
+      extractedContent = typeof data.output === 'object' ? (data.output.content || JSON.stringify(data.output)) : data.output;
+    } else if (data.content) {
+      extractedContent = typeof data.content === 'object' ? (data.content.content || JSON.stringify(data.content)) : data.content;
+    } else if (data.choices?.[0]?.message?.content) {
+      extractedContent = data.choices[0].message.content;
+    } else if (typeof data === 'string') {
+      extractedContent = data;
+    } else {
+      extractedContent = "Unexpected response format from AI.";
+    }
+
+    res.json({ enhancedPrompt: extractedContent.trim() });
+  } catch (error) {
+    console.error("Prompt Enhancement Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Audio Prompt Enhancement Endpoint
+app.post('/api/enhance-audio-prompt', async (req, res) => {
+  try {
+    const { prompt, model, provider, baseUrl } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+    if (!model) {
+      return res.status(400).json({ error: "Model is required. Please configure an AI model in AI Settings." });
+    }
+    if (!provider) {
+      return res.status(400).json({ error: "Provider is required. Please configure an AI provider in AI Settings." });
+    }
+    if (!baseUrl) {
+      return res.status(400).json({ error: "Base URL is required. Please configure an AI provider in AI Settings." });
+    }
+
+    console.log(`Enhancing audio prompt: "${prompt}" via ${provider} with model: ${model}...`);
+
+    // Construct full URL based on provider
+    const fullUrl = provider === 'ollama' 
+      ? `${baseUrl}/chat`
+      : `${baseUrl}/api/v1/chat`;
+
+    const payload = {
+      model: model,
+      system_prompt: "You are an expert at crafting detailed, evocative prompts for AI audio generation models. Your task is to take a simple user input and transform it into a rich, descriptive prompt that will produce high-quality audio or sound effects. Focus on: 1) Describing the sound characteristics (timbre, texture, dynamics), 2) Including spatial and temporal qualities (reverb, decay, attack), 3) Suggesting atmospheric or environmental context, 4) Describing emotional or mood qualities. Keep the enhanced prompt concise (1-2 sentences) but packed with auditory information. Output ONLY the enhanced prompt, no explanations or extra text.",
+      input: `Transform this simple concept into a detailed audio generation prompt: "${prompt}"`
+    };
+
+    const response = await axios.post(fullUrl, payload, {
+      headers: { "Content-Type": "application/json" }
+    }).catch(err => {
+      console.error("Connection to AI provider failed:", err.message);
+      throw new Error(`Connection to ${provider} failed at ${fullUrl}. Is the AI service running?`);
+    });
+
+    if (response.status !== 200) {
+      const errorText = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+      console.error("AI provider returned an error:", errorText);
+      throw new Error(`${provider} error (${response.status}): ${errorText}`);
+    }
+
+    const data = response.data;
+    let extractedContent = "";
+
+    // Handle LM Studio's specific format with output array
+    if (data.output && Array.isArray(data.output)) {
+      const messageObj = data.output.find((item) => item.type === 'message');
+      extractedContent = messageObj?.content || data.output[data.output.length - 1]?.content || JSON.stringify(data.output);
+    }
+    // Handle stringified JSON
+    else if (typeof data === 'string') {
+      try {
+        const parsedData = JSON.parse(data);
+        if (Array.isArray(parsedData)) {
+          const messageObj = parsedData.find((item) => item.type === 'message');
+          extractedContent = messageObj?.content || parsedData[parsedData.length - 1]?.content || JSON.stringify(parsedData);
+        } else {
+          extractedContent = data;
+        }
+      } catch {
+        extractedContent = data;
+      }
+    }
+    // Handle direct array format
+    else if (Array.isArray(data)) {
+      const messageObj = data.find((item) => item.type === 'message');
+      extractedContent = messageObj?.content || data[data.length - 1]?.content || JSON.stringify(data);
+    }
+    // Handle other formats
+    else if (data.output) {
+      extractedContent = typeof data.output === 'object' ? (data.output.content || JSON.stringify(data.output)) : data.output;
+    } else if (data.content) {
+      extractedContent = typeof data.content === 'object' ? (data.content.content || JSON.stringify(data.content)) : data.content;
+    } else if (data.choices?.[0]?.message?.content) {
+      extractedContent = data.choices[0].message.content;
+    } else if (typeof data === 'string') {
+      extractedContent = data;
+    } else {
+      extractedContent = "Unexpected response format from AI.";
+    }
+
+    res.json({ enhancedPrompt: extractedContent.trim() });
+  } catch (error) {
+    console.error("Audio Prompt Enhancement Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // TTS endpoints using say.js
 app.post('/api/tts/speak', (req, res) => {
     const { text, voice, speed = 1.0 } = req.body;

@@ -1,4 +1,4 @@
-# 📡 SignalFrame v0.5.0
+# 📡 SignalFrame v0.6.0
 **The Local-First Situation Awareness Framework**
 
 SignalFrame is an intelligence dashboard designed to transform raw feeds into situational awareness. It moves beyond traditional "dashboards" by using AI to generate narratives, identify critical key insights, and maintain a list of changes overtime all running locally for FREE on your own hardware.
@@ -113,7 +113,35 @@ ollama pull qwen3:8b
 - **GPU (Recommended)**: NVIDIA RTX 3060/4060 or better for fastest 8B-14B model performance
 - **Storage**: 2GB+ free space for models
 
-### 5. Launch SignalFrame
+### 5. Initialize Git Submodules
+
+SignalFrame uses git submodules for audio generation and NVIDIA TTS functionality:
+
+```bash
+git submodule init
+git submodule update --remote --recursive
+```
+
+This will set up:
+- `audio-gen/backend/MMAudio` - Audio generation models
+- `python-clients` - NVIDIA Riva Speech AI clients
+
+### 6. Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+cp .env.example .env
+```
+
+For NVIDIA TTS functionality (optional), add your NVIDIA API key:
+```
+VITE_NVIDIA_KEY=your_nvidia_api_key_here
+```
+
+Get your NVIDIA API key from [https://build.nvidia.com/](https://build.nvidia.com/)
+
+### 7. Launch SignalFrame
 ```bash
 git clone https://github.com/deepspacetrader/signalframe
 cd signalframe

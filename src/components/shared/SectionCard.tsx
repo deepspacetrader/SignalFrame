@@ -20,7 +20,7 @@ export function SectionCard({
   loadingOverlayContent
 }: SectionCardProps) {
   const sectionClasses = [
-    'relative bg-bg-card backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20',
+    'relative bg-bg-card backdrop-blur-xl border border-white/10 p-6 transition-all hover:border-white/20 rounded-none',
     isLoading ? 'section-loading' : '',
     className
   ]
@@ -35,7 +35,7 @@ export function SectionCard({
             loadingOverlayContent
           ) : (
             <>
-              <div className={`w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mb-2 ${loadingSpinnerClassName}`}></div>
+              <div className={`w-8 h-8 border-2 border-t-transparent animate-spin mb-2 ${loadingSpinnerClassName}`}></div>
               {loadingLabel && (
                 <span className={`text-[0.6rem] uppercase tracking-widest font-bold ${loadingLabelClassName}`}>
                   {loadingLabel}

@@ -61,8 +61,8 @@ export class LMStudioService {
     private static baseUrl = 'http://127.0.0.1:1234';
 
     static setBaseUrl(url: string) {
-        // Remove trailing /v1 if present since we'll add the correct paths
-        this.baseUrl = url.replace(/\/v1\/?$/, '').replace(/\/$/, '');
+        // Remove trailing slash if present
+        this.baseUrl = url.replace(/\/$/, '');
     }
 
     static getBaseUrl(): string {

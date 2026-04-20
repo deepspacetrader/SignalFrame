@@ -217,19 +217,19 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
     };
 
     return (
-        <div className="h-[750px] flex flex-col bg-bg-card/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl overflow-hidden">
+        <div className="h-[750px] flex flex-col bg-bg-card/40 backdrop-blur-md rounded-none border border-white/5 shadow-2xl overflow-hidden">
             <div className="p-4 border-b border-white/5 bg-white/5 space-y-4">
                 <div className="flex justify-between items-center">
                     <h3 className="text-sm font-bold uppercase tracking-widest text-accent-primary">Secure Comm Link</h3>
                     <div className="flex items-center gap-2">
                         {isTyping && (
                             <div className="flex items-center gap-1 mr-2">
-                                <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-bounce"></span>
+                                <span className="w-1.5 h-1.5 bg-accent-primary animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="w-1.5 h-1.5 bg-accent-primary animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="w-1.5 h-1.5 bg-accent-primary animate-bounce"></span>
                             </div>
                         )}
-                        <span className={`w-2 h-2 rounded-full ${isTyping ? 'bg-accent-secondary animate-pulse' : 'bg-green-500'}`}></span>
+                        <span className={`w-2 h-2 ${isTyping ? 'bg-accent-secondary animate-pulse' : 'bg-green-500'}`}></span>
                         <span className="text-[10px] font-mono text-text-secondary">{isTyping ? 'THINKING...' : 'READY'}</span>
                     </div>
                 </div>
@@ -263,7 +263,7 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
                             <span className="text-[9px] text-text-secondary uppercase">Context Usage</span>
                             <span className="text-[9px] text-text-secondary font-mono">{estTokens} / {maxTokens} tokens ({Math.round(usagePercent)}%)</span>
                         </div>
-                        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div className="w-full h-1 bg-white/10 overflow-hidden">
                             <div
                                 className={`h-full ${usageColor} transition-all duration-500`}
                                 style={{ width: `${usagePercent}%` }}
@@ -285,9 +285,9 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
 
                 {messages.map((m, i) => (
                     <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[85%] rounded-xl p-3 text-sm ${m.role === 'user'
-                            ? 'bg-accent-primary/20 border border-accent-primary/20 text-white rounded-tr-none'
-                            : 'bg-white/5 border border-white/5 text-slate-200 rounded-tl-none'
+                        <div className={`max-w-[85%] p-3 text-sm ${m.role === 'user'
+                            ? 'bg-accent-primary/20 border border-accent-primary/20 text-white'
+                            : 'bg-white/5 border border-white/5 text-slate-200'
                             }`}>
                             {formatMessage(m.content)}
                         </div>
@@ -297,11 +297,11 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
                 {/* Typing Indicator in chat flow */}
                 {isTyping && (
                     <div className="flex justify-start animate-in fade-in duration-300">
-                        <div className="bg-white/5 border border-white/5 text-slate-200 rounded-xl rounded-tl-none p-3 max-w-[85%]">
+                        <div className="bg-white/5 border border-white/5 text-slate-200 p-3 max-w-[85%]">
                             <div className="flex items-center gap-1.5 h-5">
-                                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                                <span className="w-1.5 h-1.5 bg-slate-400 animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="w-1.5 h-1.5 bg-slate-400 animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="w-1.5 h-1.5 bg-slate-400 animate-bounce"></span>
                             </div>
                         </div>
                     </div>
@@ -317,7 +317,7 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder="Type your query..."
-                        className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-accent-primary/50 transition-colors resize-none min-h-[40px] max-h-32"
+                        className="flex-1 bg-black/40 border border-white/10 px-4 py-2 text-sm text-white focus:outline-none focus:border-accent-primary/50 transition-colors resize-none min-h-[40px] max-h-32 rounded-md"
                         disabled={isTyping}
                         rows={1}
                     />

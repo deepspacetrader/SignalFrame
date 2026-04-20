@@ -5,15 +5,12 @@ import { SourceFeedList } from './components/SourceFeedList'
 import { SituationMap } from './components/SituationMap'
 import { ForeignRelationsPanel } from './components/ForeignRelationsPanel'
 import { LoadingOverlay } from './components/LoadingOverlay'
-import { AISettings } from './components/AISettings'
-import { RSSSettings } from './components/RSSSettings'
 import { ChatPanel } from './components/ChatPanel'
 import { PredictionsPanel } from './components/PredictionsPanel'
-import { VolumeControl } from './components/VolumeControl'
+import { Header } from './components/Header'
 import { useSituationStore } from './state/useSituationStore'
+import { findPreviousSnapshot } from './state/useSituationStore'
 import { BigPictureModal } from './components/BigPictureModal'
-import { formatTime } from './utils/timeUtils'
-import { getSentimentProfile } from './ai/runtime/sentimentEngine'
 import { LocalAIRequiredModal } from './components/LocalAIRequiredModal'
 import { DisclaimerModal } from './components/DisclaimerModal'
 // import { SoundTestPanel } from './components/SoundTestPanel'
@@ -42,6 +39,7 @@ export default function App() {
     if (currentIndex > 0) {
       loadDate(availableDates[currentIndex - 1]);
     } else {
+      // Calculate previous day and try to load it
       const [y, m, d] = currentDate.split('-').map(Number);
       const date = new Date(y, m - 1, d);
       date.setDate(date.getDate() - 1);
@@ -82,163 +80,17 @@ export default function App() {
 
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen bg-bg-darker text-text-primary">
-      <header className="mb-10 flex flex-col gap-6 bg-bg-card/40 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-2xl">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full gap-6 lg:gap-0">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full lg:w-auto">
-            <div>
-              <div className="flex items-center mb-1">
-                <span className="status-online w-2 h-2 bg-accent-secondary rounded-full mr-2 shadow-[0_0_10px_var(--accent-secondary)] animate-pulse"></span>
-                <span className="text-[0.65rem] text-accent-secondary font-bold uppercase tracking-[0.2em]">
-                  Deep Intelligence Node Active
-                </span>
-              </div>
-              <h1 className="m-0 text-3xl font-bold bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent font-display tracking-tight">SignalFrame <span className="text-sm font-mono text-slate-600 font-normal ml-2">v0.5.0</span></h1>
-            </div>
-
-            <div className="hidden md:block h-10 w-[1px] bg-white/10"></div>
-
-            <div className="header-stats grid grid-cols-2 gap-4 w-full lg:w-auto lg:flex lg:flex-wrap">
-              <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 flex-1 md:flex-none">
-                <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Status</p>
-                <p className={`text-xs font-mono whitespace-nowrap ${isProcessing ? 'text-accent-secondary' :
-                  (isLocalhost && aiStatus?.isOnline ? 'text-green-500' : 'text-red-500')
-                  }`}>
-                  {isProcessing ? 'SCANNING...' : (isLocalhost && aiStatus?.isOnline ? (aiConfig?.provider === 'lmstudio' ? 'LM STUDIO ONLINE' : 'OLLAMA ONLINE') : 'AI OFFLINE')}
-                </p>
-              </div>
-              {lastUpdated ? (
-                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
-                  <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Last Sync</p>
-                  <p className="text-xs font-mono">{lastUpdated.toLocaleTimeString()}</p>
-                </div>
-              ) : (
-                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
-                  <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Last Sync</p>
-                  <p className="text-xs font-mono text-red-500">never</p>
-                </div>
-              )}
-
-              <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
-                <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Sentiment</p>
-                <p className="text-xs font-mono text-accent-primary">
-                  {getSentimentProfile(aiConfig.sentimentProfile || 'balanced').name}
-                </p>
-              </div>
-
-              <div className="flex gap-2">
-                {runningModels && runningModels.length > 0 ? (
-                  aiConfig?.provider === 'lmstudio' ? (
-                    // For LM Studio, only show the currently selected model
-                    <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
-                      <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-white group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200" title={aiConfig?.model || 'Unknown'}>{aiConfig?.model || 'Unknown'}</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 bg-accent-secondary rounded-full animate-pulse shadow-[0_0_5px_var(--accent-secondary)]"></span>
-                          <span className="text-[9px] font-mono text-accent-secondary font-bold">LM Studio</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    // For Ollama, show all running models
-                    runningModels.map(m => (
-                      <div key={m.name} className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
-                        <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono text-white group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200" title={m.name.split(':')[0]}>{m.name.split(':')[0]}</span>
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 bg-accent-secondary rounded-full animate-pulse shadow-[0_0_5px_var(--accent-secondary)]"></span>
-                            <span className="text-[9px] font-mono text-accent-secondary font-bold">
-                              {Math.round(m.size_vram / 1024 / 1024 / 1024 * 10) / 10}GB
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )
-                ) : (
-                  <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5 group/model relative hover:min-w-fit hover:w-auto transition-all duration-200">
-                    <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">AI Model</p>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs font-mono group-hover/model:whitespace-normal group-hover/model:truncate-none group-hover/model:max-w-none whitespace-nowrap truncate max-w-24 transition-all duration-200 ${isLocalhost && aiStatus?.isOnline ? (aiConfig?.model ? 'text-green-500' : 'text-red-500') : 'text-red-500'}`} title={isLocalhost && aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}>
-                        {isLocalhost && aiStatus?.isOnline ? (aiConfig?.model || 'No Model Selected') : 'No AI Model Loaded'}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {sectionGenerationTimes['full-scan'] && (
-                <div className="bg-white/5 px-4 py-2 rounded-lg border border-white/5">
-                  <p className="text-[10px] uppercase text-text-secondary font-bold tracking-widest mb-1">Last Scan</p>
-                  <p className="text-xs font-mono text-accent-secondary">{formatTime(sectionGenerationTimes['full-scan'])}</p>
-                </div>
-              )}
-
-              <AISettings onAIRequired={() => setShowAIModal(true)} />
-              <RSSSettings onAIRequired={() => setShowAIModal(true)} />
-              <VolumeControl />
-            </div>
-          </div>
-
-          <button
-            onClick={() => setShowBigPicture(true)}
-            className="bg-accent-primary/10 border border-accent-primary/20 text-accent-primary px-4 py-2 rounded-lg hover:bg-accent-primary/20 transition-all flex items-center gap-2 group mr-3 flex-1 md:flex-none justify-center min-w-0"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:scale-110 transition-transform flex-shrink-0">
-              <path d="M3 3v18h18" /><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
-            </svg>
-            <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">The Big Picture</span>
-          </button>
-
-          <button
-            onClick={handleRefresh}
-            disabled={isProcessing}
-            className={`group relative overflow-hidden font-bold py-3 px-6 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] flex-1 md:flex-none justify-center items-center min-w-0
-            ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.3)]' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
-          >
-            <span className="flex items-center justify-center gap-2 whitespace-nowrap">
-              {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}
-              <svg className={`transition-transform duration-700 ${isProcessing ? 'animate-spin' : 'group-hover:rotate-12'} flex-shrink-0`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-              </svg>
-            </span>
-          </button>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/5 pt-4">
-          <button
-            onClick={handlePrevDay}
-            className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-white hover:text-secondary transition-all group"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="transition-transform group-hover:-translate-x-1"><path d="m15 18-6-6 6-6" /></svg>
-            <span className="hidden sm:inline">Previous Day</span>
-            <span className="sm:hidden">Prev</span>
-          </button>
-
-          <div className="border border-accent-primary/20 px-6 py-1 rounded-full">
-            <span className="text-xs font-mono font-bold text-accent-primary tracking-widest">
-              {(currentDate || todayStr).replace(/-/g, ' / ')}
-            </span>
-          </div>
-
-          {!isToday ? (
-            <button
-              onClick={handleNextDay}
-              className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-white hover:text-secondary transition-all group"
-            >
-              <span className="hidden sm:inline">Next Day</span>
-              <span className="sm:hidden">Next</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="transition-transform group-hover:translate-x-1"><path d="m9 18 6-6-6-6" /></svg>
-            </button>
-          ) : (
-            <div className="flex items-center gap-2 text-[0.65rem] uppercase font-bold tracking-widest text-accent-secondary opacity-50 cursor-default">
-              <span className="hidden sm:inline">Today - </span>
-              {todayStr.replace(/-/g, ' / ')}
-            </div>
-          )}
-        </div>
-      </header>
+      <Header
+        onAIRequired={() => setShowAIModal(true)}
+        onBigPictureClick={() => setShowBigPicture(true)}
+        onRefresh={handleRefresh}
+        isProcessing={isProcessing}
+        isToday={isToday}
+        currentDate={currentDate}
+        todayStr={todayStr}
+        onPrevDay={handlePrevDay}
+        onNextDay={handleNextDay}
+      />
 
       <main className="grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-12 space-y-8">

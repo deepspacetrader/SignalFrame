@@ -54,7 +54,7 @@ export function RawOutputModal({ isOpen, onClose, sectionId, title }: RawOutputM
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
-      <div className="relative w-full max-w-5xl max-h-[85vh] bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/50 rounded-3xl shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
+      <div className="relative w-full max-w-5xl max-h-[85vh] bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/50 to-slate-700/50 backdrop-blur-sm">
           <div className="flex-1">
@@ -64,7 +64,7 @@ export function RawOutputModal({ isOpen, onClose, sectionId, title }: RawOutputM
             <div className="flex items-center gap-3">
               <span className="text-sm text-slate-300">{title}</span>
               <span className="text-slate-500">•</span>
-              <span className="text-sm font-mono bg-slate-700/50 px-3 py-1 rounded-lg text-slate-300 border border-slate-600/50">
+              <span className="text-sm font-mono bg-slate-700/50 px-3 py-1 text-slate-300 border border-slate-600/50">
                 {sectionId}
               </span>
             </div>
@@ -83,10 +83,10 @@ export function RawOutputModal({ isOpen, onClose, sectionId, title }: RawOutputM
 
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[60vh] custom-scrollbar">
-          <div className="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm">
+          <div className="bg-slate-900/80 border border-slate-700/50 p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-green-500 animate-pulse"></div>
                 <span className="text-sm font-mono text-slate-400 uppercase tracking-wider">
                   Raw Response
                 </span>
@@ -108,7 +108,7 @@ export function RawOutputModal({ isOpen, onClose, sectionId, title }: RawOutputM
                 Copy to Clipboard
               </button>
             </div>
-            <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
+            <div className="bg-slate-950/50 p-4 border border-slate-800/50">
               <pre className="text-sm text-slate-200 font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto">
                 {formattedOutput.split('\n').map((line, index) => (
                   <div key={index} className="flex">

@@ -74,7 +74,7 @@ export function JsonErrorDisplay({ error, onRetry, onCancel, countdown = 5, isRe
   }
 
   return (
-    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-4">
+    <div className="bg-red-500/10 border border-red-500/30 p-4 mb-4">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
           <svg className="w-5 h-5 text-red-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,7 +87,7 @@ export function JsonErrorDisplay({ error, onRetry, onCancel, countdown = 5, isRe
           
           <div className="flex gap-2">
             {isCountingDown && timeLeft > 0 && !isRetrying && (
-              <div className="flex items-center gap-2 text-xs text-yellow-400 bg-yellow-500/10 px-3 py-2 rounded border border-yellow-500/30">
+              <div className="flex items-center gap-2 text-xs text-yellow-400 bg-yellow-500/10 px-3 py-2 border border-yellow-500/30">
                 <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>

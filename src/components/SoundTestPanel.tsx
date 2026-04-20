@@ -16,7 +16,6 @@ export function SoundTestPanel() {
         zIndex: 9999,
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         padding: '15px',
-        borderRadius: '8px',
         border: '1px solid #333',
         fontSize: '12px',
         fontFamily: 'monospace'

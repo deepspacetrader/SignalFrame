@@ -43,7 +43,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} modalId="deep-dive-modal">
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-0 max-w-6xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl flex flex-col">
+            <div className="bg-bg-card border border-white/10 p-0 max-w-6xl w-full max-h-[90vh] overflow-hidden relative shadow-2xl flex flex-col">
                 {/* Header Section */}
                 <div className="p-4 sm:p-6 lg:p-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent relative pt-16 sm:pt-20 lg:pt-24">
                     <button
@@ -77,7 +77,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
                     {isGenerating ? (
                         <div className="py-12 flex flex-col items-center justify-center text-center">
-                            <div className="w-16 h-16 border-4 border-accent-primary/20 border-t-accent-primary rounded-full animate-spin mb-6"></div>
+                            <div className="w-16 h-16 border-4 border-accent-primary/20 border-t-accent-primary animate-spin mb-6"></div>
                             <h2 className="text-xl font-bold text-text-primary mb-2 italic">Generating Deep Intelligence Analysis...</h2>
                             <p className="text-text-secondary text-sm max-w-md">AI is cross-referencing multiple sources to provide a comprehensive breakdown of this signal.</p>
                         </div>
@@ -101,7 +101,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                             <div className="flex flex-wrap items-center gap-2 mb-4">
                                 <SectionBadge tone="accent">Deep Dive Analysis</SectionBadge>
                                 {data.header.category && (
-                                    <span className="px-2 py-1 rounded bg-slate-500/20 text-slate-300 text-[0.6rem] sm:text-[0.65rem] uppercase tracking-widest font-bold">
+                                    <span className="px-2 py-1 bg-slate-500/20 text-slate-300 text-[0.6rem] sm:text-[0.65rem] uppercase tracking-widest font-bold">
                                         {data.header.category}
                                     </span>
                                 )}
@@ -118,7 +118,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                 <div className="flex items-center gap-2">
                                     <span className="text-[0.65rem] uppercase tracking-widest text-text-secondary font-bold">Status Assessment:</span>
                                     <span
-                                        className="px-3 py-1 rounded-full text-white text-[0.65rem] font-bold uppercase tracking-wider"
+                                        className="px-3 py-1 text-white text-[0.65rem] font-bold uppercase tracking-wider"
                                         style={{ backgroundColor: getSentimentColor(data.header.sentiment) }}
                                     >
                                         {data.header.sentiment.replace('-', ' ')}
@@ -127,7 +127,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                 {data.header.deltaType && (
                                     <div className="flex items-center gap-2">
                                         <span className="text-[0.65rem] uppercase tracking-widest text-text-secondary font-bold">Vector:</span>
-                                        <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-[0.65rem] font-bold uppercase tracking-wider border border-purple-500/20">
+                                        <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-[0.65rem] font-bold uppercase tracking-wider border border-purple-500/20">
                                             {data.header.deltaType}
                                         </span>
                                     </div>
@@ -154,7 +154,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                     </p>
                                 </section>
 
-                                <section className="bg-white/5 border border-white/10 rounded-xl p-6 shadow-inner">
+                                <section className="bg-white/5 border border-white/10 p-6 shadow-inner">
                                     <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-accent-primary font-bold mb-6 flex items-center gap-2">
                                         <span className="w-4 h-[1px] bg-accent-primary"></span>
                                         Intelligence Breakdown (5Ws)
@@ -188,7 +188,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         )}
                                         {data.fiveWs.why && (
                                             <div className="flex flex-col sm:flex-row gap-2">
-                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHY</div>
+                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 h-6 flex items-center justify-center border border-white/5">WHY</div>
                                                 <div className="text-text-secondary text-sm font-medium italic leading-snug">{data.fiveWs.why}</div>
                                             </div>
                                         )}
@@ -220,7 +220,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                     </h3>
                                     <div className="space-y-3">
                                         {data.source.map((item, idx) => (
-                                            <div key={idx} className="bg-white/5 border border-white/5 rounded-lg p-4 transition-all hover:bg-white/10">
+                                            <div key={idx} className="bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10">
                                                 <div className="flex justify-between items-start mb-2">
                                                     <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
                                                     {item.timestamp && (
@@ -249,7 +249,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         </h3>
                                         <div className="space-y-4">
                                             {data.counterpoints.map((cp, idx) => (
-                                                <div key={idx} className="bg-orange-500/5 border border-orange-500/10 rounded-xl p-4">
+                                                <div key={idx} className="bg-orange-500/5 border border-orange-500/10 p-4">
                                                     <div className="flex flex-col sm:flex-col gap-4">
                                                         <div className="space-y-2">
                                                             <p className="text-[0.6rem] uppercase tracking-widest text-yellow-400 font-bold mb-1">Perspective A</p>
@@ -268,7 +268,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                 )}
 
                                 {data.watchNext && data.watchNext.length > 0 && (
-                                    <section className="bg-accent-primary/5 border border-accent-primary/20 rounded-xl p-5 mt-auto">
+                                    <section className="bg-accent-primary/5 border border-accent-primary/20 p-5 mt-auto">
                                         <h3 className="text-[0.65rem] uppercase tracking-widest text-accent-primary font-bold mb-4 flex items-center gap-2">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                             Watch For

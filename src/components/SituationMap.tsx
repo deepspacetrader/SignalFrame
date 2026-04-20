@@ -146,7 +146,7 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
             isLoading={isLoading}
             loadingOverlayContent={
                 <>
-                    <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-2"></div>
                     <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary text-center px-4">Recalculating Geo-Coordinates...</span>
                 </>
             }
@@ -175,7 +175,7 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
                 />
             )}
 
-            <div className="flex-1 rounded-xl overflow-hidden border border-white/5 bg-[#0a0c10]">
+            <div className="flex-1 overflow-hidden border border-white/5 bg-[#0a0c10]">
                 <MapContainer
                     center={[20, 0]}
                     zoom={2}
@@ -219,7 +219,7 @@ export function SituationMap({ onAIRequired }: { onAIRequired: () => void }) {
                                     <h4 className="font-bold text-slate-900 text-sm leading-tight mb-2">{point.title}</h4>
                                     <div className="flex items-center gap-2 mb-3">
                                         <span
-                                            className="text-[8px] font-bold px-2 py-1 rounded"
+                                            className="text-[8px] font-bold px-2 py-1"
                                             style={{
                                                 color: (sentimentColors as any)[resolveSentiment(point.sentiment)] || '#64748b',
                                                 backgroundColor: `${(sentimentColors as any)[resolveSentiment(point.sentiment)] || '#64748b'}20`

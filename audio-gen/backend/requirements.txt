@@ -1,0 +1,17 @@
+# Core ML dependencies
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+torchdiffeq>=0.2.0
+scipy>=1.10.0
+
+# Hugging Face transformers for MusicGen
+transformers>=4.35.0
+accelerate>=0.25.0
+
+# CLIP for MMAudio
+open_clip_torch>=2.20.0
+
+# Web server
+flask>=2.3.0
+flask-cors>=4.0.0

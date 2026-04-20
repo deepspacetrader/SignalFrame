@@ -19,7 +19,7 @@ const toneStyles: Record<SectionBadgeTone, string> = {
 export function SectionBadge({ children, tone = 'neutral', className = '' }: SectionBadgeProps) {
   return (
     <span
-      className={`text-[0.55rem] uppercase tracking-widest font-bold px-2 py-0.5 rounded border whitespace-nowrap ${toneStyles[tone]} ${className}`.trim()}
+      className={`text-[0.55rem] uppercase tracking-widest font-bold px-2 py-0.5 border whitespace-nowrap ${toneStyles[tone]} ${className}`.trim()}
     >
       {children}
     </span>

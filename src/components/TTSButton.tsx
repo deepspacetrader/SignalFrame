@@ -346,7 +346,7 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
         value={selectedVoice || ''}
         onChange={(e) => setSelectedVoice(e.target.value || null)}
         disabled={isSpeaking}
-        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary"
+        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary rounded-md"
         title="Select NVIDIA Magpie voice for text-to-speech"
       >
         {NVIDIA_VOICES.map((voiceOption: Voice) => (
@@ -361,7 +361,7 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
         value={selectedEmotion || ''}
         onChange={(e) => setSelectedEmotion(e.target.value || 'default')}
         disabled={isSpeaking}
-        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 rounded bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary"
+        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary rounded-md"
         title="Select NVIDIA Magpie emotion for text-to-speech (uses SSML)"
       >
         {getAvailableEmotions().map((emotionOption: Voice) => (

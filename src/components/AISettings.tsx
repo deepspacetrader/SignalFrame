@@ -8,7 +8,7 @@ import { LMStudioService } from '../ai/runtime/lmstudio'
 
 const DEFAULT_URLS = {
     ollama: 'http://127.0.0.1:11434/api',
-    lmstudio: 'http://127.0.0.1:1234/v1'
+    lmstudio: 'http://127.0.0.1:1234'
 };
 
 export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
@@ -25,6 +25,11 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
     const [lmStudioModels, setLmStudioModels] = useState<string[]>([])
     const [lmStudioError, setLmStudioError] = useState<string | null>(null)
+    
+    const [narrativeImageSize, setNarrativeImageSize] = useState((aiConfig as any).narrativeImageSize || 512)
+    const [signalsImageSize, setSignalsImageSize] = useState((aiConfig as any).signalsImageSize || 128)
+    const [narrativeAudioDuration, setNarrativeAudioDuration] = useState((aiConfig as any).narrativeAudioDuration || 5)
+    const [signalsAudioDuration, setSignalsAudioDuration] = useState((aiConfig as any).signalsAudioDuration || 3)
 
     useEffect(() => {
         if (isOpen) {
@@ -60,6 +65,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     useEffect(() => {
         if (isOpen) {
             setTempConfig(aiConfig);
+            setNarrativeImageSize((aiConfig as any).narrativeImageSize || 512);
+            setSignalsImageSize((aiConfig as any).signalsImageSize || 128);
+            setNarrativeAudioDuration((aiConfig as any).narrativeAudioDuration || 5);
+            setSignalsAudioDuration((aiConfig as any).signalsAudioDuration || 3);
         }
     }, [isOpen, aiConfig]);
 
@@ -85,7 +94,13 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     }
 
     const handleSave = () => {
-        updateAiConfig(tempConfig);
+        updateAiConfig({
+            ...tempConfig,
+            narrativeImageSize,
+            signalsImageSize,
+            narrativeAudioDuration,
+            signalsAudioDuration
+        });
         setIsOpen(false);
     }
 
@@ -150,16 +165,16 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
             onClose={() => setIsOpen(false)}
             modalId="ai-settings-modal"
         >
-            <div className="bg-bg-card border border-white/10 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            <div className="bg-bg-card border border-white/10 p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
                 <h3 className="text-2xl font-display font-bold text-white mb-6 flex items-center gap-3">
-                    <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
+                    <span className="w-1 h-6 bg-accent-primary"></span>
                     AI Engine Parameters
                 </h3>
 
                 <div className="space-y-6">
                     {/* AI Service Setup Guide */}
                     {currentError && (
-                        <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl">
+                        <div className="p-6 bg-red-500/10 border border-red-500/20">
                             <div className="flex items-start gap-3 mb-4">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400 flex-shrink-0 mt-0.5">
                                     <circle cx="12" cy="12" r="10" />
@@ -178,7 +193,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
 
                             {/* System Requirements */}
-                            <div className="bg-black/40 rounded-lg p-4 gap-3 mb-4">
+                            <div className="bg-black/40 p-4 gap-3 mb-4">
                                 <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">System Requirements</h5>
                                 <div className="grid grid-cols-1 gap-3 text-xs">
                                     <div>
@@ -198,14 +213,14 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
                             <div className="space-y-4">
                                 {/* Installation Steps */}
-                                <div className="bg-black/40 rounded-lg p-4">
+                                <div className="bg-black/40 p-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Installation Steps</h5>
 
                                     <div className="space-y-3">
                                         {/* Windows */}
                                         <div className="border-l-2 border-blue-500/30 pl-3">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded font-mono">Windows</span>
+                                                <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 font-mono">Windows</span>
                                             </div>
                                             <ol className="text-xs text-text-secondary space-y-1 ml-4">
                                                 <li>1. Download from <a href="https://ollama.com/download/windows" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/download/windows</a></li>
@@ -217,7 +232,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         {/* macOS */}
                                         <div className="border-l-2 border-green-500/30 pl-3">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded font-mono">macOS</span>
+                                                <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 font-mono">macOS</span>
                                             </div>
                                             <ol className="text-xs text-text-secondary space-y-1 ml-4">
                                                 <li>1. Download from <a href="https://ollama.com/download/mac" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/download/mac</a></li>
@@ -229,9 +244,9 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         {/* Linux */}
                                         <div className="border-l-2 border-yellow-500/30 pl-3">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded font-mono">Linux</span>
+                                                <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 font-mono">Linux</span>
                                             </div>
-                                            <div className="bg-black/60 rounded p-2 mt-2">
+                                            <div className="bg-black/60 p-2 mt-2">
                                                 <code className="text-xs text-green-400 font-mono">curl -fsSL https://ollama.com/install.sh | sh</code>
                                             </div>
                                         </div>
@@ -239,17 +254,17 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </div>
 
                                 {/* Verification */}
-                                <div className="bg-black/40 rounded-lg p-4">
+                                <div className="bg-black/40 p-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Verify Installation</h5>
                                     <p className="text-xs text-text-secondary mb-2">Open terminal/command prompt and run:</p>
-                                    <div className="bg-black/60 rounded p-2 mb-3">
+                                    <div className="bg-black/60 p-2 mb-3">
                                         <code className="text-xs text-green-400 font-mono">ollama list</code>
                                     </div>
                                     <p className="text-xs text-text-tertiary">If you see "Error: connect ECONNREFUSED 127.0.0.1:11434", restart Ollama</p>
                                 </div>
 
                                 {/* Download Models */}
-                                <div className="bg-black/40 rounded-lg p-4">
+                                <div className="bg-black/40 p-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Download an AI Model</h5>
                                     <p className="text-xs text-text-secondary mb-3">One billion parameters roughly equals 1GB of VRAM when using a moderate amount of context length. Exceeding this will force the CPU to process data the GPU cannot handle on its own, which is <b>significantly slower</b> than only GPU processing.</p>
 
@@ -258,7 +273,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <p className="text-xs text-text-secondary mb-3">Choose an appropriate model for your hardware here are some recommendations to get started. (see <a href="https://ollama.com/search" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:underline">ollama.com/search</a> for more models)</p>
 
                                     <div className="space-y-2">
-                                        <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                                        <div className="flex items-center justify-between p-2 bg-white/5 border border-white/10">
                                             <div>
                                                 <span className="text-xs font-mono text-text-primary">deepseek-r1:8b (recommended)</span>
                                             </div>
@@ -270,7 +285,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                             </button>
                                         </div>
 
-                                        <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                                        <div className="flex items-center justify-between p-2 bg-white/5 border border-white/10">
                                             <div>
                                                 <span className="text-xs font-mono text-text-primary">gpt-oss:20b</span>
                                             </div>
@@ -282,7 +297,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                             </button>
                                         </div>
 
-                                        <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                                        <div className="flex items-center justify-between p-2 bg-white/5 border border-white/10">
                                             <div>
                                                 <span className="text-xs font-mono text-text-primary">qwen3:8b</span>
                                             </div>
@@ -300,10 +315,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
 
                                 {/* Troubleshooting */}
-                                <div className="bg-black/40 rounded-lg p-4">
+                                <div className="bg-black/40 p-4">
                                     <h5 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">Troubleshooting</h5>
                                     <div className="space-y-4 text-xs">
-                                        <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg">
+                                        <div className="bg-blue-500/10 border border-blue-500/20 p-3">
                                             <h6 className="text-blue-400 font-bold mb-2 flex items-center gap-2">
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
                                                 "Connect to local network" Prompt
@@ -319,7 +334,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                             <p className="text-text-secondary">Click <strong>"Allow"</strong> to enable the connection between this interface and your local AI.</p>
                                         </div>
 
-                                        <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-xl">
+                                        <div className="bg-red-500/10 border border-red-500/20 p-5">
                                             <h6 className="text-red-400 font-bold mb-3 flex items-center gap-2">
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                                                 Fix Connection (CORS / 403 Forbidden)
@@ -330,10 +345,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                             </p>
 
                                             <div className="space-y-4">
-                                                <div className="bg-black/40 p-4 rounded-lg border border-white/5">
+                                                <div className="bg-black/40 p-4 border border-white/5">
                                                     <ol className="text-[11px] text-text-secondary space-y-3 ml-4 list-decimal">
                                                         <li><strong>Restart Ollama</strong> with permissions (Copy & Run in PowerShell):
-                                                            <div className="bg-black/60 p-2 rounded mt-2 font-mono text-[10px] text-green-400 break-all select-all flex items-center justify-between group cursor-pointer">
+                                                            <div className="bg-black/60 p-2 mt-2 font-mono text-[10px] text-green-400 break-all select-all flex items-center justify-between group cursor-pointer">
                                                                 <span>taskkill /F /IM "ollama.exe" /T; $env:OLLAMA_ORIGINS="https://deepspacetrader.github.io"; {tempConfig.ollamaFlashAttention && `$env:OLLAMA_FLASH_ATTENTION="1"; `}{tempConfig.ollamaKvCacheType && `$env:OLLAMA_KV_CACHE_TYPE="${tempConfig.ollamaKvCacheType}"; ` }ollama serve</span>
                                                             </div>
                                                         </li>
@@ -341,7 +356,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                                     </ol>
                                                 </div>
 
-                                                <div className="flex items-center gap-2 p-3 bg-blue-500/5 rounded-lg border border-blue-500/10">
+                                                <div className="flex items-center gap-2 p-3 bg-blue-500/5 border border-blue-500/10">
                                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
                                                     <p className="text-[10px] text-text-tertiary">
                                                         <strong>Security Note:</strong> Origins are domain-level. Always use the base domain (e.g., https://deepspacetrader.github.io) without sub-paths like /signalframe/.
@@ -366,7 +381,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
                     {/* No Models Available Alert */}
                     {!currentError && currentAvailableModels.length === 0 && (
-                        <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                        <div className="p-4 bg-yellow-500/10 border border-yellow-500/20">
                             <p className="text-sm text-yellow-400 font-semibold flex items-center gap-2">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <circle cx="12" cy="12" r="10" />
@@ -450,13 +465,13 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                         </div>
 
                         {/* Base URL Display (Read-only) */}
-                        <div className="mb-4 p-3 bg-bg-darker/50 rounded-lg border border-white/5">
+                        <div className="mb-4 p-3 bg-bg-darker/50 border border-white/5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <span className="text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">
                                         API Endpoint
                                     </span>
-                                    <span className="text-[10px] text-text-tertiary px-2 py-0.5 bg-white/5 rounded">
+                                    <span className="text-[10px] text-text-tertiary px-2 py-0.5 bg-white/5">
                                         {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'}
                                     </span>
                                 </div>
@@ -472,10 +487,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 <div className="flex items-center gap-2 mb-2">
                                     <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Target Model</label>
                                     <div className="group relative">
-                                        <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
+                                        <div className="w-3.5 h-3.5 bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
                                             <span className="text-[8px] text-accent-primary font-bold">i</span>
                                         </div>
-                                        <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
+                                        <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
                                             <p className="text-[11px] text-text-primary leading-relaxed mb-3">
                                                 {tempConfig.provider === 'lmstudio'
                                                     ? 'The model ID loaded in LM Studio. Use the model identifier shown in LM Studio (e.g., "nvidia/nemotron-3-nano-4b").'
@@ -513,14 +528,14 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     type="text"
                                     value={tempConfig.model}
                                     onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
+                                    className="w-full bg-white/5 border border-white/10 p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
                                     placeholder={tempConfig.provider === 'lmstudio' ? 'nvidia/nemotron-3-nano-4b' : 'llama3.2, qwen3:8b, deepseek-r1:8b'}
                                 />
                             </div>
                         </div>
                         {/* Model Not Installed / Available Models Dropdown */}
                         {(!isModelInstalled || !tempConfig.model) && currentAvailableModels.length > 0 && (
-                            <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20 rounded-lg">
+                            <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20">
                                 <p className="text-xs text-accent-alert mb-2 font-semibold flex items-center gap-2">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
                                     {!tempConfig.model ? 'Select a model' : 'AI model not detected'}
@@ -533,10 +548,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     )}
                                     {tempConfig.provider !== 'lmstudio' && (
                                         <div className="relative group/copy">
-                                            <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                            <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
                                                 ollama list
                                             </code>
-                                            <code className="block bg-black/40 p-2 pr-10 rounded text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                                            <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
                                                 ollama pull modelName:size
                                             </code>
                                             <button
@@ -580,7 +595,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
                                         <span className="text-[8px] text-accent-primary font-bold">i</span>
                                     </div>
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                         <p className="text-[11px] text-text-primary leading-relaxed mb-3">
                                             Total tokens model can remember (input + output). Larger values allow longer conversations but use more VRAM.
                                         </p>
@@ -613,7 +628,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 type="number"
                                 value={tempConfig.numCtx}
                                 onChange={(e) => setTempConfig({ ...tempConfig, numCtx: parseInt(e.target.value) })}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
+                                className="w-full bg-white/5 border border-white/10 p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
                                 placeholder={DEFAULT_num_ctx.toString()}
                             />
                         </div>
@@ -624,7 +639,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
                                         <span className="text-[8px] text-accent-primary font-bold">i</span>
                                     </div>
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-bg-darker border border-white/20 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                         <p className="text-[11px] text-text-primary leading-relaxed mb-3">
                                             Maximum tokens in model's response (output only). Higher values allow longer answers but must fit within context window.
                                         </p>
@@ -657,14 +672,14 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 type="number"
                                 value={tempConfig.numPredict}
                                 onChange={(e) => setTempConfig({ ...tempConfig, numPredict: parseInt(e.target.value) })}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
+                                className="w-full bg-white/5 border border-white/10 p-3 text-text-primary focus:border-accent-primary outline-none transition-all"
                                 placeholder={DEFAULT_num_predict.toString()}
                             />
                         </div>
                     </div>
 
                     {/* Thinking Mode Toggle */}
-                    <div className="p-4 bg-accent-secondary/10 border border-accent-secondary/20 rounded-xl">
+                    <div className="p-4 bg-accent-secondary/10 border border-accent-secondary/20">
                         <div className="flex items-center justify-between">
                             <div className="flex-1">
                                 <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-accent-secondary mb-1">
@@ -698,6 +713,130 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </p>
                             </div>
                         )}
+
+                        {/* Image Generation Settings */}
+                        <div className="pt-6 border-t border-white/10">
+                            <h4 className="text-xl font-medium text-text-primary mb-4 flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                Media Generation Settings
+                            </h4>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Left Column: Current Narrative Settings */}
+                                <div className="space-y-6">
+                                    <h5 className="text-lg font-medium text-text-primary flex items-center gap-2">
+                                        Current Narrative
+                                    </h5>
+                                    
+                                    {/* Current Narrative Image Size */}
+                                    <div>
+                                        <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-3">
+                                            Image Size
+                                        </label>
+                                        <div className="flex">
+                                            <div className="grid grid-cols-2 gap-1.5">
+                                                {[64, 128, 256, 512].map((size) => (
+                                                    <button
+                                                        key={size}
+                                                        onClick={() => setNarrativeImageSize(size)}
+                                                        className={`py-1 px-3 rounded-md border transition-all text-xs font-medium ${
+                                                            narrativeImageSize === size
+                                                                ? 'bg-accent-primary/20 border-accent-primary text-accent-primary'
+                                                                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                                                        }`}
+                                                    >
+                                                        {size}px
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Current Narrative Audio Duration */}
+                                    <div>
+                                        <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-3">
+                                            Audio Duration
+                                        </label>
+                                        <div className="flex">
+                                            <div className="grid grid-cols-2 gap-1.5">
+                                                {[3, 5, 10, 30].map((duration) => (
+                                                    <button
+                                                        key={duration}
+                                                        onClick={() => setNarrativeAudioDuration(duration)}
+                                                        className={`py-1 px-3 rounded-md border transition-all text-xs font-medium ${
+                                                            narrativeAudioDuration === duration
+                                                                ? 'bg-accent-primary/20 border-accent-primary text-accent-primary'
+                                                                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                                                        }`}
+                                                    >
+                                                        {duration}s
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Column: Signals Settings */}
+                                <div className="space-y-6">
+                                    <h5 className="text-lg font-medium text-text-primary flex items-center gap-2">
+                                        Signals
+                                    </h5>
+                                    
+                                    {/* Signals Image Size */}
+                                    <div>
+                                        <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-3">
+                                            Image Size
+                                        </label>
+                                        <div className="flex">
+                                            <div className="grid grid-cols-2 gap-1.5">
+                                                {[64, 128, 256, 512].map((size) => (
+                                                    <button
+                                                        key={size}
+                                                        onClick={() => setSignalsImageSize(size)}
+                                                        className={`py-1 px-3 rounded-md border transition-all text-xs font-medium ${
+                                                            signalsImageSize === size
+                                                                ? 'bg-accent-primary/20 border-accent-primary text-accent-primary'
+                                                                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                                                        }`}
+                                                    >
+                                                        {size}px
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Signals Audio Duration */}
+                                    <div>
+                                        <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-3">
+                                            Audio Duration
+                                        </label>
+                                        <div className="flex">
+                                            <div className="grid grid-cols-2 gap-1.5">
+                                                {[3, 5, 10, 30].map((duration) => (
+                                                    <button
+                                                        key={duration}
+                                                        onClick={() => setSignalsAudioDuration(duration)}
+                                                        className={`py-1 px-3 rounded-md border transition-all text-xs font-medium ${
+                                                            signalsAudioDuration === duration
+                                                                ? 'bg-accent-primary/20 border-accent-primary text-accent-primary'
+                                                                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
+                                                        }`}
+                                                    >
+                                                        {duration}s
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Ollama Performance Settings - only show for Ollama */}
                         {tempConfig.provider !== 'lmstudio' && (
@@ -737,7 +876,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         <select
                                             value={tempConfig.ollamaKvCacheType || 'f16'}
                                             onChange={(e) => setTempConfig({ ...tempConfig, ollamaKvCacheType: e.target.value as 'f16' | 'q8_0' | 'q4_0' })}
-                                            className="bg-bg-darker border border-white/10 rounded-lg px-3 py-2 text-text-primary text-sm focus:border-accent-primary outline-none transition-all"
+                                            className="bg-bg-darker border border-white/10 px-3 py-2 text-text-primary text-sm focus:border-accent-primary outline-none transition-all"
                                         >
                                             <option value="null">- None -</option>
                                             <option value="f16">f16 (High Precision)</option>
@@ -771,7 +910,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <button
                                         key={profile.id}
                                         onClick={() => handleSentimentProfileChange(profile.id)}
-                                        className={`p-4 rounded-lg border transition-all text-left h-full w-full ${(tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
+                                        className={`p-4 border transition-all text-left h-full w-full ${(tempConfig.sentimentProfile || 'balanced') === profile.id && !isCustomMode
                                             ? 'bg-accent-primary/20 border-accent-primary text-text-primary'
                                             : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
                                             }`}
@@ -800,7 +939,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 );
                             })()}
                             {window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && (
-                                <div className="mt-4 p-4 bg-accent-primary/10 border border-accent-primary/20 rounded-xl">
+                                <div className="mt-4 p-4 bg-accent-primary/10 border border-accent-primary/20">
                                     <p className="text-xs text-accent-primary leading-relaxed">
                                         <strong>Static Snapshot Mode:</strong> Sentiment Analysis is fixed on the <strong>"Balanced"</strong> setting for the static snapshot data.
                                         To customize sentiment profiles or use manual weights, you must run SignalFrame on <strong>localhost</strong> with a personal Ollama instance.
@@ -812,7 +951,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                         {/* Current Guidelines */}
                         <div>
                             <h4 className="text-sm font-medium text-text-primary mb-3">Current Guidelines</h4>
-                            <div className="bg-black/30 border border-white/10 rounded-lg p-4 max-h-40 overflow-y-auto">
+                            <div className="bg-black/30 border border-white/10 p-4 max-h-40 overflow-y-auto">
                                 <pre className="text-sm text-text-secondary whitespace-pre-wrap">
                                     {currentSentimentProfile.guidelines}
                                 </pre>
@@ -836,14 +975,14 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                                     customSentimentWeights: weightsAsRecord
                                                 })
                                             }}
-                                            className="px-3 py-1 bg-accent-primary/20 text-accent-primary rounded text-sm hover:bg-accent-primary/30 transition-colors"
+                                            className="px-3 py-1 bg-accent-primary/20 text-accent-primary text-sm hover:bg-accent-primary/30 transition-colors rounded"
                                         >
                                             Customize
                                         </button>
                                     )}
                                     <button
                                         onClick={resetSentimentToDefaults}
-                                        className="px-3 py-1 bg-white/10 text-text-secondary rounded text-sm hover:bg-white/20 transition-colors"
+                                        className="px-3 py-1 bg-white/10 text-text-secondary text-sm hover:bg-white/20 transition-colors rounded"
                                     >
                                         Reset to Default
                                     </button>
@@ -852,7 +991,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 {isCustomMode && customWeights && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {Object.entries(customWeights).map(([key, value]) => (
-                                            <div key={key} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                                            <div key={key} className="flex items-center justify-between p-3 bg-white/5 border border-white/10">
                                                 <label className="text-sm text-text-secondary capitalize min-w-[120px]">
                                                     {key.replace(/([A-Z])/g, ' $1').trim()}
                                                 </label>
@@ -876,7 +1015,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 )}
 
                                 {!isCustomMode && (
-                                    <div className="bg-black/30 border border-white/10 rounded-lg p-4 ml-4">
+                                    <div className="bg-black/30 border border-white/10 p-4 ml-4">
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                             {Object.entries(currentSentimentProfile.weights).map(([key, value]) => (
                                                 <div key={key} className="text-center">
@@ -894,7 +1033,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                             </div>
 
                             {/* Impact Explanation */}
-                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                            <div className="bg-blue-500/10 border border-blue-500/20 p-4">
                                 <h4 className="text-sm font-medium text-blue-300 mb-2">How This Affects Analysis</h4>
                                 <p className="text-xs text-blue-200 leading-relaxed">
                                     Sentiment profiles determine how AI interprets and classifies the emotional tone of news events.
@@ -905,7 +1044,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
                             {/* Deployment / Static Build Section */}
                             {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
-                                <div className="bg-purple-500/10 border border-purple-500/20 p-4 rounded-xl mt-6">
+                                <div className="bg-purple-500/10 border border-purple-500/20 p-4 mt-6">
                                     <h6 className="text-purple-400 font-bold mb-3 flex items-center gap-2">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                                         Export Data

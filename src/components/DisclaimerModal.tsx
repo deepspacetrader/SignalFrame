@@ -8,11 +8,11 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-[#0a0c10] border border-white/10 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden relative" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#0a0c10] border border-white/10 w-full max-w-3xl shadow-2xl overflow-hidden relative" onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-yellow-500/10 to-transparent">
                     <h2 className="text-xl font-display font-bold text-white flex items-center gap-3">
-                        <span className="w-2 h-6 bg-yellow-500 rounded-full"></span>
+                        <span className="w-2 h-6 bg-yellow-500"></span>
                         Important Disclaimer
                     </h2>
                     <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-text-secondary hover:text-white">
@@ -26,7 +26,7 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                 {/* Content */}
                 <div className="p-8 max-h-[70vh] overflow-y-auto space-y-6">
                     {/* Warning Banner */}
-                    <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-6 flex gap-4">
+                    <div className="bg-yellow-500/5 border border-yellow-500/20 p-6 flex gap-4">
                         <div className="flex-shrink-0">
                             <svg className="w-8 h-8 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
@@ -43,9 +43,9 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                     </div>
 
                     {/* Model Dependency Section */}
-                    <div className="bg-white/5 rounded-xl p-6 border border-white/10 space-y-3">
+                    <div className="bg-white/5 p-6 border border-white/10 space-y-3">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                            <span className="w-6 h-6 rounded bg-accent-primary/20 flex items-center justify-center text-accent-primary text-xs">1</span>
+                            <span className="w-6 h-6 bg-accent-primary/20 flex items-center justify-center text-accent-primary text-xs">1</span>
                             Model Intelligence Dependency
                         </h3>
                         <p className="text-sm text-text-secondary leading-relaxed pl-8">
@@ -54,9 +54,9 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                     </div>
 
                     {/* Common AI Limitations */}
-                    <div className="bg-white/5 rounded-xl p-6 border border-white/10 space-y-3">
+                    <div className="bg-white/5 p-6 border border-white/10 space-y-3">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                            <span className="w-6 h-6 rounded bg-accent-primary/20 flex items-center justify-center text-accent-primary text-xs">2</span>
+                            <span className="w-6 h-6 bg-accent-primary/20 flex items-center justify-center text-accent-primary text-xs">2</span>
                             Known Limitations
                         </h3>
                         <div className="pl-8 space-y-3">
@@ -64,23 +64,23 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                                 AI models can exhibit various types of errors and limitations, including but not limited to:
                             </p>
                             <ul className="space-y-2 text-sm text-text-secondary">
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-yellow-500 flex-shrink-0">•</span>
                                     <span><strong className="text-white">Hallucinations:</strong> Generating plausible-sounding but factually incorrect information</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-yellow-500 flex-shrink-0">•</span>
                                     <span><strong className="text-white">Outdated Information:</strong> Models are trained on data up to a specific cutoff date and may not reflect recent events</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-yellow-500 flex-shrink-0">•</span>
                                     <span><strong className="text-white">Reasoning Errors:</strong> Mistakes in logic, calculation, or causal analysis</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-yellow-500 flex-shrink-0">•</span>
                                     <span><strong className="text-white">Bias:</strong> Reflecting biases present in training data</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-yellow-500 flex-shrink-0">•</span>
                                     <span><strong className="text-white">Context Limitations:</strong> Misunderstanding nuance or missing important context</span>
                                 </li>
@@ -89,9 +89,9 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                     </div>
 
                     {/* Verification Recommendation */}
-                    <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-xl p-6 border border-accent-primary/20 space-y-3">
+                    <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 p-6 border border-accent-primary/20 space-y-3">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                            <span className="w-6 h-6 rounded bg-accent-primary/40 flex items-center justify-center text-white text-xs">3</span>
+                            <span className="w-6 h-6 bg-accent-primary/40 flex items-center justify-center text-white text-xs">3</span>
                             Critical Recommendation
                         </h3>
                         <p className="text-sm text-text-primary leading-relaxed pl-8 font-medium">
@@ -100,9 +100,9 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                     </div>
 
                     {/* Use Case Guidance */}
-                    <div className="bg-white/5 rounded-xl p-6 border border-white/10 space-y-3">
+                    <div className="bg-white/5 p-6 border border-white/10 space-y-3">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                            <span className="w-6 h-6 rounded bg-accent-primary/20 flex items-center justify-center text-accent-primary text-xs">4</span>
+                            <span className="w-6 h-6 bg-accent-primary/20 flex items-center justify-center text-accent-primary text-xs">4</span>
                             Best Practices
                         </h3>
                         <div className="pl-8 space-y-3">
@@ -110,23 +110,23 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                                 To get the most value from SignalFrame while minimizing risks:
                             </p>
                             <ul className="space-y-2 text-sm text-text-secondary">
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-accent-primary flex-shrink-0">✓</span>
                                     <span>Use it to discover trends and patterns that warrant further investigation</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-accent-primary flex-shrink-0">✓</span>
                                     <span>Cross-reference AI-generated insights with primary sources and expert analysis</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-accent-primary flex-shrink-0">✓</span>
                                     <span>Apply critical thinking and your own expertise when evaluating outputs</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-accent-primary flex-shrink-0">✓</span>
                                     <span>Experiment with different models to compare outputs and identify inconsistencies</span>
                                 </li>
-                                <li className="flex gap-3">
+                                <li className="flex gap-3 rounded-none">
                                     <span className="text-accent-primary flex-shrink-0">✓</span>
                                     <span>Maintain healthy skepticism, especially for claims that seem surprising or consequential</span>
                                 </li>
@@ -135,7 +135,7 @@ export function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProps) {
                     </div>
 
                     {/* Legal Notice */}
-                    <div className="bg-black/40 rounded-xl p-4 border border-white/5">
+                    <div className="bg-black/40 p-4 border border-white/5">
                         <p className="text-xs text-text-tertiary leading-relaxed text-center">
                             SignalFrame and its developers make no warranties, express or implied, regarding the accuracy, completeness, or reliability of AI-generated content. Use at your own discretion and risk.
                         </p>

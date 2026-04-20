@@ -142,7 +142,7 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
             isLoading={isLoading}
             loadingOverlayContent={
                 <>
-                    <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent animate-spin mb-2"></div>
                     <span className="text-[0.6rem] uppercase tracking-widest font-bold text-purple-400">Updating Relation Status...</span>
                 </>
             }
@@ -163,24 +163,24 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
             />
 
             {isAdding && (
-                <div className="mb-6 bg-white/5 p-4 rounded-lg border border-white/10 animate-in slide-in-from-top-2">
+                <div className="mb-6 bg-white/5 p-4 border border-white/10 animate-in slide-in-from-top-2">
                     <div className="grid grid-cols-2 gap-3 mb-3">
                         <input
                             placeholder="Country A (e.g. USA)"
-                            className="bg-black/20 border border-white/10 rounded px-3 py-2 text-sm text-white focus:border-accent-primary outline-none"
+                            className="bg-black/20 border border-white/10 px-3 py-2 text-sm text-white focus:border-accent-primary outline-none"
                             value={newRel.countryA}
                             onChange={e => setNewRel({ ...newRel, countryA: e.target.value })}
                         />
                         <input
                             placeholder="Country B (e.g. China)"
-                            className="bg-black/20 border border-white/10 rounded px-3 py-2 text-sm text-white focus:border-accent-primary outline-none"
+                            className="bg-black/20 border border-white/10 px-3 py-2 text-sm text-white focus:border-accent-primary outline-none"
                             value={newRel.countryB}
                             onChange={e => setNewRel({ ...newRel, countryB: e.target.value })}
                         />
                     </div>
                     <input
                         placeholder="Topic (e.g. Trade Tariffs)"
-                        className="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-sm text-white focus:border-accent-primary outline-none mb-3"
+                        className="w-full bg-black/20 border border-white/10 px-3 py-2 text-sm text-white focus:border-accent-primary outline-none mb-3"
                         value={newRel.topic}
                         onChange={e => setNewRel({ ...newRel, topic: e.target.value })}
                     />
@@ -207,7 +207,7 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {foreignRelations.map((rel) => (
-                    <div key={rel.id} className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 p-4 rounded-xl transition-all flex flex-col justify-between h-full">
+                    <div key={rel.id} className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 p-4 transition-all flex flex-col justify-between h-full">
                         <div>
                             <div className="flex justify-between items-start mb-3">
                                 <div className="flex flex-col gap-0.5">
@@ -222,7 +222,7 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
                                     const style = getSentimentColor(String(rel.sentiment || 'neutral'));
                                     return (
                                         <span
-                                            className="text-[8px] px-2 py-1 rounded-md border uppercase font-bold tracking-[0.05em] shrink-0 whitespace-nowrap"
+                                            className="text-[8px] px-2 py-1 border uppercase font-bold tracking-[0.05em] shrink-0 whitespace-nowrap"
                                             style={{ color: style.color, borderColor: style.borderColor, backgroundColor: style.backgroundColor }}
                                         >
                                             {style.text}
@@ -235,11 +235,11 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
                             <div className="relative min-h-[3rem]">
                                 {isProcessing ? (
                                     <div className="space-y-2">
-                                        <div className="h-3 w-full bg-white/5 animate-pulse rounded"></div>
-                                        <div className="h-3 w-[80%] bg-white/5 animate-pulse rounded"></div>
+                                        <div className="h-3 w-full bg-white/5 animate-pulse"></div>
+                                        <div className="h-3 w-[80%] bg-white/5 animate-pulse"></div>
                                     </div>
                                 ) : (
-                                    <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2.5 mt-1">
+                                    <div className="bg-white/[0.02] border border-white/5 p-2.5 mt-1">
                                         <p className="text-[11px] text-text-secondary leading-normal line-clamp-4 group-hover:line-clamp-none transition-all duration-300">
                                             {rel.status}
                                         </p>
@@ -267,7 +267,7 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
                 ))}
 
                 {foreignRelations.length === 0 && (
-                    <div className="col-span-full text-center py-12 text-text-secondary italic text-sm border border-dashed border-white/10 rounded-xl">
+                    <div className="col-span-full text-center py-12 text-text-secondary italic text-sm border border-dashed border-white/10">
                         No active relation trackers. Add one above.
                     </div>
                 )}

@@ -123,7 +123,7 @@ export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void })
     };
 
     return (
-        <div className="bg-bg-card/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-2xl overflow-hidden p-6 space-y-6">
+        <div className="bg-bg-card/40 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden p-6 space-y-6">
             <div className="flex justify-between items-center">
                 <div>
                     <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-display tracking-tight">
@@ -131,7 +131,7 @@ export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void })
                     </h3>
                     <p className="text-xs text-text-secondary mt-1">Projection Engine based on current SignalFrame data.</p>
                 </div>
-                <div className="text-[10px] font-mono text-text-secondary uppercase tracking-widest px-3 py-1 border border-white/10 rounded-full">
+                <div className="text-[10px] font-mono text-text-secondary uppercase tracking-widest px-3 py-1 border border-white/10">
                     Target: {aiConfig.model}
                 </div>
             </div>
@@ -144,7 +144,7 @@ export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void })
                         value={topic}
                         onChange={(e) => setTopic(e.target.value)}
                         placeholder="Enter topic for trajectory analysis..."
-                        className="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-accent-primary/50 transition-colors"
+                        className="flex-1 bg-black/40 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-accent-primary/50 transition-colors rounded-md"
                         disabled={isLoading}
                     />
                     <button
@@ -180,7 +180,7 @@ export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void })
                             { label: 'Medium Term (1-6 Months)', data: predictions.mediumTerm, color: 'text-amber-400', border: 'border-amber-500/20' },
                             { label: 'Long Term (1-3 Years)', data: predictions.longTerm, color: 'text-rose-400', border: 'border-rose-500/20' }
                         ].map(p => (
-                            <div key={p.label} className={`bg-white/5 rounded-xl p-5 border ${p.border} relative overflow-hidden group hover:bg-white/10 transition-colors`}>
+                            <div key={p.label} className={`bg-white/5 p-5 border ${p.border} relative overflow-hidden group hover:bg-white/10 transition-colors`}>
                                 <h4 className={`text-xs font-bold uppercase tracking-widest mb-3 ${p.color} border-b border-white/5 pb-2`}>{p.label}</h4>
                                 <p className="text-sm text-slate-300 leading-relaxed font-mono">{p.data}</p>
                                 <div className={`absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity`}>

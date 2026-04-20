@@ -94,7 +94,7 @@ export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => voi
       isLoading={isLoading}
       loadingOverlayContent={
         <>
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-2"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Generating Narrative Prediction Analysis...</span>
         </>
       }
@@ -155,7 +155,7 @@ export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => voi
                 {isNarrativePredictionsOpen ? 'Hide' : 'Show'} Predictions
               </span>
               {watchFor && (
-                <span className="text-[0.5rem] text-text-secondary bg-white/5 px-2 py-0.5 rounded-full">
+                <span className="text-[0.5rem] text-text-secondary bg-white/5 px-2 py-0.5">
                   {watchFor.sections.length} topics
                 </span>
               )}
@@ -166,7 +166,7 @@ export function NarrativePredictions({ onAIRequired }: { onAIRequired: () => voi
           {isNarrativePredictionsOpen && (
             <div className="animate-in slide-in-from-top-2 duration-300">
               {watchFor?.sections.map((section, idx) => (
-                <section key={idx} className="bg-accent-primary/5 border border-accent-primary/20 rounded-xl p-5">
+                <section key={idx} className="bg-accent-primary/5 border border-accent-primary/20 p-5">
                   <h3
                     className="text-[0.65rem] uppercase tracking-widest font-bold mb-4 flex items-center gap-2"
                     style={{ color: getSentimentColor(section.sentiment || 'neutral') }}

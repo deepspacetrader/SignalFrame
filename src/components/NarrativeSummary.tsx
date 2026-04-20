@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 import { RawOutputModal } from './RawOutputModal'
 import { NarrativePredictions } from './NarrativePredictions'
@@ -8,6 +8,7 @@ import { SectionHeader } from './shared/SectionHeader'
 import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
 import { SectionBadge } from './shared/SectionBadge'
 import { TTSButton } from './TTSButton'
+import { MediaGenerationButtons } from './MediaGenerationButtons'
 
 
 export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void }) {
@@ -23,13 +24,24 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
     activeRawOutput,
     showRawOutput,
     hideRawOutput,
-    sectionGenerationTimes
+    sectionGenerationTimes,
+    mediaUrls,
+    updateMediaUrls
   } = useSituationStore()
   const isLoading = isProcessingSection.narrative && !isProcessing;
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const hasNoData = !narrative && !isProcessing;
   const shouldShowLoadingSpinner = !isLocalhost && hasNoData;
   const [isThinkingOpen, setIsThinkingOpen] = useState(false);
+  const [narrativeImageUrl, setNarrativeImageUrl] = useState<string | null>(() => {
+    // Load cached narrative image from mediaUrls
+    return mediaUrls['narrative'] || null
+  });
+
+  // Update narrative image when mediaUrls changes
+  useEffect(() => {
+    setNarrativeImageUrl(mediaUrls['narrative'] || null)
+  }, [mediaUrls])
 
   const hasThinking = thinkingTrace && thinkingTrace.length > 0;
 
@@ -57,6 +69,17 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
     return (
       <div className="flex items-center gap-2">
         {narrative && !isProcessing && <TTSButton text={narrative || ''} />}
+        {narrative && !isProcessing && (
+          <MediaGenerationButtons
+            text={narrative}
+            imageSize={(aiConfig as any).narrativeImageSize || 512}
+            cacheKey="narrative"
+            onImageGenerated={(imageUrl) => {
+              updateMediaUrls({ narrative: imageUrl })
+              setNarrativeImageUrl(imageUrl)
+            }}
+          />
+        )}
         <SectionRegenerateButton onClick={() => {
           const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           if (!isLocalhost) {
@@ -85,7 +108,7 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
       isLoading={isLoading}
       loadingOverlayContent={
         <>
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-2"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Regenerating Briefing...</span>
         </>
       }
@@ -105,13 +128,29 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
 
       {shouldShowLoadingSpinner ? (
         <div className="flex flex-col items-center justify-center py-12">
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-4"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-text-secondary">Loading narrative data...</span>
         </div>
       ) : isProcessing && !narrative ? (
-        <div className="loading-skeleton h-24 bg-white/5 animate-pulse rounded"></div>
+        <div className="loading-skeleton h-24 bg-white/5 animate-pulse"></div>
       ) : (
         <>
+          {narrativeImageUrl && (
+            <div className="mb-6 flex justify-center">
+              <div className="relative ai-generated-image inline-block" style={{ maxWidth: `${(aiConfig as any).narrativeImageSize || 512}px` }}>
+                <img
+                  src={narrativeImageUrl}
+                  alt="Generated narrative visualization"
+                  className="border border-white/10 max-w-full"
+                  style={{ maxWidth: `${(aiConfig as any).narrativeImageSize || 512}px` }}
+                  onError={() => {
+                    // Clear cached image if it fails to load
+                    setNarrativeImageUrl(null)
+                  }}
+                />
+              </div>
+            </div>
+          )}
           <p className="text-text-primary leading-relaxed whitespace-pre-wrap">
             {narrative || "No narrative generated yet. Start a scan to begin."}
           </p>
@@ -140,7 +179,7 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
                   <span className="text-[0.65rem] uppercase tracking-widest font-bold text-accent-secondary group-hover:opacity-100 opacity-70 transition-opacity">
                     AI Reasoning Trace
                   </span>
-                  <span className="text-[0.5rem] text-text-secondary bg-white/5 px-2 py-0.5 rounded-full">
+                  <span className="text-[0.5rem] text-text-secondary bg-white/5 px-2 py-0.5">
                     {Math.round(thinkingTrace.length / 100) * 100}+ chars
                   </span>
                 </div>
@@ -161,16 +200,16 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
 
               {isThinkingOpen && (
                 <div className="mt-3 animate-in slide-in-from-top-2 duration-300">
-                  <div className="relative bg-black/30 border border-accent-secondary/20 rounded-xl p-4 max-h-[400px] overflow-y-auto">
+                  <div className="relative bg-black/30 border border-accent-secondary/20 p-4 max-h-[400px] overflow-y-auto">
                     {/* Gradient fade at top for scroll indication */}
-                    <div className="absolute top-0 left-0 right-4 h-6 bg-gradient-to-b from-black/30 to-transparent pointer-events-none rounded-t-xl z-10"></div>
+                    <div className="absolute top-0 left-0 right-4 h-6 bg-gradient-to-b from-black/30 to-transparent pointer-events-none z-10"></div>
 
                     <pre className="text-xs text-text-secondary font-mono whitespace-pre-wrap leading-relaxed pt-2">
                       {thinkingTrace}
                     </pre>
 
                     {/* Gradient fade at bottom */}
-                    <div className="absolute bottom-0 left-0 right-4 h-6 bg-gradient-to-t from-black/30 to-transparent pointer-events-none rounded-b-xl"></div>
+                    <div className="absolute bottom-0 left-0 right-4 h-6 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
                   </div>
                   <p className="text-[0.5rem] text-text-secondary mt-2 italic opacity-60">
                     This is the model's internal reasoning process before generating the final narrative.
@@ -182,9 +221,9 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
 
           {/* Show streaming thinking indicator during processing */}
           {isProcessing && aiConfig.enableThinking && thinkingTrace && (
-            <div className="mt-4 p-3 bg-accent-secondary/10 border border-accent-secondary/20 rounded-lg">
+            <div className="mt-4 p-3 bg-accent-secondary/10 border border-accent-secondary/20">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-2 h-2 bg-accent-secondary rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-accent-secondary animate-pulse"></div>
                 <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-secondary">
                   Deep Reasoning in Progress...
                 </span>
