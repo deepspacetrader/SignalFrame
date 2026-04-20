@@ -4,6 +4,7 @@ import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
 import { zzfx } from '../utils/zzfx'
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
+import { batchManager, BatchTask } from '../services/batchManager'
 
 export type Sentiment =
   | 'extremely-negative'
@@ -186,6 +187,10 @@ export interface AiConfig {
   signalsImageSize?: number;
   narrativeAudioDuration?: number;
   signalsAudioDuration?: number;
+  // Audio generation provider
+  audioProvider?: 'mmaudio' | 'tangoflux';
+  autoUnloadAudioModel?: boolean; // Auto-unload audio model after generation to save VRAM
+  autoUnloadImageModel?: boolean; // Auto-unload image model after generation to save VRAM
   // Generation tracking for model loading UI
   isGeneratingImage?: boolean;
   isGeneratingAudio?: boolean;
@@ -276,6 +281,9 @@ export interface SituationState {
   sectionFailures: Record<SectionKey, SectionFailureState>; // Track section failures and retries
   soundVolume: number; // Master volume for sound effects (0-1)
   predictionHistory: PredictionHistoryItem[];
+  batchQueue: BatchTask[]; // Queue for batch AI generation tasks
+  isProcessingBatch: boolean; // Whether batch processing is currently active
+  currentBatchType: 'image' | 'audio' | null; // Current type being processed in batch
 }
 
 const getTodayStr = () => {
@@ -529,7 +537,10 @@ const defaultState: SituationState = {
     numPredict: DEFAULT_num_predict,
     enableThinking: false,
     ollamaFlashAttention: true,
-    ollamaKvCacheType: 'q8_0'
+    ollamaKvCacheType: 'q8_0',
+    audioProvider: 'tangoflux',
+    autoUnloadAudioModel: true,
+    autoUnloadImageModel: true
   },
   availableModels: [],
   runningModels: [],
@@ -567,7 +578,10 @@ const defaultState: SituationState = {
     watchFor: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
   },
   soundVolume: 0.5,
-  predictionHistory: []
+  predictionHistory: [],
+  batchQueue: [],
+  isProcessingBatch: false,
+  currentBatchType: null
 };
 
 let globalState: SituationState = { ...defaultState };
@@ -2248,6 +2262,29 @@ export function useSituationStore() {
     return () => clearInterval(interval);
   }, [retryFailedSection]);
 
+  // Subscribe to batch manager state changes
+  useEffect(() => {
+    const unsubscribe = batchManager.subscribe((batchState) => {
+      globalState = {
+        ...globalState,
+        batchQueue: batchState.queue,
+        isProcessingBatch: batchState.isProcessing,
+        currentBatchType: batchState.currentType
+      };
+      notify();
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const addBatchTask = useCallback((task: Omit<BatchTask, 'id' | 'status' | 'createdAt'>) => {
+    return batchManager.addTask(task);
+  }, []);
+
+  const clearBatchQueue = useCallback(() => {
+    batchManager.clearQueue();
+  }, []);
+
   return {
     ...state,
     refresh,
@@ -2283,6 +2320,7 @@ export function useSituationStore() {
     retryFailedSection,
     setPredictionHistory,
     exportSnapshot,
-    isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  };
+    addBatchTask,
+    clearBatchQueue,
+  }
 }

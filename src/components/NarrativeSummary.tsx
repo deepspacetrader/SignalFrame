@@ -108,7 +108,7 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
       isLoading={isLoading}
       loadingOverlayContent={
         <>
-          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-2"></div>
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent animate-spin mb-2 rounded-full"></div>
           <span className="text-[0.6rem] uppercase tracking-widest font-bold text-accent-primary">Regenerating Briefing...</span>
         </>
       }

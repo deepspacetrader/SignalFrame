@@ -19,17 +19,17 @@ SignalFrame maintains a persistent **Intelligence Timeline**:
 - **Historic Browsing**: Use the built-in navigation bar to view past events.
 - **Trend Accumulation**: Build a library of historical states for future long-term trend identification.
 
-### 🔌 Local AI Engine (Ollama)
+### 🔌 Local AI Engine (Ollama or LM Studio)
 Full integration with local Large Language Models for 100% data privacy and no API costs! The only limit is your own hardware.
 - **Streaming Responses**: Watch the AI "think" in real-time as narratives stream into the UI.
-- **Runtime Configuration**: Hot-swap models (Llama 3.2, Mistral, Qwen 2.5) and adjust context parameters directly from the dashboard.
+- **Runtime Configuration**: Hot-swap models and adjust context parameters directly from the dashboard.
 - **Structured JSON Outputs**: Robust parsing engine with auto-repair logic for reliable data representation.
-
-### 🗺️ Geospatial Intelligence
-Automatically triangulates events and renders them onto an interactive map with sentiment analysis and categorical filtering.
 
 ### 🤝 Foreign Relation Trackers
 Define custom "trackers" for specific geopolitical or corporate rivalries. SignalFrame will automatically look for updates on these specific relations during every scan across time.
+
+### 🗺️ Geospatial Intelligence
+Automatically triangulates events and renders them onto an interactive map with sentiment analysis and categorical filtering.
 
 ---
 

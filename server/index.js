@@ -24,7 +24,7 @@ const PORT = 3001;
 const NOISE_PATTERNS = [
     /NFL|NBA|MLB|NHL|FIFA|UEFA|vs\.|FA Cup|Super Bowl|World Cup/i,
     /\bFootball\b|\bBasketball\b|\bBaseball\b|\bSoccer\b|\bTennis\b/i,
-    /Kardashian|Taylor Swift|Beyonce|Hollywood|Celebrity|Gossip|Red Carpet/i,
+    /Hollywood|Celebrity|Gossip|Red Carpet/i,
     /Grammy|Oscar|Emmy|TV Review|Film Review|Season \d+|Spoiler/i,
     /Vacation|Resort|\bHotel\b|\bCruise\b|Fashion|Style|Beauty|Makeup/i,
     /Lottery|Powerball|Mega Millions|Horoscope|Astrology/i

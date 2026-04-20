@@ -13,6 +13,7 @@ import { findPreviousSnapshot } from './state/useSituationStore'
 import { BigPictureModal } from './components/BigPictureModal'
 import { LocalAIRequiredModal } from './components/LocalAIRequiredModal'
 import { DisclaimerModal } from './components/DisclaimerModal'
+import { BatchProgress } from './components/BatchProgress'
 // import { SoundTestPanel } from './components/SoundTestPanel'
 
 export default function App() {
@@ -150,6 +151,7 @@ export default function App() {
       <BigPictureModal isOpen={showBigPicture} onClose={() => setShowBigPicture(false)} onAIRequired={() => setShowAIModal(true)} />
       <LocalAIRequiredModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} />
       <DisclaimerModal isOpen={showDisclaimer} onClose={() => setShowDisclaimer(false)} />
+      <BatchProgress />
       {/* <SoundTestPanel /> */}
     </div>
   )

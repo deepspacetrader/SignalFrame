@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 
 interface AudioGenButtonProps {
@@ -9,7 +9,7 @@ interface AudioGenButtonProps {
 }
 
 export function AudioGenButton({ text, onAudioGenerated, cacheKey, className = '' }: AudioGenButtonProps) {
-  const { aiConfig, mediaUrls, updateMediaUrls } = useSituationStore()
+  const { aiConfig, mediaUrls, updateMediaUrls, addBatchTask, batchQueue } = useSituationStore()
   const [isGenerating, setIsGenerating] = useState(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(() => {
     // Load cached audio from mediaUrls on mount
@@ -21,6 +21,7 @@ export function AudioGenButton({ text, onAudioGenerated, cacheKey, className = '
   const [isPlaying, setIsPlaying] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const { soundVolume } = useSituationStore()
 
   // Update audioUrl when mediaUrls changes
   useEffect(() => {
@@ -29,83 +30,62 @@ export function AudioGenButton({ text, onAudioGenerated, cacheKey, className = '
     }
   }, [mediaUrls, cacheKey])
 
-  const handleGenerate = async () => {
+  // Update audio volume when soundVolume changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = soundVolume
+    }
+  }, [soundVolume])
+
+  // Use ref to avoid dependency cycle with onAudioGenerated
+  const onAudioGeneratedRef = useRef(onAudioGenerated)
+  useEffect(() => {
+    onAudioGeneratedRef.current = onAudioGenerated
+  }, [onAudioGenerated])
+
+  const handleGenerate = useCallback(async () => {
     setIsGenerating(true)
     setError(null)
 
     try {
-      // First, enhance the prompt using the audio-gen API
-      const promptResponse = await fetch('http://localhost:7860/api/prompt/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          current_text: text,
-          llm_provider: aiConfig.provider,
-          llm_model: aiConfig.model,
-          llm_base_url: aiConfig.baseUrl
-        })
+      const audioProvider = aiConfig.audioProvider || 'tangoflux'
+      const baseUrl = audioProvider === 'tangoflux' ? 'http://localhost:7861' : 'http://localhost:7862'
+      // Add task to batch queue
+      const taskId = addBatchTask({
+        type: 'audio',
+        text: text,
+        cacheKey: cacheKey
       })
 
-      if (!promptResponse.ok) {
-        throw new Error('Failed to generate prompt')
-      }
-
-      const promptData = await promptResponse.json()
-      const enhancedPrompt = promptData.prompt || text
-      const negativePrompt = promptData.negative_prompt || ''
-
-      // Set the SFX parameters
-      await fetch('http://localhost:7860/api/sfx/params', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: enhancedPrompt,
-          negative_prompt: negativePrompt,
-          duration: 2.0,
-          cfg_strength: 4.5,
-          num_steps: 25,
-          seed: -1
-        })
-      })
-
-      // Generate the sound effect
-      const sfxResponse = await fetch('http://localhost:7860/api/sfx/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-      })
-
-      if (!sfxResponse.ok) {
-        throw new Error('Failed to generate sound effect')
-      }
-
-      const sfxData = await sfxResponse.json()
-      
-      if (!sfxData.success) {
-        throw new Error(sfxData.error || 'Generation failed')
-      }
-
-      // The audio path is relative to the audio-gen directory
-      const newAudioUrl = `http://localhost:7860${sfxData.filepath}`
-      
-      // Cache to IndexedDB via updateMediaUrls
-      if (cacheKey) {
-        updateMediaUrls({ [cacheKey]: newAudioUrl })
-      }
-      setAudioUrl(newAudioUrl)
-      
-      // Auto-play after generation
-      if (audioRef.current) {
-        audioRef.current.src = newAudioUrl
-        audioRef.current.play()
-        setIsPlaying(true)
-      }
+      // Check if this task is in the queue and wait for completion
+      const checkCompletion = setInterval(() => {
+        const task = batchQueue.find(t => t.id === taskId)
+        if (task) {
+          if (task.status === 'completed' && task.result) {
+            clearInterval(checkCompletion)
+            setAudioUrl(task.result)
+            // Auto-play after generation
+            if (audioRef.current) {
+              audioRef.current.src = task.result
+              audioRef.current.play()
+              setIsPlaying(true)
+            }
+            if (onAudioGeneratedRef.current) {
+              onAudioGeneratedRef.current(task.result)
+            }
+            setIsGenerating(false)
+          } else if (task.status === 'failed') {
+            clearInterval(checkCompletion)
+            setError(task.error || 'Generation failed')
+            setIsGenerating(false)
+          }
+        }
+      }, 500)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Generation failed')
-    } finally {
       setIsGenerating(false)
     }
-  }
+  }, [text, cacheKey, addBatchTask, batchQueue])
 
   const handlePlayPause = () => {
     if (!audioUrl) return

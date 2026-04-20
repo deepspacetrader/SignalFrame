@@ -401,8 +401,8 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                     <div>
                         {/* Provider Selection */}
                         <div className="mb-6">
-                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary mb-3">
-                                AI Provider
+                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-xl mb-3">
+                            🧠 AI Provider
                             </label>
                             <div className="grid grid-cols-2 gap-3">
                                 <button
@@ -725,10 +725,129 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 Media Generation Settings
                             </h4>
 
+                            {/* Image Generation Section */}
+                            <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20">
+                                <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-blue-400 mb-3">
+                                    Image Generation
+                                </label>
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                    <button
+                                        className={`p-4 rounded-xl border-2 transition-all text-left bg-blue-500/20 border-blue-500 cursor-default`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-4 h-4 rounded-full border-2 border-blue-500 flex items-center justify-center">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-text-primary">SDXL Turbo</p>
+                                                <p className="text-xs text-text-secondary">Fast text-to-image</p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div className="flex items-center justify-between pt-3 border-t border-blue-500/20">
+                                    <div className="flex-1">
+                                        <label className="block text-[0.65rem] tracking-widest font-bold text-blue-400 mb-1">
+                                            Unload Model After Generation
+                                        </label>
+                                        <p className="text-[10px] text-text-secondary leading-relaxed">
+                                            SDXL uses significant VRAM. Enable to automatically unload the model after generation to free up GPU memory. Model will load on first generation request.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => setTempConfig({ ...tempConfig, autoUnloadImageModel: !tempConfig.autoUnloadImageModel })}
+                                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.autoUnloadImageModel !== false
+                                            ? 'bg-blue-500'
+                                            : 'bg-white/10 border border-white/20'
+                                            }`}
+                                    >
+                                        <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.autoUnloadImageModel !== false ? 'left-8' : 'left-1'
+                                            }`}></div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Audio Generation Section */}
+                            <div className="mb-6 p-4 bg-accent-primary/10 border border-accent-primary/20">
+                                <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-accent-primary mb-3">
+                                    Audio Generation
+                                </label>
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                    <button
+                                        onClick={() => setTempConfig({ ...tempConfig, audioProvider: 'tangoflux' })}
+                                        className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                            tempConfig.audioProvider === 'tangoflux' || !tempConfig.audioProvider
+                                                ? 'bg-accent-primary/20 border-accent-primary'
+                                                : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                                tempConfig.audioProvider === 'tangoflux' || !tempConfig.audioProvider
+                                                    ? 'border-accent-primary'
+                                                    : 'border-white/30'
+                                            }`}>
+                                                {(tempConfig.audioProvider === 'tangoflux' || !tempConfig.audioProvider) && (
+                                                    <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-text-primary">TangoFlux</p>
+                                                <p className="text-xs text-text-secondary">Fast text-to-audio (recommended)</p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <button
+                                        onClick={() => setTempConfig({ ...tempConfig, audioProvider: 'mmaudio' })}
+                                        className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                            tempConfig.audioProvider === 'mmaudio'
+                                                ? 'bg-accent-primary/20 border-accent-primary'
+                                                : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                                tempConfig.audioProvider === 'mmaudio'
+                                                    ? 'border-accent-primary'
+                                                    : 'border-white/30'
+                                            }`}>
+                                                {tempConfig.audioProvider === 'mmaudio' && (
+                                                    <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-text-primary">MMAudio</p>
+                                                <p className="text-xs text-text-secondary">Alternative audio model</p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div className="flex items-center justify-between pt-3 border-t border-accent-primary/20">
+                                    <div className="flex-1">
+                                        <label className="block text-[0.65rem] tracking-widest font-bold text-accent-primary mb-1">
+                                            Unload Model After Generation
+                                        </label>
+                                        <p className="text-[10px] text-text-secondary leading-relaxed">
+                                            TangoFlux uses significant VRAM. Enable to automatically unload the model after generation to free up GPU memory.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => setTempConfig({ ...tempConfig, autoUnloadAudioModel: !tempConfig.autoUnloadAudioModel })}
+                                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.autoUnloadAudioModel !== false
+                                            ? 'bg-accent-primary'
+                                            : 'bg-white/10 border border-white/20'
+                                            }`}
+                                    >
+                                        <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.autoUnloadAudioModel !== false ? 'left-8' : 'left-1'
+                                            }`}></div>
+                                    </button>
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Left Column: Current Narrative Settings */}
                                 <div className="space-y-6">
-                                    <h5 className="text-lg font-medium text-text-primary flex items-center gap-2">
+                                    <h5 className="text-lg uppercase tracking-widest font-medium text-text-secondary flex items-center gap-2">
                                         Current Narrative
                                     </h5>
                                     
@@ -783,7 +902,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
                                 {/* Right Column: Signals Settings */}
                                 <div className="space-y-6">
-                                    <h5 className="text-lg font-medium text-text-primary flex items-center gap-2">
+                                    <h5 className="text-lg uppercase tracking-widest font-medium text-text-secondary flex items-center gap-2">
                                         Signals
                                     </h5>
                                     

@@ -63,6 +63,7 @@ export function MediaGenerationButtons({
   })
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
+  const { soundVolume } = useSituationStore()
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(() => {
     // Load cached image from mediaUrls on mount
     if (cacheKey) {
@@ -77,6 +78,13 @@ export function MediaGenerationButtons({
       setAudioUrl(mediaUrls[`${cacheKey}_audio`] || null)
     }
   }, [mediaUrls, cacheKey])
+
+  // Update audio volume when soundVolume changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = soundVolume
+    }
+  }, [soundVolume])
 
   // Update generatedImageUrl when mediaUrls changes
   useEffect(() => {
@@ -155,7 +163,8 @@ export function MediaGenerationButtons({
           prompt: truncatedPrompt,
           size: imageSize,
           steps: 5,
-          guidance_scale: 1.0
+          guidance_scale: 1.0,
+          auto_unload: (aiConfig as any).autoUnloadImageModel !== false
         })
       })
 
@@ -164,7 +173,7 @@ export function MediaGenerationButtons({
       }
 
       const imageData = await imageResponse.json()
-      const imageUrl = `http://localhost:7860/generated_images/${imageData.filename}`
+      const imageUrl = `/signalframe/generated_images/${imageData.filename}`
 
       // Cache to IndexedDB via updateMediaUrls
       if (cacheKey) {
@@ -189,14 +198,21 @@ export function MediaGenerationButtons({
     updateAiConfig({ isGeneratingAudio: true })
 
     try {
+      const audioProvider = aiConfig.audioProvider || 'tangoflux'
+      const baseUrl = audioProvider === 'tangoflux' ? 'http://localhost:7861' : 'http://localhost:7862'
+
       // Store original text for audio
       setAudioOriginalText(text)
 
-      // Generate prompt (this is the enhanced prompt for audio)
-      const promptResponse = await fetch('http://localhost:2233/api/prompt/generate', {
+      // Generate prompt using LLM for both providers
+      let enhancedPromptText = text
+      let negativePrompt = ''
+
+      // Use TangoFlux server for prompt enhancement (it now has LLM integration)
+      const promptResponse = await fetch('http://localhost:7861/api/prompt/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           current_text: text,
           llm_provider: aiConfig.provider,
           llm_model: aiConfig.model,
@@ -209,11 +225,12 @@ export function MediaGenerationButtons({
       }
 
       const promptData = await promptResponse.json()
-      
+      enhancedPromptText = promptData.prompt || promptData.description || text
+      negativePrompt = promptData.negative_prompt || ''
+
       // Store the enhanced prompt and cache to IndexedDB
-      const enhancedPromptText = promptData.prompt || promptData.description || text
       setAudioEnhancedPrompt(enhancedPromptText)
-      
+
       if (cacheKey) {
         updateMediaUrls({
           [`${cacheKey}_audio_original`]: text,
@@ -225,24 +242,31 @@ export function MediaGenerationButtons({
       const randomSeed = Math.floor(Math.random() * 1000000)
 
       // Use appropriate audio duration from aiConfig
-      const audioDuration = cacheKey === 'narrative' 
+      const audioDuration = cacheKey === 'narrative'
         ? (aiConfig as any).narrativeAudioDuration || 5
         : (aiConfig as any).signalsAudioDuration || 3
 
-      await fetch('http://localhost:2233/api/sfx/params', {
+      // Set the SFX parameters
+      const paramsBody: any = {
+        text: enhancedPromptText,
+        duration: audioDuration,
+        num_steps: 50,
+        auto_unload: aiConfig.autoUnloadAudioModel !== false
+      }
+
+      if (audioProvider === 'mmaudio') {
+        paramsBody.negative_prompt = negativePrompt
+        paramsBody.cfg_strength = 4.5
+        paramsBody.seed = randomSeed
+      }
+
+      await fetch(`${baseUrl}/api/sfx/params`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: enhancedPromptText,
-          negative_prompt: promptData.negative_prompt || '',
-          duration: audioDuration,
-          cfg_strength: 4.5,
-          num_steps: 25,
-          seed: randomSeed
-        })
+        body: JSON.stringify(paramsBody)
       })
 
-      const sfxResponse = await fetch('http://localhost:2233/api/sfx/generate', {
+      const sfxResponse = await fetch(`${baseUrl}/api/sfx/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
@@ -253,7 +277,7 @@ export function MediaGenerationButtons({
       }
 
       const sfxData = await sfxResponse.json()
-      const newAudioUrl = `http://localhost:2233${sfxData.filepath}`
+      const newAudioUrl = `${baseUrl}${sfxData.filepath}`
 
       // Cache to IndexedDB via updateMediaUrls
       if (cacheKey) {
@@ -261,7 +285,7 @@ export function MediaGenerationButtons({
       }
 
       setAudioUrl(newAudioUrl)
-      
+
       // Auto-play after generation
       setTimeout(() => {
         if (audioRef.current) {

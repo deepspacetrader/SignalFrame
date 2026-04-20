@@ -50,8 +50,8 @@ app.post("/api/enhance-image-prompt", async (req, res) => {
 
     const payload = {
       model: model,
-      system_prompt: "You are an expert at crafting detailed, evocative prompts for AI image generation models like SDXL. Your task is to take a simple user input and transform it into a rich, visually descriptive prompt that will produce stunning, high-quality images. Focus on: 1) Adding specific visual details (colors, textures, lighting), 2) Describing the artistic style and mood, 3) Including compositional elements, 4) Suggesting atmospheric qualities. Keep the enhanced prompt concise (1-2 sentences) but packed with visual information. Output ONLY the enhanced prompt, no explanations or extra text.",
-      input: `Transform this simple concept into a detailed image generation prompt: "${prompt}"`
+      system_prompt: "You are an expert at crafting detailed, realistic prompts for AI image generation models like SDXL. Your task is to take a simple user input and transform it into a rich, visually descriptive prompt that will produce photorealistic images grounded in reality. CRITICAL CONSTRAINTS: 1) NO sci-fi, fantasy, supernatural, or futuristic elements - stay strictly within realistic, contemporary settings 2) NO magical or impossible physics 3) NO alien, cybernetic, or synthetic elements 4) Focus on realistic details: natural lighting, authentic textures, real-world materials, believable compositions 5) Describe actual objects, people, places, or scenes that could exist in the real world 6) Keep the enhanced prompt concise (1-2 sentences) but packed with realistic visual information. Output ONLY the enhanced prompt, no explanations or extra text.",
+      input: `Transform this simple concept into a realistic image generation prompt: "${prompt}"`
     };
 
     const response = await fetch(fullUrl, {
@@ -283,37 +283,79 @@ app.post("/api/generate", async (req, res) => {
     }
 
     if (type === "image") {
-      console.log(`--- GENERATING ICON: BYPASSING LM STUDIO [Topic: ${topic}] ---`);
-      // NEW: Local prompt bank to bypass LM Studio and increase speed
-      const PROMPT_BANK = [
-        "neon circuit pulse", "cybernetic eye", "floating monolith", "glitch cube",
-        "void crystal", "digital forest", "holographic skull", "quantum spark",
-        "recursive diamond", "obsidian sphere", "bioluminescent cell", "stellar dust",
-        "plasma nebula", "tectonic plate", "arcane sigil", "binary rain",
-        "abstract fractal", "synthetic organ", "nebula cloud", "neural network"
-      ];
+      const { model, provider, baseUrl } = req.body;
 
-      const randomSubject = PROMPT_BANK[Math.floor(Math.random() * PROMPT_BANK.length)];
+      if (!model) {
+        return res.status(400).json({ error: "Model is required. Please configure an AI model in AI Settings." });
+      }
+      if (!provider) {
+        return res.status(400).json({ error: "Provider is required. Please configure an AI provider in AI Settings." });
+      }
+      if (!baseUrl) {
+        return res.status(400).json({ error: "Base URL is required. Please configure an AI provider in AI Settings." });
+      }
 
-      // If the topic is short, it's likely a specific subject (e.g. "water drop").
-      // If it's empty, use a random subject.
-      const subject = topic.trim() || randomSubject;
-      const imagePrompt = `${subject}, minimalistic icon, high contrast, clean shapes, professional logo style`;
+      console.log(`Generating image for topic: "${topic}" via ${provider} with model: ${model}...`);
 
-      console.log("Generating icon with prompt:", imagePrompt);
+      // Construct full URL based on provider
+      const fullUrl = provider === 'ollama'
+        ? `${baseUrl}/chat`
+        : `${baseUrl}/api/v1/chat`;
 
-      // Step 1: Call your simplified Python worker (image-gen.py)
+      // Step 1: Enhance the prompt using LLM
+      const enhancePayload = {
+        model: model,
+        system_prompt: "You are an expert at crafting detailed, realistic prompts for AI image generation models like SDXL. Your task is to take a simple user input and transform it into a rich, visually descriptive prompt that will produce photorealistic images grounded in reality. CRITICAL CONSTRAINTS: 1) NO sci-fi, fantasy, supernatural, or futuristic elements - stay strictly within realistic, contemporary settings 2) NO magical or impossible physics 3) NO alien, cybernetic, or synthetic elements 4) Focus on realistic details: natural lighting, authentic textures, real-world materials, believable compositions 5) Describe actual objects, people, places, or scenes that could exist in the real world 6) Keep the enhanced prompt concise (1-2 sentences) but packed with realistic visual information. Output ONLY the enhanced prompt, no explanations or extra text.",
+        input: `Transform this simple concept into a realistic image generation prompt: "${topic}"`
+      };
+
+      const enhanceResponse = await fetch(fullUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enhancePayload),
+      }).catch(err => {
+        console.error("Connection to AI provider failed:", err.message);
+        throw new Error(`Connection to ${provider} failed at ${fullUrl}. Is the AI service running?`);
+      });
+
+      if (!enhanceResponse.ok) {
+        const errorText = await enhanceResponse.text();
+        console.error("LLM returned an error:", errorText);
+        throw new Error(`LLM error (${enhanceResponse.status}): ${errorText || enhanceResponse.statusText}`);
+      }
+
+      const enhanceData = await enhanceResponse.json();
+      let enhancedPrompt = topic; // Fallback to original topic
+
+      // Extract content from response
+      if (enhanceData.output && Array.isArray(enhanceData.output)) {
+        const messageObj = enhanceData.output.find((item: any) => item.type === 'message');
+        enhancedPrompt = messageObj?.content || enhanceData.output[enhanceData.output.length - 1]?.content || topic;
+      } else if (enhanceData.output) {
+        enhancedPrompt = typeof enhanceData.output === 'object' ? (enhanceData.output.content || JSON.stringify(enhanceData.output)) : enhanceData.output;
+      } else if (enhanceData.content) {
+        enhancedPrompt = typeof enhanceData.content === 'object' ? (enhanceData.content.content || JSON.stringify(enhanceData.content)) : enhanceData.content;
+      } else if (enhanceData.choices?.[0]?.message?.content) {
+        enhancedPrompt = enhanceData.choices[0].message.content;
+      } else if (typeof enhanceData === 'string') {
+        enhancedPrompt = enhanceData;
+      }
+
+      enhancedPrompt = enhancedPrompt.trim();
+      console.log("Enhanced prompt:", enhancedPrompt);
+
+      // Step 2: Call the Python image generation worker (image-gen.py)
       const SD_URL = "http://localhost:7860/generate";
       const randomSeed = Math.floor(Math.random() * 1000000);
       const sdResponse = await fetch(SD_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: imagePrompt,
+          prompt: enhancedPrompt,
           seed: randomSeed,
           size: req.body.size || 16,
-          steps: req.body.steps || 1, // SDXL Turbo is incredibly crisp at just 2 steps
-          guidance_scale: req.body.guidance_scale || 0.0 // Distilled models utilize 0.0 or 1.0 guidance
+          steps: req.body.steps || 1,
+          guidance_scale: req.body.guidance_scale || 0.0
         }),
       }).catch(err => {
         console.error("Python Image Worker not found on port 7860.");
@@ -327,13 +369,13 @@ app.post("/api/generate", async (req, res) => {
 
       const sdData = await sdResponse.json();
 
-      // Step 2: Read the file from disk (now in 'generated_icons' folder)
+      // Step 3: Read the file from disk
       const imageBuffer = fs.readFileSync(sdData.path);
       const base64Image = `data:image/png;base64,${imageBuffer.toString("base64")}`;
 
       return res.json({
         imageUrl: base64Image,
-        content: imagePrompt,
+        content: enhancedPrompt,
         seed: randomSeed,
         timestamp: Date.now()
       });

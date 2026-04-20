@@ -166,13 +166,15 @@ def set_sfx_params():
         if data['variant'] in gen.all_model_cfg:
             gen.variant = data['variant']
             gen.load_model()
+    if 'auto_unload' in data:
+        gen.auto_unload = bool(data['auto_unload'])
     return jsonify({"success": True})
 
 @app.route('/api/sfx/generate', methods=['POST'])
 def generate_sfx():
     global generation_status
     gen = get_or_create_sfx_gen()
-    
+
     data = request.json or {}
     if 'text' in data:
         gen.text = data['text']
@@ -182,17 +184,18 @@ def generate_sfx():
         gen.seed = int(data['seed'])
     if 'negative_prompt' in data:
         gen.negative_prompt = data['negative_prompt']
-    
+
     generation_status = {"type": "sfx", "status": "generating", "progress": 0, "message": "Starting generation..."}
-    
+
     result = {"filepath": None, "error": None}
-    
+    auto_unload = getattr(gen, 'auto_unload', False)
+
     def do_generate():
         global generation_status
         try:
             import torch
             import torchaudio
-            
+
             generation_status["progress"] = 10
             generation_status["message"] = "Updating sequence lengths..."
             gen.seq_cfg.duration = gen.duration
@@ -202,13 +205,13 @@ def generate_sfx():
                 gen.seq_cfg.sync_seq_len
             )
             gen.rng.manual_seed(gen.seed)
-            
+
             generation_status["progress"] = 30
             generation_status["message"] = "Generating audio..."
-            
+
             clip_frames = sync_frames = None
             from mmaudio.eval_utils import generate
-            
+
             audios = generate(
                 clip_frames,
                 sync_frames,
@@ -220,14 +223,14 @@ def generate_sfx():
                 rng=gen.rng,
                 cfg_strength=gen.cfg_strength
             )
-            
+
             generation_status["progress"] = 80
             generation_status["message"] = "Saving audio..."
-            
+
             audio = audios.float().cpu()[0]
             output_path = gen.get_next_filename()
             torchaudio.save(output_path, audio, gen.sampling_rate, format="wav")
-            
+
             # Save metadata JSON
             metadata = {
                 "prompt": gen.text,
@@ -243,21 +246,36 @@ def generate_sfx():
             metadata_path = output_path.replace('.wav', '.json')
             with open(metadata_path, 'w') as f:
                 json.dump(metadata, f, indent=2)
-            
+
             filename = os.path.basename(output_path)
             result["filepath"] = f"/sfx/{filename}"
             generation_status = {"type": "sfx", "status": "complete", "progress": 100, "message": "Done!", "filepath": result["filepath"]}
+
+            # Auto-unload if enabled
+            if auto_unload:
+                print("Auto-unloading MMAudio SFX model after generation...")
+                global sfx_gen
+                if sfx_gen is not None:
+                    if hasattr(sfx_gen, 'net') and hasattr(sfx_gen.net, 'device'):
+                        if sfx_gen.net.device.type == "cuda":
+                            sfx_gen.net = sfx_gen.net.to("cpu")
+                    del sfx_gen
+                    sfx_gen = None
+                    import gc
+                    gc.collect()
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
         except Exception as e:
             result["error"] = str(e)
             generation_status = {"type": "sfx", "status": "error", "progress": 0, "message": str(e)}
-    
+
     thread = threading.Thread(target=do_generate)
     thread.start()
     thread.join()
-    
+
     if result["error"]:
         return jsonify({"success": False, "error": result["error"]}), 500
-    
+
     return jsonify({"success": True, "filepath": result["filepath"]})
 
 @app.route('/api/status', methods=['GET'])

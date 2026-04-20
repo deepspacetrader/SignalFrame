@@ -10,7 +10,7 @@ interface ImageGenButtonProps {
 }
 
 export function ImageGenButton({ text, size = 128, className = '', cacheKey, onImageGenerated }: ImageGenButtonProps) {
-  const { aiConfig, mediaUrls, updateMediaUrls } = useSituationStore()
+  const { aiConfig, mediaUrls, updateMediaUrls, addBatchTask, batchQueue } = useSituationStore()
   const [isGenerating, setIsGenerating] = useState(false)
   const [hasCachedImage, setHasCachedImage] = useState(() => {
     // Check if there's a cached image in mediaUrls
@@ -74,74 +74,62 @@ export function ImageGenButton({ text, size = 128, className = '', cacheKey, onI
     setError(null)
 
     try {
-      // First, enhance the prompt using the LLM for image generation
-      const promptResponse = await fetch('http://localhost:3322/enhance', {
+      // Add task to batch queue
+      const taskId = addBatchTask({
+        type: 'image',
+        text: text,
+        size: size,
+        cacheKey: cacheKey
+      })
+
+      // Check if this task is in the queue and wait for completion
+      const checkCompletion = setInterval(() => {
+        const task = batchQueue.find(t => t.id === taskId)
+        if (task) {
+          if (task.status === 'completed' && task.result) {
+            clearInterval(checkCompletion)
+            setHasCachedImage(true)
+            if (onImageGeneratedRef.current) {
+              onImageGeneratedRef.current(task.result)
+            }
+            setIsGenerating(false)
+          } else if (task.status === 'failed') {
+            clearInterval(checkCompletion)
+            setError(task.error || 'Generation failed')
+            setIsGenerating(false)
+          }
+        }
+      }, 500)
+
+      // Also save prompts for display
+      const promptResponse = await fetch('http://localhost:3322/api/enhance-image-prompt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          text: text,
+        body: JSON.stringify({
+          prompt: text,
           provider: aiConfig.provider,
           baseUrl: aiConfig.baseUrl,
           model: aiConfig.model
         })
       })
 
-      if (!promptResponse.ok) {
-        throw new Error('Failed to enhance prompt')
+      if (promptResponse.ok) {
+        const promptData = await promptResponse.json()
+        const enhancedPrompt = promptData.enhancedPrompt || text
+
+        localStorage.setItem(promptsStorageKey, JSON.stringify({
+          original: text,
+          enhanced: enhancedPrompt
+        }))
+
+        setOriginalText(text)
+        setEnhancedPrompt(enhancedPrompt)
       }
-
-      const promptData = await promptResponse.json()
-      const enhancedPrompt = promptData.enhanced_prompt || text
-      const originalPrompt = promptData.original_prompt || text
-
-      // Save prompts to localStorage for future reference
-      localStorage.setItem(promptsStorageKey, JSON.stringify({
-        original: originalPrompt,
-        enhanced: enhancedPrompt
-      }))
-
-      setOriginalText(originalPrompt)
-      setEnhancedPrompt(enhancedPrompt)
-
-      // Truncate enhanced prompt to fit CLIP token limit (77 tokens ≈ 300 chars)
-      const truncatedPrompt = enhancedPrompt.length > 300
-        ? enhancedPrompt.substring(0, 300)
-        : enhancedPrompt
-
-      // Generate the image using the enhanced prompt
-      const imageResponse = await fetch('http://localhost:3322/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: truncatedPrompt,
-          size: size,
-          guidance_scale: 1.0
-        })
-      })
-
-      if (!imageResponse.ok) {
-        throw new Error('Failed to generate image')
-      }
-
-      const imageData = await imageResponse.json()
-      // The image path is relative to the image-gen directory
-      // We need to serve it through the backend or use a file:// path
-      // For now, we'll construct a URL to access the generated image
-      const imageUrl = `http://localhost:3322/generated_images/${imageData.filename}`
-      
-      // Cache the image URL to IndexedDB
-      if (cacheKey) {
-        updateMediaUrls({ [cacheKey]: imageUrl })
-      }
-      setHasCachedImage(true)
-      
-      onImageGeneratedRef.current(imageUrl)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Generation failed')
-    } finally {
       setIsGenerating(false)
     }
-  }, [text, size, cacheKey, updateMediaUrls])
+  }, [text, size, cacheKey, addBatchTask, batchQueue, aiConfig])
 
   return (
     <div className={`bg-black/40 border border-white/10 p-2 ${className}`}>
