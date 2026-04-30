@@ -224,32 +224,59 @@ export class LMStudioService {
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
+            let buffer = '';
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = decoder.decode(value, { stream: true });
-                const lines = chunk.split('\n');
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || ''; // Keep the last incomplete line in buffer
 
                 for (const line of lines) {
                     if (!line.trim()) continue;
-                    
+
+                    // Handle SSE format (data: prefix)
+                    let jsonLine = line;
+                    if (line.startsWith('data: ')) {
+                        jsonLine = line.slice(6);
+                    }
+                    if (jsonLine === '[DONE]') continue;
+
                     try {
-                        // Native streaming format: each line is a JSON object
-                        const json = JSON.parse(line);
-                        
+                        const json = JSON.parse(jsonLine);
+                        console.log('[LM Studio stream] Received chunk:', JSON.stringify(json).substring(0, 200));
+
                         // Handle new format with output array in streaming
                         if (json.output && Array.isArray(json.output)) {
                             const messageOutput = json.output.find((o: any) => o.type === 'message');
                             if (messageOutput && messageOutput.content) {
+                                console.log('[LM Studio stream] Found message content:', messageOutput.content.substring(0, 100));
                                 onChunk(messageOutput.content);
+                            } else {
+                                console.log('[LM Studio stream] Output array found but no message type');
                             }
+                        } else if (json.type === 'message.delta' && json.content) {
+                            // LM Studio message.delta format
+                            console.log('[LM Studio stream] Using message.delta format:', json.content.substring(0, 100));
+                            onChunk(json.content);
+                        } else if (json.type === 'reasoning.delta' && json.content) {
+                            // LM Studio reasoning/thinking content - skip in simple chat
+                            console.log('[LM Studio stream] Skipping reasoning content:', json.content.substring(0, 100));
                         } else if (json.result) {
                             // Fallback to old format
+                            console.log('[LM Studio stream] Using old format result:', json.result.substring(0, 100));
                             onChunk(json.result);
+                        } else if (json.choices && json.choices[0]?.delta?.content) {
+                            // OpenAI-compatible format
+                            console.log('[LM Studio stream] Using OpenAI format:', json.choices[0].delta.content.substring(0, 100));
+                            onChunk(json.choices[0].delta.content);
+                        } else {
+                            console.log('[LM Studio stream] Unknown format, keys:', Object.keys(json));
                         }
                     } catch (e) {
+                        console.log('[LM Studio stream] Failed to parse line:', jsonLine.substring(0, 100));
                         // Skip invalid JSON lines
                     }
                 }

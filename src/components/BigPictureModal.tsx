@@ -188,7 +188,7 @@ export function BigPictureModal({ isOpen, onClose, onAIRequired }: BigPictureMod
                     <div className="flex-1 overflow-y-auto p-8 lg:p-12 relative">
                         {isGenerating ? (
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0f18]/80 backdrop-blur-sm z-20">
-                                <div className="w-16 h-16 border-4 border-accent-primary/30 border-t-accent-primary animate-spin mb-4"></div>
+                                <div className="w-16 h-16 border-4 border-accent-primary/30 border-t-accent-primary rounded-full animate-spin mb-4"></div>
                                 <p className="text-accent-primary font-mono text-sm animate-pulse">INGESTING TELESCOPIC DATA...</p>
                             </div>
                         ) : null}

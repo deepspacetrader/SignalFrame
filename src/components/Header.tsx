@@ -134,8 +134,8 @@ export function Header({ onAIRequired, onBigPictureClick, onRefresh, isProcessin
         <button
           onClick={onRefresh}
           disabled={isProcessing}
-          className={`group relative overflow-hidden font-bold py-3 px-6 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.1)] flex-1 md:flex-none justify-center items-center min-w-0
-          ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.3)]' : 'bg-accent-primary text-white hover:bg-accent-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]'}`}
+          className={`group relative overflow-hidden font-bold py-3 px-6 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-1 md:flex-none justify-center items-center min-w-0
+          ${!isToday ? 'bg-purple-600/80 text-white hover:bg-purple-600' : 'bg-accent-secondary/70 text-white hover:bg-accent-secondary/100'}`}
         >
           <span className="flex items-center justify-center gap-2 whitespace-nowrap">
             {isProcessing ? 'SCANNING...' : (!isToday ? 'SCAN HISTORICAL DATA' : 'SCAN WITH AI')}

@@ -172,6 +172,9 @@ class BatchManager {
       ? enhancedPrompt.substring(0, 300)
       : enhancedPrompt;
 
+    // Get image provider from config (default to sdxl)
+    const imageProvider = aiConfig.imageProvider || 'sdxl';
+
     // Generate the image with auto_unload=false to keep model loaded for batch
     const imageResponse = await fetch('http://localhost:3322/generate', {
       method: 'POST',
@@ -180,7 +183,8 @@ class BatchManager {
         prompt: truncatedPrompt,
         size: task.size || 128,
         guidance_scale: 1.0,
-        auto_unload: false // Keep model loaded for batch processing
+        auto_unload: false, // Keep model loaded for batch processing
+        provider: imageProvider
       })
     });
 

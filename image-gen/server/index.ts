@@ -3,9 +3,25 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env from project root (2 levels up: server -> image-gen -> project-root)
+const envPath = path.join(__dirname, '../../.env');
+console.log('[Server] __dirname:', __dirname);
+console.log('[Server] Attempting to load .env from:', envPath);
+console.log('[Server] File exists:', fs.existsSync(envPath));
+
+const dotenvResult = dotenv.config({ path: envPath });
+if (dotenvResult.error) {
+  console.error('[Server] dotenv error:', dotenvResult.error);
+} else {
+  console.log('[Server] dotenv parsed keys:', Object.keys(dotenvResult.parsed || {}));
+}
+
+console.log('[Server] NVIDIA_IMAGE_GEN_KEY present:', process.env.NVIDIA_IMAGE_GEN_KEY ? 'Yes' : 'No');
 
 const app = express();
 app.use(cors({
@@ -383,6 +399,194 @@ app.post("/api/generate", async (req, res) => {
 
   } catch (error: any) {
     console.error("AI Generation Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Image Generation Endpoint (used by batchManager)
+app.post("/generate", async (req, res) => {
+  try {
+    const { prompt, size, guidance_scale, auto_unload, provider } = req.body;
+    console.log(`[Generate] Request received - provider: ${provider || 'sdxl'}, prompt: "${prompt?.substring(0, 50)}..."`);
+
+    if (!prompt) {
+      console.log('[Generate] Error: Prompt is required');
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+
+    const imageProvider = provider || 'sdxl';
+    console.log(`[Generate] Using provider: ${imageProvider}`);
+
+    // NVIDIA FLUX.2 Klein Provider
+    if (imageProvider === 'nvidia-flux') {
+      try {
+        console.log('[Generate] NVIDIA FLUX provider selected');
+        const NVIDIA_API_KEY = process.env.NVIDIA_IMAGE_GEN_KEY;
+        console.log(`[Generate] API Key present: ${NVIDIA_API_KEY ? 'Yes (first 10 chars: ' + NVIDIA_API_KEY.substring(0, 10) + '...)' : 'NO - check env vars!'}`);
+        
+        if (!NVIDIA_API_KEY) {
+          console.error('[Generate] NVIDIA_IMAGE_GEN_KEY not set!');
+          return res.status(500).json({ error: "NVIDIA_IMAGE_GEN_KEY environment variable not set" });
+        }
+
+        const invokeUrl = "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.2-klein-4b";
+        const headers = {
+          "Authorization": `Bearer ${NVIDIA_API_KEY}`,
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        };
+
+        // NVIDIA FLUX requires minimum 512px and specific dimensions (multiples of 16 from 512-1568)
+        const minSize = 512;
+        let targetSize = Math.max(size || 512, minSize);
+        // Round up to nearest multiple of 16 within valid range
+        targetSize = Math.ceil(targetSize / 16) * 16;
+        targetSize = Math.min(targetSize, 1568); // Max supported size
+
+        const payload = {
+          prompt: prompt,
+          width: targetSize,
+          height: targetSize,
+          seed: 0,
+          steps: 4
+        };
+        console.log(`[Generate] Calling NVIDIA API with payload:`, JSON.stringify(payload));
+
+        const response = await fetch(invokeUrl, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(payload)
+        });
+
+        console.log(`[Generate] NVIDIA API response status: ${response.status}`);
+
+        if (response.status !== 200) {
+          const errBody = await response.text();
+          console.error(`[Generate] NVIDIA API error: ${response.status} - ${errBody}`);
+          return res.status(500).json({ error: `NVIDIA FLUX invocation failed with status ${response.status}: ${errBody}` });
+        }
+
+        const responseBody = await response.json();
+        // console.log(`[Generate] NVIDIA API response keys: ${Object.keys(responseBody).join(', ')}`);
+
+        // Extract base64 image from response
+        // console.log('[Generate] Full NVIDIA response:', JSON.stringify(responseBody, null, 2));
+        
+        // Try various possible response formats
+        let base64Image = responseBody.image || 
+                         responseBody.images?.[0] || 
+                         responseBody.data?.[0]?.b64_json ||
+                         responseBody.data?.[0]?.image ||
+                         responseBody.artifacts?.[0]?.base64;
+        
+        console.log(`[Generate] Extracted base64 image: ${base64Image ? 'Yes (length: ' + base64Image.length + ')' : 'NO - check response structure'}`);
+        
+        if (!base64Image) {
+          console.error('[Generate] No image data in response. Response keys:', Object.keys(responseBody));
+          return res.status(500).json({ error: "No image data received from NVIDIA API. Response keys: " + Object.keys(responseBody).join(', ') });
+        }
+
+        // Save to file (same location as SDXL: public/generated_images)
+        const outputDir = path.join(__dirname, '../../public/generated_images');
+        console.log(`[Generate] Output directory: ${outputDir}`);
+        
+        if (!fs.existsSync(outputDir)) {
+          console.log(`[Generate] Creating output directory...`);
+          fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        const randomSeed = Math.floor(Math.random() * 1000000);
+        const filename = `${Date.now()}_${randomSeed}.png`;
+        const outputPath = path.join(outputDir, filename);
+        console.log(`[Generate] Writing file: ${outputPath}`);
+
+        const imageBuffer = Buffer.from(base64Image, 'base64');
+        fs.writeFileSync(outputPath, imageBuffer);
+        console.log(`[Generate] File written successfully`);
+
+        res.json({
+          filename,
+          path: outputPath,
+          seed: randomSeed
+        });
+        return;
+      } catch (nvidiaError: any) {
+        console.error('[Generate] NVIDIA FLUX Error:', nvidiaError);
+        console.error('[Generate] Error stack:', nvidiaError.stack);
+        return res.status(500).json({ error: `NVIDIA FLUX error: ${nvidiaError.message}` });
+      }
+    }
+
+    // SDXL Turbo Provider (default/local)
+    const SD_URL = "http://localhost:7860/generate";
+    const randomSeed = Math.floor(Math.random() * 1000000);
+    const sdResponse = await fetch(SD_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt,
+        seed: randomSeed,
+        size: size || 512,
+        guidance_scale: guidance_scale || 1.0,
+        auto_unload: auto_unload !== false
+      }),
+    }).catch(err => {
+      console.error("Python Image Worker not found on port 7860.", err.message);
+      throw new Error("Could not reach your Python Image Worker (image-gen.py). Ensure you have run: python image-gen/image-gen.py");
+    });
+
+    if (!sdResponse.ok) {
+      const errData = await sdResponse.json().catch(() => ({}));
+      throw new Error(`Image AI error: ${errData.error || sdResponse.statusText}`);
+    }
+
+    const sdData = await sdResponse.json();
+
+    // Copy the generated file to the public directory for serving (same as NVIDIA FLUX)
+    const outputDir = path.join(__dirname, '../../public/generated_images');
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    const filename = `${Date.now()}_${randomSeed}.png`;
+    const outputPath = path.join(outputDir, filename);
+
+    // Copy file from temp location to output directory
+    fs.copyFileSync(sdData.path, outputPath);
+
+    res.json({
+      filename,
+      path: outputPath,
+      seed: randomSeed
+    });
+  } catch (error: any) {
+    console.error("[Generate] Image Generation Error:", error);
+    console.error("[Generate] Error stack:", error.stack);
+    res.status(500).json({ error: error.message || "Unknown error during image generation" });
+  }
+});
+
+// Unload endpoint for SDXL model
+app.post("/unload", async (req, res) => {
+  try {
+    // Forward the unload request to the Python image generation server
+    const SD_UNLOAD_URL = "http://localhost:7860/unload";
+    const response = await fetch(SD_UNLOAD_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    }).catch(err => {
+      console.error("Python Image Worker not found on port 7860.", err.message);
+      // Return success even if Python server isn't running - nothing to unload
+      return { ok: true, json: async () => ({ success: true }) } as Response;
+    });
+
+    if (response.ok) {
+      res.json({ success: true, message: "SDXL model unloaded" });
+    } else {
+      res.status(500).json({ error: "Failed to unload SDXL model" });
+    }
+  } catch (error: any) {
+    console.error("Unload Error:", error);
     res.status(500).json({ error: error.message });
   }
 });

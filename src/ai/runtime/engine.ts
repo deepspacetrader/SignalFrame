@@ -73,11 +73,14 @@ async function streamGenerateWithProvider(
   systemPrompt?: string
 ): Promise<void> {
   const options = getOptionsForProvider(aiConfig);
-  
+
   if (aiConfig.provider === 'lmstudio') {
-    return LMStudioService.streamGenerate(aiConfig.model, prompt, onChunk, systemPrompt, options);
+    // Use non-streaming for LM Studio to avoid format parsing issues
+    const response = await LMStudioService.generate(aiConfig.model, prompt, systemPrompt, options);
+    onChunk(response);
+    return;
   }
-  
+
   return OllamaService.streamGenerate(aiConfig.model, prompt, onChunk, options);
 }
 
@@ -103,30 +106,39 @@ async function streamGenerateWithThinkingWithProvider(
   systemPrompt?: string
 ): Promise<void> {
   const options = getOptionsForProvider(aiConfig);
-  
+
   if (aiConfig.provider === 'lmstudio') {
-    return LMStudioService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, systemPrompt, options);
+    // Use non-streaming for LM Studio to avoid format parsing issues
+    const result = await LMStudioService.generateWithThinking(aiConfig.model, prompt, systemPrompt, options);
+    if (result.thinking) {
+      onThinking(result.thinking);
+    }
+    onContent(result.response);
+    return;
   }
-  
+
   return OllamaService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, options);
 }
 
-async function chatWithProvider(
+export async function chatWithProvider(
   aiConfig: AiConfig,
   messages: { role: string; content: string }[],
   onChunk: (text: string) => void,
   signal?: AbortSignal
 ): Promise<void> {
   const options = getOptionsForProvider(aiConfig, signal);
-  
+
   if (aiConfig.provider === 'lmstudio') {
+    // Use non-streaming for LM Studio to avoid format parsing issues
     const lmMessages: LMStudioMessage[] = messages.map(m => ({
       role: m.role as 'system' | 'user' | 'assistant',
       content: m.content
     }));
-    return LMStudioService.streamChat(aiConfig.model, lmMessages, onChunk, options);
+    const response = await LMStudioService.chat(aiConfig.model, lmMessages, options);
+    onChunk(response);
+    return;
   }
-  
+
   return OllamaService.chat(aiConfig.model, messages, onChunk, options);
 }
 
@@ -529,10 +541,10 @@ function selectRelevantFeeds(signal: Signal, feeds: RawSignal[]) {
   return selected;
 }
 
-function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateStr: string, aiConfig?: AiConfig) {
+function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateStr: string, aiConfig?: AiConfig, feedIndex?: any[]) {
   // Use aggressive truncation to stay under 9,000 byte limit
-  const maxContentLength = 600; // Further reduced
-  const maxTotalChars = 6000; // Much smaller to stay safe
+  const maxContentLength = 1200;
+  const maxTotalChars = 12000;
   
   let feedContent = '';
   for (const f of feedsSubset) {
@@ -585,6 +597,9 @@ DATE: ${dateStr}
 SIGNAL:
 ${JSON.stringify(minimalSignal)}
 
+FEED INDEX (use these feedId values in your source references):
+${JSON.stringify(feedIndex || [])}
+
 FEED CONTENT:
 ${feedContent}${customGuidelines}
 
@@ -607,10 +622,10 @@ Return EXACTLY one JSON object with this shape:
     "soWhat": string
   },
   "source": [
-    { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
+    { "feedId": string, "source": string, "title": string, "timestamp": string (optional), "quote": string (optional) }
   ],
-  "counterpoints": [
-    { "claimA": string, "claimB": string, "sourceA": array, "sourceB": array }
+  "perspectives": [
+    { "entity": string, "claim": string, "sources": array }
   ],
   "watchNext": string[]
 }
@@ -618,7 +633,16 @@ Return EXACTLY one JSON object with this shape:
 Rules:
 - Use provided FEED CONTENT as source material
 - Include relevant quotes from feed content in your analysis
-- watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.`;
+- CRITICAL: DO NOT include feed references like "(Feed 12)" or "(Feeds 3, 5)" in the header.text field - write clean prose only
+- watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.
+
+PERSPECTIVES GUIDELINES:
+- Identify 2-4 DISTINCT perspectives on the signal/event
+- Each perspective should represent a different viewpoint from a specific entity (government, organization, group, or individual)
+- The "entity" field must clearly state WHO holds this perspective (e.g., "Iranian government", "US military", "Market analysts", "United Nations")
+- Perspectives should be clearly OPPOSING or DISTINCT from each other - not just minor variations
+- Each perspective should have a clear, well-defined stance on the situation
+- Include relevant sources that support each perspective`;
 
 /*
 {
@@ -642,35 +666,39 @@ Rules:
     {
       "feedId": "41",
       "source": "NY Times World",
-      "title": "3 U.S. Planes Are Shot Down in ‘Friendly Fire’ in Kuwait, U.S. Military Says",
+      "title": "3 U.S. Planes Are Shot Down in 'Friendly Fire' in Kuwait, U.S. Military Says",
       "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000",
       "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
     },
     {
       "feedId": "20",
       "source": "Al Jazeera",
-      "title": "Three US fighter jets ‘mistakenly’ shot down over Kuwait",
+      "title": "Three US fighter jets 'mistakenly' shot down over Kuwait",
       "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000",
       "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
     }
   ],
-  "counterpoints": [
+  "perspectives": [
     {
-      "claimA": "The US military claims the jets were mistakenly shot down by Kuwaiti defenses.",
-      "claimB": "Kuwaiti officials are investigating the cause of the incident.",
-      "sourceA": [
+      "entity": "US Military Command",
+      "claim": "The jets were mistakenly shot down by Kuwaiti air defenses due to a radar identification error during the operation.",
+      "sources": [
         {
           "feedId": "41",
           "source": "NY Times World",
-          "title": "3 U.S. Planes Are Shot Down in ‘Friendly Fire’ in Kuwait, U.S. Military Says",
+          "title": "3 U.S. Planes Are Shot Down in 'Friendly Fire' in Kuwait, U.S. Military Says",
           "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000"
         }
-      ],
-      "sourceB": [
+      ]
+    },
+    {
+      "entity": "Kuwaiti Officials",
+      "claim": "We are conducting a thorough investigation to determine the exact cause of the incident and prevent future occurrences.",
+      "sources": [
         {
           "feedId": "20",
           "source": "Al Jazeera",
-          "title": "Three US fighter jets ‘mistakenly’ shot down over Kuwait",
+          "title": "Three US fighter jets 'mistakenly' shot down over Kuwait",
           "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000"
         }
       ]
@@ -702,6 +730,9 @@ DATE: ${dateStr}
 SIGNAL:
 ${JSON.stringify(minimalSignal)}
 
+FEED INDEX (use these feedId values in your source references):
+${JSON.stringify(feedIndex || [])}
+
 FEED CONTENT:
 ${feedContent}${customGuidelines}
 
@@ -724,10 +755,10 @@ Return EXACTLY one JSON object with this shape:
     "soWhat": string
   },
   "source": [
-    { "feedId": string, "source": string, "title": string, "timestamp": string, "quote": string }
+    { "feedId": string, "source": string, "title": string, "timestamp": string (optional), "quote": string (optional) }
   ],
-  "counterpoints": [
-    { "claimA": string, "claimB": string, "sourceA": SourceRef[], "sourceB": SourceRef[] }
+  "perspectives": [
+    { "entity": string, "claim": string, "sources": SourceRef[] }
   ],
   "watchNext": string[] // 3-5 predictive statements about what events/indicators to watch for NEXT (e.g., "Potential retaliatory strikes from Iran", "Watch for CENTCOM investigation results", "Monitor gas price fluctuations")
 }
@@ -736,6 +767,14 @@ Rules:
 - Use the provided FEED CONTENT as source material
 - Include relevant quotes from the feed content in your analysis
 - watchNext should be PREDICTIVE ANALYSIS about what might happen next - NOT URLs, NOT links, NOT example.com placeholders. Think like an intelligence analyst forecasting likely next developments.
+
+PERSPECTIVES GUIDELINES:
+- Identify 2-4 DISTINCT perspectives on the signal/event
+- Each perspective should represent a different viewpoint from a specific entity (government, organization, group, or individual)
+- The "entity" field must clearly state WHO holds this perspective (e.g., "Iranian government", "US military", "Market analysts", "United Nations")
+- Perspectives should be clearly OPPOSING or DISTINCT from each other - not just minor variations
+- Each perspective should have a clear, well-defined stance on the situation
+- Include relevant sources that support each perspective
 `;
 }
 
@@ -792,7 +831,7 @@ function parseJsonObjectWithDetection(text: string): JsonObjectParseResult {
 }
 
 
-// Zod schema for DeepDive structured output - simplified for Ollama compatibility
+// Zod schema for DeepDive structured output - simplified for AI compatibility
 const DeepDiveSchema = z.object({
   signalId: z.string(),
   header: z.object({
@@ -805,7 +844,7 @@ const DeepDiveSchema = z.object({
   fiveWs: z.object({
     who: z.array(z.string()),
     what: z.string(),
-    where: z.union([z.string(), z.array(z.string())]), // Accept both string and array
+    where: z.union([z.string(), z.array(z.string())]),
     when: z.string(),
     why: z.string(),
     soWhat: z.string()
@@ -813,15 +852,14 @@ const DeepDiveSchema = z.object({
   source: z.array(z.object({
     feedId: z.string().optional(),
     source: z.string(),
-    title: z.string(),
-    timestamp: z.string(),
-    quote: z.string()
+    title: z.string().optional(),
+    timestamp: z.string().optional(),
+    quote: z.string().optional()
   })),
-  counterpoints: z.array(z.object({
-    claimA: z.string(),
-    claimB: z.string(),
-    sourceA: z.array(z.any()).optional(),
-    sourceB: z.array(z.any()).optional()
+  perspectives: z.array(z.object({
+    entity: z.string(),
+    claim: z.string(),
+    sources: z.array(z.any()).optional()
   })),
   watchNext: z.array(z.string())
 });
@@ -834,7 +872,17 @@ export async function generateDeepDive(
 ): Promise<DeepDiveData> {
   // Select relevant feeds for this signal
   const relevantFeeds = selectRelevantFeeds(signal, feeds);
-  const prompt = generateDeepDivePrompt(signal, relevantFeeds, dateStr, aiConfig);
+
+  // Generate feed index from relevant feeds (not full feeds) to ensure indices match
+  const feedIndex = relevantFeeds.map((f, idx) => ({
+    feedId: String(idx),
+    source: f.source,
+    title: f.title,
+    timestamp: f.timestamp,
+    category: f.category
+  }));
+
+  const prompt = generateDeepDivePrompt(signal, relevantFeeds, dateStr, aiConfig, feedIndex);
   
   // Convert Zod schema to JSON schema (disabled for now due to compatibility issues)
   // const deepDiveJsonSchema = zodToJsonSchema(DeepDiveSchema as any);
@@ -913,7 +961,7 @@ export async function generateDeepDive(
           soWhat: 'Manual analysis may be required'
         },
         source: [],
-        counterpoints: [],
+        perspectives: [],
         watchNext: []
       };
     }
@@ -946,8 +994,16 @@ export async function generateDeepDive(
           category: obj.header?.category || signal.category
         },
         fiveWs: obj.fiveWs || { who: [], what: '', where: '', when: '', why: '', soWhat: '' },
-        source: obj.source || [],
-        counterpoints: obj.counterpoints || [],
+        source: (obj.source || []).map((s: any) => {
+          const feedIndex = parseInt(s.feedId || '0', 10);
+          const originalFeed = relevantFeeds[feedIndex];
+          return {
+            ...s,
+            feedId: s.feedId || '',
+            link: originalFeed?.link || undefined
+          };
+        }),
+        perspectives: obj.perspectives || [],
         watchNext: obj.watchNext || []
       };
     }
@@ -972,11 +1028,26 @@ export async function generateDeepDive(
           ? validatedData.fiveWs.where.join(', ') 
           : validatedData.fiveWs.where
       },
-      source: validatedData.source.map(s => ({ ...s, feedId: s.feedId || '' })) as any,
-      counterpoints: validatedData.counterpoints.map(cp => ({
-        ...cp,
-        sourceA: cp.sourceA || [],
-        sourceB: cp.sourceB || []
+      source: validatedData.source.map(s => {
+        const feedIndex = parseInt(s.feedId || '0', 10);
+        const originalFeed = relevantFeeds[feedIndex];
+        return {
+          ...s,
+          feedId: s.feedId || '',
+          link: originalFeed?.link || undefined
+        };
+      }) as any,
+      perspectives: validatedData.perspectives.map(p => ({
+        ...p,
+        sources: (p.sources || []).map((s: any) => {
+          const feedIndex = parseInt(s.feedId || '0', 10);
+          const originalFeed = relevantFeeds[feedIndex];
+          return {
+            ...s,
+            feedId: s.feedId || '',
+            link: originalFeed?.link || undefined
+          };
+        })
       })) as any,
       watchNext: validatedData.watchNext
     };
@@ -1006,7 +1077,7 @@ export async function generateDeepDive(
           soWhat: 'Manual analysis may be required'
         },
         source: [],
-        counterpoints: [],
+        perspectives: [],
         watchNext: []
       };
     }
@@ -1086,13 +1157,15 @@ function generateNarrativePredictionsPrompt(narrative: string, aiConfig?: AiConf
     sentimentGuidance = `\n\nSENTIMENT ANALYSIS FRAMEWORK:\nWhen analyzing the sentiment of each prediction topic, interpret it through the following lens:\n${generateCustomSentimentGuidelines(profile)}\n\nApply this framework when assessing the sentiment of each topic.`;
   }
 
-  return `You are an elite intelligence analyst specializing in predictive analysis. Based on the following narrative summary of current events, analyze what could happen next across the different topics and subjects mentioned.
+  return `You are an elite intelligence analyst specializing in predictive analysis. Based on the following narrative summary of current events, analyze what could happen next across the different topics and subjects mentioned. Ensure the following standard topics are always included: "'Artificial Intelligence Integration', 'Economic Health & Market Risk', 'Geopolitical Risks & Global Stability'" but also include any other relevant topics found in the narrative.
 
 Your task is to provide forward-looking intelligence predictions that are:
 - Grounded in the current narrative context
 - Broken down by the main topics/subjects identified in the narrative
 - Written as short, concise bullet points
 - Focused on likely developments, not speculative scenarios
+- No duplicate topics or duplicate predictions
+- No markdown formatting
 - Each section should include a sentiment assessment${sentimentGuidance}
 
 Format your response as a JSON object with the following structure:
@@ -1263,6 +1336,7 @@ Rules:
 - You MUST return exactly 5-8 signals in the array
 - title: MAX ~20 words, shareable headline (e.g., "Crackdown Intensifies Amid Protests")
 - text: 1-2 sentences detailed description of the signal (e.g., "Authorities are escalating violent crackdowns on nationwide protests, with reports of mass arrests and lethal force being used against demonstrators.")
+- CRITICAL: DO NOT include feed references like "(Feed 12)" or "(Feeds 3, 5)" in the text field - the sources belong ONLY in the source array
 - novelty is 0..100 (lower if similar to RECENT SIGNALS).
 - feedId MUST be the numeric index from FEED INDEX.
 - You MUST include at least 1 reference source per signal item. (if you can't match any source feed reference for a signal, skip it)

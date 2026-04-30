@@ -578,33 +578,53 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
                       <ul className="space-y-2">
                         {signal.source.map((item, sourceIdx) => (
                           <li key={sourceIdx} className="text-xs text-text-secondary bg-white/5 p-2 border border-white/10 rounded-none">
-                            <div className="flex justify-between items-start gap-2">
-                              <span className="font-medium text-text-primary text-[0.65rem]">{item.source || 'Unknown Source'}</span>
-                              {item.timestamp && (
-                                <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary">
-                                  {new Date(item.timestamp).toLocaleDateString()}
-                                </span>
-                              )}
-                            </div>
-                            {item.title && (
-                              <p className="mt-1 text-text-primary text-xs font-medium">
-                                {item.title}
-                              </p>
-                            )}
-                            {item.quote && (
-                              <p className="mt-1 italic text-[0.6rem] text-text-secondary">
-                                "{item.quote}"
-                              </p>
-                            )}
-                            {item.link && (
+                            {item.link ? (
                               <a
                                 href={item.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-accent-primary hover:underline text-[0.6rem] mt-1 inline-block"
+                                className="block hover:bg-white/10 transition-colors -m-2 p-2"
                               >
-                                Open article ↗
+                                <div className="flex justify-between items-start gap-2">
+                                  <span className="font-medium text-text-primary text-[0.65rem]">{item.source || 'Unknown Source'}</span>
+                                  {item.timestamp && (
+                                    <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary">
+                                      {new Date(item.timestamp).toLocaleDateString()}
+                                    </span>
+                                  )}
+                                </div>
+                                {item.title && (
+                                  <p className="mt-1 text-text-primary text-xs font-medium">
+                                    {item.title}
+                                  </p>
+                                )}
+                                {item.quote && (
+                                  <p className="mt-1 italic text-[0.6rem] text-text-secondary">
+                                    "{item.quote}"
+                                  </p>
+                                )}
                               </a>
+                            ) : (
+                              <>
+                                <div className="flex justify-between items-start gap-2">
+                                  <span className="font-medium text-text-primary text-[0.65rem]">{item.source || 'Unknown Source'}</span>
+                                  {item.timestamp && (
+                                    <span className="text-[0.55rem] uppercase tracking-widest text-text-tertiary">
+                                      {new Date(item.timestamp).toLocaleDateString()}
+                                    </span>
+                                  )}
+                                </div>
+                                {item.title && (
+                                  <p className="mt-1 text-text-primary text-xs font-medium">
+                                    {item.title}
+                                  </p>
+                                )}
+                                {item.quote && (
+                                  <p className="mt-1 italic text-[0.6rem] text-text-secondary">
+                                    "{item.quote}"
+                                  </p>
+                                )}
+                              </>
                             )}
                           </li>
                         ))}

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { OllamaService } from '../ai/runtime/ollama';
+import { chatWithProvider } from '../ai/runtime/engine';
 import { useSituationStore } from '../state/useSituationStore';
 
 interface Message {
@@ -177,14 +177,16 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
 
             let assistantContent = '';
 
-            await OllamaService.chat(aiConfig.model, apiMessages, (chunk) => {
+            await chatWithProvider(aiConfig, apiMessages, (chunk: string) => {
                 assistantContent += chunk;
                 setMessages(prev => {
-                    const last = prev[prev.length - 1];
-                    if (last.role === 'assistant') {
-                        return [...prev.slice(0, -1), { role: 'assistant', content: assistantContent }];
+                    const newMessages = [...prev];
+                    if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'assistant') {
+                        newMessages[newMessages.length - 1] = { role: 'assistant', content: assistantContent };
+                    } else {
+                        newMessages.push({ role: 'assistant', content: assistantContent });
                     }
-                    return [...prev, { role: 'assistant', content: assistantContent }];
+                    return newMessages;
                 });
             });
         } catch (error) {

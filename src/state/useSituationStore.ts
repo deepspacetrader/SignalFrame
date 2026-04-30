@@ -67,11 +67,10 @@ export interface DeepDiveData {
     soWhat?: string;
   };
   source: SourceRef[];
-  counterpoints?: {
-    claimA: string;
-    claimB: string;
-    sourceA: SourceRef[];
-    sourceB: SourceRef[];
+  perspectives?: {
+    entity: string;  // Who holds this perspective (e.g., "Iranian government", "US military", "Market analysts")
+    claim: string;   // What they claim
+    sources: SourceRef[];  // Sources supporting this perspective
   }[];
   watchNext?: string[];
 }
@@ -187,6 +186,8 @@ export interface AiConfig {
   signalsImageSize?: number;
   narrativeAudioDuration?: number;
   signalsAudioDuration?: number;
+  // Image generation provider
+  imageProvider?: 'sdxl' | 'nvidia-flux';
   // Audio generation provider
   audioProvider?: 'mmaudio' | 'tangoflux';
   autoUnloadAudioModel?: boolean; // Auto-unload audio model after generation to save VRAM
@@ -587,6 +588,7 @@ const defaultState: SituationState = {
 let globalState: SituationState = { ...defaultState };
 const listeners = new Set<(state: SituationState) => void>();
 let configLoaded = false; // Flag to track when config is loaded from storage
+let initCompleted = false; // Flag to prevent init from running multiple times
 
 // Module-level polling manager to prevent multiple instances
 class OllamaPollingManager {
@@ -631,8 +633,9 @@ class OllamaPollingManager {
       globalState = {
         ...globalState,
         aiStatus: {
-          ...globalState.aiStatus,
-          lastChecked: new Date()
+          isOnline: globalState.aiStatus?.isOnline || false,
+          lastChecked: new Date(),
+          lastError: globalState.aiStatus?.lastError || null
         }
       };
       listeners.forEach(l => l({ ...globalState }));
@@ -764,6 +767,9 @@ class OllamaPollingManager {
  * Notifies all listeners of state changes without persisting to DB.
  */
 function notify() {
+  const stack = new Error().stack;
+  const caller = stack?.split('\n')[2]?.trim();
+  console.log('[notify] currentDate:', globalState.currentDate, 'caller:', caller);
   listeners.forEach(l => l({ ...globalState }));
 }
 
@@ -839,6 +845,11 @@ export function useSituationStore() {
     listeners.add(setState);
     // Initial Load - Ensure we don't leak async logic into raw state
     const init = async () => {
+      if (initCompleted) {
+        console.log('[init] Already completed, skipping');
+        return;
+      }
+      initCompleted = true;
       const today = getTodayStr();
       const [analysis, config, defs, dates, savedBigPicture] = await Promise.all([
         StorageService.getAnalysis(today),
@@ -903,7 +914,11 @@ export function useSituationStore() {
       }
 
       globalState.availableDates = availableDates;
-      globalState.currentDate = today;
+      // Only set currentDate to today if it's not already set to a different value
+      // This prevents overwriting the user's date navigation
+      if (!globalState.currentDate || globalState.currentDate === today) {
+        globalState.currentDate = today;
+      }
 
       if (analysis) {
         // Preserve AI status and running models before loading analysis
@@ -997,7 +1012,9 @@ export function useSituationStore() {
           const result = await loadDateStampedSnapshot(globalState.currentDate);
 
           if (result) {
-            const { snapshot } = result;
+            const { snapshot, actualDate } = result;
+            // Update currentDate to the actual date that was loaded
+            globalState.currentDate = actualDate;
             // Hydrate state with snapshot data
             // We use Object.assign to merge carefully
             Object.assign(globalState, {
@@ -1256,7 +1273,6 @@ export function useSituationStore() {
 
   const loadDate = useCallback(async (dateStr: string, force: boolean = false) => {
     if (globalState.isProcessing && !force) {
-      console.log('[loadDate] Blocked - currently processing');
       return;
     }
 
@@ -1269,7 +1285,6 @@ export function useSituationStore() {
 
     if (isStatic) {
       // In static mode, try to load date-stamped snapshot
-      console.log(`Static mode: Loading snapshot for date ${dateStr}`);
       const result = await loadDateStampedSnapshot(dateStr);
 
       if (result) {
@@ -1364,6 +1379,8 @@ export function useSituationStore() {
           };
         });
       }
+
+      notify();
     } else {
       // No analysis found in IndexedDB, try to load from snapshot files
       console.log(`No analysis found for date ${dateStr} in IndexedDB, attempting to load from snapshot files...`);

@@ -39,6 +39,13 @@ export default function App() {
     const currentIndex = availableDates.indexOf(currentDate);
     if (currentIndex > 0) {
       loadDate(availableDates[currentIndex - 1]);
+    } else if (currentIndex === -1 && availableDates.length > 0) {
+      // Current date not in availableDates - find the most recent date before current
+      const sortedDates = [...availableDates].sort();
+      const prevDate = sortedDates.reverse().find(d => d < currentDate);
+      if (prevDate) {
+        loadDate(prevDate);
+      }
     } else {
       // Calculate previous day and try to load it
       const [y, m, d] = currentDate.split('-').map(Number);

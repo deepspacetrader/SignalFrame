@@ -155,21 +155,24 @@ export function MediaGenerationButtons({
         })
       }
 
-      // Generate the image using the enhanced prompt
-      const imageResponse = await fetch('http://localhost:7860/generate', {
+      // Generate the image using the backend server (handles both SDXL and NVIDIA FLUX)
+      const imageProvider = (aiConfig as any).imageProvider || 'sdxl';
+      const imageResponse = await fetch('http://localhost:3322/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: truncatedPrompt,
           size: imageSize,
-          steps: 5,
           guidance_scale: 1.0,
-          auto_unload: (aiConfig as any).autoUnloadImageModel !== false
+          auto_unload: (aiConfig as any).autoUnloadImageModel !== false,
+          provider: imageProvider
         })
       })
 
       if (!imageResponse.ok) {
-        throw new Error('Failed to generate image')
+        const errorData = await imageResponse.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('[ImageGen] Backend error:', errorData)
+        throw new Error(errorData.error || `Failed to generate image (HTTP ${imageResponse.status})`)
       }
 
       const imageData = await imageResponse.json()

@@ -29,15 +29,6 @@ const getSentimentColor = (sentiment: string) => {
 }
 
 export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired, regenerateDeepDive, activeSignalId }: DeepDiveModalProps) {
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    
-    // If in demo mode and no data is available, show demo modal instead
-    useEffect(() => {
-        if (isOpen && !isLocalhost && !data && !isGenerating && onAIRequired) {
-            onClose();
-            onAIRequired();
-        }
-    }, [isOpen, isLocalhost, data, isGenerating, onAIRequired, onClose]);
 
     if (!isOpen) return null;
 
@@ -48,7 +39,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                 <div className="p-4 sm:p-6 lg:p-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent relative pt-16 sm:pt-20 lg:pt-24">
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-text-tertiary hover:text-white transition-colors rounded-full hover:bg-white/5 z-10"
+                        className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-white hover:text-white hover:bg-accent-primary transition-colors rounded-full z-10"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -58,16 +49,9 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
 
                     {/* Regenerate button - only show when data exists and not generating */}
                     {data && !isGenerating && regenerateDeepDive && activeSignalId && (
-                        <div className="absolute top-4 right-12 sm:top-6 sm:right-16 z-10">
+                        <div className="absolute top-4 right-12 sm:top-6 sm:right-16 z-10 mr-5 mt-1">
                             <SectionRegenerateButton
                                 onClick={() => {
-                                    // console.log('Regenerate button clicked, activeSignalId:', activeSignalId);
-                                    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                                    if (!isLocalhost) {
-                                        onAIRequired?.();
-                                        return;
-                                    }
-                                    // console.log('Calling regenerateDeepDive with:', activeSignalId);
                                     regenerateDeepDive(activeSignalId);
                                 }}
                                 disabled={isGenerating}
@@ -84,17 +68,6 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                     ) : !data ? (
                         <div className="py-12 text-center">
                             <p className="text-text-secondary italic">No data available for this deep dive.</p>
-                            {!isLocalhost && onAIRequired && (
-                                <button
-                                    onClick={() => {
-                                        onClose();
-                                        onAIRequired();
-                                    }}
-                                    className="mt-4 px-4 py-2 bg-accent-primary/20 hover:bg-accent-primary/40 text-accent-primary border border-accent-primary/30 rounded-lg text-sm font-bold uppercase tracking-widest transition-all"
-                                >
-                                    View Demo Mode Info
-                                </button>
-                            )}
                         </div>
                     ) : (
                         <>
@@ -162,7 +135,7 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                     <div className="space-y-5">
                                         {data.fiveWs.who && data.fiveWs.who.length > 0 && (
                                             <div className="flex flex-col sm:flex-row gap-2">
-                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHO</div>
+                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 h-6 flex items-center justify-center border border-white/5">WHO</div>
                                                 <div className="text-text-primary text-sm font-medium leading-snug">
                                                     {data.fiveWs.who.join(', ')}
                                                 </div>
@@ -170,20 +143,20 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         )}
                                         {data.fiveWs.what && (
                                             <div className="flex flex-col sm:flex-row gap-2">
-                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHAT</div>
+                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 h-6 flex items-center justify-center border border-white/5">WHAT</div>
                                                 <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.what}</div>
-                                            </div>
-                                        )}
-                                        {data.fiveWs.where && (
-                                            <div className="flex flex-col sm:flex-row gap-2">
-                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHERE</div>
-                                                <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.where}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.when && (
                                             <div className="flex flex-col sm:flex-row gap-2">
-                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 rounded h-6 flex items-center justify-center border border-white/5">WHEN</div>
+                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 h-6 flex items-center justify-center border border-white/5">WHEN</div>
                                                 <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.when}</div>
+                                            </div>
+                                        )}
+                                        {data.fiveWs.where && (
+                                            <div className="flex flex-col sm:flex-row gap-2">
+                                                <div className="w-16 shrink-0 text-[0.6rem] uppercase font-black text-text-tertiary bg-white/5 h-6 flex items-center justify-center border border-white/5">WHERE</div>
+                                                <div className="text-text-primary text-sm font-medium leading-snug">{data.fiveWs.where}</div>
                                             </div>
                                         )}
                                         {data.fiveWs.why && (
@@ -209,63 +182,6 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         )}
                                     </div>
                                 </section>
-                            </div>
-
-                            {/* Right Column: Source & Counterpoints */}
-                            <div className="space-y-8">
-                                <section>
-                                    <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-accent-secondary font-bold mb-4 flex items-center gap-2">
-                                        <span className="w-4 h-[1px] bg-accent-secondary"></span>
-                                        Source References
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {data.source.map((item, idx) => (
-                                            <div key={idx} className="bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
-                                                    {item.timestamp && (
-                                                        <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
-                                                    )}
-                                                </div>
-                                                <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
-                                                {item.quote && (
-                                                    <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
-                                                )}
-                                                {item.link && (
-                                                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[0.6rem] text-accent-secondary hover:underline flex items-center gap-1">
-                                                        Open Article ↗
-                                                    </a>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </section>
-
-                                {data.counterpoints && data.counterpoints.length > 0 && (
-                                    <section>
-                                        <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-orange-400 font-bold mb-4 flex items-center gap-2">
-                                            <span className="w-4 h-[1px] bg-orange-400"></span>
-                                            Main Perspectives
-                                        </h3>
-                                        <div className="space-y-4">
-                                            {data.counterpoints.map((cp, idx) => (
-                                                <div key={idx} className="bg-orange-500/5 border border-orange-500/10 p-4">
-                                                    <div className="flex flex-col sm:flex-col gap-4">
-                                                        <div className="space-y-2">
-                                                            <p className="text-[0.6rem] uppercase tracking-widest text-yellow-400 font-bold mb-1">Perspective A</p>
-                                                            <p className="leading-snug font-bold text-yellow-200">{cp.claimA}</p>
-                                                        </div>
-                                                        <div className="border-t border-white/10"></div>
-                                                        <div className="space-y-2">
-                                                            <p className="text-[0.6rem] uppercase tracking-widest text-orange-400 font-bold mb-1">Perspective B</p>
-                                                            <p className="leading-snug font-bold text-orange-300">{cp.claimB}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </section>
-                                )}
 
                                 {data.watchNext && data.watchNext.length > 0 && (
                                     <section className="bg-accent-primary/5 border border-accent-primary/20 p-5 mt-auto">
@@ -283,6 +199,86 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         </ul>
                                     </section>
                                 )}
+
+                            </div>
+
+                            {/* Right Column: Source & Counterpoints */}
+                            <div className="space-y-8">
+                                <section>
+                                    <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-accent-secondary font-bold mb-4 flex items-center gap-2">
+                                        <span className="w-4 h-[1px] bg-accent-secondary"></span>
+                                        Source References
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {data.source.map((item, idx) => (
+                                            item.link ? (
+                                                <a
+                                                    key={idx}
+                                                    href={item.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="block bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10 hover:border-accent-secondary/30"
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
+                                                        {item.timestamp && (
+                                                            <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
+                                                        )}
+                                                    </div>
+                                                    <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
+                                                    {item.quote && (
+                                                        <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
+                                                    )}
+                                                </a>
+                                            ) : (
+                                                <div key={idx} className="bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10">
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
+                                                        {item.timestamp && (
+                                                            <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
+                                                        )}
+                                                    </div>
+                                                    <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
+                                                    {item.quote && (
+                                                        <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
+                                                    )}
+                                                </div>
+                                            )
+                                        ))}
+                                    </div>
+                                </section>
+
+                                {data.perspectives && data.perspectives.length > 0 && (
+                                    <section>
+                                        <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-orange-400 font-bold mb-4 flex items-center gap-2">
+                                            <span className="w-4 h-[1px] bg-orange-400"></span>
+                                            Main Perspectives
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {data.perspectives.map((perspective, idx) => {
+                                                const letter = String.fromCharCode(65 + idx);
+                                                // Fixed blue hue (210), varying lightness from light to dark
+                                                const hue = 35; // Pure blue
+                                                const lightness = 70 - (idx * 10) % 50; // From 75% (light) down to 30% (dark)
+                                                const borderOpacity = 0.1;
+                                                const badgeBgOpacity = 0.1;
+                                                const bgColor = `hsla(${hue}, 70%, ${lightness}%, 0.05)`;
+                                                const badgeBorderOpacity = 0.2;
+                                                const textHue = hue;
+                                                return (
+                                                    <div key={idx} style={{ backgroundColor: bgColor, borderColor: `hsla(${hue}, 70%, ${lightness}%, ${borderOpacity})` }} className="border p-4">
+                                                        <div className="flex items-start gap-2 mb-2">
+                                                            <span className="text-xs text-text-tertiary  tracking-widest p-1 border" style={{ backgroundColor: bgColor, borderColor: `hsla(${hue}, 70%, ${lightness}%, ${borderOpacity})` }}>{perspective.entity}</span>
+                                                        </div>
+                                                        <p className="leading-snug font-bold" style={{ color: `hsl(${textHue}, 70%, ${Math.min(lightness + 10, 90)}%)` }}>{perspective.claim}</p>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </section>
+                                )}
+
+
                             </div>
                         </div>
                     </div>

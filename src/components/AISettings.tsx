@@ -732,39 +732,76 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </label>
                                 <div className="grid grid-cols-2 gap-3 mb-4">
                                     <button
-                                        className={`p-4 rounded-xl border-2 transition-all text-left bg-blue-500/20 border-blue-500 cursor-default`}
+                                        onClick={() => setTempConfig({ ...tempConfig, imageProvider: 'sdxl' })}
+                                        className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                            tempConfig.imageProvider === 'sdxl' || !tempConfig.imageProvider
+                                                ? 'bg-blue-500/20 border-blue-500'
+                                                : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                        }`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <div className="w-4 h-4 rounded-full border-2 border-blue-500 flex items-center justify-center">
-                                                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                                tempConfig.imageProvider === 'sdxl' || !tempConfig.imageProvider
+                                                    ? 'border-blue-500'
+                                                    : 'border-white/30'
+                                            }`}>
+                                                {(tempConfig.imageProvider === 'sdxl' || !tempConfig.imageProvider) && (
+                                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                                )}
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-text-primary">SDXL Turbo</p>
-                                                <p className="text-xs text-text-secondary">Fast text-to-image</p>
+                                                <p className="text-xs text-text-secondary">Fast local text-to-image</p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <button
+                                        onClick={() => setTempConfig({ ...tempConfig, imageProvider: 'nvidia-flux' })}
+                                        className={`p-4 rounded-xl border-2 transition-all text-left relative overflow-hidden ${
+                                            tempConfig.imageProvider === 'nvidia-flux'
+                                                ? 'bg-blue-500/20 border-blue-500'
+                                                : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-3 relative z-10">
+                                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                                tempConfig.imageProvider === 'nvidia-flux'
+                                                    ? 'border-blue-500'
+                                                    : 'border-white/30'
+                                            }`}>
+                                                {tempConfig.imageProvider === 'nvidia-flux' && (
+                                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-text-primary">NVIDIA FLUX.2 Klein</p>
+                                                <p className="text-xs text-text-secondary">Cloud-based 4B model</p>
                                             </div>
                                         </div>
                                     </button>
                                 </div>
-                                <div className="flex items-center justify-between pt-3 border-t border-blue-500/20">
-                                    <div className="flex-1">
-                                        <label className="block text-[0.65rem] tracking-widest font-bold text-blue-400 mb-1">
-                                            Unload Model After Generation
-                                        </label>
-                                        <p className="text-[10px] text-text-secondary leading-relaxed">
-                                            SDXL uses significant VRAM. Enable to automatically unload the model after generation to free up GPU memory. Model will load on first generation request.
-                                        </p>
+                                {tempConfig.imageProvider !== 'nvidia-flux' && (
+                                    <div className="flex items-center justify-between pt-3 border-t border-blue-500/20">
+                                        <div className="flex-1">
+                                            <label className="block text-[0.65rem] tracking-widest font-bold text-blue-400 mb-1">
+                                                Unload Model After Generation
+                                            </label>
+                                            <p className="text-[10px] text-text-secondary leading-relaxed">
+                                                SDXL uses significant VRAM. Enable to automatically unload the model after generation to free up GPU memory. Model will load on first generation request.
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => setTempConfig({ ...tempConfig, autoUnloadImageModel: !tempConfig.autoUnloadImageModel })}
+                                            className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.autoUnloadImageModel !== false
+                                                ? 'bg-blue-500'
+                                                : 'bg-white/10 border border-white/20'
+                                                }`}
+                                        >
+                                            <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.autoUnloadImageModel !== false ? 'left-8' : 'left-1'
+                                                }`}></div>
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => setTempConfig({ ...tempConfig, autoUnloadImageModel: !tempConfig.autoUnloadImageModel })}
-                                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tempConfig.autoUnloadImageModel !== false
-                                            ? 'bg-blue-500'
-                                            : 'bg-white/10 border border-white/20'
-                                            }`}
-                                    >
-                                        <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${tempConfig.autoUnloadImageModel !== false ? 'left-8' : 'left-1'
-                                            }`}></div>
-                                    </button>
-                                </div>
+                                )}
                             </div>
 
                             {/* Audio Generation Section */}
