@@ -75,7 +75,8 @@ export function Signals({ onAIRequired }: { onAIRequired: () => void }) {
     signals.forEach((signal, idx) => {
       const cacheKey = signal.id || `signal-${idx}`
       if (mediaUrls[cacheKey]) {
-        images[cacheKey] = mediaUrls[cacheKey]
+        // Fix legacy URLs with /signalframe/ prefix
+        images[cacheKey] = mediaUrls[cacheKey].replace('/signalframe/', '/')
       }
     })
     return images

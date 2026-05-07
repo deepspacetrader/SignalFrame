@@ -176,7 +176,7 @@ export function MediaGenerationButtons({
       }
 
       const imageData = await imageResponse.json()
-      const imageUrl = `/signalframe/generated_images/${imageData.filename}`
+      const imageUrl = `/generated_images/${imageData.filename}`
 
       // Cache to IndexedDB via updateMediaUrls
       if (cacheKey) {

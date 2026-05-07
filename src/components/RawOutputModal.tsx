@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSituationStore } from '../state/useSituationStore'
 
 interface RawOutputModalProps {
@@ -8,31 +8,31 @@ interface RawOutputModalProps {
   title: string
 }
 
-export function RawOutputModal({ isOpen, onClose, sectionId, title }: RawOutputModalProps) {
+// Format JSON for better readability - moved outside to keep component clean and help HMR
+const formatRawOutput = (output: string) => {
+  try {
+    // Try to parse as JSON first
+    const parsed = JSON.parse(output)
+    return JSON.stringify(parsed, null, 2)
+  } catch {
+    // If not valid JSON, try to extract JSON from the string
+    const jsonMatch = output.match(/\{[\s\S]*\}/)
+    if (jsonMatch) {
+      try {
+        const parsed = JSON.parse(jsonMatch[0])
+        return JSON.stringify(parsed, null, 2)
+      } catch {
+        // If still fails, return original
+        return output
+      }
+    }
+    return output
+  }
+}
+
+export const RawOutputModal = ({ isOpen, onClose, sectionId, title }: RawOutputModalProps) => {
   const { rawOutputs, activeRawOutput } = useSituationStore()
   const rawOutput = rawOutputs[sectionId]
-
-  // Format JSON for better readability
-  const formatRawOutput = (output: string) => {
-    try {
-      // Try to parse as JSON first
-      const parsed = JSON.parse(output)
-      return JSON.stringify(parsed, null, 2)
-    } catch {
-      // If not valid JSON, try to extract JSON from the string
-      const jsonMatch = output.match(/\{[\s\S]*\}/)
-      if (jsonMatch) {
-        try {
-          const parsed = JSON.parse(jsonMatch[0])
-          return JSON.stringify(parsed, null, 2)
-        } catch {
-          // If still fails, return original
-          return output
-        }
-      }
-      return output
-    }
-  }
 
   const formattedOutput = formatRawOutput(rawOutput || '')
 

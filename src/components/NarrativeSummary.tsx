@@ -34,13 +34,15 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
   const shouldShowLoadingSpinner = !isLocalhost && hasNoData;
   const [isThinkingOpen, setIsThinkingOpen] = useState(false);
   const [narrativeImageUrl, setNarrativeImageUrl] = useState<string | null>(() => {
-    // Load cached narrative image from mediaUrls
-    return mediaUrls['narrative'] || null
+    // Load cached narrative image from mediaUrls (fix legacy /signalframe/ prefix)
+    const url = mediaUrls['narrative']
+    return url ? url.replace('/signalframe/', '/') : null
   });
 
   // Update narrative image when mediaUrls changes
   useEffect(() => {
-    setNarrativeImageUrl(mediaUrls['narrative'] || null)
+    const url = mediaUrls['narrative']
+    setNarrativeImageUrl(url ? url.replace('/signalframe/', '/') : null)
   }, [mediaUrls])
 
   const hasThinking = thinkingTrace && thinkingTrace.length > 0;

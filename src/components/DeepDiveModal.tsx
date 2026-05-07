@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Modal } from './shared/Modal'
 import { DeepDiveData, Sentiment } from '../state/useSituationStore'
 import { SectionBadge } from './shared/SectionBadge'
 import { SectionRegenerateButton } from './shared/SectionRegenerateButton'
+import { TTSButton } from './TTSButton'
 
 interface DeepDiveModalProps {
     isOpen: boolean;
@@ -26,6 +27,63 @@ const getSentimentColor = (sentiment: string) => {
         case 'very-positive': return 'var(--crit-bright-green)';
         default: return 'var(--crit-gray)';
     }
+}
+
+// Construct spoken text from deep dive data
+const constructSpeechText = (data: DeepDiveData): string => {
+    const parts: string[] = [];
+    
+    // Title and category
+    parts.push(`Deep Dive Analysis: ${data.header.title}`);
+    if (data.header.category) {
+        parts.push(`Category: ${data.header.category}`);
+    }
+    parts.push(`Sentiment: ${data.header.sentiment.replace('-', ' ')}`);
+    
+    // Briefing summary
+    if (data.header.text) {
+        parts.push(`Briefing Summary: ${data.header.text}`);
+    }
+    
+    // 5Ws Analysis
+    const fiveWsParts: string[] = [];
+    if (data.fiveWs.who?.length) {
+        fiveWsParts.push(`Who: ${data.fiveWs.who.join(', ')}`);
+    }
+    if (data.fiveWs.what) {
+        fiveWsParts.push(`What: ${data.fiveWs.what}`);
+    }
+    if (data.fiveWs.when) {
+        fiveWsParts.push(`When: ${data.fiveWs.when}`);
+    }
+    if (data.fiveWs.where) {
+        fiveWsParts.push(`Where: ${data.fiveWs.where}`);
+    }
+    if (data.fiveWs.why) {
+        fiveWsParts.push(`Why: ${data.fiveWs.why}`);
+    }
+    if (data.fiveWs.soWhat) {
+        fiveWsParts.push(`Strategic Significance: ${data.fiveWs.soWhat}`);
+    }
+    
+    if (fiveWsParts.length > 0) {
+        parts.push(`Intelligence Breakdown: ${fiveWsParts.join('. ')}`);
+    }
+    
+    // Perspectives
+    if (data.perspectives?.length) {
+        const perspectiveTexts = data.perspectives.map((p, i) => 
+            `Perspective ${String.fromCharCode(65 + i)} from ${p.entity}: ${p.claim}`
+        );
+        parts.push(`Main Perspectives: ${perspectiveTexts.join('. ')}`);
+    }
+    
+    // Watch items
+    if (data.watchNext?.length) {
+        parts.push(`Watch For: ${data.watchNext.join('. ')}`);
+    }
+    
+    return parts.join('.\n\n');
 }
 
 export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequired, regenerateDeepDive, activeSignalId }: DeepDiveModalProps) {
@@ -81,6 +139,9 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                 <span className="text-[0.55rem] sm:text-[0.6rem] text-text-tertiary uppercase tracking-widest">
                                     Generated: {new Date(data.generatedAt).toLocaleString()}
                                 </span>
+                                <div className="ml-auto">
+                                    <TTSButton text={constructSpeechText(data)} />
+                                </div>
                             </div>
 
                             <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-text-primary mb-4 leading-tight tracking-tight">
