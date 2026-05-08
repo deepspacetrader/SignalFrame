@@ -243,72 +243,10 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         )}
                                     </div>
                                 </section>
-
-                                {data.watchNext && data.watchNext.length > 0 && (
-                                    <section className="bg-accent-primary/5 border border-accent-primary/20 p-5 mt-auto">
-                                        <h3 className="text-[0.65rem] uppercase tracking-widest text-accent-primary font-bold mb-4 flex items-center gap-2">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                                            Watch For
-                                        </h3>
-                                        <ul className="space-y-2">
-                                            {(Array.isArray(data.watchNext) ? data.watchNext : []).map((item, idx) => (
-                                                <li key={idx} className="text-xs text-text-primary flex items-start gap-2">
-                                                    <span className="text-accent-primary mt-0.5">•</span>
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </section>
-                                )}
-
                             </div>
 
-                            {/* Right Column: Source & Counterpoints */}
+                            {/* Right Column: Main Perspectives */}
                             <div className="space-y-8">
-                                <section>
-                                    <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-accent-secondary font-bold mb-4 flex items-center gap-2">
-                                        <span className="w-4 h-[1px] bg-accent-secondary"></span>
-                                        Source References
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {data.source.map((item, idx) => (
-                                            item.link ? (
-                                                <a
-                                                    key={idx}
-                                                    href={item.link}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="block bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10 hover:border-accent-secondary/30"
-                                                >
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
-                                                        {item.timestamp && (
-                                                            <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
-                                                        )}
-                                                    </div>
-                                                    <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
-                                                    {item.quote && (
-                                                        <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
-                                                    )}
-                                                </a>
-                                            ) : (
-                                                <div key={idx} className="bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
-                                                        {item.timestamp && (
-                                                            <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
-                                                        )}
-                                                    </div>
-                                                    <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
-                                                    {item.quote && (
-                                                        <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
-                                                    )}
-                                                </div>
-                                            )
-                                        ))}
-                                    </div>
-                                </section>
-
                                 {data.perspectives && data.perspectives.length > 0 && (
                                     <section>
                                         <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-orange-400 font-bold mb-4 flex items-center gap-2">
@@ -338,9 +276,74 @@ export function DeepDiveModal({ isOpen, onClose, data, isGenerating, onAIRequire
                                         </div>
                                     </section>
                                 )}
-
-
                             </div>
+                        </div>
+                        
+                        {/* Single Column: Watch Next & Source References */}
+                        <div className="grid grid-cols-1 mt-6">
+
+                            {/* Watch Next */}
+                            {data.watchNext && data.watchNext.length > 0 && (
+                                <section className="bg-accent-primary/5 border border-accent-primary/20 p-5 mt-auto">
+                                    <h3 className="text-[0.65rem] uppercase tracking-widest text-accent-primary font-bold mb-4 flex items-center gap-2">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                        Watch For
+                                    </h3>
+                                    <ul className="space-y-2">
+                                        {(Array.isArray(data.watchNext) ? data.watchNext : []).map((item, idx) => (
+                                            <li key={idx} className="text-sm text-text-primary flex items-start gap-2 p-2">
+                                                <span className="text-accent-primary mt-0.5">•</span>
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            )}
+
+                            {/* Source References */}
+                            <section>
+                                <h3 className="text-[0.7rem] uppercase tracking-[0.2em] text-accent-secondary font-bold mb-4 flex items-center gap-2">
+                                    <span className="w-4 h-[1px] bg-accent-secondary"></span>
+                                    Source References
+                                </h3>
+                                <div className="space-y-3">
+                                    {data.source.map((item, idx) => (
+                                        item.link ? (
+                                            <a
+                                                key={idx}
+                                                href={item.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="block bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10 hover:border-accent-secondary/30"
+                                            >
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
+                                                    {item.timestamp && (
+                                                        <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
+                                                    )}
+                                                </div>
+                                                <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
+                                                {item.quote && (
+                                                    <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
+                                                )}
+                                            </a>
+                                        ) : (
+                                            <div key={idx} className="bg-white/5 border border-white/5 p-4 transition-all hover:bg-white/10">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="text-[0.65rem] font-bold text-accent-primary">{item.source}</span>
+                                                    {item.timestamp && (
+                                                        <span className="text-[0.55rem] text-text-tertiary uppercase">{new Date(item.timestamp).toLocaleDateString()}</span>
+                                                    )}
+                                                </div>
+                                                <h4 className="text-xs font-semibold text-text-primary mb-2 leading-tight">{item.title}</h4>
+                                                {item.quote && (
+                                                    <p className="text-xs italic text-text-secondary border-l border-white/10 pl-3 mb-2">{item.quote}</p>
+                                                )}
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+                            </section>
                         </div>
                     </div>
                 )}
