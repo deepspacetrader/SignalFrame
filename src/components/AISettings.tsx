@@ -5,10 +5,12 @@ import { useSituationStore } from '../state/useSituationStore'
 import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai/runtime/sentimentEngine'
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
 import { LMStudioService } from '../ai/runtime/lmstudio'
+import { LlamaCppService } from '../ai/runtime/llamacpp'
 
 const DEFAULT_URLS = {
     ollama: 'http://127.0.0.1:11434/api',
-    lmstudio: 'http://127.0.0.1:1234'
+    lmstudio: 'http://127.0.0.1:1234',
+    llamacpp: 'http://localhost:8080/v1'
 };
 
 export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
@@ -25,6 +27,9 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
     const [lmStudioModels, setLmStudioModels] = useState<string[]>([])
     const [lmStudioError, setLmStudioError] = useState<string | null>(null)
+
+    const [llamacppModels, setLlamacppModels] = useState<string[]>([])
+    const [llamacppError, setLlamacppError] = useState<string | null>(null)
     
     const [narrativeImageSize, setNarrativeImageSize] = useState((aiConfig as any).narrativeImageSize || 512)
     const [signalsImageSize, setSignalsImageSize] = useState((aiConfig as any).signalsImageSize || 128)
@@ -46,6 +51,18 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                     } catch (error) {
                         setLmStudioError('LM Studio is not running or not accessible');
                         setLmStudioModels([]);
+                    }
+                } else if (tempConfig.provider === 'llamacpp') {
+                    try {
+                        if (tempConfig.baseUrl) {
+                            LlamaCppService.setBaseUrl(tempConfig.baseUrl);
+                        }
+                        const models = await LlamaCppService.listModels();
+                        setLlamacppModels(models);
+                        setLlamacppError(null);
+                    } catch (error) {
+                        setLlamacppError('Llama.cpp is not running or not accessible');
+                        setLlamacppModels([]);
                     }
                 } else {
                     // Check Ollama
@@ -72,8 +89,8 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
         }
     }, [isOpen, aiConfig]);
 
-    const currentAvailableModels = tempConfig.provider === 'lmstudio' ? lmStudioModels : availableModels;
-    const currentError = tempConfig.provider === 'lmstudio' ? lmStudioError : ollamaError;
+    const currentAvailableModels = tempConfig.provider === 'lmstudio' ? lmStudioModels : (tempConfig.provider === 'llamacpp' ? llamacppModels : availableModels);
+    const currentError = tempConfig.provider === 'lmstudio' ? lmStudioError : (tempConfig.provider === 'llamacpp' ? llamacppError : ollamaError);
 
     const isModelInstalled = currentAvailableModels.length === 0 || !tempConfig.model || currentAvailableModels.some(m => {
         const normalizedInput = tempConfig.model.toLowerCase().trim();
@@ -84,7 +101,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     });
 
     const handleCopy = () => {
-        if (tempConfig.provider === 'lmstudio') {
+        if (tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp') {
             navigator.clipboard.writeText(tempConfig.model);
         } else {
             navigator.clipboard.writeText(`ollama pull ${tempConfig.model}`);
@@ -183,10 +200,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </svg>
                                 <div>
                                     <h4 className="text-sm text-red-400 font-semibold mb-1">
-                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio Not Detected' : 'Ollama Not Detected'}
+                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio Not Detected' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp Not Detected' : 'Ollama Not Detected')}
                                     </h4>
                                     <p className="text-xs text-red-300">
-                                        SignalFrame requires {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'} to be running on your local machine
+                                        SignalFrame requires {tempConfig.provider === 'lmstudio' ? 'LM Studio' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp' : 'Ollama')} to be running on your local machine
                                     </p>
                                 </div>
                             </div>
@@ -388,12 +405,14 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     <line x1="12" y1="8" x2="12" y2="12" />
                                     <line x1="12" y1="16" x2="12.01" y2="16" />
                                 </svg>
-                                No AI models detected in {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'}
+                                No AI models detected in {tempConfig.provider === 'lmstudio' ? 'LM Studio' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp' : 'Ollama')}
                             </p>
                             <p className="text-xs text-yellow-300 mt-2">
                                 {tempConfig.provider === 'lmstudio' 
                                     ? 'Load a model in LM Studio and ensure the server is running on port 1234.'
-                                    : 'Install models using: ollama pull <model-name>'}
+                                    : (tempConfig.provider === 'llamacpp' 
+                                        ? 'Ensure Llama.cpp server is running.' 
+                                        : 'Install models using: ollama pull <model-name>')}
                             </p>
                         </div>
                     )}
@@ -404,7 +423,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                             <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-xl mb-3">
                             🧠 AI Provider
                             </label>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-3 gap-3">
                                 <button
                                     onClick={() => setTempConfig({ 
                                         ...tempConfig, 
@@ -461,6 +480,34 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         </div>
                                     </div>
                                 </button>
+                                <button
+                                    onClick={() => setTempConfig({ 
+                                        ...tempConfig, 
+                                        provider: 'llamacpp',
+                                        baseUrl: DEFAULT_URLS.llamacpp
+                                    })}
+                                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                        tempConfig.provider === 'llamacpp'
+                                            ? 'bg-accent-primary/20 border-accent-primary'
+                                            : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                            tempConfig.provider === 'llamacpp'
+                                                ? 'border-accent-primary'
+                                                : 'border-white/30'
+                                        }`}>
+                                            {tempConfig.provider === 'llamacpp' && (
+                                                <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-text-primary">Llama.cpp</p>
+                                            <p className="text-xs text-text-secondary">Fast CPU/GPU LLM runner</p>
+                                        </div>
+                                    </div>
+                                </button>
                             </div>
                         </div>
 
@@ -476,7 +523,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     </span>
                                 </div>
                                 <span className="text-xs font-mono text-text-primary">
-                                    {tempConfig.baseUrl || (tempConfig.provider === 'lmstudio' ? DEFAULT_URLS.lmstudio : DEFAULT_URLS.ollama)}
+                                    {tempConfig.baseUrl || (tempConfig.provider === 'lmstudio' ? DEFAULT_URLS.lmstudio : (tempConfig.provider === 'llamacpp' ? DEFAULT_URLS.llamacpp : DEFAULT_URLS.ollama))}
                                 </span>
                             </div>
                         </div>
@@ -492,12 +539,12 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         </div>
                                         <div className="absolute left-full top-0 ml-2 w-64 p-3 bg-bg-darker border border-white/20 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
                                             <p className="text-[11px] text-text-primary leading-relaxed mb-3">
-                                                {tempConfig.provider === 'lmstudio'
-                                                    ? 'The model ID loaded in LM Studio. Use the model identifier shown in LM Studio (e.g., "nvidia/nemotron-3-nano-4b").'
+                                                {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp'
+                                                    ? 'The model ID loaded in the server. Use the model identifier (e.g., "nvidia/nemotron-3-nano-4b" or "default").'
                                                     : 'Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.'
                                                 }
                                             </p>
-                                            {tempConfig.provider !== 'lmstudio' && (
+                                            {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
                                                 <div className="border-t border-white/10 pt-2">
                                                     <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
                                                     <div className="space-y-1">
@@ -529,7 +576,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     value={tempConfig.model}
                                     onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
                                     className="w-full bg-white/5 border border-white/10 p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
-                                    placeholder={tempConfig.provider === 'lmstudio' ? 'nvidia/nemotron-3-nano-4b' : 'llama3.2, qwen3:8b, deepseek-r1:8b'}
+                                    placeholder={tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'default, nvidia/nemotron-3-nano-4b' : 'llama3.2, qwen3:8b, deepseek-r1:8b'}
                                 />
                             </div>
                         </div>
@@ -541,12 +588,12 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     {!tempConfig.model ? 'Select a model' : 'AI model not detected'}
                                 </p>
                                 <div className="space-y-2">
-                                    {tempConfig.provider !== 'lmstudio' && (
+                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
                                         <p className="text-[10px] text-text-secondary font-bold">
                                             You can view / download models from Ollama using the terminal:
                                         </p>
                                     )}
-                                    {tempConfig.provider !== 'lmstudio' && (
+                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
                                         <div className="relative group/copy">
                                             <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
                                                 ollama list
@@ -569,7 +616,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     )}
 
                                     <p className="text-[10px] text-text-secondary font-bold pt-2">
-                                        {tempConfig.provider === 'lmstudio' ? 'Available models:' : 'or select from these installed models:'}
+                                        {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'Available models:' : 'or select from these installed models:'}
                                     </p>
                                     <div className="flex flex-wrap gap-2">
                                         {currentAvailableModels.map(m => (

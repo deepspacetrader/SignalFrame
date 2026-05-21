@@ -1,16 +1,17 @@
-
 import { OllamaService } from './ollama';
 import { LMStudioService, LMStudioMessage } from './lmstudio';
+import { LlamaCppService, LlamaCppMessage } from './llamacpp';
 import { RawSignal } from '../../services/feedIngest';
 import type { ForeignRelation, AiConfig, DeepDiveData, NarrativePredictionsData, SourceRef, Signal, SituationState } from '../../state/useSituationStore';
 import { StorageService } from '../../services/db';
 import { getSentimentProfile, generateCustomSentimentGuidelines } from './sentimentEngine';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { ragService } from '../../services/ragService';
 
 // Service wrapper functions that route to the appropriate backend based on provider
 function getOptionsForProvider(aiConfig: AiConfig, signal?: AbortSignal) {
-  if (aiConfig.provider === 'lmstudio') {
+  if (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp') {
     return {
       max_tokens: aiConfig.maxTokens || aiConfig.numPredict || 16384,
       temperature: 0,
@@ -35,11 +36,11 @@ async function generateWithProvider(
   systemPrompt?: string
 ): Promise<string> {
   const options = getOptionsForProvider(aiConfig);
-  
+
   if (aiConfig.provider === 'lmstudio') {
     // For LM Studio with limited context, use simpler prompts for JSON
     let finalPrompt = prompt;
-    
+
     // If JSON format and prompt is very long, truncate aggressively
     if (format === 'json' && prompt.length > 2000) {
       // Keep only essential parts - instructions and minimal context
@@ -47,22 +48,44 @@ async function generateWithProvider(
       const essentialLines = lines.slice(0, 50); // Keep first 50 lines
       finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
     }
-    
+
     // For JSON format, add strong instruction to the system prompt
-    const finalSystemPrompt = format === 'json' 
+    const finalSystemPrompt = format === 'json'
       ? `${systemPrompt || ''}\n\nCRITICAL: You MUST respond with ONLY valid JSON. No markdown, no explanations, no text outside the JSON.`.trim()
       : systemPrompt;
-    
+
     const result = await LMStudioService.generate(aiConfig.model, finalPrompt, finalSystemPrompt, options);
-    
+
     // If empty result for JSON, log warning
     if (format === 'json' && (!result || result.trim() === '')) {
       console.warn('LM Studio returned empty response for JSON request. Context may be insufficient.');
     }
-    
+
     return result;
   }
-  
+
+  if (aiConfig.provider === 'llamacpp') {
+    let finalPrompt = prompt;
+
+    if (format === 'json' && prompt.length > 2000) {
+      const lines = prompt.split('\n');
+      const essentialLines = lines.slice(0, 50);
+      finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
+    }
+
+    const finalSystemPrompt = format === 'json'
+      ? `${systemPrompt || ''}\n\nCRITICAL: You MUST respond with ONLY valid JSON. No markdown, no explanations, no text outside the JSON.`.trim()
+      : systemPrompt;
+
+    const result = await LlamaCppService.generate(aiConfig.model, finalPrompt, finalSystemPrompt, format, options);
+
+    if (format === 'json' && (!result || result.trim() === '')) {
+      console.warn('Llama.cpp returned empty response for JSON request.');
+    }
+
+    return result;
+  }
+
   return OllamaService.generate(aiConfig.model, prompt, format, options);
 }
 
@@ -81,6 +104,10 @@ async function streamGenerateWithProvider(
     return;
   }
 
+  if (aiConfig.provider === 'llamacpp') {
+    return LlamaCppService.streamGenerate(aiConfig.model, prompt, onChunk, systemPrompt, options);
+  }
+
   return OllamaService.streamGenerate(aiConfig.model, prompt, onChunk, options);
 }
 
@@ -90,11 +117,15 @@ async function generateWithThinkingWithProvider(
   systemPrompt?: string
 ): Promise<{ response: string; thinking?: string }> {
   const options = getOptionsForProvider(aiConfig);
-  
+
   if (aiConfig.provider === 'lmstudio') {
     return LMStudioService.generateWithThinking(aiConfig.model, prompt, systemPrompt, options);
   }
-  
+
+  if (aiConfig.provider === 'llamacpp') {
+    return LlamaCppService.generateWithThinking(aiConfig.model, prompt, systemPrompt, options);
+  }
+
   return OllamaService.generateWithThinking(aiConfig.model, prompt, options);
 }
 
@@ -115,6 +146,10 @@ async function streamGenerateWithThinkingWithProvider(
     }
     onContent(result.response);
     return;
+  }
+
+  if (aiConfig.provider === 'llamacpp') {
+    return LlamaCppService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, systemPrompt, options);
   }
 
   return OllamaService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, options);
@@ -139,6 +174,14 @@ export async function chatWithProvider(
     return;
   }
 
+  if (aiConfig.provider === 'llamacpp') {
+    const lmMessages: LlamaCppMessage[] = messages.map(m => ({
+      role: m.role as 'system' | 'user' | 'assistant',
+      content: m.content
+    }));
+    return LlamaCppService.streamChat(aiConfig.model, lmMessages, onChunk, options);
+  }
+
   return OllamaService.chat(aiConfig.model, messages, onChunk, options);
 }
 
@@ -148,7 +191,8 @@ const CATEGORY_MAP: Record<string, string> = {
   'insights': 'hidden insights',
   'map': 'map coordinates',
   'relations': 'relation trackers',
-  'bigPicture': 'grand strategy analysis'
+  'bigPicture': 'grand strategy analysis',
+  'verySimpleSummary': 'very simple summary'
 };
 
 
@@ -207,7 +251,7 @@ class CancellationTokenManager {
 // Global instance
 export const cancellationTokenManager = new CancellationTokenManager();
 
-async function getRecentSignalsForNovelty(days: number = 7): Promise<string[]> {
+async function getRecentSignalsForNovelty(days: number = 30): Promise<string[]> {
   try {
     const dates = await StorageService.getAllDates();
     const recentDates = dates.slice(-days).reverse();
@@ -244,8 +288,8 @@ async function getHistoricalRelationsContext(foreignRelations: ForeignRelation[]
     const dates = await StorageService.getAllDates();
     let historicalContext = '';
 
-    // Get the last 7 days of historical data for context
-    const recentDates = dates.slice(-7).reverse();
+    // Get the last 30 days of historical data for context
+    const recentDates = dates.slice(-30).reverse();
 
     for (const date of recentDates) {
       const analysis = await StorageService.getAnalysis(date);
@@ -272,6 +316,127 @@ async function getHistoricalRelationsContext(foreignRelations: ForeignRelation[]
   }
 }
 
+async function getRagContext(feeds: RawSignal[]): Promise<string> {
+  try {
+    // Check if RAG service is available
+    const healthy = await ragService.isHealthy();
+    if (!healthy) {
+      console.warn('RAG Memory service is not reachable at http://localhost:3333');
+      return '';
+    }
+
+    // Use top 5 feed headlines as search query for context
+    const query = feeds.slice(0, 5).map(f => f.title).join(' ');
+    console.log(`🔍 Querying RAG Memory for historical correlation: "${query.substring(0, 50)}..."`);
+
+    const results = await ragService.smartSearch(query, 8);
+    if (results.length === 0) {
+      console.log('ℹ️ No relevant historical context found in RAG Memory.');
+      return '';
+    }
+
+    console.log(`✅ Found ${results.length} historical matches in RAG Memory.`);
+    return `### HISTORICAL CORRELATION (from RAG Memory):\n` +
+      results.map(r => `- ${r.content}`).join('\n') + '\n\n';
+  } catch (e) {
+    console.error('Error fetching RAG context:', e);
+    return '';
+  }
+}
+
+async function safeStoreInRag(content: string, metadata: Record<string, any>) {
+  try {
+    const healthy = await ragService.isHealthy();
+    if (!healthy) return;
+
+    // Check if content is substantial enough to store
+    if (!content || content.length < 50) return;
+
+    await ragService.storeSignal(content, {
+      ...metadata,
+      date: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error(`Failed to store ${metadata.type || 'data'} in RAG:`, e);
+  }
+}
+
+/**
+ * Background sync function to store generated intelligence in RAG Memory.
+ * This should be called after the main scan completes to avoid blocking the UI.
+ */
+export async function syncIntelligenceToRag(state: Partial<SituationState>) {
+  try {
+    const healthy = await ragService.isHealthy();
+    if (!healthy) return;
+
+    console.log('🔄 Background Sync: Storing intelligence in RAG Memory...');
+
+    // 1. Store Signals
+    if (state.signals && state.signals.length > 0) {
+      console.log(`💾 RAG Sync: Storing ${state.signals.length} signals...`);
+      for (const signal of state.signals) {
+        // We use safeStoreInRag to handle health/length checks
+        await safeStoreInRag(signal.text, {
+          id: signal.id,
+          title: signal.title,
+          sentiment: signal.sentiment,
+          category: signal.category,
+          type: 'signal'
+        });
+      }
+    }
+
+    // 2. Store Narrative
+    if (state.narrative) {
+      console.log('💾 RAG Sync: Storing Narrative...');
+      await safeStoreInRag(state.narrative, {
+        type: 'narrative',
+        category: 'Intelligence Briefing'
+      });
+    }
+
+    // 3. Store Insights
+    if (state.insights && state.insights.length > 0) {
+      console.log(`💾 RAG Sync: Storing ${state.insights.length} Insights...`);
+      for (const insight of state.insights) {
+        await safeStoreInRag(insight.text, {
+          type: 'insight',
+          sentiment: insight.sentiment,
+          category: 'Deep Analysis'
+        });
+      }
+    }
+
+    // 4. Store Big Picture
+    if (state.bigPicture?.summary) {
+      console.log('💾 RAG Sync: Storing Big Picture...');
+      await safeStoreInRag(state.bigPicture.summary, {
+        type: 'big-picture',
+        category: 'Grand Strategy Analysis'
+      });
+    }
+
+    // 5. Store Predictions (Watch For)
+    if (state.watchFor?.sections && state.watchFor.sections.length > 0) {
+      console.log(`💾 RAG Sync: Storing ${state.watchFor.sections.length} Predictions...`);
+      for (const section of state.watchFor.sections) {
+        const predictionText = `TOPIC: ${section.title}\nSENTIMENT: ${section.sentiment}\nPREDICTIONS:\n${section.predictions.map((p: string) => `- ${p}`).join('\n')}`;
+        await safeStoreInRag(predictionText, {
+          type: 'prediction',
+          topic: section.title,
+          sentiment: section.sentiment,
+          category: 'Future Trajectory Analysis'
+        });
+      }
+    }
+
+    console.log('✅ RAG Sync Complete.');
+  } catch (error) {
+    console.error('RAG Background Sync failed:', error);
+  }
+}
+
 export async function processSituation(
   feeds: RawSignal[],
   foreignRelations: ForeignRelation[] = [],
@@ -289,11 +454,13 @@ export async function processSituation(
   const controller = cancellationTokenManager.createController(jobId);
 
   try {
-    // Use context limit based on aiConfig.numCtx for LM Studio (default 60000 for Ollama)
-    const maxContextChars = aiConfig.provider === 'lmstudio' 
+    // Use context limit based on aiConfig.numCtx for LM Studio and llamacpp (default 60000 for Ollama)
+    const maxContextChars = (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp')
       ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)  // ~2 chars per token, cap at 15000
       : 60000;
-    const context = generateContext(feeds, maxContextChars);
+    // Fetch RAG Context for historical correlation
+    const ragContext = await getRagContext(feeds);
+    const context = generateContext(feeds, maxContextChars, ragContext);
     const feedIndex = generateFeedIndex(feeds);
 
     try {
@@ -320,8 +487,8 @@ export async function processSituation(
           }
         );
       } else if (onNarrativeChunk && aiConfig.provider !== 'lmstudio') {
-        // Use streaming for Ollama only - LM Studio has streaming format issues
-        console.log('[Narrative] Using streaming mode for Ollama');
+        // Use streaming for Ollama and llamacpp only - LM Studio has streaming format issues
+        console.log(`[Narrative] Using streaming mode for ${aiConfig.provider}`);
         await streamGenerateWithProvider(aiConfig, narrativePrompt, (chunk) => {
           narrative += chunk;
           onNarrativeChunk(narrative);
@@ -336,25 +503,25 @@ export async function processSituation(
 
       onSectionComplete?.('narrative');
       onProgress?.(`Generating ${CATEGORY_MAP.signals}...`);
-      const recentSignals = await getRecentSignalsForNovelty(7);
+      const recentSignals = await getRecentSignalsForNovelty(30);
       const signalsRaw = await generateWithProvider(aiConfig, generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig), 'json');
-      
+
       // Debug: Log raw AI output
       // console.log('=== RAW SIGNALS OUTPUT ===');
       // console.log('Raw string:', signalsRaw);
-      
+
       const parsedJson = parseJsonArray(signalsRaw);
       // console.log('Parsed JSON:', JSON.stringify(parsedJson, null, 2));
-      
+
       const parsedSignals = applyNoveltyScores(finalizeSignals(parsedJson, feeds), recentSignals);
-      console.log('Final processed signals:', JSON.stringify(parsedSignals.map(s => ({ 
-        title: s.title, 
-        text: s.text?.substring(0, 50), 
+      console.log('Final processed signals:', JSON.stringify(parsedSignals.map(s => ({
+        title: s.title,
+        text: s.text?.substring(0, 50),
         sentiment: s.sentiment,
-        sourceCount: s.source?.length 
+        sourceCount: s.source?.length
       })), null, 2));
       console.log('===========================');
-      
+
       const signalsText = parsedSignals.map((s: any) => `- ${s.text} [Sentiment: ${s.sentiment}]`).join('\n');
 
       onSectionComplete?.('signals');
@@ -362,10 +529,6 @@ export async function processSituation(
       const insightsRaw = await generateWithProvider(aiConfig, generateInsightsPrompt(context, feedIndex, signalsText, parsedSignals, aiConfig), 'json');
 
       onSectionComplete?.('insights');
-      onProgress?.(`Triangulating ${CATEGORY_MAP.map}...`);
-      const mapPointsRaw = await generateWithProvider(aiConfig, generateMapPointsPrompt(context, signalsText, aiConfig), 'json');
-
-      onSectionComplete?.('map');
       onProgress?.(`Updating ${CATEGORY_MAP.relations}...`);
       const historicalContext = await getHistoricalRelationsContext(foreignRelations);
       const relationsRaw = await generateWithProvider(aiConfig, generateRelationsPrompt(context, foreignRelations, narrative, parsedSignals, finalizeInsights(parseJsonArray(insightsRaw)), bigPicture, historicalContext, aiConfig), 'json');
@@ -377,13 +540,12 @@ export async function processSituation(
         thinkingTrace: thinkingTrace.trim(),
         signals: parsedSignals,
         insights: finalizeInsights(parseJsonArray(insightsRaw), feeds),
-        mapPoints: finalizeMapPoints(parseJsonArray(mapPointsRaw), parsedSignals),
+        mapPoints: [], // Do not automatically generate map points during full scan
         foreignRelations: finalizeRelations(parseJsonArray(relationsRaw), foreignRelations),
         rawOutputs: {
           narrative: narrative,
           signals: signalsRaw,
           insights: insightsRaw,
-          map: mapPointsRaw,
           relations: relationsRaw
         }
       };
@@ -484,8 +646,10 @@ ${context}
       summary = await generateWithProvider(aiConfig, bigPicturePrompt);
     }
 
+    const finalBigPicture = finalizeNarrative(summary);
+
     return {
-      summary: finalizeNarrative(summary),
+      summary: finalBigPicture,
       timeline: timeline
     };
 
@@ -545,24 +709,24 @@ function generateDeepDivePrompt(signal: Signal, feedsSubset: RawSignal[], dateSt
   // Use aggressive truncation to stay under 9,000 byte limit
   const maxContentLength = 1200;
   const maxTotalChars = 12000;
-  
+
   let feedContent = '';
   for (const f of feedsSubset) {
     const sourceTag = `[${f.source}]`;
     const titleTag = f.title ? `${f.title}. ` : '';
-    
+
     let content = f.content || '';
     if (content.length > maxContentLength) {
       content = content.substring(0, maxContentLength) + '... [truncated]';
     }
-    
+
     const itemText = `${sourceTag} ${titleTag}${content}\n\n`;
-    
+
     if ((feedContent.length + itemText.length) > maxTotalChars) {
       feedContent += `... [Further feeds omitted due to context limit]`;
       break;
     }
-    
+
     feedContent += itemText;
   }
 
@@ -644,75 +808,75 @@ PERSPECTIVES GUIDELINES:
 - Each perspective should have a clear, well-defined stance on the situation
 - Include relevant sources that support each perspective`;
 
-/*
-{
-  "signalId": "sig_872a24e9",
-  "header": {
-    "title": "Friendly Fire Incident Grounds US Fleet in Kuwait",
-    "text": "Multiple reports confirm six US F-15 fighter jets were 'mistakenly shot down' by air defenses, with crews recovering safely but raising questions about regional radar safety protocols during the conflict.",
-    "sentiment": "very-negative",
-    "deltaType": "escalation",
-    "category": "Other"
-  },
-  "fiveWs": {
-    "who": ["US military", "Kuwaiti air defenses"],
-    "what": "Six US F-15 fighter jets were mistakenly shot down by Kuwaiti air defenses during a military operation.",
-    "where": "Kuwait",
-    "when": "2026-03-02",
-    "why": "The incident raises concerns about radar safety protocols and potential misidentification of friendly aircraft during the conflict.",
-    "soWhat": "The friendly fire incident could impact US military operations in the region and prompt a review of air defense systems."
-  },
-  "source": [
-    {
-      "feedId": "41",
-      "source": "NY Times World",
-      "title": "3 U.S. Planes Are Shot Down in 'Friendly Fire' in Kuwait, U.S. Military Says",
-      "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000",
-      "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
+  /*
+  {
+    "signalId": "sig_872a24e9",
+    "header": {
+      "title": "Friendly Fire Incident Grounds US Fleet in Kuwait",
+      "text": "Multiple reports confirm six US F-15 fighter jets were 'mistakenly shot down' by air defenses, with crews recovering safely but raising questions about regional radar safety protocols during the conflict.",
+      "sentiment": "very-negative",
+      "deltaType": "escalation",
+      "category": "Other"
     },
-    {
-      "feedId": "20",
-      "source": "Al Jazeera",
-      "title": "Three US fighter jets 'mistakenly' shot down over Kuwait",
-      "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000",
-      "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
-    }
-  ],
-  "perspectives": [
-    {
-      "entity": "US Military Command",
-      "claim": "The jets were mistakenly shot down by Kuwaiti air defenses due to a radar identification error during the operation.",
-      "sources": [
-        {
-          "feedId": "41",
-          "source": "NY Times World",
-          "title": "3 U.S. Planes Are Shot Down in 'Friendly Fire' in Kuwait, U.S. Military Says",
-          "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000"
-        }
-      ]
+    "fiveWs": {
+      "who": ["US military", "Kuwaiti air defenses"],
+      "what": "Six US F-15 fighter jets were mistakenly shot down by Kuwaiti air defenses during a military operation.",
+      "where": "Kuwait",
+      "when": "2026-03-02",
+      "why": "The incident raises concerns about radar safety protocols and potential misidentification of friendly aircraft during the conflict.",
+      "soWhat": "The friendly fire incident could impact US military operations in the region and prompt a review of air defense systems."
     },
-    {
-      "entity": "Kuwaiti Officials",
-      "claim": "We are conducting a thorough investigation to determine the exact cause of the incident and prevent future occurrences.",
-      "sources": [
-        {
-          "feedId": "20",
-          "source": "Al Jazeera",
-          "title": "Three US fighter jets 'mistakenly' shot down over Kuwait",
-          "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000"
-        }
-      ]
-    }
-  ],
-  "watchNext": [
-    "US-Israel war on Iran – live updates",
-    "What we know so far on day three of the Iran war",
-    "Qatar halts natural gas production after Iranian attacks",
-    "Gas prices soar as QatarEnergy halts LNG production after Iran attacks",
-    "Spain denies US permission to use jointly operated bases to attack Iran"
-  ]
-}
-*/
+    "source": [
+      {
+        "feedId": "41",
+        "source": "NY Times World",
+        "title": "3 U.S. Planes Are Shot Down in 'Friendly Fire' in Kuwait, U.S. Military Says",
+        "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000",
+        "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
+      },
+      {
+        "feedId": "20",
+        "source": "Al Jazeera",
+        "title": "Three US fighter jets 'mistakenly' shot down over Kuwait",
+        "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000",
+        "quote": "CENTCOM says three fighter jets 'mistakenly shot down'."
+      }
+    ],
+    "perspectives": [
+      {
+        "entity": "US Military Command",
+        "claim": "The jets were mistakenly shot down by Kuwaiti air defenses due to a radar identification error during the operation.",
+        "sources": [
+          {
+            "feedId": "41",
+            "source": "NY Times World",
+            "title": "3 U.S. Planes Are Shot Down in 'Friendly Fire' in Kuwait, U.S. Military Says",
+            "timestamp": "Mon, 02 Mar 2026 12:38:02 +0000"
+          }
+        ]
+      },
+      {
+        "entity": "Kuwaiti Officials",
+        "claim": "We are conducting a thorough investigation to determine the exact cause of the incident and prevent future occurrences.",
+        "sources": [
+          {
+            "feedId": "20",
+            "source": "Al Jazeera",
+            "title": "Three US fighter jets 'mistakenly' shot down over Kuwait",
+            "timestamp": "Mon, 02 Mar 2026 14:51:21 +0000"
+          }
+        ]
+      }
+    ],
+    "watchNext": [
+      "US-Israel war on Iran – live updates",
+      "What we know so far on day three of the Iran war",
+      "Qatar halts natural gas production after Iranian attacks",
+      "Gas prices soar as QatarEnergy halts LNG production after Iran attacks",
+      "Spain denies US permission to use jointly operated bases to attack Iran"
+    ]
+  }
+  */
 
 
 
@@ -883,20 +1047,20 @@ export async function generateDeepDive(
   }));
 
   const prompt = generateDeepDivePrompt(signal, relevantFeeds, dateStr, aiConfig, feedIndex);
-  
+
   // Convert Zod schema to JSON schema (disabled for now due to compatibility issues)
   // const deepDiveJsonSchema = zodToJsonSchema(DeepDiveSchema as any);
   // console.log('JSON Schema being sent to Ollama:', JSON.stringify(deepDiveJsonSchema, null, 2));
-  
+
   // Check if prompt is too large for context window
   const promptSize = new Blob([prompt]).size;
   const contextWindow = aiConfig.numCtx || 12000;
   const maxPromptSize = contextWindow * 0.75; // Use 75% of context window for safety
-  
+
   if (promptSize > maxPromptSize) {
     console.warn(`DeepDive prompt size (${promptSize} bytes) exceeds safe limit (${maxPromptSize} bytes). May cause empty responses.`);
   }
-  
+
   // Add detailed debugging
   // console.log('=== DeepDive Debug Info ===');
   // console.log('Model:', aiConfig.model);
@@ -906,11 +1070,11 @@ export async function generateDeepDive(
   // console.log('Prompt preview (first 300 chars):', prompt?.substring(0, 300) + '...');
   // console.log('Using regular JSON generation with Zod validation');
   // console.log('==============================');
-  
+
   let raw: string = '';
   let retryCount = 0;
   const maxRetries = 2;
-  
+
   while (retryCount < maxRetries) {
     try {
       // First attempt without format parameter (some models don't support it well)
@@ -923,7 +1087,7 @@ export async function generateDeepDive(
       break; // Success, exit retry loop
     } catch (error) {
       retryCount++;
-      
+
       if (retryCount >= maxRetries) {
         raw = ''; // Final failure
       } else {
@@ -932,13 +1096,13 @@ export async function generateDeepDive(
       }
     }
   }
-  
+
   // Parse and validate with Zod
   try {
     // console.log('Raw response from Ollama:', raw);
     // console.log('Raw response type:', typeof raw);
     // console.log('Raw response length:', raw?.length);
-    
+
     // If we have an empty response, provide the standard fallback DeepDive
     if (!raw || raw.trim() === '') {
       console.warn('Empty response from both structured and regular JSON, providing fallback DeepDive');
@@ -965,15 +1129,15 @@ export async function generateDeepDive(
         watchNext: []
       };
     }
-    
+
     const parsedData = JSON.parse(raw);
     // console.log('Parsed JSON data:', parsedData);
-    
+
     // Check if we're using fallback (regular JSON) or structured format
-    const isFallback = raw === '' || 
-                      (parsedData && Object.keys(parsedData).length === 0) || 
-                      (parsedData && parsedData.error && parsedData.error.includes('Internal Server Error'));
-    
+    const isFallback = raw === '' ||
+      (parsedData && Object.keys(parsedData).length === 0) ||
+      (parsedData && parsedData.error && parsedData.error.includes('Internal Server Error'));
+
     if (isFallback) {
       console.log('Using fallback parsing without Zod validation');
       // Use the original parsing logic for fallback
@@ -981,7 +1145,7 @@ export async function generateDeepDive(
       if (!fallbackParsed.success) {
         throw new Error(fallbackParsed.error || 'Fallback parsing failed');
       }
-      
+
       const obj = fallbackParsed.data;
       return {
         signalId: signal.id || '',
@@ -1007,10 +1171,10 @@ export async function generateDeepDive(
         watchNext: obj.watchNext || []
       };
     }
-    
+
     const validatedData = DeepDiveSchema.parse(parsedData);
     // console.log('Validated data:', validatedData);
-    
+
     // Convert to DeepDiveData format
     return {
       signalId: validatedData.signalId || signal.id || '',
@@ -1024,8 +1188,8 @@ export async function generateDeepDive(
       },
       fiveWs: {
         ...validatedData.fiveWs,
-        where: Array.isArray(validatedData.fiveWs.where) 
-          ? validatedData.fiveWs.where.join(', ') 
+        where: Array.isArray(validatedData.fiveWs.where)
+          ? validatedData.fiveWs.where.join(', ')
           : validatedData.fiveWs.where
       },
       source: validatedData.source.map(s => {
@@ -1054,7 +1218,7 @@ export async function generateDeepDive(
   } catch (error) {
     console.error('DeepDive Zod validation failed:', error);
     console.log('Raw response that failed:', raw);
-    
+
     // If validation fails, try to provide a fallback
     if (!raw || raw.trim() === '') {
       console.warn('Empty response from AI, providing fallback DeepDive');
@@ -1081,7 +1245,7 @@ export async function generateDeepDive(
         watchNext: []
       };
     }
-    
+
     throw new Error(`Deep Dive validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
@@ -1092,11 +1256,11 @@ export async function generateNarrativePredictions(
   aiConfig: AiConfig
 ): Promise<NarrativePredictionsData> {
   const prompt = generateNarrativePredictionsPrompt(narrative, aiConfig);
-  
+
   let raw: string = '';
   let retryCount = 0;
   const maxRetries = 2;
-  
+
   while (retryCount < maxRetries) {
     try {
       // First attempt without format parameter
@@ -1110,7 +1274,7 @@ export async function generateNarrativePredictions(
     } catch (error) {
       console.error(`Narrative service error on attempt ${retryCount + 1}:`, error);
       retryCount++;
-      
+
       if (retryCount >= maxRetries) {
         raw = ''; // Final failure
       } else {
@@ -1119,7 +1283,7 @@ export async function generateNarrativePredictions(
       }
     }
   }
-  
+
   // If we have an empty response, provide a standard fallback
   if (!raw || raw.trim() === '') {
     console.warn('Empty response from narrative predictions, providing fallback');
@@ -1134,19 +1298,25 @@ export async function generateNarrativePredictions(
       ]
     };
   }
-  
+
   const parsed = parseJsonObjectWithDetection(raw);
   if (!parsed.success) {
     console.error('Narrative Predictions parsing failed:', parsed.error);
     throw new Error(parsed.error || 'Watch For JSON parsing error');
   }
 
-  const obj: any = parsed.data;
-  
-  return {
-    generatedAt: new Date().toISOString(),
-    sections: obj.sections || []
-  };
+  return parsed.data;
+}
+
+function generateVerySimpleSummaryPrompt(narrative: string): string {
+  return `TASK: Create an extremely simple summary of the following narrative. Use simple words and short sentences. (can be grammatically incorrect just to save tokens)
+Maximum 50 words total. Focus on the main action or key point only.
+
+EXAMPLES:
+Input: "Indonesia has conditionally lifted its ban on xAI's Grok chatbot following similar moves by Malaysia and the Philippines."
+Output: "Indonesia unbans Grok."
+
+NARRATIVE TO SUMMARIZE:\n\n${narrative}\n\nProvide only the ultra-condensed summary, nothing else.`;
 }
 
 function generateNarrativePredictionsPrompt(narrative: string, aiConfig?: AiConfig): string {
@@ -1200,16 +1370,16 @@ Current Narrative:\\n\\n${narrative}`;
  * Constructs the intelligence context from raw signals.
  * Handles enriched full-article crawls with smart truncation to fit within AI context windows.
  */
-function generateContext(feeds: RawSignal[], maxTotalChars: number = 60000) {
+function generateContext(feeds: RawSignal[], maxTotalChars: number = 60000, ragContext: string = '') {
   if (!feeds || feeds.length === 0) return 'No news data available for the selected period.';
+
+  let fullContext = ragContext; // Start with historical context from RAG
 
   const grouped = feeds.reduce((acc, f) => {
     if (!acc[f.category]) acc[f.category] = [];
     acc[f.category].push(f);
     return acc;
   }, {} as Record<string, RawSignal[]>);
-
-  let fullContext = '';
   const charLimitPerArticle = feeds.length > 20 ? 1000 : 3000; // Shrink individual context if we have many articles
 
   for (const [category, items] of Object.entries(grouped)) {
@@ -1845,7 +2015,7 @@ function calculateTextSimilarity(text1: string, text2: string): number {
 function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
   // console.log('=== FINALIZE SIGNALS ===');
   // console.log('Input raw data sample:', JSON.stringify(raw[0], null, 2));
-  
+
   // Check if the raw data contains actual error objects (not signal objects)
   const hasError = raw.some(item =>
     typeof item === 'object' &&
@@ -1911,21 +2081,21 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
     const category = normalizeCategory(s.category);
     const deltaType = normalizeDeltaType(s.deltaType);
     let source = normalizeSource(s.source, feeds);
-    
+
     // Fallback: Auto-assign sources based on text similarity if AI didn't provide them
     if (!source || source.length === 0) {
       // console.log(`No sources provided for signal "${title}", attempting auto-assignment...`);
       const signalText = `${title || ''} ${text || ''}`.toLowerCase();
       // console.log(`Signal text for matching: "${signalText.substring(0, 80)}..."`);
-      
+
       const scoredFeeds = feeds.map((f, idx) => {
         const feedText = `${f.title || ''} ${f.content || ''}`.toLowerCase();
         const score = calculateTextSimilarity(signalText, feedText);
         return { feed: f, idx, score };
       }).sort((a, b) => b.score - a.score);
-      
+
       // console.log(`Top 3 matches:`, scoredFeeds.slice(0, 3).map(s => ({ title: s.feed.title?.substring(0, 40), score: s.score.toFixed(2) })));
-      
+
       const viableMatches = scoredFeeds.filter(s => s.score > 0.15);
       if (viableMatches.length > 0) {
         const topMatch = viableMatches[0];
@@ -1941,7 +2111,7 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
         console.warn(`No feed match found for signal "${title}"`);
       }
     }
-    
+
     const contradictions = (Array.isArray(s.contradictions) ? s.contradictions : []).map((c: any) => ({
       ...c,
       sourceA: normalizeSource(c.sourceA, feeds),
@@ -1980,7 +2150,7 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
   });
 
   // console.log(`Processed ${processedSignals.length} signals`);
-  
+
   // Filter out signals without at least one source
   const signalsWithSources = processedSignals.filter(s => {
     const hasSource = s.source && s.source.length > 0;
@@ -1989,9 +2159,9 @@ function finalizeSignals(raw: any[], feeds: RawSignal[] = []) {
     // }
     return hasSource;
   });
-  
+
   // console.log(`${signalsWithSources.length} signals have sources (${processedSignals.length - signalsWithSources.length} filtered out)`);
-  
+
   // if (signalsWithSources.length > 0) {
   //   console.log('First processed signal:', JSON.stringify(signalsWithSources[0], null, 2));
   // }
@@ -2253,10 +2423,11 @@ export async function processSingleSection(
     }
 
     // Use context limit based on aiConfig.numCtx for LM Studio (default 60000 for Ollama)
-    const maxContextChars = aiConfig.provider === 'lmstudio' 
+    const maxContextChars = aiConfig.provider === 'lmstudio'
       ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)  // ~2 chars per token, cap at 15000
       : 60000;
-    const context = generateContext(feeds, maxContextChars);
+    const ragContext = await getRagContext(feeds);
+    const context = generateContext(feeds, maxContextChars, ragContext);
     const feedIndex = generateFeedIndex(feeds);
 
     if (sectionId === 'narrative') {
@@ -2280,11 +2451,13 @@ export async function processSingleSection(
 
     const prompts: any = {
       signals: async () => {
-        const recentSignals = await getRecentSignalsForNovelty(7);
+        const recentSignals = await getRecentSignalsForNovelty(30);
         return generateSignalsPrompt(context, feedIndex, recentSignals, aiConfig);
       },
       insights: generateInsightsPrompt(context, feedIndex, extraContext.signalsText || '', extraContext.signals || [], aiConfig),
       map: generateMapPointsPrompt(context, extraContext.signalsText || '', aiConfig),
+      watchFor: generateNarrativePredictionsPrompt(extraContext.narrative || '', aiConfig),
+      verySimpleSummary: generateVerySimpleSummaryPrompt(extraContext.narrative || ''),
       relations: async () => {
         const historicalContext = await getHistoricalRelationsContext(foreignRelations);
         return generateRelationsPrompt(
@@ -2329,6 +2502,11 @@ export async function processSingleSection(
 
       res = lastRes;
       parseResult = lastParse;
+    } else if (sectionId === 'verySimpleSummary') {
+      // Very Simple Summary returns plain text, not JSON
+      res = await generateWithProvider(aiConfig, prompts[sectionId], undefined, 'You are a helpful assistant that creates ultra-condensed summaries.');
+      // Create a successful parse result for plain text
+      parseResult = { success: true, data: [], error: undefined, canRetry: false };
     } else {
       res = await generateWithProvider(aiConfig, prompts[sectionId], 'json', 'You must respond with valid JSON only.');
       parseResult = parseJsonArrayWithDetection(res);
@@ -2341,8 +2519,23 @@ export async function processSingleSection(
       throw new Error(parseResult.error);
     }
 
+    if (sectionId === 'watchFor') {
+      const rawOutputs: Record<string, string> = { watchFor: res || '' };
+      const parsed = parseJsonObjectWithDetection(res);
+      const obj: any = parsed.data || {};
+      const predictions = {
+        generatedAt: new Date().toISOString(),
+        sections: obj.sections || []
+      };
+
+      return {
+        watchFor: predictions,
+        rawOutputs
+      };
+    }
+
     if (sectionId === 'signals') {
-      const recentSignals = await getRecentSignalsForNovelty(7);
+      const recentSignals = await getRecentSignalsForNovelty(30);
       const rawOutputs: Record<string, string> = { signals: res || '' };
       return {
         signals: applyNoveltyScores(finalizeSignals(parseResult.data, feeds), recentSignals),
@@ -2367,6 +2560,13 @@ export async function processSingleSection(
       const rawOutputs: Record<string, string> = { relations: res || '' };
       return {
         foreignRelations: finalizeRelations(parseResult.data, foreignRelations),
+        rawOutputs
+      };
+    }
+    if (sectionId === 'verySimpleSummary') {
+      const rawOutputs: Record<string, string> = { verySimpleSummary: res || '' };
+      return {
+        verySimpleSummary: res?.trim() || null,
         rawOutputs
       };
     }

@@ -26,7 +26,9 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
     hideRawOutput,
     sectionGenerationTimes,
     mediaUrls,
-    updateMediaUrls
+    updateMediaUrls,
+    verySimpleSummary,
+    regenerateVerySimpleSummary
   } = useSituationStore()
   const isLoading = isProcessingSection.narrative && !isProcessing;
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -245,6 +247,43 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
         sectionId="narrative"
         title="Current Narrative"
       />
+
+      {/* Very Simple Summary - Subsection */}
+      <section className="mt-8 pt-6 border-t border-white/10">
+        <SectionHeader
+          className="mb-4"
+          title="Very Simple Summary"
+          icon={
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              <path d="M12 6h.01" />
+              <path d="M8 6h.01" />
+              <path d="M8 10h.01" />
+              <path d="M8 14h.01" />
+            </svg>
+          }
+          actions={
+            <SectionRegenerateButton
+              onClick={() => { regenerateVerySimpleSummary(); }}
+            />
+          }
+        />
+        {isProcessingSection.verySimpleSummary ? (
+          <div className="flex items-center gap-2 py-2">
+            <div className="w-4 h-4 border-2 border-accent-primary border-t-transparent animate-spin rounded-full"></div>
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-text-secondary">Condensing...</span>
+          </div>
+        ) : verySimpleSummary ? (
+          <p className="text-text-primary text-lg font-medium leading-relaxed">
+            {verySimpleSummary}
+          </p>
+        ) : (
+          <p className="text-text-secondary text-sm italic">
+            No summary generated yet. Click regenerate to create an ultra-condensed summary.
+          </p>
+        )}
+      </section>
 
       {/* Watch For Component */}
       <NarrativePredictions onAIRequired={onAIRequired} />

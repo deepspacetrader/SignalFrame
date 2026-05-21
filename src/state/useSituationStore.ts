@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { processSituation, processSingleSection, processBigPicture, cancellationTokenManager } from '../ai/runtime/engine'
+import { processSituation, processSingleSection, processBigPicture, cancellationTokenManager, syncIntelligenceToRag } from '../ai/runtime/engine'
 import { fetchLatestFeeds, RawSignal } from '../services/feedIngest'
 import { StorageService } from '../services/db'
 import { zzfx } from '../utils/zzfx'
@@ -169,7 +169,7 @@ export interface PredictionHistoryItem {
 }
 
 export interface AiConfig {
-  provider: 'ollama' | 'lmstudio';
+  provider: 'ollama' | 'lmstudio' | 'llamacpp';
   model: string;
   baseUrl?: string; // Custom base URL (provider-specific)
   numCtx: number; // Ollama-specific
@@ -209,7 +209,7 @@ export interface AiStatus {
   lastError: string | null;
 }
 
-export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'rss' | 'bigPicture' | 'watchFor';
+export type SectionKey = 'narrative' | 'signals' | 'insights' | 'map' | 'relations' | 'rss' | 'bigPicture' | 'watchFor' | 'verySimpleSummary';
 
 export interface SectionFailureState {
   hasFailed: boolean;
@@ -250,6 +250,7 @@ export interface SituationState {
   foreignRelations: ForeignRelation[];
   thinkingTrace: string; // AI's reasoning trace for narrative generation
   watchFor: NarrativePredictionsData | null; // AI-generated predictions based on narrative context
+  verySimpleSummary: string | null; // Ultra-condensed summary (max 50 words)
   isProcessing: boolean;
   processingStatus: string;
   isProcessingSection: {
@@ -261,6 +262,7 @@ export interface SituationState {
     rss: boolean;
     bigPicture: boolean;
     watchFor: boolean;
+    verySimpleSummary: boolean;
   };
   completedSections: Set<string>;
   bigPicture: BigPictureData | null;
@@ -520,6 +522,7 @@ const defaultState: SituationState = {
     narrative: false,
     signals: false,
     insights: false,
+    verySimpleSummary: false,
     map: false,
     relations: false,
     rss: false,
@@ -530,6 +533,7 @@ const defaultState: SituationState = {
   bigPicture: null,
   thinkingTrace: '',
   watchFor: null,
+  verySimpleSummary: null,
   aiConfig: {
     provider: 'ollama' as const,
     model: '',
@@ -576,7 +580,8 @@ const defaultState: SituationState = {
     relations: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     rss: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
     bigPicture: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
-    watchFor: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
+    watchFor: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false },
+    verySimpleSummary: { hasFailed: false, error: '', failedAt: null, retryCount: 0, lastRetryAt: null, nextRetryAt: null, isRetrying: false }
   },
   soundVolume: 0.5,
   predictionHistory: [],
@@ -1499,7 +1504,7 @@ export function useSituationStore() {
       isProcessing: true,
       processingStatus: 'Initializing Intelligence Network...',
       thinkingTrace: '', // Reset thinking trace on new scan
-      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false, watchFor: false },
+      isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false, watchFor: false, verySimpleSummary: false },
       completedSections: new Set() // Reset completed sections
     };
     startTimer('full-scan');
@@ -1530,7 +1535,7 @@ export function useSituationStore() {
           notify();
         },
         (section: string) => {
-          const sectionOrder: (keyof SituationState['isProcessingSection'])[] = ['rss', 'narrative', 'signals', 'insights', 'map', 'relations'];
+          const sectionOrder: (keyof SituationState['isProcessingSection'])[] = ['rss', 'narrative', 'signals', 'insights', 'relations'];
           const typedSection = section as keyof SituationState['isProcessingSection'];
           const currentIndex = sectionOrder.indexOf(typedSection);
 
@@ -1562,7 +1567,7 @@ export function useSituationStore() {
         feeds: newsFeeds,
         isProcessing: false,
         processingStatus: 'Scan Complete',
-        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, rss: false, bigPicture: false, watchFor: false },
+        isProcessingSection: { narrative: false, signals: false, insights: false, map: false, relations: false, rss: false, bigPicture: false, watchFor: false, verySimpleSummary: false },
         lastUpdated: new Date()
       };
 
@@ -1588,6 +1593,9 @@ export function useSituationStore() {
 
       notify();
       persist();
+
+      // Fire and forget RAG sync in the background
+      syncIntelligenceToRag(globalState).catch(err => console.error('Background RAG sync failed:', err));
     } catch (error) {
       stopTimer('full-scan');
       ['narrative', 'signals', 'insights', 'map', 'relations'].forEach(stopTimer);
@@ -1792,6 +1800,9 @@ export function useSituationStore() {
       }
       notify();
       persist();
+
+      // Fire and forget RAG sync in the background
+      syncIntelligenceToRag(globalState).catch(err => console.error('Background RAG sync failed:', err));
     } catch (error) {
       console.error('refreshSection error for', sectionId, ':', error);
       stopTimer(sectionId);
@@ -1867,6 +1878,9 @@ export function useSituationStore() {
       };
       notify();
       persist(); // Saved globally now
+
+      // Background RAG Sync
+      syncIntelligenceToRag(globalState).catch(err => console.error('Background RAG sync failed:', err));
     } catch (error) {
       console.error(error);
       globalState = { ...globalState, isProcessingSection: { ...globalState.isProcessingSection, bigPicture: false } };
@@ -2125,6 +2139,9 @@ export function useSituationStore() {
       };
       notify();
       persist();
+
+      // Background RAG Sync
+      syncIntelligenceToRag(globalState).catch(err => console.error('Background RAG sync failed:', err));
     } catch (error) {
       console.error('Failed to generate watchFor:', error);
       globalState = {
@@ -2158,11 +2175,88 @@ export function useSituationStore() {
       };
       notify();
       persist();
+
+      // Background RAG Sync
+      syncIntelligenceToRag(globalState).catch(err => console.error('Background RAG sync failed:', err));
     } catch (error) {
       console.error('Failed to regenerate watchFor:', error);
       globalState = {
         ...globalState,
         isProcessingSection: { ...globalState.isProcessingSection, watchFor: false }
+      };
+      notify();
+    }
+  }, []);
+
+  const generateVerySimpleSummary = useCallback(async () => {
+    if (globalState.isProcessing || globalState.isProcessingSection.verySimpleSummary || !globalState.narrative) return;
+
+    globalState = {
+      ...globalState,
+      isProcessingSection: { ...globalState.isProcessingSection, verySimpleSummary: true }
+    };
+    notify();
+
+    try {
+      const { processSingleSection } = await import('../ai/runtime/engine');
+      const result = await processSingleSection(
+        'verySimpleSummary',
+        globalState.feeds,
+        globalState.foreignRelations,
+        globalState.aiConfig,
+        undefined,
+        { narrative: globalState.narrative }
+      );
+
+      globalState = {
+        ...globalState,
+        verySimpleSummary: result.verySimpleSummary || null,
+        isProcessingSection: { ...globalState.isProcessingSection, verySimpleSummary: false }
+      };
+      notify();
+      persist();
+    } catch (error) {
+      console.error('Failed to generate verySimpleSummary:', error);
+      globalState = {
+        ...globalState,
+        isProcessingSection: { ...globalState.isProcessingSection, verySimpleSummary: false }
+      };
+      notify();
+    }
+  }, []);
+
+  const regenerateVerySimpleSummary = useCallback(async () => {
+    if (globalState.isProcessing || globalState.isProcessingSection.verySimpleSummary || !globalState.narrative) return;
+
+    globalState = {
+      ...globalState,
+      isProcessingSection: { ...globalState.isProcessingSection, verySimpleSummary: true }
+    };
+    notify();
+
+    try {
+      const { processSingleSection } = await import('../ai/runtime/engine');
+      const result = await processSingleSection(
+        'verySimpleSummary',
+        globalState.feeds,
+        globalState.foreignRelations,
+        globalState.aiConfig,
+        undefined,
+        { narrative: globalState.narrative }
+      );
+
+      globalState = {
+        ...globalState,
+        verySimpleSummary: result.verySimpleSummary || null,
+        isProcessingSection: { ...globalState.isProcessingSection, verySimpleSummary: false }
+      };
+      notify();
+      persist();
+    } catch (error) {
+      console.error('Failed to regenerate verySimpleSummary:', error);
+      globalState = {
+        ...globalState,
+        isProcessingSection: { ...globalState.isProcessingSection, verySimpleSummary: false }
       };
       notify();
     }
@@ -2324,6 +2418,8 @@ export function useSituationStore() {
     regenerateDeepDive,
     generateNarrativePredictions,
     regenerateNarrativePredictions,
+    generateVerySimpleSummary,
+    regenerateVerySimpleSummary,
     setRawOutput,
     showRawOutput,
     hideRawOutput,

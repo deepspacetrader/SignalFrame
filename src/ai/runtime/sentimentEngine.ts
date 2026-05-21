@@ -161,6 +161,34 @@ Sentiment Analysis Guidelines - Far Right / Nationalist Approach:
 - very-positive: Restoration of national sovereignty, crushing of subversive elements, revival of traditional order, nationalist victories
 
 Deeply critical of globalism, progressivism, and liberal degeneracy. View "neutral" internationalism as a threat to sovereignty. Democratic leadership is viewed as destructive (very negative). Nationalist leadership (e.g. Trump) is viewed as essential for national survival (positive/very positive).`
+  },
+  {
+    id: 'clinical-analyst',
+    name: 'Clinical Analyst',
+    description: 'Evidence-based, strictly clinical intelligence analysis',
+    weights: {
+      extremelyNegative: -4,
+      veryNegative: -3,
+      negative: -2,
+      somewhatNegative: -1,
+      neutral: 0,
+      interesting: 0.5,
+      positive: 2,
+      veryPositive: 3
+    },
+    guidelines: `
+Sentiment Analysis Guidelines - Clinical Analyst / Evidence-Based Approach:
+
+- extremely-negative: Systemic failure, catastrophic loss of life, irreversible geopolitical shifts with global instability.
+- very-negative: Significant escalation in conflict, major economic contraction, verified threats to critical infrastructure.
+- negative: Negative developments with confirmed impact, policy failures with clear second-order consequences.
+- somewhat-negative: Emerging risks, friction in diplomatic or economic spheres, data points suggesting a downward trend.
+- neutral: Factual reporting without immediate strategic shift, status quo maintenance, routine bureaucratic updates.
+- interesting: Divergent data points, anomalies in established patterns, emerging technology or policy shifts with unconfirmed impact.
+- positive: Measurable progress in stability, economic indicators exceeding consensus, diplomatic breakthroughs.
+- very-positive: Systemic improvements, resolution of long-standing conflicts, transformative technological breakthroughs.
+
+Approach every data point with skepticism. Prioritize primary source evidence over secondary interpretation. Focus on "What" and "So What" rather than "How I feel." Maintain a detached, professional tone. Avoid ideological bias by focusing strictly on state-level impacts and strategic outcomes. Hallucinations or speculative filler are unacceptable; if data is missing, state it is unknown.`
   }
 ];
 
