@@ -1,6 +1,7 @@
 import { OllamaService } from './ollama';
 import { LMStudioService, LMStudioMessage } from './lmstudio';
 import { LlamaCppService, LlamaCppMessage } from './llamacpp';
+import { NimService, NimMessage } from './nim';
 import { RawSignal } from '../../services/feedIngest';
 import type { ForeignRelation, AiConfig, DeepDiveData, NarrativePredictionsData, SourceRef, Signal, SituationState } from '../../state/useSituationStore';
 import { StorageService } from '../../services/db';
@@ -11,12 +12,11 @@ import { ragService } from '../../services/ragService';
 
 // Service wrapper functions that route to the appropriate backend based on provider
 function getOptionsForProvider(aiConfig: AiConfig, signal?: AbortSignal) {
-  if (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp') {
+  if (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp' || aiConfig.provider === 'nim') {
     return {
       max_tokens: aiConfig.maxTokens || aiConfig.numPredict || 16384,
       temperature: 0,
       signal,
-      // LM Studio doesn't accept num_ctx per request, but we pass it for prompt truncation
       contextWindow: aiConfig.numCtx || 32000
     };
   }
@@ -86,6 +86,28 @@ async function generateWithProvider(
     return result;
   }
 
+  if (aiConfig.provider === 'nim') {
+    let finalPrompt = prompt;
+
+    if (format === 'json' && prompt.length > 2000) {
+      const lines = prompt.split('\n');
+      const essentialLines = lines.slice(0, 50);
+      finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
+    }
+
+    const finalSystemPrompt = format === 'json'
+      ? `${systemPrompt || ''}\n\nCRITICAL: You MUST respond with ONLY valid JSON. No markdown, no explanations, no text outside the JSON.`.trim()
+      : systemPrompt;
+
+    const result = await NimService.generate(aiConfig.model, finalPrompt, finalSystemPrompt, format, options);
+
+    if (format === 'json' && (!result || result.trim() === '')) {
+      console.warn('NVIDIA NIM returned empty response for JSON request.');
+    }
+
+    return result;
+  }
+
   return OllamaService.generate(aiConfig.model, prompt, format, options);
 }
 
@@ -108,6 +130,10 @@ async function streamGenerateWithProvider(
     return LlamaCppService.streamGenerate(aiConfig.model, prompt, onChunk, systemPrompt, options);
   }
 
+  if (aiConfig.provider === 'nim') {
+    return NimService.streamGenerate(aiConfig.model, prompt, onChunk, systemPrompt, options);
+  }
+
   return OllamaService.streamGenerate(aiConfig.model, prompt, onChunk, options);
 }
 
@@ -124,6 +150,10 @@ async function generateWithThinkingWithProvider(
 
   if (aiConfig.provider === 'llamacpp') {
     return LlamaCppService.generateWithThinking(aiConfig.model, prompt, systemPrompt, options);
+  }
+
+  if (aiConfig.provider === 'nim') {
+    return NimService.generateWithThinking(aiConfig.model, prompt, systemPrompt, options);
   }
 
   return OllamaService.generateWithThinking(aiConfig.model, prompt, options);
@@ -150,6 +180,10 @@ async function streamGenerateWithThinkingWithProvider(
 
   if (aiConfig.provider === 'llamacpp') {
     return LlamaCppService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, systemPrompt, options);
+  }
+
+  if (aiConfig.provider === 'nim') {
+    return NimService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, systemPrompt, options);
   }
 
   return OllamaService.streamGenerateWithThinking(aiConfig.model, prompt, onThinking, onContent, options);
@@ -180,6 +214,14 @@ export async function chatWithProvider(
       content: m.content
     }));
     return LlamaCppService.streamChat(aiConfig.model, lmMessages, onChunk, options);
+  }
+
+  if (aiConfig.provider === 'nim') {
+    const nimMessages: NimMessage[] = messages.map(m => ({
+      role: m.role as 'system' | 'user' | 'assistant',
+      content: m.content
+    }));
+    return NimService.streamChat(aiConfig.model, nimMessages, onChunk, options);
   }
 
   return OllamaService.chat(aiConfig.model, messages, onChunk, options);
@@ -455,8 +497,8 @@ export async function processSituation(
 
   try {
     // Use context limit based on aiConfig.numCtx for LM Studio and llamacpp (default 60000 for Ollama)
-    const maxContextChars = (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp')
-      ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)  // ~2 chars per token, cap at 15000
+    const maxContextChars = (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp' || aiConfig.provider === 'nim')
+      ? Math.min((aiConfig.numCtx || 8192) * 2, 15000) // ~2 chars per token, cap at 15000
       : 60000;
     // Fetch RAG Context for historical correlation
     const ragContext = await getRagContext(feeds);
@@ -487,7 +529,6 @@ export async function processSituation(
           }
         );
       } else if (onNarrativeChunk && aiConfig.provider !== 'lmstudio') {
-        // Use streaming for Ollama and llamacpp only - LM Studio has streaming format issues
         console.log(`[Narrative] Using streaming mode for ${aiConfig.provider}`);
         await streamGenerateWithProvider(aiConfig, narrativePrompt, (chunk) => {
           narrative += chunk;
@@ -2423,8 +2464,8 @@ export async function processSingleSection(
     }
 
     // Use context limit based on aiConfig.numCtx for LM Studio (default 60000 for Ollama)
-    const maxContextChars = aiConfig.provider === 'lmstudio'
-      ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)  // ~2 chars per token, cap at 15000
+    const maxContextChars = (aiConfig.provider === 'lmstudio' || aiConfig.provider === 'llamacpp' || aiConfig.provider === 'nim')
+      ? Math.min((aiConfig.numCtx || 8192) * 2, 15000)
       : 60000;
     const ragContext = await getRagContext(feeds);
     const context = generateContext(feeds, maxContextChars, ragContext);
@@ -2434,7 +2475,6 @@ export async function processSingleSection(
       let narrative = '';
       const prompt = generateNarrativePrompt(context, aiConfig);
       if (onStream && aiConfig.provider !== 'lmstudio') {
-        // Streaming for Ollama (LM Studio has format issues with streaming)
         await streamGenerateWithProvider(aiConfig, prompt, (c) => { narrative += c; onStream(narrative); });
       } else {
         // Non-streaming for LM Studio or when no stream callback

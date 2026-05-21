@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { OllamaService } from '../ai/runtime/ollama';
 import { LMStudioService } from '../ai/runtime/lmstudio';
+import { LlamaCppService } from '../ai/runtime/llamacpp';
+import { NimService } from '../ai/runtime/nim';
 import { useSituationStore } from '../state/useSituationStore';
 
 interface Predictions {
@@ -60,11 +62,17 @@ export function PredictionsPanel({ onAIRequired }: { onAIRequired: () => void })
         try {
             let response: string;
             
-            if (aiConfig.provider === 'lmstudio') {
-                // LM Studio: use system prompt to request JSON format
-                const systemPrompt = 'You must respond with valid JSON only. Do not include markdown formatting, explanations, or text outside the JSON object.';
-                response = await LMStudioService.generate(aiConfig.model, prompt, systemPrompt, { max_tokens: 25000 });
-            } else {
+        if (aiConfig.provider === 'lmstudio') {
+          // LM Studio: use system prompt to request JSON format
+          const systemPrompt = 'You must respond with valid JSON only. Do not include markdown formatting, explanations, or text outside the JSON object.';
+          response = await LMStudioService.generate(aiConfig.model, prompt, systemPrompt, { max_tokens: 25000 });
+        } else if (aiConfig.provider === 'nim') {
+          const systemPrompt = 'You must respond with valid JSON only. Do not include markdown formatting, explanations, or text outside the JSON object.';
+          response = await NimService.generate(aiConfig.model, prompt, systemPrompt, 'json', { max_tokens: 25000 });
+        } else if (aiConfig.provider === 'llamacpp') {
+          const systemPrompt = 'You must respond with valid JSON only. Do not include markdown formatting, explanations, or text outside the JSON object.';
+          response = await LlamaCppService.generate(aiConfig.model, prompt, systemPrompt, 'json', { max_tokens: 25000 });
+        } else {
                 // Ollama: use built-in JSON format
                 response = await OllamaService.generate(aiConfig.model, prompt, 'json', { num_ctx: 32000, num_predict: 25000 });
             }

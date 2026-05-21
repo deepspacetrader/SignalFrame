@@ -6,11 +6,15 @@ import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
 import { LMStudioService } from '../ai/runtime/lmstudio'
 import { LlamaCppService } from '../ai/runtime/llamacpp'
+import { NimService } from '../ai/runtime/nim'
 
 const DEFAULT_URLS = {
     ollama: 'http://127.0.0.1:11434/api',
     lmstudio: 'http://127.0.0.1:1234',
-    llamacpp: 'http://localhost:8080/v1'
+    llamacpp: 'http://localhost:8080/v1',
+    nim: (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+        ? `${window.location.origin}/api/nim`
+        : 'https://integrate.api.nvidia.com/v1'
 };
 
 export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
@@ -30,6 +34,9 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
 
     const [llamacppModels, setLlamacppModels] = useState<string[]>([])
     const [llamacppError, setLlamacppError] = useState<string | null>(null)
+
+    const [nimModels, setNimModels] = useState<string[]>([])
+    const [nimError, setNimError] = useState<string | null>(null)
     
     const [narrativeImageSize, setNarrativeImageSize] = useState((aiConfig as any).narrativeImageSize || 512)
     const [signalsImageSize, setSignalsImageSize] = useState((aiConfig as any).signalsImageSize || 128)
@@ -64,6 +71,15 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                         setLlamacppError('Llama.cpp is not running or not accessible');
                         setLlamacppModels([]);
                     }
+                } else if (tempConfig.provider === 'nim') {
+                    try {
+                        const models = await NimService.listModels();
+                        setNimModels(models);
+                        setNimError(null);
+                    } catch (error) {
+                        setNimError('NVIDIA NIM is not accessible');
+                        setNimModels([]);
+                    }
                 } else {
                     // Check Ollama
                     try {
@@ -89,8 +105,8 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
         }
     }, [isOpen, aiConfig]);
 
-    const currentAvailableModels = tempConfig.provider === 'lmstudio' ? lmStudioModels : (tempConfig.provider === 'llamacpp' ? llamacppModels : availableModels);
-    const currentError = tempConfig.provider === 'lmstudio' ? lmStudioError : (tempConfig.provider === 'llamacpp' ? llamacppError : ollamaError);
+    const currentAvailableModels = tempConfig.provider === 'lmstudio' ? lmStudioModels : (tempConfig.provider === 'llamacpp' ? llamacppModels : (tempConfig.provider === 'nim' ? nimModels : availableModels));
+    const currentError = tempConfig.provider === 'lmstudio' ? lmStudioError : (tempConfig.provider === 'llamacpp' ? llamacppError : (tempConfig.provider === 'nim' ? nimError : ollamaError));
 
     const isModelInstalled = currentAvailableModels.length === 0 || !tempConfig.model || currentAvailableModels.some(m => {
         const normalizedInput = tempConfig.model.toLowerCase().trim();
@@ -101,7 +117,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     });
 
     const handleCopy = () => {
-        if (tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp') {
+        if (tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' || tempConfig.provider === 'nim') {
             navigator.clipboard.writeText(tempConfig.model);
         } else {
             navigator.clipboard.writeText(`ollama pull ${tempConfig.model}`);
@@ -200,10 +216,10 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 </svg>
                                 <div>
                                     <h4 className="text-sm text-red-400 font-semibold mb-1">
-                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio Not Detected' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp Not Detected' : 'Ollama Not Detected')}
+                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio Not Detected' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp Not Detected' : (tempConfig.provider === 'nim' ? 'NVIDIA NIM Not Configured' : 'Ollama Not Detected'))}
                                     </h4>
                                     <p className="text-xs text-red-300">
-                                        SignalFrame requires {tempConfig.provider === 'lmstudio' ? 'LM Studio' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp' : 'Ollama')} to be running on your local machine
+                                        SignalFrame requires {tempConfig.provider === 'lmstudio' ? 'LM Studio' : (tempConfig.provider === 'llamacpp' ? 'Llama.cpp' : (tempConfig.provider === 'nim' ? 'an NVIDIA NIM API key' : 'Ollama'))} to be running on your local machine
                                     </p>
                                 </div>
                             </div>
@@ -412,7 +428,9 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     ? 'Load a model in LM Studio and ensure the server is running on port 1234.'
                                     : (tempConfig.provider === 'llamacpp' 
                                         ? 'Ensure Llama.cpp server is running.' 
-                                        : 'Install models using: ollama pull <model-name>')}
+                                        : (tempConfig.provider === 'nim'
+                                            ? 'Check your NVIDIA NIM API key configuration.'
+                                            : 'Install models using: ollama pull <model-name>'))}
                             </p>
                         </div>
                     )}
@@ -423,7 +441,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                             <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-xl mb-3">
                             🧠 AI Provider
                             </label>
-                            <div className="grid grid-cols-3 gap-3">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <button
                                     onClick={() => setTempConfig({ 
                                         ...tempConfig, 
@@ -508,6 +526,34 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         </div>
                                     </div>
                                 </button>
+                                <button
+                                    onClick={() => setTempConfig({ 
+                                        ...tempConfig, 
+                                        provider: 'nim',
+                                        baseUrl: DEFAULT_URLS.nim
+                                    })}
+                                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                                        tempConfig.provider === 'nim'
+                                            ? 'bg-accent-primary/20 border-accent-primary'
+                                            : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                            tempConfig.provider === 'nim'
+                                                ? 'border-accent-primary'
+                                                : 'border-white/30'
+                                        }`}>
+                                            {tempConfig.provider === 'nim' && (
+                                                <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-text-primary">NVIDIA NIM</p>
+                                            <p className="text-xs text-text-secondary">Cloud-based AI models</p>
+                                        </div>
+                                    </div>
+                                </button>
                             </div>
                         </div>
 
@@ -519,11 +565,11 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                         API Endpoint
                                     </span>
                                     <span className="text-[10px] text-text-tertiary px-2 py-0.5 bg-white/5">
-                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio' : 'Ollama'}
+                                        {tempConfig.provider === 'lmstudio' ? 'LM Studio' : (tempConfig.provider === 'nim' ? 'NVIDIA NIM' : 'Ollama')}
                                     </span>
                                 </div>
                                 <span className="text-xs font-mono text-text-primary">
-                                    {tempConfig.baseUrl || (tempConfig.provider === 'lmstudio' ? DEFAULT_URLS.lmstudio : (tempConfig.provider === 'llamacpp' ? DEFAULT_URLS.llamacpp : DEFAULT_URLS.ollama))}
+                                    {tempConfig.baseUrl || (tempConfig.provider === 'lmstudio' ? DEFAULT_URLS.lmstudio : (tempConfig.provider === 'llamacpp' ? DEFAULT_URLS.llamacpp : (tempConfig.provider === 'nim' ? DEFAULT_URLS.nim : DEFAULT_URLS.ollama)))}
                                 </span>
                             </div>
                         </div>
@@ -541,10 +587,12 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                             <p className="text-[11px] text-text-primary leading-relaxed mb-3">
                                                 {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp'
                                                     ? 'The model ID loaded in the server. Use the model identifier (e.g., "nvidia/nemotron-3-nano-4b" or "default").'
-                                                    : 'Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.'
+                                                    : (tempConfig.provider === 'nim'
+                                                        ? 'Select a cloud model from the NVIDIA NIM catalog. These models run on NVIDIA\'s infrastructure.'
+                                                        : 'Choose a model based on your GPU VRAM and performance needs. Larger models offer better quality but require more resources.')
                                                 }
                                             </p>
-                                            {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
+                                            {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && tempConfig.provider !== 'nim' && (
                                                 <div className="border-t border-white/10 pt-2">
                                                     <p className="text-[10px] text-accent-primary font-semibold mb-2">VRAM-Based Recommendations:</p>
                                                     <div className="space-y-1">
@@ -576,7 +624,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     value={tempConfig.model}
                                     onChange={(e) => setTempConfig({ ...tempConfig, model: e.target.value })}
                                     className="w-full bg-white/5 border border-white/10 p-3 text-text-primary focus:border-accent-primary outline-none transition-all font-mono text-sm"
-                                    placeholder={tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'default, nvidia/nemotron-3-nano-4b' : 'llama3.2, qwen3:8b, deepseek-r1:8b'}
+                                    placeholder={tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'default, nvidia/nemotron-3-nano-4b' : (tempConfig.provider === 'nim' ? 'moonshotai/kimi-k2.6' : 'llama3.2, qwen3:8b, deepseek-r1:8b')}
                                 />
                             </div>
                         </div>
@@ -588,12 +636,12 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     {!tempConfig.model ? 'Select a model' : 'AI model not detected'}
                                 </p>
                                 <div className="space-y-2">
-                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
+                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && tempConfig.provider !== 'nim' && (
                                         <p className="text-[10px] text-text-secondary font-bold">
                                             You can view / download models from Ollama using the terminal:
                                         </p>
                                     )}
-                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
+                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && tempConfig.provider !== 'nim' && (
                                         <div className="relative group/copy">
                                             <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
                                                 ollama list
@@ -616,7 +664,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                     )}
 
                                     <p className="text-[10px] text-text-secondary font-bold pt-2">
-                                        {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'Available models:' : 'or select from these installed models:'}
+                                        {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'Available models:' : (tempConfig.provider === 'nim' ? 'Available cloud models:' : 'or select from these installed models:')}
                                     </p>
                                     <div className="flex flex-wrap gap-2">
                                         {currentAvailableModels.map(m => (
@@ -634,10 +682,11 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                         )}
                     </div>
 
+{tempConfig.provider !== 'nim' && (
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Context Window (num_ctx)</label>
+                    <div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <label className="block text-[0.65rem] uppercase tracking-widest font-bold text-text-secondary">Context Window (num_ctx)</label>
                                 <div className="group relative">
                                     <div className="w-3.5 h-3.5 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center cursor-help">
                                         <span className="text-[8px] text-accent-primary font-bold">i</span>
@@ -724,6 +773,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                             />
                         </div>
                     </div>
+                    )}
 
                     {/* Thinking Mode Toggle */}
                     <div className="p-4 bg-accent-secondary/10 border border-accent-secondary/20">
@@ -1042,7 +1092,7 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                         </div>
 
                         {/* Ollama Performance Settings - only show for Ollama */}
-                        {tempConfig.provider !== 'lmstudio' && (
+                        {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'nim' && (
                             <div className="pt-6 border-t border-white/10">
                                 <h4 className="text-sm font-medium text-text-primary mb-4 flex items-center gap-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

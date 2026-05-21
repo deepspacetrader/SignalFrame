@@ -169,7 +169,7 @@ export interface PredictionHistoryItem {
 }
 
 export interface AiConfig {
-  provider: 'ollama' | 'lmstudio' | 'llamacpp';
+  provider: 'ollama' | 'lmstudio' | 'llamacpp' | 'nim';
   model: string;
   baseUrl?: string; // Custom base URL (provider-specific)
   numCtx: number; // Ollama-specific
@@ -631,27 +631,36 @@ class OllamaPollingManager {
 
     this.pollCount++;
 
-    // Check if we're using LM Studio - skip polling, models are fetched only when AISettings is opened
-    if (globalState.aiConfig.provider === 'lmstudio') {
-      // console.log('[Poll] LM Studio mode - skipping polling (models fetched in AISettings)');
-      // Just update lastChecked timestamp without making API calls
-      globalState = {
-        ...globalState,
-        aiStatus: {
-          isOnline: globalState.aiStatus?.isOnline || false,
-          lastChecked: new Date(),
-          lastError: globalState.aiStatus?.lastError || null
-        }
-      };
+    if (globalState.aiConfig.provider === 'lmstudio' || globalState.aiConfig.provider === 'nim') {
+      const isNim = globalState.aiConfig.provider === 'nim';
+      if (isNim) {
+        const { NimService } = await import('../ai/runtime/nim');
+        const hasApiKey = !!NimService.getApiKey();
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: hasApiKey,
+            lastChecked: new Date(),
+            lastError: hasApiKey ? null : 'NVIDIA API key not configured'
+          }
+        };
+      } else {
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: globalState.aiStatus?.isOnline || false,
+            lastChecked: new Date(),
+            lastError: globalState.aiStatus?.lastError || null
+          }
+        };
+      }
       listeners.forEach(l => l({ ...globalState }));
       this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), 30000);
       return;
     }
 
     try {
-      // Only poll Ollama if using Ollama provider
       if (globalState.aiConfig.provider !== 'ollama') {
-        // Skip polling for LM Studio - it doesn't need service polling
         listeners.forEach(l => l({ ...globalState }));
         this.pollTimeout = setTimeout(() => this.scheduleNextPoll(), 30000);
         return;
@@ -887,15 +896,23 @@ export function useSituationStore() {
         globalState.aiConfig = config;
         configLoaded = true; // Mark config as loaded
         // console.log('[Init] Loaded AI config:', config);
-        if (config.baseUrl) {
-          if (config.provider === 'lmstudio') {
-            const { LMStudioService } = await import('../ai/runtime/lmstudio');
-            LMStudioService.setBaseUrl(config.baseUrl);
-          } else {
-            const { OllamaService } = await import('../ai/runtime/ollama');
-            OllamaService.setBaseUrl(config.baseUrl);
-          }
+      if (config.baseUrl) {
+        if (config.provider === 'lmstudio') {
+          const { LMStudioService } = await import('../ai/runtime/lmstudio');
+          LMStudioService.setBaseUrl(config.baseUrl);
+        } else if (config.provider === 'nim') {
+          const { NimService } = await import('../ai/runtime/nim');
+          NimService.setBaseUrl(config.baseUrl);
+          const apiKey = import.meta.env.VITE_NVIDIA_AI_MODEL_KEY || import.meta.env.VITE_NVIDIA_KEY || '';
+          if (apiKey) NimService.setApiKey(apiKey);
+        } else if (config.provider === 'llamacpp') {
+          const { LlamaCppService } = await import('../ai/runtime/llamacpp');
+          LlamaCppService.setBaseUrl(config.baseUrl);
+        } else {
+          const { OllamaService } = await import('../ai/runtime/ollama');
+          OllamaService.setBaseUrl(config.baseUrl);
         }
+      }
       } else {
         console.log('[Init] No AI config found, using default:', globalState.aiConfig);
         configLoaded = true; // Mark as loaded even if using default
@@ -1915,9 +1932,8 @@ export function useSituationStore() {
 
   const fetchAvailableModels = useCallback(async () => {
     try {
-      if (globalState.aiConfig.provider === 'lmstudio') {
-        // LM Studio models are fetched directly in AISettings when opened, skip here
-        console.log('[fetchAvailableModels] LM Studio mode - skipping (handled in AISettings)');
+      if (globalState.aiConfig.provider === 'lmstudio' || globalState.aiConfig.provider === 'nim') {
+        console.log('[fetchAvailableModels] LM Studio/NIM mode - skipping (handled in AISettings)');
         return;
       } else {
         const { OllamaService } = await import('../ai/runtime/ollama');
@@ -1932,13 +1948,22 @@ export function useSituationStore() {
 
   const updateAiConfig = useCallback(async (config: Partial<AiConfig>) => {
     globalState = { ...globalState, aiConfig: { ...globalState.aiConfig, ...config } };
-    if (config.baseUrl) {
-      if (globalState.aiConfig.provider === 'lmstudio') {
+    if (config.baseUrl || config.provider) {
+      const provider = globalState.aiConfig.provider;
+      if (provider === 'lmstudio') {
         const { LMStudioService } = await import('../ai/runtime/lmstudio');
-        LMStudioService.setBaseUrl(config.baseUrl);
+        LMStudioService.setBaseUrl(globalState.aiConfig.baseUrl || 'http://127.0.0.1:1234');
+      } else if (provider === 'nim') {
+        const { NimService } = await import('../ai/runtime/nim');
+        NimService.setBaseUrl(globalState.aiConfig.baseUrl || 'https://integrate.api.nvidia.com/v1');
+        const apiKey = import.meta.env.VITE_NVIDIA_AI_MODEL_KEY || import.meta.env.VITE_NVIDIA_KEY || '';
+        if (apiKey) NimService.setApiKey(apiKey);
+      } else if (provider === 'llamacpp') {
+        const { LlamaCppService } = await import('../ai/runtime/llamacpp');
+        LlamaCppService.setBaseUrl(globalState.aiConfig.baseUrl || 'http://localhost:8080/v1');
       } else {
         const { OllamaService } = await import('../ai/runtime/ollama');
-        OllamaService.setBaseUrl(config.baseUrl);
+        OllamaService.setBaseUrl(globalState.aiConfig.baseUrl || 'http://127.0.0.1:11434/api');
       }
     }
     notify();
@@ -1992,6 +2017,35 @@ export function useSituationStore() {
   }, [refreshSection, clearSectionFailure]);
 
   const fetchAiStatus = useCallback(async () => {
+    if (globalState.aiConfig.provider === 'nim') {
+      try {
+        const { NimService } = await import('../ai/runtime/nim');
+        const hasApiKey = !!NimService.getApiKey();
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: hasApiKey,
+            lastChecked: new Date(),
+            lastError: hasApiKey ? null : 'NVIDIA API key not configured (set VITE_NVIDIA_AI_MODEL_KEY)'
+          },
+          runningModels: []
+        };
+        listeners.forEach(l => l({ ...globalState }));
+      } catch (error) {
+        globalState = {
+          ...globalState,
+          aiStatus: {
+            isOnline: false,
+            lastChecked: new Date(),
+            lastError: error instanceof Error ? error.message : 'NVIDIA NIM not responding'
+          },
+          runningModels: []
+        };
+        listeners.forEach(l => l({ ...globalState }));
+      }
+      return;
+    }
+
     // Check if using LM Studio
     if (globalState.aiConfig.provider === 'lmstudio') {
       try {
