@@ -1,0 +1,1511 @@
+{
+  "narrative": "Sustained high fuel costs and inflation are causing real-world consumer spending patterns to contract away from non-essential goods; this decline contrasts with the apparent stability of bond markets, raising the probability of a sharp market correction as major corporations face increased debt vulnerability.\n\nWestern nations applying diplomatic pressure regarding international law compliance at contested territories combines with continued active conflict reporting in Ukraine. This resource stress is exacerbated by a developing El Nino climate pattern, adding environmental volatility to critical global trade routes and supply chains.\n\nLocal opposition complicates containment efforts during the Ebola outbreak in the Democratic Republic of Congo while an acute measles epidemic strains regional pediatric healthcare systems in Bangladesh. These simultaneous biosecurity challenges require immediate, coordinated international responses across varied public health infrastructures.\n\nThe necessity for national technological primacy is fueling massive state-backed capital injections into advanced computational sectors like AI and quantum computing. This intense demand places extreme operational stress on foundational global electrical grids, mandating a fundamental corporate pivot toward localized service structures to manage power limitations.\n\nPolitical advertising revenue is rapidly moving from traditional local television sources to digital online platforms. This structural shift threatens the solvency of legacy broadcasters who cannot quickly reorganize their financial and content models to match the new media consumption landscape.",
+  "signals": [
+    {
+      "id": "sig_33c139fc",
+      "title": "Middle East Escalation Risks Remain High Following US Strikes",
+      "text": "Tensions between Iran and Western powers remain critically high following recent U.S. strikes, which Tehran condemned as a violation of ceasefire agreements. This escalation suggests ongoing regional instability and the risk of wider conflict.",
+      "sentiment": "extremely-negative",
+      "category": "Conflicts",
+      "deltaType": "escalation",
+      "source": [
+        {
+          "feedId": "38",
+          "source": "Al Jazeera",
+          "title": "Tehran labels US attacks ‘gross violation’, says it is prepared to respond",
+          "link": "https://www.aljazeera.com/news/2026/5/26/tehran-labels-us-attacks-gross-violation-says-it-is-prepared-to-respond?traffic_source=rss",
+          "timestamp": "Tue, 26 May 2026 15:13:18 +0000"
+        },
+        {
+          "feedId": "92",
+          "source": "The Guardian",
+          "title": "Middle East crisis live: Iran’s foreign ministry says US broke ceasefire with overnight strikes",
+          "link": "https://www.theguardian.com/world/live/2026/may/26/iran-war-live-updates-us-attacks-iran-missile-sites-self-defence-during-peace-talks",
+          "timestamp": "Tue, 26 May 2026 16:00:03 GMT"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_ad85aed9",
+      "title": "AI Governance Focus Shifts to Combating Digital Misuse and IP Theft",
+      "text": "Major content rights holders (UMG) and religious institutions are addressing the ethical fallout of generative AI, specifically focusing on combating unauthorized music replication and defining proper use in spiritual life.",
+      "sentiment": "somewhat-negative",
+      "category": "Tech/AI",
+      "deltaType": "disruption",
+      "source": [
+        {
+          "feedId": "29",
+          "source": "TechCrunch",
+          "title": "Universal Music Group and TikTok renew agreement to combat unauthorized AI music",
+          "link": "https://techcrunch.com/2026/05/26/universal-music-group-and-tiktok-renew-agreement-to-combat-unauthorized-ai-music/",
+          "timestamp": "Tue, 26 May 2026 14:55:05 +0000"
+        },
+        {
+          "feedId": "80",
+          "source": "NY Times World",
+          "title": "Main Takeaways From Pope Leo’s Encyclical on A.I.",
+          "link": "https://www.nytimes.com/2026/05/25/us/pope-leo-encyclical-highlights.html",
+          "timestamp": "Tue, 26 May 2026 07:32:45 +0000"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_ce0fd0bf",
+      "title": "European Nations Condemn Russian Threats Regarding Ukraine Escalation",
+      "text": "European countries and the EU have mobilized to summon Russian envoys following escalating threats directed at Kyiv. This represents a unified diplomatic pivot against perceived destabilization efforts.",
+      "sentiment": "negative",
+      "category": "Geopolitical",
+      "deltaType": "escalation",
+      "source": [
+        {
+          "feedId": "37",
+          "source": "Al Jazeera",
+          "title": "European countries and EU summon Russian envoys over threats on Kyiv",
+          "link": "https://www.aljazeera.com/news/2026/5/26/european-countries-and-eu-summon-russian-envoys-over-threats-on-kyiv?traffic_source=rss",
+          "timestamp": "Tue, 26 May 2026 15:19:22 +0000"
+        },
+        {
+          "feedId": "41",
+          "source": "Al Jazeera",
+          "title": "‘Leave Kyiv’: Why Russia’s latest Ukraine threat is a major escalation",
+          "link": "https://www.aljazeera.com/news/2026/5/26/leave-kyiv-why-russias-latest-ukraine-threat-is-a-major-escalation?traffic_source=rss",
+          "timestamp": "Tue, 26 May 2026 14:59:42 +0000"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_cb1c33d",
+      "title": "Structural Vulnerabilities Exposed in Social Safety Nets and Markets",
+      "text": "Multiple reports highlight systemic financial stress, ranging from market warning signals concerning bear markets to significant groups of people potentially missing out on vital food or medical benefits.",
+      "sentiment": "somewhat-negative",
+      "category": "Financial",
+      "deltaType": "policy",
+      "source": [
+        {
+          "feedId": "1",
+          "source": "MarketWatch",
+          "title": "More than 9 million people are missing out on $58 billion in food and medical benefits. Are you one of them?",
+          "link": "https://www.marketwatch.com/story/more-than-9-million-people-are-missing-out-on-58-billion-in-food-and-medical-benefits-are-you-one-of-them-d2e79770?mod=mw_rss_topstories",
+          "timestamp": "Tue, 26 May 2026 16:15:00 GMT"
+        },
+        {
+          "feedId": "0",
+          "source": "MarketWatch",
+          "title": "This bear market signal Wall Street ignores is putting your money at risk right now",
+          "link": "https://www.marketwatch.com/story/this-bear-market-signal-wall-street-ignores-is-putting-your-money-at-risk-right-now-46f1fcf3?mod=mw_rss_topstories",
+          "timestamp": "Tue, 26 May 2026 16:22:00 GMT"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_c19c08ad",
+      "title": "Global Health Alert System Flags Persistent Outbreak Risks",
+      "text": "The global health picture remains fragile due to confirmed outbreaks, such as diphtheria in Australia, and continuous warnings about tropical diseases like Ebola requiring immediate international response.",
+      "sentiment": "somewhat-negative",
+      "category": "Health",
+      "deltaType": "other",
+      "source": [
+        {
+          "feedId": "10",
+          "source": "BBC World",
+          "title": "Australia confirms first diphtheria death amid worst outbreak in decades",
+          "link": "https://www.bbc.com/news/articles/c759q6y26w3o?at_medium=RSS&amp;at_campaign=rss",
+          "timestamp": "Tue, 26 May 2026 07:09:38 GMT"
+        },
+        {
+          "feedId": "58",
+          "source": "BBC World",
+          "title": "Ebola needs swift response to prevent catastrophe, says DR Congo governor",
+          "link": "https://www.bbc.com/news/articles/c3022rd2er4o?at_medium=RSS&amp;at_campaign=rss",
+          "timestamp": "Tue, 26 May 2026 11:22:04 GMT"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_e13adb6e",
+      "title": "Cybersecurity Focus on State-Sponsored Attacks and Regulatory Blocks",
+      "text": "The digital domain remains volatile, marked by reported hacks linked to state actors (Iran) and increased foreign governments using regulatory tools to block corporate acquisitions.",
+      "sentiment": "negative",
+      "category": "Tech/AI",
+      "deltaType": "disruption",
+      "source": [
+        {
+          "feedId": "27",
+          "source": "TechCrunch",
+          "title": "Iranian hackers blamed for breach of Los Angeles transit system that took weeks to recover",
+          "link": "https://techcrunch.com/2026/05/26/iranian-hackers-blamed-for-breach-of-los-angeles-transit-system-that-took-weeks-to-recover/",
+          "timestamp": "Tue, 26 May 2026 15:26:27 +0000"
+        },
+        {
+          "feedId": "25",
+          "source": "TechCrunch",
+          "title": "Dutch government blocks US company from acquisition, citing ‘risk to public interest’",
+          "link": "https://techcrunch.com/2026/05/26/dutch-government-blocks-us-company-from-acquisition-citing-risk-to-public-interest/",
+          "timestamp": "Tue, 26 May 2026 15:44:23 +0000"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_db84ffe3",
+      "title": "Scientists Monitor Environmental Decline and Climate Pivot Points",
+      "text": "Environmental monitoring continues through bioindicators like fly counters detecting river pollution. Furthermore, scientific reports indicate a significant shift away from previous worst-case climate scenarios.",
+      "sentiment": "neutral",
+      "category": "Science",
+      "deltaType": "breakthrough",
+      "source": [
+        {
+          "feedId": "15",
+          "source": "BBC Science",
+          "title": "Fly counters help to spot signs of river pollution",
+          "link": "https://www.bbc.com/news/articles/czj21vv3z7eo?at_medium=RSS&amp;at_campaign=rss",
+          "timestamp": "Tue, 26 May 2026 09:54:49 GMT"
+        },
+        {
+          "feedId": "17",
+          "source": "NY Times Science",
+          "title": "Scientists Ditched a Scary Climate Scenario. What Now?",
+          "link": "https://www.nytimes.com/2026/05/26/climate/emissions-worst-case-scenario-rcp.html",
+          "timestamp": "Tue, 26 May 2026 14:32:38 +0000"
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "insights": [
+    {
+      "text": "The Interplay of Energy Geopolitics and Consumer Financial Contraction",
+      "sentiment": "neutral",
+      "source": []
+    },
+    {
+      "text": "Infrastructure Strain: The Bottleneck of AI Growth Amid Economic Retrenchment",
+      "sentiment": "neutral",
+      "source": []
+    },
+    {
+      "text": "The Militarization of Information and Cyber Sovereignty",
+      "sentiment": "neutral",
+      "source": []
+    },
+    {
+      "text": "Governance Vacuum: Institutional Failure as a Precursor to Social Disorder",
+      "sentiment": "neutral",
+      "source": []
+    }
+  ],
+  "feeds": [
+    {
+      "id": "WP-MKTW-0004997943",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 16:22:00 GMT",
+      "content": "This bear market signal Wall Street ignores is putting your money at risk right now. Veteran trader Steve Burns prepares for a 50% decline and exposes the 3 &#x201c;deadly stock-market sins&#x201d; destroying portfolios.",
+      "category": "Business",
+      "title": "This bear market signal Wall Street ignores is putting your money at risk right now",
+      "link": "https://www.marketwatch.com/story/this-bear-market-signal-wall-street-ignores-is-putting-your-money-at-risk-right-now-46f1fcf3?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-95721773",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/this-bear-market-signal-wall-street-ignores-is-putting-your-money-at-risk-right-now-46f1fcf3?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005016919",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 16:15:00 GMT",
+      "content": "More than 9 million people are missing out on $58 billion in food and medical benefits. Are you one of them?. Lack of awareness, social stigma, application struggles and eligibility concerns prevent people from getting benefits",
+      "category": "Business",
+      "title": "More than 9 million people are missing out on $58 billion in food and medical benefits. Are you one of them?",
+      "link": "https://www.marketwatch.com/story/more-than-9-million-people-are-missing-out-on-58-billion-in-food-and-medical-benefits-are-you-one-of-them-d2e79770?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-34834016",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/more-than-9-million-people-are-missing-out-on-58-billion-in-food-and-medical-benefits-are-you-one-of-them-d2e79770?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005018769",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 16:15:00 GMT",
+      "content": "Micron&#x2019;s stock soars as UBS slaps on an out-of-sight price target. Strong memory chip demand is leading to &#x201c;enhanced&#x201d; long term agreements that should benefit Micron&#x2019;s stock and earnings power, UBS says.",
+      "category": "Business",
+      "title": "Micron&#x2019;s stock soars as UBS slaps on an out-of-sight price target",
+      "link": "https://www.marketwatch.com/story/microns-stock-soars-as-ubs-slaps-on-an-out-of-sight-price-target-77e75b8e?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-18553565",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/microns-stock-soars-as-ubs-slaps-on-an-out-of-sight-price-target-77e75b8e?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005017702",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 16:00:00 GMT",
+      "content": "I&#x2019;m 67. Our family trust earns $300,000 annually for my kids. How do I ensure they won&#x2019;t get killed on taxes?. &#x201c;My thought is to distribute all of the income to my children each year so that the trust itself pays little to no tax.&#x201d;",
+      "category": "Business",
+      "title": "I&#x2019;m 67. Our family trust earns $300,000 annually for my kids. How do I ensure they won&#x2019;t get killed on taxes?",
+      "link": "https://www.marketwatch.com/story/im-67-our-family-trust-earns-300-000-annually-for-my-kids-how-do-i-ensure-they-wont-get-killed-on-taxes-ee0c35d6?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-51473819",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/im-67-our-family-trust-earns-300-000-annually-for-my-kids-how-do-i-ensure-they-wont-get-killed-on-taxes-ee0c35d6?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005018797",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 15:47:00 GMT",
+      "content": "Space stocks are rocketing as SpaceX keeps making pre-IPO headlines with first Starship launch. SpaceX, which is planning to go public soon, recently tested the latest version of its massive 407-foot rocket for the first time.",
+      "category": "Business",
+      "title": "Space stocks are rocketing as SpaceX keeps making pre-IPO headlines with first Starship launch",
+      "link": "https://www.marketwatch.com/story/space-stocks-are-rocketing-as-spacex-keeps-making-pre-ipo-headlines-with-first-starship-launch-17c76a46?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-08443278",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/space-stocks-are-rocketing-as-spacex-keeps-making-pre-ipo-headlines-with-first-starship-launch-17c76a46?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005014115",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 15:25:00 GMT",
+      "content": "An adviser told me I can save 35% of the taxes on a Roth conversion. Is that true?. The age-old rule applies: If it sounds too good to be true, it probably is.",
+      "category": "Business",
+      "title": "An adviser told me I can save 35% of the taxes on a Roth conversion. Is that true?",
+      "link": "https://www.marketwatch.com/story/an-adviser-told-me-i-can-save-35-of-the-taxes-on-a-roth-conversion-is-that-true-7f4b4268?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-87846845",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/an-adviser-told-me-i-can-save-35-of-the-taxes-on-a-roth-conversion-is-that-true-7f4b4268?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005015765",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 15:25:00 GMT",
+      "content": "I almost fell for a scammer. This one rule saved me &#x2014; and could help you, too.. Scams are sophisticated and come in many shapes and forms. It&#x2019;s easy to be fooled.",
+      "category": "Business",
+      "title": "I almost fell for a scammer. This one rule saved me &#x2014; and could help you, too.",
+      "link": "https://www.marketwatch.com/story/i-almost-fell-for-scammer-this-one-rule-saved-me-and-could-help-you-too-8c3bcf78?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-05405000",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/i-almost-fell-for-scammer-this-one-rule-saved-me-and-could-help-you-too-8c3bcf78?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005010985",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 15:19:00 GMT",
+      "content": "Divorce: The surprising cost of caring for aging parents. Mental-health and financial pressures can strain even strong marriages.",
+      "category": "Business",
+      "title": "Divorce: The surprising cost of caring for aging parents",
+      "link": "https://www.marketwatch.com/story/the-surprising-cost-of-caring-for-aging-parents-divorce-2ff83fce?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-05641346",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/the-surprising-cost-of-caring-for-aging-parents-divorce-2ff83fce?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005018303",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 15:15:00 GMT",
+      "content": "My friend, 62, earns $20,000 a year. Should she take Social Security now &#x2014; and claim survivor&#x2019;s benefit at 67?. &#x201c;I calculated her break-even point to be around age 78.&#x201d;",
+      "category": "Business",
+      "title": "My friend, 62, earns $20,000 a year. Should she take Social Security now &#x2014; and claim survivor&#x2019;s benefit at 67?",
+      "link": "https://www.marketwatch.com/story/my-friend-62-earns-20-000-a-year-should-she-take-social-security-now-or-claim-survivors-benefit-at-67-c661bdca?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-46036277",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/my-friend-62-earns-20-000-a-year-should-she-take-social-security-now-or-claim-survivors-benefit-at-67-c661bdca?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005018835",
+      "source": "MarketWatch",
+      "timestamp": "Tue, 26 May 2026 15:00:00 GMT",
+      "content": "&#x2018;We have always bonded over hating billionaires&#x2019;: I got a well-paid job. Now my friend says I&#x2019;m ultrawealthy. How do I respond?. &#x201c;I don&#x2019;t want to make it awkward.&#x201d;",
+      "category": "Business",
+      "title": "&#x2018;We have always bonded over hating billionaires&#x2019;: I got a well-paid job. Now my friend says I&#x2019;m ultrawealthy. How do I respond?",
+      "link": "https://www.marketwatch.com/story/we-have-always-bonded-over-hating-billionaires-i-got-a-well-paid-job-now-my-friend-says-im-ultrawealthy-how-do-i-respond-087aa4dd?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-90011351",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/we-have-always-bonded-over-hating-billionaires-i-got-a-well-paid-job-now-my-friend-says-im-ultrawealthy-how-do-i-respond-087aa4dd?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c759q6y26w3o#0",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 07:09:38 GMT",
+      "content": "Australia confirms first diphtheria death amid worst outbreak in decades. Most cases are in the Northern Territory with some also in Western Australia, South Australia and Queensland.",
+      "category": "World",
+      "title": "Australia confirms first diphtheria death amid worst outbreak in decades",
+      "link": "https://www.bbc.com/news/articles/c759q6y26w3o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c759q6y26w3o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/ckmg1572e8ko#4",
+      "source": "BBC Science",
+      "timestamp": "Tue, 26 May 2026 10:17:03 GMT",
+      "content": "What are UV levels and how can you protect yourself?. Some UV exposure is essential for our wellbeing, but too much is damaging and can cause skin cancer.",
+      "category": "Science",
+      "title": "What are UV levels and how can you protect yourself?",
+      "link": "https://www.bbc.com/news/articles/ckmg1572e8ko?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/ckmg1572e8ko?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/health/lenacapavir-hiv-zambia.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 15:47:05 +0000",
+      "content": "A Powerful H.I.V. Drug Lands in Zambia. But Will It Reach Those Who Need It?. Lenacapavir, which protects people from H.I.V. infection with twice-yearly shots, is arriving in a country where the health system has been hollowed out by American aid cuts.",
+      "category": "World",
+      "title": "A Powerful H.I.V. Drug Lands in Zambia. But Will It Reach Those Who Need It?",
+      "link": "https://www.nytimes.com/2026/05/26/health/lenacapavir-hiv-zambia.html",
+      "picture": "https://static01.nyt.com/images/2026/05/05/multimedia/xx-zambia-lenacapavir-01-wgpf/xx-zambia-lenacapavir-01-wgpf-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/health/lenacapavir-hiv-zambia.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/business/eli-lilly-vaccines-shingles-epstein-barr.html",
+      "source": "NY Times Science",
+      "timestamp": "Tue, 26 May 2026 14:01:31 +0000",
+      "content": "Eli Lilly to Buy 3 Vaccine Developers. The drugmaker said it would spend up to $4 billion to acquire small companies exploring vaccines for shingles, Epstein-Barr virus and other pathogens.",
+      "category": "Science",
+      "title": "Eli Lilly to Buy 3 Vaccine Developers",
+      "link": "https://www.nytimes.com/2026/05/26/business/eli-lilly-vaccines-shingles-epstein-barr.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26biz-lilly-vaccines-pfqb/26biz-lilly-vaccines-pfqb-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/business/eli-lilly-vaccines-shingles-epstein-barr.html"
+    },
+    {
+      "id": "https://www.nytimes.com/video/health/100000010889107/how-profit-seeking-autism-clinics-can-harm-kids.html",
+      "source": "NY Times Health",
+      "timestamp": "Tue, 26 May 2026 15:16:47 +0000",
+      "content": "How Profit-Seeking Autism Clinics Can Harm Kids. Profit motives are shaping the care inside an expanding autism therapy industry, creating conditions that can harm some children. Our health reporter Sarah Kliff explains her new investigation, co-authored with Margot Sanger-Katz.",
+      "category": "Health",
+      "title": "How Profit-Seeking Autism Clinics Can Harm Kids",
+      "link": "https://www.nytimes.com/video/health/100000010889107/how-profit-seeking-autism-clinics-can-harm-kids.html",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/video/health/100000010889107/how-profit-seeking-autism-clinics-can-harm-kids.html"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/czj21vv3z7eo#2",
+      "source": "BBC Science",
+      "timestamp": "Tue, 26 May 2026 09:54:49 GMT",
+      "content": "Fly counters help to spot signs of river pollution. Hundreds of volunteers survey Scotland's watercourses and report any issues of concern quickly.",
+      "category": "Science",
+      "title": "Fly counters help to spot signs of river pollution",
+      "link": "https://www.bbc.com/news/articles/czj21vv3z7eo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/czj21vv3z7eo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/travel/solar-eclipse-spain-iceland-greenland.html",
+      "source": "NY Times Science",
+      "timestamp": "Tue, 26 May 2026 09:00:16 +0000",
+      "content": "Where to See the Total Solar Eclipse on Aug. 12. On Aug. 12, parts of Greenland, Iceland, Spain and Portugal will experience the thrill of daytime darkness. Here’s where you can witness the cosmic spectacle.",
+      "category": "Science",
+      "title": "Where to See the Total Solar Eclipse on Aug. 12",
+      "link": "https://www.nytimes.com/2026/05/26/travel/solar-eclipse-spain-iceland-greenland.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26trav-august-eclipse-hqtp/26trav-august-eclipse-hqtp-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/travel/solar-eclipse-spain-iceland-greenland.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/climate/emissions-worst-case-scenario-rcp.html",
+      "source": "NY Times Science",
+      "timestamp": "Tue, 26 May 2026 14:32:38 +0000",
+      "content": "Scientists Ditched a Scary Climate Scenario. What Now?. While global warming is still a threat, the decision to back away from a worst-case outlook raises questions about whether some risks have been overstated.",
+      "category": "Science",
+      "title": "Scientists Ditched a Scary Climate Scenario. What Now?",
+      "link": "https://www.nytimes.com/2026/05/26/climate/emissions-worst-case-scenario-rcp.html",
+      "picture": "https://static01.nyt.com/images/2026/05/24/multimedia/24cli-worst-case-01-mtfw/24cli-worst-case-01-mtfw-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/climate/emissions-worst-case-scenario-rcp.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/us/chemical-tank-garden-grove.html",
+      "source": "NY Times Science",
+      "timestamp": "Tue, 26 May 2026 13:02:09 +0000",
+      "content": "Threat of Explosion From Toxic Chemical Tank Lessened, Officials Say. The risk of a large explosion has been averted, officials say. But a smaller blast remains possible, and 16,000 people remain displaced.",
+      "category": "Science",
+      "title": "Threat of Explosion From Toxic Chemical Tank Lessened, Officials Say",
+      "link": "https://www.nytimes.com/2026/05/25/us/chemical-tank-garden-grove.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25nat-oc-tank-NEW-mvbp/25nat-oc-tank-NEW-mvbp-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/us/chemical-tank-garden-grove.html"
+    },
+    {
+      "id": "https://arstechnica.com/culture/2026/05/review-the-boroughs-is-a-smart-pitch-perfect-creature-feature/",
+      "source": "Ars Technica",
+      "timestamp": "Tue, 26 May 2026 14:35:13 +0000",
+      "content": "Review: The Boroughs is a smart, pitch-perfect creature feature. ",
+      "category": "Technology",
+      "title": "Review: The Boroughs is a smart, pitch-perfect creature feature",
+      "link": "https://arstechnica.com/culture/2026/05/review-the-boroughs-is-a-smart-pitch-perfect-creature-feature/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/boroughs14-1152x648-1779640645.jpg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/culture/2026/05/review-the-boroughs-is-a-smart-pitch-perfect-creature-feature/"
+    },
+    {
+      "id": "https://arstechnica.com/cars/2026/05/audis-boss-talks-local-production-wagons-and-maybe-a-new-r8-supercar/",
+      "source": "Ars Technica",
+      "timestamp": "Tue, 26 May 2026 14:21:33 +0000",
+      "content": "A global brand but local cars is Audi&#039;s future, says CEO. ",
+      "category": "Technology",
+      "title": "A global brand but local cars is Audi&#039;s future, says CEO",
+      "link": "https://arstechnica.com/cars/2026/05/audis-boss-talks-local-production-wagons-and-maybe-a-new-r8-supercar/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/A251501_large-1152x648.jpg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/cars/2026/05/audis-boss-talks-local-production-wagons-and-maybe-a-new-r8-supercar/"
+    },
+    {
+      "id": "https://arstechnica.com/space/2026/05/analyst-on-chinas-spent-rocket-stages-things-only-continue-to-get-worse/",
+      "source": "Ars Technica",
+      "timestamp": "Tue, 26 May 2026 13:57:30 +0000",
+      "content": "Analyst on China&#039;s spent rocket stages: &quot;Things only continue to get worse&quot;. ",
+      "category": "Technology",
+      "title": "Analyst on China&#039;s spent rocket stages: &quot;Things only continue to get worse&quot;",
+      "link": "https://arstechnica.com/space/2026/05/analyst-on-chinas-spent-rocket-stages-things-only-continue-to-get-worse/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/rocket-body-mass-1152x648.jpg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/space/2026/05/analyst-on-chinas-spent-rocket-stages-things-only-continue-to-get-worse/"
+    },
+    {
+      "id": "https://arstechnica.com/cars/2026/05/the-most-controversial-ferrari-ever-meet-the-luce-its-first-ever-ev/",
+      "source": "Ars Technica",
+      "timestamp": "Tue, 26 May 2026 12:56:32 +0000",
+      "content": "Amazing interior, controversial exterior: Ferrari&#039;s first electric car. ",
+      "category": "Technology",
+      "title": "Amazing interior, controversial exterior: Ferrari&#039;s first electric car",
+      "link": "https://arstechnica.com/cars/2026/05/the-most-controversial-ferrari-ever-meet-the-luce-its-first-ever-ev/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/Luce_22rtv3_lightsOn_6000x3375-1152x648.jpg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/cars/2026/05/the-most-controversial-ferrari-ever-meet-the-luce-its-first-ever-ev/"
+    },
+    {
+      "id": "https://arstechnica.com/cars/2026/05/porsches-cayenne-coupe-electric-brings-formula-e-tech-to-the-autobahn/",
+      "source": "Ars Technica",
+      "timestamp": "Tue, 26 May 2026 12:00:11 +0000",
+      "content": "Driving Porsche&#039;s most powerful car—and no, it&#039;s not a 911. ",
+      "category": "Technology",
+      "title": "Driving Porsche&#039;s most powerful car—and no, it&#039;s not a 911",
+      "link": "https://arstechnica.com/cars/2026/05/porsches-cayenne-coupe-electric-brings-formula-e-tech-to-the-autobahn/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/2026-Porsche-Cayenne-Coupe-Turbo-2-1152x648.jpg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/cars/2026/05/porsches-cayenne-coupe-electric-brings-formula-e-tech-to-the-autobahn/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3123948",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 16:00:00 +0000",
+      "content": "This startup is betting India&#8217;s gig economy can train the world&#8217;s robots. Human Archive, a startup founded by Berkeley and Stanford researchers, is paying gig workers in India to wear camera-equipped caps and sensor devices to collect the real-world physical training data that AI and robotics labs are racing to acquire.",
+      "category": "Technology",
+      "title": "This startup is betting India&#8217;s gig economy can train the world&#8217;s robots",
+      "link": "https://techcrunch.com/2026/05/26/human-archive-taps-into-indias-services-startups-to-collect-data-for-physical-ai/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/human-archive-taps-into-indias-services-startups-to-collect-data-for-physical-ai/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125946",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 15:44:23 +0000",
+      "content": "Dutch government blocks US company from acquisition, citing &#8216;risk to public interest&#8217;. The move to block the acquisition of the cloud company that hosts the Dutch digital ID service comes as Europe continues to reduce its reliance on U.S. technology.",
+      "category": "Technology",
+      "title": "Dutch government blocks US company from acquisition, citing &#8216;risk to public interest&#8217;",
+      "link": "https://techcrunch.com/2026/05/26/dutch-government-blocks-us-company-from-acquisition-citing-risk-to-public-interest/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/dutch-government-blocks-us-company-from-acquisition-citing-risk-to-public-interest/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3111520",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 15:27:12 +0000",
+      "content": "Ghost hackers: the cybersecurity mystery that nobody has solved. A shadowy group that stole and dumped the NSA’s most powerful hacking tools still has implications for how companies think about digital risk today.",
+      "category": "Technology",
+      "title": "Ghost hackers: the cybersecurity mystery that nobody has solved",
+      "link": "https://techcrunch.com/2026/05/26/ghost-hackers-the-cybersecurity-mystery-that-nobody-has-solved/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/ghost-hackers-the-cybersecurity-mystery-that-nobody-has-solved/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125930",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 15:26:27 +0000",
+      "content": "Iranian hackers blamed for breach of Los Angeles transit system that took weeks to recover. An Israeli cybersecurity firm said Iran’s government is behind Ababil of Minab, a fake hacktivist persona that has claimed a series of data breaches after the start of the war in Iran.",
+      "category": "Technology",
+      "title": "Iranian hackers blamed for breach of Los Angeles transit system that took weeks to recover",
+      "link": "https://techcrunch.com/2026/05/26/iranian-hackers-blamed-for-breach-of-los-angeles-transit-system-that-took-weeks-to-recover/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/iranian-hackers-blamed-for-breach-of-los-angeles-transit-system-that-took-weeks-to-recover/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125917",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 15:16:34 +0000",
+      "content": "Ferrari&#8217;s first EV is not for you. The Ferrari Luce seems to be more aimed at regulatory compliance and China, putting a lot of pressure on the Jony Ive-designed EV.",
+      "category": "Technology",
+      "title": "Ferrari&#8217;s first EV is not for you",
+      "link": "https://techcrunch.com/2026/05/26/ferraris-first-ev-is-not-for-you/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/ferraris-first-ev-is-not-for-you/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125925",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 14:55:05 +0000",
+      "content": "Universal Music Group and TikTok renew agreement to combat unauthorized AI music. For years, UMG has pushed platforms, streaming services, and AI companies to implement stricter content moderation policies",
+      "category": "Technology",
+      "title": "Universal Music Group and TikTok renew agreement to combat unauthorized AI music",
+      "link": "https://techcrunch.com/2026/05/26/universal-music-group-and-tiktok-renew-agreement-to-combat-unauthorized-ai-music/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/universal-music-group-and-tiktok-renew-agreement-to-combat-unauthorized-ai-music/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125916",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 14:38:05 +0000",
+      "content": "Spotify now lets you stream narrated magazine articles, too. Spotify is adding narrated magazine articles to its app as it expands beyond music into audiobooks, podcasts, AI audio, and more.",
+      "category": "Technology",
+      "title": "Spotify now lets you stream narrated magazine articles, too",
+      "link": "https://techcrunch.com/2026/05/26/spotify-now-lets-you-stream-narrated-magazine-articles-too/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/spotify-now-lets-you-stream-narrated-magazine-articles-too/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125880",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 14:00:00 +0000",
+      "content": "TechCrunch Disrupt 2026 Early Bird ticket rates end May 29. Save up to $410 on your TechCrunch Disrupt 2026 pass before prices increase on May 29 at 11:59 p.m. PT. Register here to join the tech epicenter in San Francisco.",
+      "category": "Technology",
+      "title": "TechCrunch Disrupt 2026 Early Bird ticket rates end May 29",
+      "link": "https://techcrunch.com/2026/05/26/techcrunch-disrupt-2026-early-bird-ticket-rates-end-may-29/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/techcrunch-disrupt-2026-early-bird-ticket-rates-end-may-29/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125909",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 13:04:56 +0000",
+      "content": "7-Eleven data breach affects over 185,000 people&#8217;s personal data. The data breach included names, dates-of-birth, postal addresses, and Social Security numbers, according to a state government listing.",
+      "category": "Technology",
+      "title": "7-Eleven data breach affects over 185,000 people&#8217;s personal data",
+      "link": "https://techcrunch.com/2026/05/26/7-eleven-data-breach-affects-over-185000-peoples-personal-data/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/7-eleven-data-breach-affects-over-185000-peoples-personal-data/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125670",
+      "source": "TechCrunch",
+      "timestamp": "Tue, 26 May 2026 12:00:00 +0000",
+      "content": "Amazon fulfillment competitor Stord raises $250M at $3B valuation. Stord was founded in 2015 by then-college students CEO Sean Henry  and CTO Jacob Boudreau while they were still at Georgia Tech.",
+      "category": "Technology",
+      "title": "Amazon fulfillment competitor Stord raises $250M at $3B valuation",
+      "link": "https://techcrunch.com/2026/05/26/amazon-fulfillment-competitor-stord-raises-250m-at-3b-valuation/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/26/amazon-fulfillment-competitor-stord-raises-250m-at-3b-valuation/"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779810954",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 16:21:10 +0000",
+      "content": "France’s Kouame becomes youngest male Grand Slam match-winner in 17 years. At 17, Moise Kouame becomes the youngest winner of a Grand Slam match with French Open win against Marin Cilic.",
+      "category": "World",
+      "title": "France’s Kouame becomes youngest male Grand Slam match-winner in 17 years",
+      "link": "https://www.aljazeera.com/sports/2026/5/26/frances-kouame-becomes-youngest-male-grand-slam-match-winner-in-17-years?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/sports/2026/5/26/frances-kouame-becomes-youngest-male-grand-slam-match-winner-in-17-years?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779808652",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 16:19:40 +0000",
+      "content": "Albert Manifold ousted as BP chair over governance and conduct concerns. BP stock falls by over 4 percent in US and UK markets as governance concerns lead to chairman Albert Manifold&#039;s removal.",
+      "category": "World",
+      "title": "Albert Manifold ousted as BP chair over governance and conduct concerns",
+      "link": "https://www.aljazeera.com/economy/2026/5/26/albert-manifold-ousted-as-bp-chair-over-governance-and-conduct-concerns?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/economy/2026/5/26/albert-manifold-ousted-as-bp-chair-over-governance-and-conduct-concerns?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779808324",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 16:13:58 +0000",
+      "content": "Iranian fishermen struggle to survive amid Hormuz blockade. The livelihoods of Iranian fishermen have taken a hit amid the US blockade on Iran’s ports in the Strait of Hormuz.",
+      "category": "World",
+      "title": "Iranian fishermen struggle to survive amid Hormuz blockade",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/26/iranian-fishermen-struggle-to-survive-amid-hormuz-blockade?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/26/iranian-fishermen-struggle-to-survive-amid-hormuz-blockade?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779805200",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 15:19:22 +0000",
+      "content": "European countries and EU summon Russian envoys over threats on Kyiv. EU spokesperson Anitta Hipper says Russia’s threat to diplomats and foreign citizens is an &#039;unacceptable escalation&#039;.",
+      "category": "World",
+      "title": "European countries and EU summon Russian envoys over threats on Kyiv",
+      "link": "https://www.aljazeera.com/news/2026/5/26/european-countries-and-eu-summon-russian-envoys-over-threats-on-kyiv?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/european-countries-and-eu-summon-russian-envoys-over-threats-on-kyiv?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779802751",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 15:13:18 +0000",
+      "content": "Tehran labels US attacks ‘gross violation’, says it is prepared to respond. The US says it struck boats and missile sites in Iran, shortly after both sides had indicated progress in peace talks.",
+      "category": "World",
+      "title": "Tehran labels US attacks ‘gross violation’, says it is prepared to respond",
+      "link": "https://www.aljazeera.com/news/2026/5/26/tehran-labels-us-attacks-gross-violation-says-it-is-prepared-to-respond?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/tehran-labels-us-attacks-gross-violation-says-it-is-prepared-to-respond?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779187271",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 15:10:04 +0000",
+      "content": "Israel is no longer ‘shooting and crying’. A settler society rewarded for its violence has stopped pretending to mourn it.",
+      "category": "World",
+      "title": "Israel is no longer ‘shooting and crying’",
+      "link": "https://www.aljazeera.com/opinions/2026/5/26/israel-is-no-longer-shooting-and-crying?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/opinions/2026/5/26/israel-is-no-longer-shooting-and-crying?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779799677",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 15:08:06 +0000",
+      "content": "Hajj pilgrims gather at Mount Arafat under scorching desert sun. Temperatures near 44°C test worshippers’ endurance as the annual pilgrimage unfolds under the shadow of war.",
+      "category": "World",
+      "title": "Hajj pilgrims gather at Mount Arafat under scorching desert sun",
+      "link": "https://www.aljazeera.com/gallery/2026/5/26/hajj-pilgrims-gather-at-mount-arafat-under-scorching-desert-sun?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/gallery/2026/5/26/hajj-pilgrims-gather-at-mount-arafat-under-scorching-desert-sun?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779787232",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 14:59:42 +0000",
+      "content": "‘Leave Kyiv’: Why Russia’s latest Ukraine threat is a major escalation. Russia and Ukraine have been at war since February 2022 and have not yet agreed on a peace deal.",
+      "category": "World",
+      "title": "‘Leave Kyiv’: Why Russia’s latest Ukraine threat is a major escalation",
+      "link": "https://www.aljazeera.com/news/2026/5/26/leave-kyiv-why-russias-latest-ukraine-threat-is-a-major-escalation?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/leave-kyiv-why-russias-latest-ukraine-threat-is-a-major-escalation?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779806084",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 14:38:16 +0000",
+      "content": "Iran’s president praises military after US strikes. President Masoud Pezeshkian praised Iran’s military capabilities after the US carried out ‘self-defence’ strikes on Iran",
+      "category": "World",
+      "title": "Iran’s president praises military after US strikes",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/26/irans-president-praises-military-after-us-strikes?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/26/irans-president-praises-military-after-us-strikes?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779779215",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 14:36:33 +0000",
+      "content": "India, US strike critical minerals deal: What’s in it, why does it matter?. Agreement is latest US has signed as it seeks to diversify its rare earths supply chain.",
+      "category": "World",
+      "title": "India, US strike critical minerals deal: What’s in it, why does it matter?",
+      "link": "https://www.aljazeera.com/economy/2026/5/26/india-us-strike-critical-minerals-deal-whats-in-it-why-does-it-matter?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/economy/2026/5/26/india-us-strike-critical-minerals-deal-whats-in-it-why-does-it-matter?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779805485",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 14:36:01 +0000",
+      "content": "Twitch to politics: Hasan Piker on Gaza and the US right-wing. Twitch streamer Hasan Piker tackles politics, Gaza, and culture for nearly 3M viewers.",
+      "category": "World",
+      "title": "Twitch to politics: Hasan Piker on Gaza and the US right-wing",
+      "link": "https://www.aljazeera.com/video/the-take-2/2026/5/26/aje-onl-tt_rr_usa_piker_av_v1-250526?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/the-take-2/2026/5/26/aje-onl-tt_rr_usa_piker_av_v1-250526?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779805271",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 14:25:29 +0000",
+      "content": "Do we owe the world children?. Is having children a choice or responsibility?",
+      "category": "World",
+      "title": "Do we owe the world children?",
+      "link": "https://www.aljazeera.com/video/doha-debates/2026/5/26/do-we-owe-the-world-children?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/doha-debates/2026/5/26/do-we-owe-the-world-children?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779802179",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 13:33:16 +0000",
+      "content": "Al Jazeera speaks to Hajj pilgrims about their journey to Mecca. Pilgrims gather on the Day of Arafah, the spiritual peak of Hajj, retracing the Prophet Muhammad’s final sermon.",
+      "category": "World",
+      "title": "Al Jazeera speaks to Hajj pilgrims about their journey to Mecca",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/26/al-jazeera-speaks-to-hajj-pilgrims-about-their-journey-to-mecca?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/26/al-jazeera-speaks-to-hajj-pilgrims-about-their-journey-to-mecca?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779779025",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 13:26:40 +0000",
+      "content": "Israel’s occupation of Gaza, Lebanon, Syria extends beyond what maps show. Findings show Israel holds 1,000sq km of Gaza, Lebanon and Syria under direct military rule.",
+      "category": "World",
+      "title": "Israel’s occupation of Gaza, Lebanon, Syria extends beyond what maps show",
+      "link": "https://www.aljazeera.com/news/2026/5/26/israels-occupation-of-gaza-lebanon-syria-extends-beyond-what-maps-show?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/israels-occupation-of-gaza-lebanon-syria-extends-beyond-what-maps-show?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779780463",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 13:18:20 +0000",
+      "content": "Report warns pro-Palestine protesters face legal crackdown: What to know. Campaigners warn the right to protest is being put under pressure by the arms industry.",
+      "category": "World",
+      "title": "Report warns pro-Palestine protesters face legal crackdown: What to know",
+      "link": "https://www.aljazeera.com/news/2026/5/26/report-warns-pro-palestine-protesters-face-legal-crackdown-what-to-know?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/report-warns-pro-palestine-protesters-face-legal-crackdown-what-to-know?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779800273",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 13:13:53 +0000",
+      "content": "French Open: Medvedev shocked by wildcard Walton in first round. Former world number one Daniil Medvedev is stunned by Australia&#039;s Adam Walton in the opening round at Roland Garros.",
+      "category": "World",
+      "title": "French Open: Medvedev shocked by wildcard Walton in first round",
+      "link": "https://www.aljazeera.com/sports/2026/5/26/medvedev-shocked-by-wildcard-walton-in-french-open-first-round?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/sports/2026/5/26/medvedev-shocked-by-wildcard-walton-in-french-open-first-round?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779800146",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 12:58:00 +0000",
+      "content": "Protester confronts Canadian politician over ‘Gaza complicity’. Protester confronts Canadian politician over ‘Gaza complicity’",
+      "category": "World",
+      "title": "Protester confronts Canadian politician over ‘Gaza complicity’",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/26/protester-confronts-canadian-politician-over-gaza?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/26/protester-confronts-canadian-politician-over-gaza?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779797145",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 12:57:05 +0000",
+      "content": "French Open: Sabalenka storms past Bouzas Maneiro, Gauff also cruises. Aryna Sabalenka powered into the French Open second round, defying her world number 50 opponent and searing Paris heat.",
+      "category": "World",
+      "title": "French Open: Sabalenka storms past Bouzas Maneiro, Gauff also cruises",
+      "link": "https://www.aljazeera.com/sports/2026/5/26/french-open-sabelenka-storms-to-opening-win-against-bouzas-maneiro?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/sports/2026/5/26/french-open-sabelenka-storms-to-opening-win-against-bouzas-maneiro?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779794174",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 12:44:56 +0000",
+      "content": "Senegal lawmakers elect ousted PM Sonko as new parliament speaker. Lawmakers reinstate Sonko and elect him speaker with overwhelming support.",
+      "category": "World",
+      "title": "Senegal lawmakers elect ousted PM Sonko as new parliament speaker",
+      "link": "https://www.aljazeera.com/news/2026/5/26/senegal-lawmakers-elect-ousted-pm-sonko-as-new-parliament-speaker?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/senegal-lawmakers-elect-ousted-pm-sonko-as-new-parliament-speaker?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779798716",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 12:39:31 +0000",
+      "content": "Congolese protesters accuse EU of complicity in DRC violence. Congolese protesters marched in Brussels to condemn the EU for what they say is complicity in violence in eastern DRC.",
+      "category": "World",
+      "title": "Congolese protesters accuse EU of complicity in DRC violence",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/26/congolese-protesters-accuse-eu-of-complicity-in-drc-violence?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/26/congolese-protesters-accuse-eu-of-complicity-in-drc-violence?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779785479",
+      "source": "Al Jazeera",
+      "timestamp": "Tue, 26 May 2026 12:34:20 +0000",
+      "content": "Israeli air attacks kill seven Palestinians in Gaza. At least five Palestinians killed in Israeli attack on a refugee camp in central Gaza, officials said.",
+      "category": "World",
+      "title": "Israeli air attacks kill seven Palestinians in Gaza",
+      "link": "https://www.aljazeera.com/news/2026/5/26/israeli-air-attacks-kill-seven-palestinians-in-gaza?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/26/israeli-air-attacks-kill-seven-palestinians-in-gaza?traffic_source=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c4g44yl7q70o#0",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 15:15:29 GMT",
+      "content": "Iran condemns US strikes as 'gross violation' of ceasefire. The attacks took place while Iranian and Qatari negotiators were in Doha for peace talks.",
+      "category": "World",
+      "title": "Iran condemns US strikes as 'gross violation' of ceasefire",
+      "link": "https://www.bbc.com/news/articles/c4g44yl7q70o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c4g44yl7q70o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c70vvd17rg7o#0",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 16:15:42 GMT",
+      "content": "Four killed as school minibus collides with train in Belgium. Two schoolchildren, their chaperone and the minibus driver were killed in the crash, says a Belgian minister.",
+      "category": "World",
+      "title": "Four killed as school minibus collides with train in Belgium",
+      "link": "https://www.bbc.com/news/articles/c70vvd17rg7o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c70vvd17rg7o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cx211rgngp0o#0",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 12:44:57 GMT",
+      "content": "Eleven killed in Lebanon village as Israel intensifies strikes. Israel says it struck 100 Hezbollah infrastructure sites and fighters in Lebanon, after PM Benjamin Netanyahu vows to \"crush\" Hezbollah.",
+      "category": "World",
+      "title": "Eleven killed in Lebanon village as Israel intensifies strikes",
+      "link": "https://www.bbc.com/news/articles/cx211rgngp0o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cx211rgngp0o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c3022rd2er4o#0",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 11:22:04 GMT",
+      "content": "Ebola needs swift response to prevent catastrophe, says DR Congo governor. The governor of Ituri said the more time they lose, the closer the province is to disaster.",
+      "category": "World",
+      "title": "Ebola needs swift response to prevent catastrophe, says DR Congo governor",
+      "link": "https://www.bbc.com/news/articles/c3022rd2er4o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c3022rd2er4o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cewppdk1187o#0",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 10:48:55 GMT",
+      "content": "Netanyahu says Israel will intensify strikes against Hezbollah. The Israeli military hits targets in eastern Lebanon after the prime minister announces further strikes.",
+      "category": "World",
+      "title": "Netanyahu says Israel will intensify strikes against Hezbollah",
+      "link": "https://www.bbc.com/news/articles/cewppdk1187o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cewppdk1187o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cg5ppg50gplo#1",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 08:55:55 GMT",
+      "content": "China executes man for poisoning billionaire gaming tycoon. The court said the man poisoned the tycoon for sidelining him after he helped secure a deal with Netflix for the 3 Body Problem.",
+      "category": "World",
+      "title": "China executes man for poisoning billionaire gaming tycoon",
+      "link": "https://www.bbc.com/news/articles/cg5ppg50gplo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cg5ppg50gplo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cg4pppq12nvo#1",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 15:41:31 GMT",
+      "content": "Senegal's sacked PM Sonko elected parliamentary Speaker in challenge to president. As speaker, Sonko could use his position to challenge the policies of the president, his one-time ally.",
+      "category": "World",
+      "title": "Senegal's sacked PM Sonko elected parliamentary Speaker in challenge to president",
+      "link": "https://www.bbc.com/news/articles/cg4pppq12nvo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cg4pppq12nvo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c1l22pg12mpo#1",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 14:04:51 GMT",
+      "content": "White House gunman had previous run-ins with Secret Service, court documents show. The suspect previously obstructed a White House entry lane in June of 2025 and told Secret Service agents he was Jesus Christ.",
+      "category": "World",
+      "title": "White House gunman had previous run-ins with Secret Service, court documents show",
+      "link": "https://www.bbc.com/news/articles/c1l22pg12mpo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c1l22pg12mpo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/ce8pp0n5znko#2",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 10:31:24 GMT",
+      "content": "Delhi's most exclusive club is under threat of shutdown - can it survive?. The British-era Gymkhana Club is facing eviction, triggering a legal battle and a wave of nostalgia.",
+      "category": "World",
+      "title": "Delhi's most exclusive club is under threat of shutdown - can it survive?",
+      "link": "https://www.bbc.com/news/articles/ce8pp0n5znko?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/ce8pp0n5znko?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/videos/cdjppm1rpn7o#3",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 09:12:57 GMT",
+      "content": "Watch: Bridge collapses and car swept away in China river. The driver and passengers of the car managed to escape before the bridge gave way in Xiaogan.",
+      "category": "World",
+      "title": "Watch: Bridge collapses and car swept away in China river",
+      "link": "https://www.bbc.com/news/videos/cdjppm1rpn7o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/videos/cdjppm1rpn7o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/videos/clyppgdl3xwo#3",
+      "source": "BBC World",
+      "timestamp": "Tue, 26 May 2026 07:11:50 GMT",
+      "content": "Watch: Drones crash into water after Sydney light show malfunction. Almost 90 drones fell from the sky over Sydney's Darling Harbour during a popular winter light show.",
+      "category": "World",
+      "title": "Watch: Drones crash into water after Sydney light show malfunction",
+      "link": "https://www.bbc.com/news/videos/clyppgdl3xwo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/videos/clyppgdl3xwo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.nytimes.com/live/2026/05/26/world/iran-war-trump-deal",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 16:14:33 +0000",
+      "content": "Iran War Live Updates: Iran Threatens to Retaliate for U.S. Strikes as Talks Continue. The threat by Iran’s Revolutionary Guards Corps came after American military forces attacked sites near the Strait of Hormuz.",
+      "category": "World",
+      "title": "Iran War Live Updates: Iran Threatens to Retaliate for U.S. Strikes as Talks Continue",
+      "link": "https://www.nytimes.com/live/2026/05/26/world/iran-war-trump-deal",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26mideast-promo1/26mideast-header1-fghb-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/live/2026/05/26/world/iran-war-trump-deal"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/americas/dominican-republic-haiti-hospital-deportations.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 14:38:17 +0000",
+      "content": "Threat of Deportations Leads to Risky Childbirth for Haitian Mothers. Haitian women are having babies in squalid, unsupervised settings after the Dominican Republic started sending immigration agents to detain migrants at hospitals.",
+      "category": "World",
+      "title": "Threat of Deportations Leads to Risky Childbirth for Haitian Mothers",
+      "link": "https://www.nytimes.com/2026/05/26/world/americas/dominican-republic-haiti-hospital-deportations.html",
+      "picture": "https://static01.nyt.com/images/2026/05/05/world/00int-haitian-mothers-promo/00int-haitian-mothers-top-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/americas/dominican-republic-haiti-hospital-deportations.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/europe/chelsea-flower-show-gnomes-uk.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 14:09:02 +0000",
+      "content": "At Chelsea Flower Show, a Gnome Controversy and Some ‘Good British Madness’. At the prestigious garden show, attendees jockeyed to buy prizewinning blooms and debated the role of whimsy as a ban on garden gnomes was temporarily lifted.",
+      "category": "World",
+      "title": "At Chelsea Flower Show, a Gnome Controversy and Some ‘Good British Madness’",
+      "link": "https://www.nytimes.com/2026/05/26/world/europe/chelsea-flower-show-gnomes-uk.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26int-chelsea-flower-dispatch-01-tvjq/26int-chelsea-flower-dispatch-01-tvjq-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/europe/chelsea-flower-show-gnomes-uk.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/europe/belgium-minibus-train-collision-children.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 15:50:12 +0000",
+      "content": "Belgium Crash Kills 4 as Train Hits School Van. Two children, 12 and 15, were among those killed in the crash near Brussels, officials said. The students in the van attended a special education school.",
+      "category": "World",
+      "title": "Belgium Crash Kills 4 as Train Hits School Van",
+      "link": "https://www.nytimes.com/2026/05/26/world/europe/belgium-minibus-train-collision-children.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26int-belgium-crash-ctvg/26int-belgium-crash-ctvg-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/europe/belgium-minibus-train-collision-children.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/canada/mark-carney-alberta-referendum-brexit.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 15:07:59 +0000",
+      "content": "‘A Dangerous Bluff’: Carney Likens Alberta Referendum to Brexit. The Canadian prime minister, who was the governor of the Bank of England when Britain voted to leave the European Union, said the Alberta referendum on separating from Canada could backfire.",
+      "category": "World",
+      "title": "‘A Dangerous Bluff’: Carney Likens Alberta Referendum to Brexit",
+      "link": "https://www.nytimes.com/2026/05/25/world/canada/mark-carney-alberta-referendum-brexit.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25int-carney-alberta-brexit-photo-qmbz/25int-carney-alberta-brexit-photo-qmbz-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/canada/mark-carney-alberta-referendum-brexit.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/europe/child-abuse-trial-school-paris.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 16:16:08 +0000",
+      "content": "Paris School Worker Tried for Child Abuse in Widespread Assault Inquiry. The 36-year-old, named in the French news media as David G., is among more than 70 employees at schools in the capital who have been recently suspended or fired over allegations of sexual abuse and other misconduct.",
+      "category": "World",
+      "title": "Paris School Worker Tried for Child Abuse in Widespread Assault Inquiry",
+      "link": "https://www.nytimes.com/2026/05/26/world/europe/child-abuse-trial-school-paris.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26int-france-abuse-vwlq/26int-france-abuse-vwlq-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/europe/child-abuse-trial-school-paris.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/middleeast/iran-internet-blackout-lifting.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 15:58:27 +0000",
+      "content": "Iran Begins Lifting Monthslong Internet Blackout, Officials Say. Organizations that track online traffic confirmed an uptick in activity on Tuesday, as Iranians reconnected to the global internet after a government-imposed shutdown.",
+      "category": "World",
+      "title": "Iran Begins Lifting Monthslong Internet Blackout, Officials Say",
+      "link": "https://www.nytimes.com/2026/05/26/world/middleeast/iran-internet-blackout-lifting.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26mideast-internet-lvjk/26mideast-internet-lvjk-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/middleeast/iran-internet-blackout-lifting.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/middleeast/trump-middle-east-peace-deals.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 13:57:30 +0000",
+      "content": "Trump’s Iran Proposal Has Echoes of Half-Finished Gaza Deal. President Trump’s proposal to end the war with Iran would delay tackling the most contentious issues — a tactic that has had mixed results in Gaza.",
+      "category": "World",
+      "title": "Trump’s Iran Proposal Has Echoes of Half-Finished Gaza Deal",
+      "link": "https://www.nytimes.com/2026/05/26/world/middleeast/trump-middle-east-peace-deals.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26mideast-half-deals-zpbg/26mideast-half-deals-zpbg-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/middleeast/trump-middle-east-peace-deals.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/middleeast/israel-strikes-escalation-lebanon.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 15:55:06 +0000",
+      "content": "Israel Steps Up Lebanon Offensive as U.S. Pushes for Iran Peace Deal. Hezbollah, the Iran-backed militant group, has also kept up rocket and drone attacks on Israeli troops, as the escalation threatens to complicate diplomatic efforts.",
+      "category": "World",
+      "title": "Israel Steps Up Lebanon Offensive as U.S. Pushes for Iran Peace Deal",
+      "link": "https://www.nytimes.com/2026/05/26/world/middleeast/israel-strikes-escalation-lebanon.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26mideast-lebanon-gqmf/26mideast-lebanon-gqmf-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/middleeast/israel-strikes-escalation-lebanon.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/asia/china-dissident-dong-guangping-south-korea.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 14:06:57 +0000",
+      "content": "A Dissident Escapes China by Rubber Boat and Lands in South Korea. Dong Guangping, 68, fled China at least three other times but was always sent back. His friends hope things might be different this time.",
+      "category": "World",
+      "title": "A Dissident Escapes China by Rubber Boat and Lands in South Korea",
+      "link": "https://www.nytimes.com/2026/05/26/world/asia/china-dissident-dong-guangping-south-korea.html",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/asia/china-dissident-dong-guangping-south-korea.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/us/pope-leo-ai-anthropic.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 13:25:31 +0000",
+      "content": "To Understand Pope Leo’s Efforts on A.I., Look at the Man Shaking His Hand. The co-founder of a prominent A.I. company was nearby as the pope implored A.I. leaders to slow down and consider the technology’s possible perils.",
+      "category": "World",
+      "title": "To Understand Pope Leo’s Efforts on A.I., Look at the Man Shaking His Hand",
+      "link": "https://www.nytimes.com/2026/05/26/us/pope-leo-ai-anthropic.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26nat-pope-assess-hwgf/26nat-pope-assess-hwgf-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/us/pope-leo-ai-anthropic.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/26/world/asia/russians-phuket-thailand.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 09:00:15 +0000",
+      "content": "Russians Are Thriving on This Thai Island, but the Scene Feels Fleeting. Thousands who fled Russia after the invasion of Ukraine have built an enclave in Phuket. An air of impermanence hangs over their community.",
+      "category": "World",
+      "title": "Russians Are Thriving on This Thai Island, but the Scene Feels Fleeting",
+      "link": "https://www.nytimes.com/2026/05/26/world/asia/russians-phuket-thailand.html",
+      "picture": "https://static01.nyt.com/images/2026/03/26/multimedia/00xp-russians-05-fvtm/00xp-russians-05-fvtm-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/26/world/asia/russians-phuket-thailand.html"
+    },
+    {
+      "id": "https://www.nytimes.com/live/2026/05/26/world/iran-war-trump-deal/heres-the-latest",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 16:06:02 +0000",
+      "content": "Here’s the latest.. ",
+      "category": "World",
+      "title": "Here’s the latest.",
+      "link": "https://www.nytimes.com/live/2026/05/26/world/iran-war-trump-deal/heres-the-latest",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/live/2026/05/26/world/iran-war-trump-deal/heres-the-latest"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/middleeast/us-iran-strikes.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 10:36:58 +0000",
+      "content": "U.S. Carries Out Renewed Strikes in Southern Iran. Military officials said that the strikes targeted missile sites near a major Iranian port that threatened U.S. ships and planes.",
+      "category": "World",
+      "title": "U.S. Carries Out Renewed Strikes in Southern Iran",
+      "link": "https://www.nytimes.com/2026/05/25/world/middleeast/us-iran-strikes.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25mideast-us-strikes-tgbq/25mideast-us-strikes-tgbq-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/middleeast/us-iran-strikes.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/us/pope-leo-encyclical-highlights.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 07:32:45 +0000",
+      "content": "Main Takeaways From Pope Leo’s Encyclical on A.I.. In his letter, the first American pontiff called for putting care for humans at the heart of technological change.",
+      "category": "World",
+      "title": "Main Takeaways From Pope Leo’s Encyclical on A.I.",
+      "link": "https://www.nytimes.com/2026/05/25/us/pope-leo-encyclical-highlights.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26nat-pope-annotations-SWAP-tjpq/26nat-pope-annotations-SWAP-tjpq-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/us/pope-leo-encyclical-highlights.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/weather/uk-heat-wave-may-weather-record.html",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 13:52:29 +0000",
+      "content": "UK Heat Wave Could Break May Temperature Record. Forecasters warned that temperatures could climb to the highest level ever recorded in the month of May, reaching 35 degrees Celsius (95 degrees Fahrenheit) in some areas of England.",
+      "category": "World",
+      "title": "UK Heat Wave Could Break May Temperature Record",
+      "link": "https://www.nytimes.com/2026/05/25/weather/uk-heat-wave-may-weather-record.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25wea-britainheatwave-kqfc/25wea-britainheatwave-kqfc-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/weather/uk-heat-wave-may-weather-record.html"
+    },
+    {
+      "id": "https://www.nytimes.com/live/2026/05/24/world/iran-war-trump/heres-the-latest",
+      "source": "NY Times World",
+      "timestamp": "Tue, 26 May 2026 14:59:46 +0000",
+      "content": "Here’s the latest.. ",
+      "category": "World",
+      "title": "Here’s the latest.",
+      "link": "https://www.nytimes.com/live/2026/05/24/world/iran-war-trump/heres-the-latest",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/live/2026/05/24/world/iran-war-trump/heres-the-latest"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/27/anti-abortion-activist-joanna-howe-twin-babies-image-likely-to-show-sugar-gliders-ntwnfb",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 15:00:02 GMT",
+      "content": "Image of ‘twin babies’ used by anti-abortion activist appears to show sugar gliders. &lt;p&gt;Joanna Howe says the image was sent to her by a woman ashamed of her abortion, and used it to support ‘rally for Emma and Ruth’ in favour of NSW bill&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;free app&lt;/a&gt; or &lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;daily news podcast&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;An image posted by anti-abortion activist Joanna Howe claiming to show aborted twin girls called “Ruth and Emma” appears to be a picture of sugar gliders.&lt;/p&gt;&lt;p&gt;The two little pink bodies are displayed on a clean white background and experts say the",
+      "category": "World",
+      "title": "Image of ‘twin babies’ used by anti-abortion activist appears to show sugar gliders",
+      "link": "https://www.theguardian.com/world/2026/may/27/anti-abortion-activist-joanna-howe-twin-babies-image-likely-to-show-sugar-gliders-ntwnfb",
+      "picture": "https://i.guim.co.uk/img/media/eb866ebc394db662faa1bd7d31ece8e46c4a1946/0_0_5000_4000/master/5000.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=e9c701cda71c129d9a58732fd33f7620",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/27/anti-abortion-activist-joanna-howe-twin-babies-image-likely-to-show-sugar-gliders-ntwnfb"
+    },
+    {
+      "id": "https://www.theguardian.com/environment/2026/may/27/australia-home-energy-bill-savings-renters-landlords-rooftop-solar-insulation-appliances",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 14:01:52 GMT",
+      "content": "Renters could save $20bn on bills in a decade from rooftop solar and appliance upgrades – if landlords act. &lt;p&gt;Owners’ lack of motivation due to ‘split incentive’ is main reason rental properties are missing out on energy upgrades, research finds&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;free app&lt;/a&gt; or &lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;daily news podcast&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Renters make up nearly a third of Australian households, yet many are missing out on energy upgrades – such as insulation, appliances and rooftop solar – that could slash their power bills and improve home comfort.&lt;/p&gt;&lt;p&gt;The problem, according to the Institute fo",
+      "category": "World",
+      "title": "Renters could save $20bn on bills in a decade from rooftop solar and appliance upgrades – if landlords act",
+      "link": "https://www.theguardian.com/environment/2026/may/27/australia-home-energy-bill-savings-renters-landlords-rooftop-solar-insulation-appliances",
+      "picture": "https://i.guim.co.uk/img/media/d0b724cfca3a4184efb86e077d8977c529a25669/852_0_6250_5000/master/6250.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=254625a04609d3b086398702ab419abf",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/environment/2026/may/27/australia-home-energy-bill-savings-renters-landlords-rooftop-solar-insulation-appliances"
+    },
+    {
+      "id": "https://www.theguardian.com/australia-news/2026/may/26/anti-corruption-staff-are-terrified-of-making-mistakes-says-outgoing-chief",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 12:16:44 GMT",
+      "content": "Australia’s anti-corruption staff are ‘terrified’ of making mistakes, says outgoing chief. &lt;p&gt;With a second investigation under way into his conduct, Paul Brereton tells estimates about concerns of workers&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;free app&lt;/a&gt; or &lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;daily news podcast&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Australia’s federal anti-corruption body is filled with staff “terrified of making any mistake of fact or law”, the outgoing commissioner claims.&lt;/p&gt;&lt;p&gt;Paul Brereton, the National Anti-Corruption Commissioner, also defended his actions and decisions as the watchdog’s first head &lt;a hr",
+      "category": "World",
+      "title": "Australia’s anti-corruption staff are ‘terrified’ of making mistakes, says outgoing chief",
+      "link": "https://www.theguardian.com/australia-news/2026/may/26/anti-corruption-staff-are-terrified-of-making-mistakes-says-outgoing-chief",
+      "picture": "https://i.guim.co.uk/img/media/ab25b206451554f638a1b2c75b7a593ddb5b71eb/1719_0_4651_3723/master/4651.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=b3e295101ae2bcd6c6a81eefc11ffab7",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/australia-news/2026/may/26/anti-corruption-staff-are-terrified-of-making-mistakes-says-outgoing-chief"
+    },
+    {
+      "id": "https://www.theguardian.com/business/2026/may/26/labor-to-announce-easing-of-jobseeker-mutual-obligations-requirements-in-major-overhaul-of-employment-system",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 12:00:51 GMT",
+      "content": "Labor to announce easing of jobseeker mutual obligations requirements in major overhaul of employment system. &lt;p&gt;Employment minister Amanda Rishworth plans to move system from a ‘one size fits all’ employment services model to three streams of support&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;free app&lt;/a&gt; or &lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;daily news podcast&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The Albanese government has flagged a major overhaul of Australia’s employment system, with minister Amanda Rishworth on Wednesday expected to outline plans to ease Centrelink’s much-maligned mutual obligations regime.&lt;/p&gt;&lt;p&gt;Rishworth is expected to tell the N",
+      "category": "World",
+      "title": "Labor to announce easing of jobseeker mutual obligations requirements in major overhaul of employment system",
+      "link": "https://www.theguardian.com/business/2026/may/26/labor-to-announce-easing-of-jobseeker-mutual-obligations-requirements-in-major-overhaul-of-employment-system",
+      "picture": "https://i.guim.co.uk/img/media/c056a9e44457cc71874c7a07c8525a2e1c0fd8b8/650_0_4640_3712/master/4640.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=5f9755abba0bf0b3afae0f355f7602a0",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/business/2026/may/26/labor-to-announce-easing-of-jobseeker-mutual-obligations-requirements-in-major-overhaul-of-employment-system"
+    },
+    {
+      "id": "https://www.theguardian.com/australia-news/2026/may/26/war-crimes-investigator-and-afp-ask-corruption-commission-to-probe-ben-roberts-smith-leak",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 11:55:20 GMT",
+      "content": "War crimes investigator and AFP ask corruption commission to probe Ben Roberts-Smith leak. &lt;p&gt;Government’s special investigator tells Senate estimates he was surprised journalists had prior knowledge of former SAS man’s arrest&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;strong&gt;Get our &lt;/strong&gt;&lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;&lt;strong&gt;breaking news email&lt;/strong&gt;&lt;/a&gt;&lt;strong&gt;, &lt;/strong&gt;&lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;&lt;strong&gt;free app&lt;/strong&gt;&lt;/a&gt;&lt;strong&gt; or &lt;/strong&gt;&lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;&lt;strong&gt;daily news podcast&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The federal government’s special investigator for war crimes allegations and the Australian federal poli",
+      "category": "World",
+      "title": "War crimes investigator and AFP ask corruption commission to probe Ben Roberts-Smith leak",
+      "link": "https://www.theguardian.com/australia-news/2026/may/26/war-crimes-investigator-and-afp-ask-corruption-commission-to-probe-ben-roberts-smith-leak",
+      "picture": "https://i.guim.co.uk/img/media/4746894ef59ee125277f36e983aaea7b777b91ee/97_0_1573_1258/master/1573.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=42e7f3c662682c886665cc250121bc82",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/australia-news/2026/may/26/war-crimes-investigator-and-afp-ask-corruption-commission-to-probe-ben-roberts-smith-leak"
+    },
+    {
+      "id": "https://www.theguardian.com/world/live/2026/may/26/europe-ukraine-russia-lithuania-eu-heatwave-hungary-magyar-france-latest-news-updates",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 16:05:19 GMT",
+      "content": "Moscow wants to ‘destabilise’ Europe, EU chief warns, as countries summon Russian ambassadors over Kyiv threats – as it happened. &lt;p&gt;Ursula von der Leyen visiting Lithuania amid drone incursions as diplomats are called over Russian requests for envoys to leave the Ukrainian capital&lt;/p&gt;&lt;p&gt;Back to &lt;strong&gt;Ukraine, the EU has summoned Russia’s top diplomat in Brussels over Russian warnings telling foreigners and diplomats to leave Kyiv amid planned new strikes on the Ukrainian capital.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;EU’s foreign policy spokesperson &lt;strong&gt;Anitta Hipper&lt;/strong&gt; &lt;a href=\"https://x.com/ExtSpoxEU/status/2059228347285025263\"&gt;said on X&lt;/a&gt;:&lt;/p&gt;&lt;p&gt;&lt;em&gt;“[Russian] threat to foreign citizens &amp;amp; diplomats to leave Kyiv is an unacceptable escalation. @eu_eeas summoned the Chargé d’Affairs, calling to stop hitting civilians &amp;amp; [Russi",
+      "category": "World",
+      "title": "Moscow wants to ‘destabilise’ Europe, EU chief warns, as countries summon Russian ambassadors over Kyiv threats – as it happened",
+      "link": "https://www.theguardian.com/world/live/2026/may/26/europe-ukraine-russia-lithuania-eu-heatwave-hungary-magyar-france-latest-news-updates",
+      "picture": "https://i.guim.co.uk/img/media/a2967c81c9155371c270edf475143b3afeba6a91/909_0_5052_4042/master/5052.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=488cd2a6ef56a70861d585d6dd3c9440",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/live/2026/may/26/europe-ukraine-russia-lithuania-eu-heatwave-hungary-magyar-france-latest-news-updates"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/26/czech-police-release-russian-bishop-after-white-powder-found-in-his-car",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 14:58:27 GMT",
+      "content": "Czech police release Russian bishop after ‘white powder’ found in his car. &lt;p&gt;Russia says arrest of Bishop Hilarion, who heads Orthodox congregation in Karlovy Vary, was politically motivated ‘setup’&lt;/p&gt;&lt;p&gt;Czech police have released a Russian Orthodox bishop who was detained on suspicion of drug possession, after Moscow condemned the arrest as a politically motivated setup.&lt;/p&gt;&lt;p&gt;Bishop Hilarion, also known by his secular name, Grigory Alfeyev, was stopped by police on Sunday in Karlovy Vary, a spa town in western Czechia popular with Russian tourists, after officers discovered containers of a white substance in the boot of his car.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/26/czech-police-release-russian-bishop-after-white-powder-found-in-his-car\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Czech police release Russian bishop after ‘white powder’ found in his car",
+      "link": "https://www.theguardian.com/world/2026/may/26/czech-police-release-russian-bishop-after-white-powder-found-in-his-car",
+      "picture": "https://i.guim.co.uk/img/media/680a4190c621986b68dfb9d6db61fcc575e22c20/319_0_2697_2158/master/2697.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=1e0f0fd14459c0f978d25e3980969057",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/26/czech-police-release-russian-bishop-after-white-powder-found-in-his-car"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/26/spain-blocks-access-polymarket-kalshi-gambling-licence-investigation",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 13:46:31 GMT",
+      "content": "Spain blocks access to Polymarket and Kalshi as it launches gambling licence investigation. &lt;p&gt;Prediction sites, which allow bets on all topics from weather to politics, may be in breach of country’s rules&lt;/p&gt;&lt;p&gt;Spain’s ministry of consumer rights has blocked access to Polymarket and Kalshi while it investigates whether the leading prediction market sites are violating Spanish law by operating without a gambling licence.&lt;/p&gt;&lt;p&gt;On Tuesday the ministry said it had launched disciplinary proceedings against the two platforms, which &lt;a href=\"https://www.theguardian.com/tv-and-radio/2026/apr/20/john-oliver-last-week-tonight-recap-prediction-markets\"&gt;allow users&lt;/a&gt; to bet on everything from the weather to political events, amid allegations that they lacked the “necessary administrative authorisation” to operate in Spain.&lt;/p&gt; &lt;a href=\"h",
+      "category": "World",
+      "title": "Spain blocks access to Polymarket and Kalshi as it launches gambling licence investigation",
+      "link": "https://www.theguardian.com/world/2026/may/26/spain-blocks-access-polymarket-kalshi-gambling-licence-investigation",
+      "picture": "https://i.guim.co.uk/img/media/6d37dac2eb83e0b39c6d91d588bfbd4abb9d48b0/165_0_3338_2670/master/3338.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=ff277a5199916451758386debc6bf69c",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/26/spain-blocks-access-polymarket-kalshi-gambling-licence-investigation"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/26/investigation-belgium-train-school-bus-collision-buggenhout-flanders",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 12:39:21 GMT",
+      "content": "Four people killed in Belgium in train and school bus collision. &lt;p&gt;Two children among dead after incident at level crossing near town of Buggenhout in Flanders&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/live/2026/may/26/europe-ukraine-russia-lithuania-eu-heatwave-hungary-magyar-france-latest-news-updates\"&gt;Europe – latest updates&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;An investigation is under way after four people, including two children, were killed when a school minibus collided with a train in northern Belgium.&lt;/p&gt;&lt;p&gt;Five children were injured in the crash at a level crossing near the small town of Buggenhout in Flanders on Tuesday.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/26/investigation-belgium-train-school-bus-collision-buggenhout-flanders\"&gt;Contin",
+      "category": "World",
+      "title": "Four people killed in Belgium in train and school bus collision",
+      "link": "https://www.theguardian.com/world/2026/may/26/investigation-belgium-train-school-bus-collision-buggenhout-flanders",
+      "picture": "https://i.guim.co.uk/img/media/823974975de9d2f4590080632aea5cc9dfc0bb95/673_0_4317_3454/master/4317.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=009d9f779853127f5a3554af8341e5a3",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/26/investigation-belgium-train-school-bus-collision-buggenhout-flanders"
+    },
+    {
+      "id": "https://www.theguardian.com/world/live/2026/may/26/iran-war-live-updates-us-attacks-iran-missile-sites-self-defence-during-peace-talks",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 16:00:03 GMT",
+      "content": "Middle East crisis live: Iran’s foreign ministry says US broke ceasefire with overnight strikes. &lt;p&gt;The US military said it carried out strikes on Monday against targets including boats attempting to lay mines and missile launch sites&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/2026/may/26/us-strikes-iran-missile-sites-vessels-trump-peace-deal-elusive\"&gt;US strikes Iran missile sites and mine laying vessels&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Iranian supreme leader &lt;strong&gt;Mojtaba Khamenei&lt;/strong&gt; said on his Telegram channel that Gulf powers will no longer be a shield for US bases and the US will no longer have a safe haven in the region, as &lt;strong&gt;Tehran&lt;/strong&gt; and &lt;strong&gt;Washington&lt;/strong&gt; discuss a framework to end their three-month-old war, Reuters reports.&lt;/p&gt;&lt;p&gt;The",
+      "category": "World",
+      "title": "Middle East crisis live: Iran’s foreign ministry says US broke ceasefire with overnight strikes",
+      "link": "https://www.theguardian.com/world/live/2026/may/26/iran-war-live-updates-us-attacks-iran-missile-sites-self-defence-during-peace-talks",
+      "picture": "https://i.guim.co.uk/img/media/142e7888fec783a669df6e26759414046705ce75/1511_0_3812_3051/master/3812.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=f70a67605a22acec502e7dfceed4495e",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/live/2026/may/26/iran-war-live-updates-us-attacks-iran-missile-sites-self-defence-during-peace-talks"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/26/iran-internet-blackout",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 14:28:53 GMT",
+      "content": "Iran’s access to global internet starts to resume after 88-day blackout. &lt;p&gt;End of shutdown comes despite interim court order questioning authority of body overseeing the move&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/live/2026/may/26/iran-war-live-updates-us-attacks-iran-missile-sites-self-defence-during-peace-talks\"&gt;Middle East crisis – live updates&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Iran’s access to the global internet slowly restarted on Tuesday, ending a record 88-day blackout that has contributed to thousands of Iranians losing their jobs and provided cover for the Iranian security services to mount a large-scale wartime crackdown.&lt;/p&gt;&lt;p&gt;The resumption came despite an interim administrative court order questioning the authority of the body overseeing the move, called the “specia",
+      "category": "World",
+      "title": "Iran’s access to global internet starts to resume after 88-day blackout",
+      "link": "https://www.theguardian.com/world/2026/may/26/iran-internet-blackout",
+      "picture": "https://i.guim.co.uk/img/media/8cf735a669ab200b6e77f45ee78cdd576832979c/670_0_3871_3097/master/3871.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=87435017c23fbe5211022bb9effcdd2c",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/26/iran-internet-blackout"
+    },
+    {
+      "id": "https://www.theguardian.com/politics/2026/may/26/snp-embezzling-voters-peter-murrell",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 15:51:13 GMT",
+      "content": "SNP accused of ‘embezzling’ voters over Peter Murrell’s theft of party funds. &lt;p&gt;Scottish National party’s attempt to focus on call for independence referendum overshadowed by embezzlement scandal&lt;/p&gt;&lt;p&gt;The Scottish National party was accused of “embezzling” voters after opposition leaders highlighted the crisis over Peter Murrell’s misuse of £400,000 from party funds.&lt;/p&gt;&lt;p&gt;The scandal over &lt;a href=\"https://www.theguardian.com/uk-news/2026/may/25/peter-murrell-pleads-guilty-embezzlement-snp-scottish-national-party\"&gt;Murrell’s guilty plea&lt;/a&gt; on Monday to embezzling £400,310.65 while he was the SNP’s chief executive overshadowed a Holyrood &lt;a href=\"https://www.parliament.scot/chamber-and-committees/votes-and-motions/S7M-00105\"&gt;motion&lt;/a&gt; tabled by John Swinney to call for a second independence referendum.&lt;/p&gt",
+      "category": "World",
+      "title": "SNP accused of ‘embezzling’ voters over Peter Murrell’s theft of party funds",
+      "link": "https://www.theguardian.com/politics/2026/may/26/snp-embezzling-voters-peter-murrell",
+      "picture": "https://i.guim.co.uk/img/media/3ffe6123f5b57c1bd2c4cd0e07b739850932e544/20_17_2158_1726/master/2158.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=0d89668957b90d75cd0bbc2c802d9a4b",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/politics/2026/may/26/snp-embezzling-voters-peter-murrell"
+    },
+    {
+      "id": "https://www.theguardian.com/politics/live/2026/may/26/wes-streeting-keir-starmer-social-media-ban-labour-uk-politics-live",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 15:47:43 GMT",
+      "content": "Labour says Reform UK ‘in chaos’ as Zia Yusuf publicly tells Jenrick he’s got party’s deportation policy wrong – UK politics live. &lt;p&gt;‘Robert’s answer is not Reform policy’, Yusuf said about an answer that Jenrick gave to journalists days earlier&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Keir Starmer&lt;/strong&gt; has said that SNP leaders need to explain why they did not realise that Peter Murrell was stealing more than £400,000 from the party.&lt;/p&gt;&lt;p&gt;Asked about yesterday’s court proceedings in Edinburgh, where Murrell admitting embezzling money from the party to spend on luxury goods, Starmer said:&lt;/p&gt;&lt;p&gt;I think anybody looking at what’s happening up in Scotland will be baffled that those at the top of the SNP say they didn’t know anything about what was going on, so clearly there are questions that need to be answered.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/politics/live/2026/may/26/",
+      "category": "World",
+      "title": "Labour says Reform UK ‘in chaos’ as Zia Yusuf publicly tells Jenrick he’s got party’s deportation policy wrong – UK politics live",
+      "link": "https://www.theguardian.com/politics/live/2026/may/26/wes-streeting-keir-starmer-social-media-ban-labour-uk-politics-live",
+      "picture": "https://i.guim.co.uk/img/media/643b9d3740487e6c4b3b6596d5333f5b9aa0bd0b/0_779_2418_1934/master/2418.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=cffdc45af2250c40f0c914eb84fc2b73",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/politics/live/2026/may/26/wes-streeting-keir-starmer-social-media-ban-labour-uk-politics-live"
+    },
+    {
+      "id": "https://www.theguardian.com/uk-news/2026/may/26/uk-records-highest-ever-may-temperature-for-second-day-in-a-row",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 14:41:47 GMT",
+      "content": "UK records highest ever May temperature for second day in a row. &lt;p&gt;Temperature reaches 35C at Heathrow on Tuesday after 34.8C high at Kew Gardens in London on Monday&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/environment/2026/may/26/tell-us-how-are-you-coping-during-the-uk-heatwave\"&gt;Tell us: how are you coping in the UK heatwave?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The UK has recorded its highest-ever May temperature for the second consecutive day, as thermometers hit 35C (95F) at Heathrow and Kew Gardens in London, the Met Office said.&lt;/p&gt;&lt;p&gt;The latest high was recorded the day after the country’s provisional &lt;a href=\"https://www.theguardian.com/uk-news/2026/may/26/uk-weather-hottest-ever-may-day-britain-tropical-night\"&gt;hottest meteorological spring temperature&lt;/a&gt;, of 3",
+      "category": "World",
+      "title": "UK records highest ever May temperature for second day in a row",
+      "link": "https://www.theguardian.com/uk-news/2026/may/26/uk-records-highest-ever-may-temperature-for-second-day-in-a-row",
+      "picture": "https://i.guim.co.uk/img/media/6c28d5ac4243a3f98aa4dba800710cf87583737d/1774_566_3614_2893/master/3614.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=e9595d5683bc2af09042af0f1d74dcdb",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/uk-news/2026/may/26/uk-records-highest-ever-may-temperature-for-second-day-in-a-row"
+    },
+    {
+      "id": "https://www.theguardian.com/uk-news/2026/may/26/jury-sworn-in-at-trial-of-jeffrey-donaldson-for-alleged-sex-offences",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 14:32:07 GMT",
+      "content": "Jury sworn in at trial of Jeffrey Donaldson for alleged sex offences. &lt;p&gt;Trial of former DUP leader expected to last four weeks alongside trial of facts for wife, Eleanor, on charges of aiding and abetting&lt;/p&gt;&lt;p&gt;The jury in Jeffrey Donaldson’s trial for alleged sex offences has been sworn in, launching one of the most high-profile trials in recent Northern Irish history.&lt;/p&gt;&lt;p&gt;The former MP and Democratic Unionist party (DUP) leader entered Newry crown court on Tuesday amid a heavy police and media presence for the trial which is expected to last about four weeks.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/uk-news/2026/may/26/jury-sworn-in-at-trial-of-jeffrey-donaldson-for-alleged-sex-offences\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Jury sworn in at trial of Jeffrey Donaldson for alleged sex offences",
+      "link": "https://www.theguardian.com/uk-news/2026/may/26/jury-sworn-in-at-trial-of-jeffrey-donaldson-for-alleged-sex-offences",
+      "picture": "https://i.guim.co.uk/img/media/0a83ced1a88e3fbf296640057147055d37f9ad7c/175_0_1750_1400/master/1750.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=1edbdd75b4bc50616b13bcdc13fa49fc",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/uk-news/2026/may/26/jury-sworn-in-at-trial-of-jeffrey-donaldson-for-alleged-sex-offences"
+    },
+    {
+      "id": "https://www.theguardian.com/uk-news/2026/may/26/janice-nix-guilty-killing-andrea-bernard-five-scalding-50-years-ago",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 14:02:36 GMT",
+      "content": "Woman guilty of killing stepdaughter, five, by scalding almost 50 years ago. &lt;p&gt;Janice Nix convicted of manslaughter after brother of Andrea Bernard alters account of incident in 1978&lt;/p&gt;&lt;p&gt;A woman has been found guilty of killing her five-year-old stepdaughter by punishing her in a scalding hot bath almost 50 years ago.&lt;/p&gt;&lt;p&gt;Andrea Bernard’s death in 1978 in Thornton Heath, south London, was treated as an accident until the girl’s older brother, Desmond Bernard, went to police in 2022 with a new account of what happened, Isleworth crown court heard.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/uk-news/2026/may/26/janice-nix-guilty-killing-andrea-bernard-five-scalding-50-years-ago\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Woman guilty of killing stepdaughter, five, by scalding almost 50 years ago",
+      "link": "https://www.theguardian.com/uk-news/2026/may/26/janice-nix-guilty-killing-andrea-bernard-five-scalding-50-years-ago",
+      "picture": "https://i.guim.co.uk/img/media/b3e7c9a72aef5164e0526b8e581c8a1fce811202/512_113_2157_1725/master/2157.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=f24cf48aa39c6206d9d31dfa9c15df43",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/uk-news/2026/may/26/janice-nix-guilty-killing-andrea-bernard-five-scalding-50-years-ago"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/live/2026/may/26/donald-trump-medical-walter-reed-republicans-texas-runoff-iran-latest-news-updates",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 16:19:35 GMT",
+      "content": "Trump urges Texas Republicans to vote for Ken Paxton as four-term senator John Cornyn fights to hold seat – live. &lt;p&gt;Ken Paxton, Texas attorney general, takes on four-term incumbent John Cornyn on Tuesday in a primary that tests Trump’s grip on Republican party&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/us-news/2026/may/26/republican-primary-runoff-texas\"&gt;America’s ugliest primary? Texas Republican infighting could hand Senate seat to Democrat&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/news/2026/feb/17/sign-up-for-the-breaking-news-us-email-to-get-newsletter-alerts-direct-to-your-inbox?utm_medium=ACQUISITIONS_STANDFIRST&amp;amp;utm_campaign=BN22326&amp;amp;utm_content=signup&amp;amp;utm_term=standfirst&amp;amp;utm_source=GUARDIAN_WEB\"&gt;Sign up for the Breaking News US email&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul",
+      "category": "World",
+      "title": "Trump urges Texas Republicans to vote for Ken Paxton as four-term senator John Cornyn fights to hold seat – live",
+      "link": "https://www.theguardian.com/us-news/live/2026/may/26/donald-trump-medical-walter-reed-republicans-texas-runoff-iran-latest-news-updates",
+      "picture": "https://i.guim.co.uk/img/media/fd2d7e03e2efc26b7bb61d735f1e3910fb236f71/458_0_4583_3667/master/4583.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=0bc6e29f8767a9bb40488dff518ae719",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/live/2026/may/26/donald-trump-medical-walter-reed-republicans-texas-runoff-iran-latest-news-updates"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/26/alabama-new-congressional-map-struck-down",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 15:30:28 GMT",
+      "content": "Federal court blocks new Republican-friendly voting map in Alabama. &lt;p&gt;Panel of three judges says congressional map was drawn to intentionally discriminate against Black voters&lt;/p&gt;&lt;p&gt;Alabama cannot use a new Republican-friendly map in this year’s midterm elections because it was drawn to intentionally discriminate against Black voters, a panel of three federal judges&lt;a href=\"https://storage.courtlistener.com/recap/gov.uscourts.alnd.178644/gov.uscourts.alnd.178644.363.0.pdf\"&gt; ruled on Tuesday&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The decision blocks Alabama &lt;a href=\"https://www.theguardian.com/us-news/2023/sep/01/alabama-discrimination-black-voters-gerrymandering\"&gt;from using a congressional map&lt;/a&gt; lawmakers passed in 2023 but never went into effect because the same court found it was drawn with intent to discriminate. Alabama was",
+      "category": "World",
+      "title": "Federal court blocks new Republican-friendly voting map in Alabama",
+      "link": "https://www.theguardian.com/us-news/2026/may/26/alabama-new-congressional-map-struck-down",
+      "picture": "https://i.guim.co.uk/img/media/fa6ddff8de2b994b1437f9aece4796e9564fd7c6/955_915_5683_4547/master/5683.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=b4d18b334c0320184d01d3874a5a10dc",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/26/alabama-new-congressional-map-struck-down"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/26/thomas-massie-run-2028",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 13:51:24 GMT",
+      "content": "Thomas Massie files to run in 2028 after losing to Trump pick Ed Gallrein. &lt;p&gt;Kentucky conservative says ‘I haven’t made a final decision about which office to seek, if I run’&lt;/p&gt;&lt;p&gt;Thomas Massie is planning his comeback.&lt;/p&gt;&lt;p&gt;The conservative Kentucky congressman filed to run again for the US House of Representatives in 2028, less than a week after losing to Donald Trump’s hand-picked challenger Ed Gallrein 55-45 in a bruising primary.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/us-news/2026/may/26/thomas-massie-run-2028\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Thomas Massie files to run in 2028 after losing to Trump pick Ed Gallrein",
+      "link": "https://www.theguardian.com/us-news/2026/may/26/thomas-massie-run-2028",
+      "picture": "https://i.guim.co.uk/img/media/7945869aeb763b15b9295ccdab499e7108bded6e/1246_202_3036_2429/master/3036.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=44ceeaa9ba99082276d7118772c844da",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/26/thomas-massie-run-2028"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/26/dog-shotgun-nebraska-convenience-store",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 13:41:53 GMT",
+      "content": "Dog shoots woman with shotgun at Nebraska convenience store. &lt;p&gt;Police responded to reports of gunfire at store in town of Scottsbluff, and found the culprit to be a dog&lt;/p&gt;&lt;p&gt;Police responding to reports of a shotgun blast at a convenience store sounds like the opening of countless American crime movies, but when cops in Nebraska responded to a recent such call they found an unusual culprit: &lt;a href=\"https://www.knopnews2.com/2026/05/24/scottsbluff-police-respond-gunfire-convenience-store-after-dog-accidently-shoots-person-with-shotgun/\"&gt;a dog&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Local TV station &lt;a href=\"https://www.knopnews2.com/authors/nbcnebraskanews2/\"&gt;KNOP News 2&lt;/a&gt; reported that police in the town of Scottsbluff were called out to a local store recently after reports of a blast involving a shotgun.&lt;/p&gt; &lt;",
+      "category": "World",
+      "title": "Dog shoots woman with shotgun at Nebraska convenience store",
+      "link": "https://www.theguardian.com/us-news/2026/may/26/dog-shotgun-nebraska-convenience-store",
+      "picture": "https://i.guim.co.uk/img/media/557370107241e4ebaab6006cde4d941199e58e94/96_0_1683_1346/master/1683.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=7c47b931857a8ac2567dc7efd5084b4e",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/26/dog-shotgun-nebraska-convenience-store"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/26/senator-pepper-sprayed-ice-facility-protest-new-jersey",
+      "source": "The Guardian",
+      "timestamp": "Tue, 26 May 2026 13:12:08 GMT",
+      "content": "US senator says he was pepper sprayed by federal agents during protest at ICE facility. &lt;p&gt;Democrat Andy Kim says he saw ‘chaos’ at the New Jersey ICE facility amid ‘standoff’ between protesters and agents&lt;/p&gt;&lt;p&gt;Andy Kim, a Democratic senator, said he was pepper sprayed by federal agents on Monday during a protest at a New Jersey detention facility.&lt;/p&gt;&lt;p&gt;Video &lt;a href=\"https://www.instagram.com/reels/DYx6GSVJk4Y/\"&gt;posted on social media&lt;/a&gt; showed Kim receiving help from a volunteer who is seen pouring water in his eyes outside Delaney Hall in Newark, where detainees are reportedly staging a &lt;a href=\"https://abc7ny.com/post/protesters-clash-ice-agents-outside-delaney-hall-amid-hunger-strike-2-lawmakers-visit-scene/19166948/?ex_cid=TA_WABC_FB\"&gt;hunger strike&lt;/a&gt; against poor conditions and denial of medical care.&lt;/p&gt; ",
+      "category": "World",
+      "title": "US senator says he was pepper sprayed by federal agents during protest at ICE facility",
+      "link": "https://www.theguardian.com/us-news/2026/may/26/senator-pepper-sprayed-ice-facility-protest-new-jersey",
+      "picture": "https://i.guim.co.uk/img/media/2dff5aca4ea8b632041a0f9c845d66d9e932a740/932_0_6829_5464/master/6829.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=ac7f3dd5f21d62cae9c40009214116d4",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/26/senator-pepper-sprayed-ice-facility-protest-new-jersey"
+    }
+  ],
+  "mapPoints": [],
+  "foreignRelations": [],
+  "watchFor": {
+    "sections": [
+      {
+        "title": "Economic Health & Market Risk",
+        "sentiment": "somewhat-negative",
+        "predictions": [
+          "Increased corporate debt vulnerability will force a bifurcated credit environment, separating highly capitalized entities from others.",
+          "Consumer spending contraction will mandate that major retail and services sectors rapidly de-risk inventory models.",
+          "Central banks may pivot from generalized rate adjustments to targeted sectoral liquidity injections to mitigate systemic failure."
+        ]
+      },
+      {
+        "title": "Geopolitical Risks & Global Stability",
+        "sentiment": "negative",
+        "predictions": [
+          "Resource competition will intensify, leading resource-poor nations to prioritize defensive supply chain alliances.",
+          "The combination of conflict and climate stress will elevate trans-border migration risks and humanitarian crises.",
+          "Western diplomatic efforts regarding international law compliance will face persistent resistance from non-aligned regional blocs."
+        ]
+      },
+      {
+        "title": "Artificial Intelligence Integration",
+        "sentiment": "interesting",
+        "predictions": [
+          "The demand for energy-efficient, localized computing architectures (edge AI) will become the dominant hardware investment trend.",
+          "Foundational electrical grids will undergo mandated structural overhauls to manage distributed computation loads.",
+          "State funding models will increasingly mandate that private sector AI deployment adheres to national technological primacy goals."
+        ]
+      },
+      {
+        "title": "Global Health Security & Biosecurity",
+        "sentiment": "somewhat-negative",
+        "predictions": [
+          "Simultaneous outbreaks in multiple regions will stress existing international coordination frameworks, delaying critical medical response.",
+          "The challenge of local opposition to public health initiatives will undermine vaccine distribution efforts and surveillance data collection.",
+          "Pediatric healthcare systems globally will require accelerated investment in telemedicine and decentralized care models."
+        ]
+      },
+      {
+        "title": "Media & Communications Industry Shifts",
+        "sentiment": "negative",
+        "predictions": [
+          "Legacy broadcasters lacking agile digital pivots will face sustained financial insolvency, accelerating market consolidation.",
+          "The ad revenue flow to online platforms will intensify competition for user attention, favoring personalized and fragmented content feeds.",
+          "Structural shifts in media consumption necessitate new regulatory frameworks governing cross-platform advertising transparency."
+        ]
+      }
+    ]
+  },
+  "dailyMetrics": {},
+  "lastUpdated": "2026-05-26T16:31:52.422Z",
+  "mediaUrls": {
+    "sig_ad85aed9_image_original": "AI Governance Focus Shifts to Combating Digital Misuse and IP Theft",
+    "sig_ad85aed9_image_enhanced": "A close-up photograph taken in a modern, softly lit corporate office: two diverse policy analysts are gathered around a large mahogany table covered with printouts and open legal textbooks; one is intently reviewing code snippets displayed on multiple high-resolution monitors while the other points ..."
+  },
+  "date": "2026-05-26",
+  "timestamp": "2026-05-27T02:13:46.160Z"
+}

@@ -96,6 +96,9 @@ export function ChatPanel({ onAIRequired }: { onAIRequired: () => void }) {
     const [ragMatches, setRagMatches] = useState<Array<{ date: string; score: number }>>([]);
     const [activeRagData, setActiveRagData] = useState<any[]>([]);
 
+    // Suggested Analyst Directives State
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
     // Auto-scroll to bottom when AI finishes typing or matches load
     useEffect(() => {
         if (!isTyping && messages.length > 0) {
@@ -550,7 +553,7 @@ ${insightsText ? `\nInsights:\n${insightsText}` : ''}`;
             )}
 
             {/* Auto-Generated Suggestions panel */}
-            {messages.length === 0 && (
+            {messages.length === 0 && showSuggestions && (
                 <div className="px-4 pb-4">
                     <div className="text-[10px] uppercase text-text-secondary/60 font-bold tracking-wider mb-2">Suggested Analyst Directives</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -566,6 +569,19 @@ ${insightsText ? `\nInsights:\n${insightsText}` : ''}`;
                             </button>
                         ))}
                     </div>
+                </div>
+            )}
+
+            {/* Regenerate Suggestions button */}
+            {messages.length === 0 && !showSuggestions && (
+                <div className="px-4 pb-4">
+                    <button
+                        onClick={() => setShowSuggestions(true)}
+                        className="w-full p-2.5 bg-white/5 hover:bg-accent-primary/10 border border-white/5 hover:border-accent-primary/30 rounded text-xs text-slate-300 transition-all duration-200 hover:text-accent-primary"
+                    >
+                        <span className="font-mono text-[10px] text-accent-primary mr-1.5 font-bold">🎯</span>
+                        Generate Suggested Analyst Directives
+                    </button>
                 </div>
             )}
 

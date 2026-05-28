@@ -783,7 +783,7 @@ class OllamaPollingManager {
 function notify() {
   const stack = new Error().stack;
   const caller = stack?.split('\n')[2]?.trim();
-  console.log('[notify] currentDate:', globalState.currentDate, 'caller:', caller);
+  // console.log('[notify] currentDate:', globalState.currentDate, 'caller:', caller);
   listeners.forEach(l => l({ ...globalState }));
 }
 
@@ -1522,7 +1522,8 @@ export function useSituationStore() {
       processingStatus: 'Initializing Intelligence Network...',
       thinkingTrace: '', // Reset thinking trace on new scan
       isProcessingSection: { rss: true, narrative: false, signals: false, insights: false, map: false, relations: false, bigPicture: false, watchFor: false, verySimpleSummary: false },
-      completedSections: new Set() // Reset completed sections
+      completedSections: new Set(), // Reset completed sections
+      sectionGenerationTimes: {} // Reset timing records
     };
     startTimer('full-scan');
     startTimer('rss');
@@ -1533,6 +1534,20 @@ export function useSituationStore() {
       globalState = { ...globalState, processingStatus: 'Fetching latest feeds...' };
       notify();
       const newsFeeds = await fetchLatestFeeds(globalState.currentDate);
+
+      // Stop RSS timer and transition processing state to narrative
+      stopTimer('rss');
+      globalState = {
+        ...globalState,
+        completedSections: new Set([...globalState.completedSections, 'rss']),
+        isProcessingSection: {
+          ...globalState.isProcessingSection,
+          rss: false,
+          narrative: true
+        }
+      };
+      startTimer('narrative');
+      notify();
 
       const result = await processSituation(
         newsFeeds,
@@ -1611,11 +1626,32 @@ export function useSituationStore() {
       notify();
       persist();
 
+      // Save snapshot to static JSON file for demo website / page refresh persistence
+      fetch('http://localhost:3001/api/snapshot/' + globalState.currentDate, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lastUpdated: globalState.lastUpdated?.toISOString() || new Date().toISOString(),
+          narrative: globalState.narrative,
+          signals: globalState.signals,
+          insights: globalState.insights,
+          feeds: globalState.feeds,
+          mapPoints: globalState.mapPoints,
+          foreignRelations: globalState.foreignRelations,
+          dailyMetrics: globalState.dailyMetrics,
+          availableDates: globalState.availableDates,
+          bigPicture: globalState.bigPicture,
+          predictionHistory: globalState.predictionHistory,
+          deepDiveBySignalId: globalState.deepDiveBySignalId,
+          watchFor: globalState.watchFor
+        })
+      }).catch(err => console.error('Failed to save snapshot to file:', err));
+
       // Fire and forget RAG sync in the background
       syncIntelligenceToRag(globalState).catch(err => console.error('Background RAG sync failed:', err));
     } catch (error) {
       stopTimer('full-scan');
-      ['narrative', 'signals', 'insights', 'map', 'relations'].forEach(stopTimer);
+      ['rss', 'narrative', 'signals', 'insights', 'map', 'relations'].forEach(stopTimer);
       globalState = { ...globalState, isProcessing: false, processingStatus: 'Error' };
 
       // Check if this was a cancellation

@@ -91,7 +91,7 @@ export function ForeignRelationsPanel({ onAIRequired }: { onAIRequired: () => vo
 
         if (actions.length === 0) return null
 
-        return <div className="flex items-center gap-3">{actions}</div>
+        return <div className="flex flex-wrap items-center gap-3">{actions}</div>
     }, [foreignRelations.length, isAdding, isProcessing, refreshSection])
 
     const handleAdd = () => {

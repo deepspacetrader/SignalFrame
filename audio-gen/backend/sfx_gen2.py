@@ -39,7 +39,6 @@ class SFXGenerator:
         self.seed = 42
         self.variant = "large_44k_v2"
         self.dtype = torch.bfloat16
-        self.load_model()
 
     def get_device(self):
         if torch.cuda.is_available():
@@ -55,6 +54,8 @@ class SFXGenerator:
         return device
 
     def load_model(self):
+        if self.net is not None:
+            return
         print(f"Loading MMAudio model: {self.variant} (this may take a moment)...")
         
         if self.variant not in all_model_cfg:
@@ -111,6 +112,7 @@ class SFXGenerator:
             print(f"  Negative:      {self.negative_prompt}")
 
     def generate(self):
+        self.load_model()
         print(f"\nGenerating SFX with current parameters...")
         self.show_current_params()
         

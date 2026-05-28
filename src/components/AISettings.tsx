@@ -6,7 +6,7 @@ import { SENTIMENT_PROFILES, SentimentProfile, getSentimentProfile } from '../ai
 import { DEFAULT_num_ctx, DEFAULT_num_predict } from '../ai/runtime/ollama'
 import { LMStudioService } from '../ai/runtime/lmstudio'
 import { LlamaCppService } from '../ai/runtime/llamacpp'
-import { NimService } from '../ai/runtime/nim'
+import { NimService, NimModelInfo } from '../ai/runtime/nim'
 
 const DEFAULT_URLS = {
     ollama: 'http://127.0.0.1:11434/api',
@@ -35,8 +35,9 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
     const [llamacppModels, setLlamacppModels] = useState<string[]>([])
     const [llamacppError, setLlamacppError] = useState<string | null>(null)
 
-    const [nimModels, setNimModels] = useState<string[]>([])
-    const [nimError, setNimError] = useState<string | null>(null)
+  const [nimModels, setNimModels] = useState<string[]>([])
+  const [nimModelDetails, setNimModelDetails] = useState<NimModelInfo[]>([])
+  const [nimError, setNimError] = useState<string | null>(null)
     
     const [narrativeImageSize, setNarrativeImageSize] = useState((aiConfig as any).narrativeImageSize || 512)
     const [signalsImageSize, setSignalsImageSize] = useState((aiConfig as any).signalsImageSize || 128)
@@ -71,15 +72,20 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                         setLlamacppError('Llama.cpp is not running or not accessible');
                         setLlamacppModels([]);
                     }
-                } else if (tempConfig.provider === 'nim') {
-                    try {
-                        const models = await NimService.listModels();
-                        setNimModels(models);
-                        setNimError(null);
-                    } catch (error) {
-                        setNimError('NVIDIA NIM is not accessible');
-                        setNimModels([]);
-                    }
+} else if (tempConfig.provider === 'nim') {
+          try {
+            const [ids, details] = await Promise.all([
+              NimService.listModels(),
+              NimService.listModelDetails(),
+            ]);
+            setNimModels(ids);
+            setNimModelDetails(details);
+            setNimError(null);
+          } catch (error) {
+            setNimError('NVIDIA NIM is not accessible');
+            setNimModels([]);
+            setNimModelDetails([]);
+          }
                 } else {
                     // Check Ollama
                     try {
@@ -628,58 +634,98 @@ export function AISettings({ onAIRequired }: { onAIRequired?: () => void }) {
                                 />
                             </div>
                         </div>
-                        {/* Model Not Installed / Available Models Dropdown */}
-                        {(!isModelInstalled || !tempConfig.model) && currentAvailableModels.length > 0 && (
-                            <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20">
-                                <p className="text-xs text-accent-alert mb-2 font-semibold flex items-center gap-2">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-                                    {!tempConfig.model ? 'Select a model' : 'AI model not detected'}
-                                </p>
-                                <div className="space-y-2">
-                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && tempConfig.provider !== 'nim' && (
-                                        <p className="text-[10px] text-text-secondary font-bold">
-                                            You can view / download models from Ollama using the terminal:
-                                        </p>
-                                    )}
-                                    {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && tempConfig.provider !== 'nim' && (
-                                        <div className="relative group/copy">
-                                            <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
-                                                ollama list
-                                            </code>
-                                            <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
-                                                ollama pull modelName:size
-                                            </code>
-                                            <button
-                                                onClick={handleCopy}
-                                                className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent-primary transition-colors p-1.5 bg-bg-card/50 rounded-md"
-                                                title="Copy to clipboard"
-                                            >
-                                                {copied ? (
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="text-accent-secondary animate-in zoom-in duration-300"><polyline points="20 6 9 17 4 12" /></svg>
-                                                ) : (
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-                                                )}
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    <p className="text-[10px] text-text-secondary font-bold pt-2">
-                                        {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'Available models:' : (tempConfig.provider === 'nim' ? 'Available cloud models:' : 'or select from these installed models:')}
-                                    </p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {currentAvailableModels.map(m => (
-                                            <button
-                                                key={m}
-                                                onClick={() => setTempConfig({ ...tempConfig, model: m })}
-                                                className="text-[9px] bg-white/5 hover:bg-accent-primary/20 border border-white/10 rounded px-2 py-1 text-text-primary transition-all"
-                                            >
-                                                {m}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+      {/* NIM Model Browser - always show when NIM is selected */}
+      {tempConfig.provider === 'nim' && nimModelDetails.length > 0 && (
+        <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded">
+          <div className="space-y-2">
+            <div className="max-h-64 overflow-y-auto space-y-1">
+              {(() => {
+                const groups = nimModelDetails.reduce<Record<string, NimModelInfo[]>>((acc, m) => {
+                  const key = m.family;
+                  (acc[key] ??= []).push(m);
+                  return acc;
+                }, {});
+                return Object.entries(groups).map(([family, models]) => (
+                  <div key={family}>
+                    <p className="text-[10px] text-accent-primary font-bold uppercase tracking-wider mb-1">{family}</p>
+                    <div className="space-y-1">
+                      {models.map(m => (
+                          <button
+                            key={m.id}
+                            onClick={() => setTempConfig({ ...tempConfig, model: m.id })}
+                            className={`w-full text-left p-2 bg-white/5 hover:bg-accent-primary/20 border border-white/10 rounded transition-all ${tempConfig.model === m.id ? 'border-accent-primary bg-accent-primary/10' : ''}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-mono text-text-primary">{m.name}</span>
+                              <span className="text-[9px] text-text-tertiary font-mono">{m.sizeB >= 1000 ? `${(m.sizeB / 1000).toFixed(1)}T` : `${m.sizeB}B`}</span>
                             </div>
-                        )}
+                            <div className="flex items-center justify-between mt-0.5">
+                              <span className="text-[9px] text-text-secondary">{m.description}</span>
+                              <span className="text-[8px] text-text-tertiary">{m.released}</span>
+                            </div>
+                          </button>
+                      ))}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Model Not Installed / Available Models Dropdown (non-NIM) */}
+      {(!isModelInstalled || !tempConfig.model) && currentAvailableModels.length > 0 && tempConfig.provider !== 'nim' && (
+        <div className="mt-3 p-3 bg-accent-alert/10 border border-accent-alert/20">
+          <p className="text-xs text-accent-alert mb-2 font-semibold flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+            {!tempConfig.model ? 'Select a model' : 'AI model not detected'}
+          </p>
+          <div className="space-y-2">
+          {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
+            <p className="text-[10px] text-text-secondary font-bold">
+              You can view / download models from Ollama using the terminal:
+            </p>
+          )}
+          {tempConfig.provider !== 'lmstudio' && tempConfig.provider !== 'llamacpp' && (
+            <div className="relative group/copy">
+              <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                ollama list
+              </code>
+              <code className="block bg-black/40 p-2 pr-10 text-[10px] text-green-400 font-mono transition-all overflow-hidden text-ellipsis whitespace-nowrap">
+                ollama pull modelName:size
+              </code>
+              <button
+                onClick={handleCopy}
+                className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent-primary transition-colors p-1.5 bg-bg-card/50 rounded-md"
+                title="Copy to clipboard"
+              >
+                {copied ? (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="text-accent-secondary animate-in zoom-in duration-300"><polyline points="20 6 9 17 4 12" /></svg>
+                ) : (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                )}
+              </button>
+            </div>
+          )}
+
+            <p className="text-[10px] text-text-secondary font-bold pt-2">
+              {tempConfig.provider === 'lmstudio' || tempConfig.provider === 'llamacpp' ? 'Available models:' : 'or select from these installed models:'}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {currentAvailableModels.map(m => (
+                <button
+                  key={m}
+                  onClick={() => setTempConfig({ ...tempConfig, model: m })}
+                  className="text-[9px] bg-white/5 hover:bg-accent-primary/20 border border-white/10 rounded px-2 py-1 text-text-primary transition-all"
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
                     </div>
 
 {tempConfig.provider !== 'nim' && (

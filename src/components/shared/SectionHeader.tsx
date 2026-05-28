@@ -20,17 +20,17 @@ export function SectionHeader({
   const normalizedBadges = Array.isArray(badges) ? badges.filter(Boolean) : badges ? [badges] : []
 
   return (
-    <div className={`flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6 ${className}`}>
-      <div className="flex items-start gap-3">
-        <div className={`w-1 h-5 mt-1 ${accentClassName}`}></div>
-        <div>
-          <div className="flex items-center gap-3 text-text-primary font-display text-xl font-semibold">
+    <div className={`flex flex-col lg:flex-row justify-between items-start gap-3 lg:gap-6 min-w-0 ${className}`}>
+      <div className="flex items-start gap-3 min-w-0">
+        <div className={`w-1 h-5 mt-1 shrink-0 ${accentClassName}`}></div>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-text-primary font-display text-lg sm:text-xl font-semibold">
             {icon && (
-              <span className="text-text-secondary/80">
+              <span className="text-text-secondary/80 shrink-0">
                 {icon}
               </span>
             )}
-            <span>{title}</span>
+            <span className="break-words">{title}</span>
             {normalizedBadges.length > 0 && (
               <div className="flex flex-wrap items-center gap-2">
                 {normalizedBadges.map((badge, idx) => (
@@ -45,7 +45,7 @@ export function SectionHeader({
       </div>
 
       {actions && (
-        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+        <div className="flex flex-wrap items-center gap-2 lg:justify-end shrink-0">
           {actions}
         </div>
       )}

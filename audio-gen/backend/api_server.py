@@ -85,6 +85,7 @@ def generate_music():
         try:
             generation_status["progress"] = 10
             generation_status["message"] = "Preparing inputs..."
+            gen.load_model()
             
             import torch
             inputs = gen.processor(text=[gen.text], return_tensors="pt")
@@ -198,6 +199,7 @@ def generate_sfx():
 
             generation_status["progress"] = 10
             generation_status["message"] = "Updating sequence lengths..."
+            gen.load_model()
             gen.seq_cfg.duration = gen.duration
             gen.net.update_seq_lengths(
                 gen.seq_cfg.latent_seq_len,
@@ -532,6 +534,7 @@ def external_generate_sfx():
             
             generation_status["progress"] = 10
             generation_status["message"] = "Updating sequence lengths..."
+            gen.load_model()
             gen.seq_cfg.duration = gen.duration
             gen.net.update_seq_lengths(
                 gen.seq_cfg.latent_seq_len,

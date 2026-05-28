@@ -17,7 +17,8 @@ function getOptionsForProvider(aiConfig: AiConfig, signal?: AbortSignal) {
       max_tokens: aiConfig.maxTokens || aiConfig.numPredict || 16384,
       temperature: 0,
       signal,
-      contextWindow: aiConfig.numCtx || 32000
+      contextWindow: aiConfig.numCtx || 32000,
+      timeout: aiConfig.provider === 'nim' ? 300000 : undefined
     };
   }
   // Ollama default
@@ -89,10 +90,17 @@ async function generateWithProvider(
   if (aiConfig.provider === 'nim') {
     let finalPrompt = prompt;
 
+    // More aggressive truncation for NIM due to cloud API limits
     if (format === 'json' && prompt.length > 2000) {
       const lines = prompt.split('\n');
       const essentialLines = lines.slice(0, 50);
       finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
+    } else if (prompt.length > 8000) {
+      // Truncate non-JSON prompts if they're very large
+      const lines = prompt.split('\n');
+      const essentialLines = lines.slice(0, 100);
+      finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
+      console.warn(`NIM prompt truncated from ${prompt.length} to ${finalPrompt.length} characters`);
     }
 
     const finalSystemPrompt = format === 'json'
@@ -131,7 +139,15 @@ async function streamGenerateWithProvider(
   }
 
   if (aiConfig.provider === 'nim') {
-    return NimService.streamGenerate(aiConfig.model, prompt, onChunk, systemPrompt, options);
+    let finalPrompt = prompt;
+    // Truncate very large prompts for streaming as well
+    if (prompt.length > 8000) {
+      const lines = prompt.split('\n');
+      const essentialLines = lines.slice(0, 100);
+      finalPrompt = essentialLines.join('\n') + '\n\n[Context truncated due to size limit]\n';
+      console.warn(`NIM streaming prompt truncated from ${prompt.length} to ${finalPrompt.length} characters`);
+    }
+    return NimService.streamGenerate(aiConfig.model, finalPrompt, onChunk, systemPrompt, options);
   }
 
   return OllamaService.streamGenerate(aiConfig.model, prompt, onChunk, options);

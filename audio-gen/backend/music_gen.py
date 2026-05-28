@@ -17,7 +17,6 @@ class MusicGenerator:
         self.text = "deep bassy techno beat with synths and arpeggio"
         self.output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "output_music")
         self.device = self.get_device()
-        self.load_model()
 
     def get_device(self):
         if torch.cuda.is_available():
@@ -30,6 +29,8 @@ class MusicGenerator:
         return device
 
     def load_model(self):
+        if self.model is not None:
+            return
         print("Loading MusicGen Stereo Large model (this may take a moment)...")
         self.processor = AutoProcessor.from_pretrained("facebook/musicgen-stereo-large")
         self.model = AutoModelForTextToWaveform.from_pretrained("facebook/musicgen-stereo-large", use_safetensors=True)
@@ -52,6 +53,7 @@ class MusicGenerator:
         print(f"  Text Prompt:   {self.text}")
 
     def generate(self):
+        self.load_model()
         print(f"\nGenerating music with current parameters...")
         self.show_current_params()
 

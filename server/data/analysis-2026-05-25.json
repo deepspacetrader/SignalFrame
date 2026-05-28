@@ -1,0 +1,1198 @@
+{
+  "narrative": "Consumer financial health is showing signs of deep structural weakness; the observed contraction in real-world purchasing power contrasts sharply with complacent bond market indicators. This divergence compels major corporations to rapidly pivot away from speculative capital expenditures toward tangible commodity stockpiles and localized manufacturing bases, increasing reliance on alternative payment rails outside established global systems.\n\nGeopolitical tension across critical maritime passages is elevating resource scarcity risk globally. This instability forces regional powers to solidify new defense pacts focused specifically on joint cyber- and maritime security capabilities, accelerating militarization patterns in key global waterways amidst compounding environmental pressure from El Nino conditions.\n\nAccelerated advancement in AI and deep space technology is placing immense operational strain on foundational national infrastructure, particularly electrical grids. Surging data center demand mandates significant redesign of existing business models toward digitized fulfillment and complex service layers to manage power limitations and hardware dependencies.\n\nPublic health preparedness faces concurrent crises; the spread of Ebola in Congo complicated by local resistance, combined with a severe measles epidemic in Bangladesh, strains international public health infrastructure. These events require immediate and heightened global coordination responses for containment and resource allocation across diverse geographical areas.\n\nRegulatory oversight is forcing deep structural changes within multinational technology companies and traditional media markets alike. Growing legal scrutiny over content moderation requires localized service structures worldwide, paralleling the rapid financial shift of advertising revenue from local television sources to specialized digital platforms, compelling immediate corporate insolvency avoidance strategies.",
+  "signals": [
+    {
+      "id": "sig_82abbdc6",
+      "title": "Religious Leadership Issues Major Warnings Regarding AI Governance",
+      "text": "High-profile religious figures, including the Pope, are issuing stark warnings that artificial intelligence must be 'disarmed' or regulated strictly to prevent global domination, exclusion, and societal harm.",
+      "sentiment": "somewhat-negative",
+      "category": "Tech/AI",
+      "deltaType": "policy",
+      "source": [
+        {
+          "feedId": "21",
+          "source": "Al Jazeera",
+          "title": "Pope says AI must be ‘disarmed’ to prevent domination, exclusion, and death",
+          "link": "https://www.aljazeera.com/news/2026/5/25/pope-says-ai-must-be-disarmed-to-prevent-domination-exclusion-and-death?traffic_source=rss",
+          "timestamp": "Mon, 25 May 2026 16:26:46 +0000"
+        },
+        {
+          "feedId": "52",
+          "source": "NY Times World",
+          "title": "Pope Leo Warns of Risks From A.I. in 42,300-Word Encyclical",
+          "link": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical.html",
+          "timestamp": "Mon, 25 May 2026 15:14:03 +0000"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_8a6fb481",
+      "title": "Ebola Outbreak Escalates and Threatens Overwhelmed Regional Response",
+      "text": "Health authorities are warning that the spread of Ebola in areas like the Democratic Republic of Congo is outpacing current response capabilities, indicating a rapidly escalating public health crisis.",
+      "sentiment": "extremely-negative",
+      "category": "Health",
+      "deltaType": "escalation",
+      "source": [
+        {
+          "feedId": "10",
+          "source": "NY Times World",
+          "title": "In City at Center of Ebola Crisis, ‘the Virus Is Far Ahead of Us’",
+          "link": "https://www.nytimes.com/2026/05/24/world/africa/ebola-virus-congo-response.html",
+          "timestamp": "Mon, 25 May 2026 16:04:25 +0000"
+        },
+        {
+          "feedId": "62",
+          "source": "The Guardian",
+          "title": "Spread of Ebola in DRC ‘outpacing’ response efforts, warns WHO",
+          "link": "https://www.theguardian.com/world/2026/may/25/spread-of-ebola-in-drc-outpacing-response-efforts-warns-who",
+          "timestamp": "Mon, 25 May 2026 17:00:30 GMT"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_ba0f2f33",
+      "title": "Middle East Stability Remains Ambiguous Despite Diplomatic Pressure",
+      "text": "Iran continues to publicly deny that a comprehensive deal with the US is imminent despite external calls for peace and progress, maintaining strategic ambiguity while regional conflicts persist.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "deltaType": "other",
+      "source": [
+        {
+          "feedId": "42",
+          "source": "BBC World",
+          "title": "Deal with US not imminent, Iran says",
+          "link": "https://www.bbc.com/news/articles/cglpp2yk336o?at_medium=RSS&amp;at_campaign=rss",
+          "timestamp": "Mon, 25 May 2026 11:17:49 GMT"
+        },
+        {
+          "feedId": "73",
+          "source": "The Guardian",
+          "title": "Iran denies deal with US is imminent despite some progress",
+          "link": "https://www.theguardian.com/world/2026/may/25/iran-denies-deal-us-imminent-israel-oman-strait-of-hormuz",
+          "timestamp": "Mon, 25 May 2026 16:06:47 GMT"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_b06a97cc",
+      "title": "Major Miner Backtracks on Climate Goals, Favoring Polluting Short-Term Projects",
+      "text": "Leaked documents reveal that BHP has moved away from its stated climate strategy by backtracking key emission reduction projects and spending millions on polluting diesel infrastructure.",
+      "sentiment": "somewhat-negative",
+      "category": "Financial",
+      "deltaType": "disruption",
+      "source": [
+        {
+          "feedId": "65",
+          "source": "The Guardian",
+          "title": "The BHP files: World’s biggest miner BHP backtracks on climate action with key projects put on ice, leaked documents reveal",
+          "link": "https://www.theguardian.com/world/2026/may/25/bhp-files-leak-mining-company-climate-action",
+          "timestamp": "Mon, 25 May 2026 10:30:25 GMT"
+        },
+        {
+          "feedId": "66",
+          "source": "The Guardian",
+          "title": "BHP defies its own climate strategy to spend hundreds of millions on polluting diesel trucks in Pilbara",
+          "link": "https://www.theguardian.com/world/2026/may/25/bhp-diesel-trucks-pilbara-australia-mining-climate-pollution",
+          "timestamp": "Mon, 25 May 2026 10:30:24 GMT"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_9603d46d",
+      "title": "Regulatory Roadblocks Highlight Risks in Advanced Computing Sectors",
+      "text": "Concerns have been raised that the US push into quantum computing may not be entirely legal or fully regulated, signaling potential major policy and infrastructure risks for the tech sector.",
+      "sentiment": "interesting",
+      "category": "Tech/AI",
+      "deltaType": "policy",
+      "source": [
+        {
+          "feedId": "13",
+          "source": "Ars Technica",
+          "title": "US's big bet on quantum computing may not be entirely legal",
+          "link": "https://arstechnica.com/tech-policy/2026/05/uss-big-bet-on-quantum-computing-may-not-be-entirely-legal/",
+          "timestamp": "Mon, 25 May 2026 12:00:15 +0000"
+        },
+        {
+          "feedId": "15",
+          "source": "TechCrunch",
+          "title": "What ClickUp’s mass layoff tells us about the future of work",
+          "link": "https://techcrunch.com/2026/05/25/what-clickups-mass-layoff-tells-us-about-the-future-of-work/",
+          "timestamp": "Mon, 25 May 2026 16:00:00 +0000"
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "insights": [
+    {
+      "text": "The Paradox of Energy Stability: Political Optimism vs. Infrastructure Fragility",
+      "sentiment": "neutral",
+      "source": []
+    },
+    {
+      "text": "Regulatory Pressure on AI Will Accelerate Decentralized Computing Paradigms",
+      "sentiment": "neutral",
+      "source": []
+    },
+    {
+      "text": "The Global Public Health Crisis Signals Governance Failure Over Specialized Conflict",
+      "sentiment": "neutral",
+      "source": []
+    }
+  ],
+  "feeds": [
+    {
+      "id": "WP-MKTW-0005004352",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 15:49:00 GMT",
+      "content": "Is the stock market open today? Does the post office deliver mail on Memorial Day?. The holiday weekend will affect the stock and bond market. Here&#x2019;s what you need to know.",
+      "category": "Business",
+      "title": "Is the stock market open today? Does the post office deliver mail on Memorial Day?",
+      "link": "https://www.marketwatch.com/story/is-the-stock-market-closed-on-memorial-day-does-the-post-office-deliver-mail-bba7ef11?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-41109016",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/is-the-stock-market-closed-on-memorial-day-does-the-post-office-deliver-mail-bba7ef11?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005004047",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 14:16:00 GMT",
+      "content": "I inherited a house. My CPA says I should sell within a year to avoid capital gains. Is he right?. &#x201c;We plan to sell it to another family member for the appraised value.&#x201d;",
+      "category": "Business",
+      "title": "I inherited a house. My CPA says I should sell within a year to avoid capital gains. Is he right?",
+      "link": "https://www.marketwatch.com/story/i-inherited-a-house-my-cpa-says-i-should-sell-within-a-year-to-avoid-capital-gains-is-he-right-d0909486?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-92611943",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/i-inherited-a-house-my-cpa-says-i-should-sell-within-a-year-to-avoid-capital-gains-is-he-right-d0909486?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005013732",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 14:00:00 GMT",
+      "content": "These underdogs are a big reason S&amp;P 500 profit growth is the fastest in nearly 5 years. Ever since Big Tech went all in on artificial intelligence more than three years ago, seven companies have done the heavy lifting for overall S&amp;P 500 earnings growth. But more recently, the other 493 names in the index have started to pull their weight.",
+      "category": "Business",
+      "title": "These underdogs are a big reason S&amp;P 500 profit growth is the fastest in nearly 5 years",
+      "link": "https://www.marketwatch.com/story/these-underdogs-are-a-big-reason-s-p-500-profit-growth-is-the-fastest-in-nearly-5-years-4a43f142?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-52439349",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/these-underdogs-are-a-big-reason-s-p-500-profit-growth-is-the-fastest-in-nearly-5-years-4a43f142?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005007294",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 13:45:00 GMT",
+      "content": "I&#x2019;m selling my $1 million home. Will my agent really charge less than a 6% commission?. &#x201c;I haven&#x2019;t bought or sold property since the National Association of Realtors ruling that decoupled buyer&#x2019;s and seller&#x2019;s agent commissions.&#x201d;",
+      "category": "Business",
+      "title": "I&#x2019;m selling my $1 million home. Will my agent really charge less than a 6% commission?",
+      "link": "https://www.marketwatch.com/story/im-selling-my-1-million-maui-home-will-my-agent-charge-me-less-than-a-6-commission-ed06c0f1?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-91276895",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/im-selling-my-1-million-maui-home-will-my-agent-charge-me-less-than-a-6-commission-ed06c0f1?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005013935",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 13:30:00 GMT",
+      "content": "Mastercard&#x2019;s stock is up 11,000% since its IPO 20 years ago. What comes next?. Mastercard is in an elite club. Among S&amp;P 500 components, only Nvidia and Apple shares have performed better over the two-decade span since the card company&#x2019;s IPO.",
+      "category": "Business",
+      "title": "Mastercard&#x2019;s stock is up 11,000% since its IPO 20 years ago. What comes next?",
+      "link": "https://www.marketwatch.com/story/mastercards-stock-is-up-11-000-since-its-ipo-20-years-ago-what-comes-next-deb949eb?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-19335591",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/mastercards-stock-is-up-11-000-since-its-ipo-20-years-ago-what-comes-next-deb949eb?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005017923",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 11:31:00 GMT",
+      "content": "&#x2018;There is zero transparency&#x2019;: My friend&#x2019;s sister controls their mother&#x2019;s estate. How can we stop her from stealing?. &#x201c;The sister claims she does not have to explain herself to anyone.&#x201d;",
+      "category": "Business",
+      "title": "&#x2018;There is zero transparency&#x2019;: My friend&#x2019;s sister controls their mother&#x2019;s estate. How can we stop her from stealing?",
+      "link": "https://www.marketwatch.com/story/there-is-zero-transparency-my-friends-sister-controls-their-mothers-estate-how-can-we-stop-her-from-stealing-a1a34ac8?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-77358932",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/there-is-zero-transparency-my-friends-sister-controls-their-mothers-estate-how-can-we-stop-her-from-stealing-a1a34ac8?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005014903",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 10:40:00 GMT",
+      "content": "&#x2018;We have longevity in the family&#x2019;: My sister is turning 67. Should she wait until 70 to claim Social Security?. &#x201c;Others say she should start at full retirement age.&#x201d;",
+      "category": "Business",
+      "title": "&#x2018;We have longevity in the family&#x2019;: My sister is turning 67. Should she wait until 70 to claim Social Security?",
+      "link": "https://www.marketwatch.com/story/we-have-longevity-in-the-family-my-sister-is-turning-67-should-she-wait-until-70-to-claim-social-security-812087a4?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-76366035",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/we-have-longevity-in-the-family-my-sister-is-turning-67-should-she-wait-until-70-to-claim-social-security-812087a4?mod=mw_rss_topstories"
+    },
+    {
+      "id": "WP-MKTW-0005017702",
+      "source": "MarketWatch",
+      "timestamp": "Mon, 25 May 2026 09:38:00 GMT",
+      "content": "I&#x2019;m 67. Our family trust earns $300,000 annually for my kids. How do I ensure they won&#x2019;t get killed on taxes?. &#x201c;My thought is to distribute all of the income to my children each year so that the trust itself pays little to no tax.&#x201d;",
+      "category": "Business",
+      "title": "I&#x2019;m 67. Our family trust earns $300,000 annually for my kids. How do I ensure they won&#x2019;t get killed on taxes?",
+      "link": "https://www.marketwatch.com/story/im-67-our-family-trust-earns-300-000-annually-for-my-kids-how-do-i-ensure-they-wont-get-killed-on-taxes-ee0c35d6?mod=mw_rss_topstories",
+      "picture": "https://images.mktw.net/im-51473819",
+      "hasFullContent": false,
+      "url": "https://www.marketwatch.com/story/im-67-our-family-trust-earns-300-000-annually-for-my-kids-how-do-i-ensure-they-wont-get-killed-on-taxes-ee0c35d6?mod=mw_rss_topstories"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/ckgl51jjp3jo#2",
+      "source": "BBC Health",
+      "timestamp": "Mon, 25 May 2026 07:53:58 GMT",
+      "content": "What to do if you think someone has heat exhaustion or heatstroke. Know the signs and what to do if someone is unwell in hot weather.",
+      "category": "Health",
+      "title": "What to do if you think someone has heat exhaustion or heatstroke",
+      "link": "https://www.bbc.com/news/articles/ckgl51jjp3jo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/ckgl51jjp3jo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/health/cholesterol-ldl-gene-therapy.html",
+      "source": "NY Times Science",
+      "timestamp": "Mon, 25 May 2026 12:45:05 +0000",
+      "content": "One-and-Done Heart Disease Prevention? Scientists Show It May Be Possible.. A single infusion of an experimental gene-editing drug seemed to reduce LDL long-term in a small trial. The results may point to something “curative,” one expert said.",
+      "category": "Science",
+      "title": "One-and-Done Heart Disease Prevention? Scientists Show It May Be Possible.",
+      "link": "https://www.nytimes.com/2026/05/25/health/cholesterol-ldl-gene-therapy.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/science/25sci-cholesterol/25sci-cholesterol-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/health/cholesterol-ldl-gene-therapy.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/24/world/africa/ebola-virus-congo-response.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 16:04:25 +0000",
+      "content": "In City at Center of Ebola Crisis, ‘the Virus Is Far Ahead of Us’. The deadly virus has spread alarmingly in Congo for months. Only now is the response taking shape.",
+      "category": "World",
+      "title": "In City at Center of Ebola Crisis, ‘the Virus Is Far Ahead of Us’",
+      "link": "https://www.nytimes.com/2026/05/24/world/africa/ebola-virus-congo-response.html",
+      "picture": "https://static01.nyt.com/images/2026/05/24/multimedia/24int-ebola-response-vzmj/24int-ebola-response-vzmj-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/24/world/africa/ebola-virus-congo-response.html"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cj0pp45md0lo#2",
+      "source": "BBC Science",
+      "timestamp": "Mon, 25 May 2026 12:08:52 GMT",
+      "content": "Unacceptable bacteria levels around Jersey seas. Infrastructure and Environment bosses say they believe significant rainfall has caused poor results.",
+      "category": "Science",
+      "title": "Unacceptable bacteria levels around Jersey seas",
+      "link": "https://www.bbc.com/news/articles/cj0pp45md0lo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cj0pp45md0lo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/24/science/rfk-jr-antidepressants-ssri-psychiatry.html",
+      "source": "NY Times Science",
+      "timestamp": "Mon, 25 May 2026 12:31:46 +0000",
+      "content": "RFK Jr.’s Push to Curb Antidepressants Has Shaken Psychiatry. An annual psychiatric meeting was abuzz over Robert F. Kennedy Jr.’s call to rein in the use of depression medications. Some fear it will drive patients away from care.",
+      "category": "Science",
+      "title": "RFK Jr.’s Push to Curb Antidepressants Has Shaken Psychiatry",
+      "link": "https://www.nytimes.com/2026/05/24/science/rfk-jr-antidepressants-ssri-psychiatry.html",
+      "picture": "https://static01.nyt.com/images/2026/05/22/multimedia/22sci-psychiatry-critics-stillpromo-wpck/22sci-psychiatry-critics-stillpromo-wpck-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/24/science/rfk-jr-antidepressants-ssri-psychiatry.html"
+    },
+    {
+      "id": "https://arstechnica.com/tech-policy/2026/05/uss-big-bet-on-quantum-computing-may-not-be-entirely-legal/",
+      "source": "Ars Technica",
+      "timestamp": "Mon, 25 May 2026 12:00:15 +0000",
+      "content": "US&#039;s big bet on quantum computing may not be entirely legal. ",
+      "category": "Technology",
+      "title": "US&#039;s big bet on quantum computing may not be entirely legal",
+      "link": "https://arstechnica.com/tech-policy/2026/05/uss-big-bet-on-quantum-computing-may-not-be-entirely-legal/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/image-2-1152x648.jpeg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/tech-policy/2026/05/uss-big-bet-on-quantum-computing-may-not-be-entirely-legal/"
+    },
+    {
+      "id": "https://arstechnica.com/gaming/2026/05/the-witcher-3-is-a-good-game-but-that-doesnt-mean-you-have-to-like-it/",
+      "source": "Ars Technica",
+      "timestamp": "Mon, 25 May 2026 11:22:27 +0000",
+      "content": "I spent years forcing myself to finish The Witcher 3—don&#039;t repeat my mistake. ",
+      "category": "Technology",
+      "title": "I spent years forcing myself to finish The Witcher 3—don&#039;t repeat my mistake",
+      "link": "https://arstechnica.com/gaming/2026/05/the-witcher-3-is-a-good-game-but-that-doesnt-mean-you-have-to-like-it/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/05/The-Witcher-3-hero-image-1152x648-1779476972.jpg",
+      "hasFullContent": false,
+      "url": "https://arstechnica.com/gaming/2026/05/the-witcher-3-is-a-good-game-but-that-doesnt-mean-you-have-to-like-it/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125761",
+      "source": "TechCrunch",
+      "timestamp": "Mon, 25 May 2026 16:00:00 +0000",
+      "content": "What ClickUp&#8217;s mass layoff tells us about the future of work. The nine-year-old startup is replacing hundreds of employees with thousands of AI agents.",
+      "category": "Technology",
+      "title": "What ClickUp&#8217;s mass layoff tells us about the future of work",
+      "link": "https://techcrunch.com/2026/05/25/what-clickups-mass-layoff-tells-us-about-the-future-of-work/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/25/what-clickups-mass-layoff-tells-us-about-the-future-of-work/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125866",
+      "source": "TechCrunch",
+      "timestamp": "Mon, 25 May 2026 15:09:41 +0000",
+      "content": "The pope’s AI encyclical isn’t really about AI. Pope Leo XIV's first encyclical uses AI as a lens to diagnose older problems: concentrated power, eroding democracy, and a tech elite that shapes the world to its own advantage.",
+      "category": "Technology",
+      "title": "The pope’s AI encyclical isn’t really about AI",
+      "link": "https://techcrunch.com/2026/05/25/the-popes-ai-encyclical-isnt-really-about-ai/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/25/the-popes-ai-encyclical-isnt-really-about-ai/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3122173",
+      "source": "TechCrunch",
+      "timestamp": "Mon, 25 May 2026 15:00:00 +0000",
+      "content": "The pitch trick that helped an eSports startup raise $20M when VCs only wanted AI. Earlier this year, Lucra Sports founder and CEO Dylan Robbins did something that no one else has ever done. And he shared several secrets on how he did it.",
+      "category": "Technology",
+      "title": "The pitch trick that helped an eSports startup raise $20M when VCs only wanted AI",
+      "link": "https://techcrunch.com/2026/05/25/the-pitch-trick-that-helped-an-esports-startup-raise-20m-when-vcs-only-wanted-ai/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/25/the-pitch-trick-that-helped-an-esports-startup-raise-20m-when-vcs-only-wanted-ai/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125834",
+      "source": "TechCrunch",
+      "timestamp": "Mon, 25 May 2026 14:30:00 +0000",
+      "content": "Startup Battlefield 200 applications close in days: Apply before May 27. The deadline to apply or nominate for Startup Battlefield 200 is May 27. This is your shot at VC access, global visibility, TechCrunch coverage, and $100,000. Apply now.",
+      "category": "Technology",
+      "title": "Startup Battlefield 200 applications close in days: Apply before May 27",
+      "link": "https://techcrunch.com/2026/05/25/startup-battlefield-200-applications-close-in-days-apply-before-may-27/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/25/startup-battlefield-200-applications-close-in-days-apply-before-may-27/"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3125848",
+      "source": "TechCrunch",
+      "timestamp": "Mon, 25 May 2026 14:00:00 +0000",
+      "content": "5 days left: Save up to $410 on TechCrunch Disrupt 2026 passes before prices increase. Early Bird savings for TechCrunch Disrupt 2026 in San Francisco end May 29 at 11:59 p.m. PT. Register now to save up to $410 before prices increase.",
+      "category": "Technology",
+      "title": "5 days left: Save up to $410 on TechCrunch Disrupt 2026 passes before prices increase",
+      "link": "https://techcrunch.com/2026/05/25/5-days-left-save-up-to-410-on-techcrunch-disrupt-2026-passes-before-prices-increase/",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://techcrunch.com/2026/05/25/5-days-left-save-up-to-410-on-techcrunch-disrupt-2026-passes-before-prices-increase/"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779726422",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 16:30:50 +0000",
+      "content": "How technology is shaping Hajj. With nearly two million worshippers performing Hajj this year, technology is key to ensuring everything runs smoothly.",
+      "category": "World",
+      "title": "How technology is shaping Hajj",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/how-technology-is-shaping-hajj?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/how-technology-is-shaping-hajj?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779708280",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 16:26:46 +0000",
+      "content": "Pope says AI must be ‘disarmed’ to prevent domination, exclusion, and death. In his first encyclical, Leo insists ownership of artificial intelligence data must not be left solely in private hands.",
+      "category": "World",
+      "title": "Pope says AI must be ‘disarmed’ to prevent domination, exclusion, and death",
+      "link": "https://www.aljazeera.com/news/2026/5/25/pope-says-ai-must-be-disarmed-to-prevent-domination-exclusion-and-death?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/pope-says-ai-must-be-disarmed-to-prevent-domination-exclusion-and-death?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779717462",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 16:12:52 +0000",
+      "content": "Russia warns foreigners to leave Kyiv as it prepares ‘systematic strikes’. Moscow calls upcoming &#039;systematic strikes&#039; on Ukrainian capital a response to Kyiv&#039;s recent attack in Luhansk.",
+      "category": "World",
+      "title": "Russia warns foreigners to leave Kyiv as it prepares ‘systematic strikes’",
+      "link": "https://www.aljazeera.com/news/2026/5/25/russia-warns-foreigners-to-leave-kyiv-as-it-prepares-systematic-strikes?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/russia-warns-foreigners-to-leave-kyiv-as-it-prepares-systematic-strikes?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779724229",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 15:58:07 +0000",
+      "content": "Nearly 300 tourists rescued after cable cars halt mid-air. Around 300 people were stranded mid-air after the Gondola system suddenly halted in Indian-administered Kashmir.",
+      "category": "World",
+      "title": "Nearly 300 tourists rescued after cable cars halt mid-air",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/nearly-300-tourists-rescued-after-cable-cars-halt-mid-air?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/nearly-300-tourists-rescued-after-cable-cars-halt-mid-air?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779700292",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 15:43:21 +0000",
+      "content": "Train bomb in Pakistan’s Baloch region: Why violence is on the rise. Deadly blast in Pakistan marks uptick in Balochistan separatist violence.",
+      "category": "World",
+      "title": "Train bomb in Pakistan’s Baloch region: Why violence is on the rise",
+      "link": "https://www.aljazeera.com/news/2026/5/25/train-bomb-in-pakistans-baloch-region-why-violence-is-on-the-rise?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/train-bomb-in-pakistans-baloch-region-why-violence-is-on-the-rise?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779721148",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 15:06:46 +0000",
+      "content": "Pope Leo calls for ‘disarming’ of artificial intelligence. Pope Leo has warned that some AI-powered weapons systems are becoming ‘practically beyond human control&#039;.",
+      "category": "World",
+      "title": "Pope Leo calls for ‘disarming’ of artificial intelligence",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/pope-leo-calls-for-disarming-of-artificial-intelligence?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/pope-leo-calls-for-disarming-of-artificial-intelligence?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779719790",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 14:43:01 +0000",
+      "content": "Trump links Iran negotiations to expansion of Abraham Accords. US President Donald Trump links Iran negotiations to expansion of Abraham Accords.",
+      "category": "World",
+      "title": "Trump links Iran negotiations to expansion of Abraham Accords",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/trump-links-iran-negotiations-to-expansion-of-abraham-accords?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/trump-links-iran-negotiations-to-expansion-of-abraham-accords?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779701970",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 14:33:35 +0000",
+      "content": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction. Activists allege assaults and torture during Israeli detention after flotilla intercepted in international waters.",
+      "category": "World",
+      "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
+      "link": "https://www.aljazeera.com/news/2026/5/25/australian-gaza-aid-flotilla-activists-allege-abuse-after-israeli-abduction?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/australian-gaza-aid-flotilla-activists-allege-abuse-after-israeli-abduction?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779706870",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 14:32:56 +0000",
+      "content": "WHO chief says suspected Ebola deaths at 220 as epidemic ‘outpacing us’. Tedros ⁠Adhanom Ghebreyesus says ​a delay in detecting cases means responders were now &#039;playing catch-up&#039;.",
+      "category": "World",
+      "title": "WHO chief says suspected Ebola deaths at 220 as epidemic ‘outpacing us’",
+      "link": "https://www.aljazeera.com/news/2026/5/25/who-chief-says-suspected-ebola-deaths-at-220-as-epidemic-outpacing-us?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/who-chief-says-suspected-ebola-deaths-at-220-as-epidemic-outpacing-us?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779715893",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 13:36:35 +0000",
+      "content": "Baloch separatists ‘take advantage’ of Pakistan’s entanglements. Baloch separatists &#039;take advantage&#039; of Pakistan&#039;s entanglements",
+      "category": "World",
+      "title": "Baloch separatists ‘take advantage’ of Pakistan’s entanglements",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/baloch-separatists-take-advantage-of-pakistans-entanglements?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/baloch-separatists-take-advantage-of-pakistans-entanglements?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779712796",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 13:29:34 +0000",
+      "content": "Could Israel sabotage US-Iran deal?. As the US and Iran move closer to a peace deal, Israel vows to keep striking what it calls regional and nuclear threats.",
+      "category": "World",
+      "title": "Could Israel sabotage US-Iran deal?",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/could-israel-sabotage-us-iran-deal?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/could-israel-sabotage-us-iran-deal?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779711065",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 13:19:02 +0000",
+      "content": "Iran says deal with US ‘not imminent’ despite progress. Iran’s FM spokesman Baghaei says a ‘large portion’ of issues with the US have been resolved, but a deal is not imminent.",
+      "category": "World",
+      "title": "Iran says deal with US ‘not imminent’ despite progress",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/iran-says-deal-with-us-not-imminent-despite-progress?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/iran-says-deal-with-us-not-imminent-despite-progress?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779704607",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 13:00:15 +0000",
+      "content": "Could Brazilian oil emerge as one of the big winners of the Iran war?. China and India are among those ramping up imports of Brazilian crude amid Strait of Hormuz disruptions.",
+      "category": "World",
+      "title": "Could Brazilian oil emerge as one of the big winners of the Iran war?",
+      "link": "https://www.aljazeera.com/news/2026/5/25/could-brazilian-oil-emerge-as-one-of-the-big-winners-of-the-iran-war?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/could-brazilian-oil-emerge-as-one-of-the-big-winners-of-the-iran-war?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779709984",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 11:54:05 +0000",
+      "content": "Paraglider survives mid-air collision with plane over Austria. Paraglider survives mid-air collision with plane over Austria",
+      "category": "World",
+      "title": "Paraglider survives mid-air collision with plane over Austria",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/paraglider-survives-mid-air-collision-with-plane-over-austria?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/paraglider-survives-mid-air-collision-with-plane-over-austria?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779701617",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 11:28:24 +0000",
+      "content": "The world urgently needs a US-Iran deal now. Without a deal between Washington and Tehran, the fallout from Strait of Hormuz closure could deepen global crises.",
+      "category": "World",
+      "title": "The world urgently needs a US-Iran deal now",
+      "link": "https://www.aljazeera.com/opinions/2026/5/25/the-world-urgently-needs-a-us-iran-deal-now?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/opinions/2026/5/25/the-world-urgently-needs-a-us-iran-deal-now?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779701493",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 11:23:26 +0000",
+      "content": "China’s Xi praises ‘unbreakable’ Pakistan ties as Sharif visits Beijing. Prime Minister Shehbaz Sharif says China and Pakistan are &#039;iron brother&#039; countries.",
+      "category": "World",
+      "title": "China’s Xi praises ‘unbreakable’ Pakistan ties as Sharif visits Beijing",
+      "link": "https://www.aljazeera.com/news/2026/5/25/chinas-xi-praises-unbreakable-pakistan-ties-as-sharif-visits-beijing?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/chinas-xi-praises-unbreakable-pakistan-ties-as-sharif-visits-beijing?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1778998418",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 11:23:26 +0000",
+      "content": "Cattle market empties as fear grips Eid preparations in India’s West Bengal. Tensions rise in key state, won by BJP this month for first time, as political shift disrupts Eid al-Adha traditions.",
+      "category": "World",
+      "title": "Cattle market empties as fear grips Eid preparations in India’s West Bengal",
+      "link": "https://www.aljazeera.com/news/2026/5/25/cattle-market-empties-as-fear-grips-eid-preparations-in-indias-west-bengal?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/cattle-market-empties-as-fear-grips-eid-preparations-in-indias-west-bengal?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779667505",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 11:12:45 +0000",
+      "content": "Trump’s war loop: Escalate, retreat, repeat. Stuck in a quagmire of a war, Trump chafes at negative coverage while Iran digs its heels in.",
+      "category": "World",
+      "title": "Trump’s war loop: Escalate, retreat, repeat",
+      "link": "https://www.aljazeera.com/video/the-listening-post/2026/5/25/trumps-war-loop-escalate-retreat-repeat?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/the-listening-post/2026/5/25/trumps-war-loop-escalate-retreat-repeat?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779705138",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 10:42:34 +0000",
+      "content": "Surveillance video shows moment of China coal mine blast. Surveillance video caught the moment a powerful explosion surged through the tunnels of a coal mine in China.",
+      "category": "World",
+      "title": "Surveillance video shows moment of China coal mine blast",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/surveillance-video-shows-moment-of-china-coal-mine-blast?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/surveillance-video-shows-moment-of-china-coal-mine-blast?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779693387",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 10:10:16 +0000",
+      "content": "Israel kills three in attacks on Lebanon, issues more displacement orders. Israel carries out attacks on multiple villages and towns in southern Lebanon.",
+      "category": "World",
+      "title": "Israel kills three in attacks on Lebanon, issues more displacement orders",
+      "link": "https://www.aljazeera.com/news/2026/5/25/israel-kills-three-in-attacks-on-lebanon-issues-more-displacement-orders?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/news/2026/5/25/israel-kills-three-in-attacks-on-lebanon-issues-more-displacement-orders?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779622602",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 09:46:57 +0000",
+      "content": "What’s inside the Kaaba and what covers it? The story of the Kiswah. At the heart of Hajj stands the Kaaba, draped in 670kg of silk and embroidered with 200kg of gold and silver thread.",
+      "category": "World",
+      "title": "What’s inside the Kaaba and what covers it? The story of the Kiswah",
+      "link": "https://www.aljazeera.com/features/2026/5/25/whats-inside-the-kaaba-and-what-covers-it-the-story-of-the-kiswah?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/features/2026/5/25/whats-inside-the-kaaba-and-what-covers-it-the-story-of-the-kiswah?traffic_source=rss"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1779700234",
+      "source": "Al Jazeera",
+      "timestamp": "Mon, 25 May 2026 09:14:27 +0000",
+      "content": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid. A small boat believed to be part of the Global Sumud Flotilla that was carrying aid for Gaza has washed ashore in Egypt",
+      "category": "World",
+      "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/5/25/abandoned-flotilla-boat-washes-ashore-in-egypt-with-gaza-aid?traffic_source=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/abandoned-flotilla-boat-washes-ashore-in-egypt-with-gaza-aid?traffic_source=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cglpp2yk336o#0",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 11:17:49 GMT",
+      "content": "Deal with US not imminent, Iran says. The US secretary of state earlier said that an agreement could possibly come on Monday.",
+      "category": "World",
+      "title": "Deal with US not imminent, Iran says",
+      "link": "https://www.bbc.com/news/articles/cglpp2yk336o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cglpp2yk336o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c809m7g29r7o#0",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 13:05:56 GMT",
+      "content": "Oil prices slide on hopes of US-Iran peace deal. Trump said on Saturday that an agreement would include the reopening of the Strait of Hormuz, without giving further details.",
+      "category": "World",
+      "title": "Oil prices slide on hopes of US-Iran peace deal",
+      "link": "https://www.bbc.com/news/articles/c809m7g29r7o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c809m7g29r7o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c1l22pg12mpo#0",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 15:45:27 GMT",
+      "content": "White House gunman had previous run-ins with Secret Service, court documents show. The suspect previously obstructed a White House entry lane in June of 2025 and told Secret Service agents he was Jesus Christ.",
+      "category": "World",
+      "title": "White House gunman had previous run-ins with Secret Service, court documents show",
+      "link": "https://www.bbc.com/news/articles/c1l22pg12mpo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c1l22pg12mpo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/clyppgvd3qzo#0",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 11:54:07 GMT",
+      "content": "Three killed in Uganda after crashing into elephant. Four people were also injured in the incident inside Murchison Falls National Park, officials say.",
+      "category": "World",
+      "title": "Three killed in Uganda after crashing into elephant",
+      "link": "https://www.bbc.com/news/articles/clyppgvd3qzo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/clyppgvd3qzo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/videos/ckgppxw9239o#0",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 15:17:10 GMT",
+      "content": "'Blistering heat': Indians warned to stay indoors as temperatures soar. The BBC's Sumedha Pal described how difficult it was to be standing in the streets of Delhi as temperatures rose to 45C .",
+      "category": "World",
+      "title": "'Blistering heat': Indians warned to stay indoors as temperatures soar",
+      "link": "https://www.bbc.com/news/videos/ckgppxw9239o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/videos/ckgppxw9239o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cevpp983kmzo#0",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 11:08:05 GMT",
+      "content": "At least 19 people taken to hospital after 'strong smell' reported at Tokyo mall. Police say a man sprayed a substance at an ATM in the luxury Ginza 6 shopping centre.",
+      "category": "World",
+      "title": "At least 19 people taken to hospital after 'strong smell' reported at Tokyo mall",
+      "link": "https://www.bbc.com/news/articles/cevpp983kmzo?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/cevpp983kmzo?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c893543gn20o#1",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 08:00:35 GMT",
+      "content": "Anger grows after China's deadliest coal mining disaster in years. On China's tightly-controlled internet, people are calling for justice and questioning how this happened.",
+      "category": "World",
+      "title": "Anger grows after China's deadliest coal mining disaster in years",
+      "link": "https://www.bbc.com/news/articles/c893543gn20o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c893543gn20o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c0l22wrx44po#1",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 11:13:45 GMT",
+      "content": "Clashes as Venezuelan prisoners protest over alleged mistreatment. The prisoners insisted their protest was peaceful but that security forces deployed to quell it opened fire.",
+      "category": "World",
+      "title": "Clashes as Venezuelan prisoners protest over alleged mistreatment",
+      "link": "https://www.bbc.com/news/articles/c0l22wrx44po?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c0l22wrx44po?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c87qq07l1d8o#1",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 11:12:43 GMT",
+      "content": "Senegal's leadership row mounts as parliament speaker resigns. Some speculate that El Malick Ndiaye stepped down so that ousted-PM Ousmane Sonko can take his place.",
+      "category": "World",
+      "title": "Senegal's leadership row mounts as parliament speaker resigns",
+      "link": "https://www.bbc.com/news/articles/c87qq07l1d8o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/articles/c87qq07l1d8o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.bbc.com/news/videos/cedpp9ldnl9o#3",
+      "source": "BBC World",
+      "timestamp": "Mon, 25 May 2026 10:20:57 GMT",
+      "content": "Moment of gas explosion at China coal mine. At least 82 people have been killed and two are missing after a gas explosion at a coal mine in northern China on Sunday, officials say.",
+      "category": "World",
+      "title": "Moment of gas explosion at China coal mine",
+      "link": "https://www.bbc.com/news/videos/cedpp9ldnl9o?at_medium=RSS&amp;at_campaign=rss",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.bbc.com/news/videos/cedpp9ldnl9o?at_medium=RSS&amp;at_campaign=rss"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 15:14:03 +0000",
+      "content": "Pope Leo Warns of Risks From A.I. in 42,300-Word Encyclical. The document marks a powerful foray by the leader of the Roman Catholic Church into the debate about the misuse or overuse of artificial intelligence.",
+      "category": "World",
+      "title": "Pope Leo Warns of Risks From A.I. in 42,300-Word Encyclical",
+      "link": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25int-pope-encyclical-HFO-01-ktvm/25int-pope-encyclical-HFO-01-ktvm-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/europe/a-city-in-the-kill-zone.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 09:00:19 +0000",
+      "content": "A City in the Kill Zone. Little is left of Kostiantynivka, a city on the front lines. Rescuers risk their lives to ferry out the few who remain.",
+      "category": "World",
+      "title": "A City in the Kill Zone",
+      "link": "https://www.nytimes.com/2026/05/25/world/europe/a-city-in-the-kill-zone.html",
+      "picture": "https://static01.nyt.com/images/2026/02/18/multimedia/00int-Ukraine-Kostiantynivka-visual-promo-aniafa/00int-Ukraine-Kostiantynivka-visual-cvfp-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/europe/a-city-in-the-kill-zone.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/asia/cambodia-pardon-kem-sokha.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 16:40:39 +0000",
+      "content": "Cambodia’s Leader Pardons Top Opposition Politician Kem Sokha. The decision to release Kem Sokha is being seen as a likely attempt to recalibrate frayed ties with Western countries.",
+      "category": "World",
+      "title": "Cambodia’s Leader Pardons Top Opposition Politician Kem Sokha",
+      "link": "https://www.nytimes.com/2026/05/25/world/asia/cambodia-pardon-kem-sokha.html",
+      "picture": "https://static01.nyt.com/images/2026/05/26/multimedia/26int-cambodia-politician-photo-cmhv/26int-cambodia-politician-photo-cmhv-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/asia/cambodia-pardon-kem-sokha.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/europe/wine-truffles-firefighting-climate-change.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 16:12:34 +0000",
+      "content": "How Wine, Truffles and Honey Could Help Europe Fight Wildfires. Countries are learning that the finer things in life sometimes have a serendipitous side benefit.",
+      "category": "World",
+      "title": "How Wine, Truffles and Honey Could Help Europe Fight Wildfires",
+      "link": "https://www.nytimes.com/2026/05/25/world/europe/wine-truffles-firefighting-climate-change.html",
+      "picture": "https://static01.nyt.com/images/2026/05/22/22visualUploader-9485-cover/22visualUploader-9485-cover-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/europe/wine-truffles-firefighting-climate-change.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical-ai.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 09:40:10 +0000",
+      "content": "Pope Leo Has Released an Encyclical About A.I. Why Is That Important?. Leo XIV issued his thoughts about artificial intelligence in the modern world using a centuries-old form of papal communication called an encyclical.",
+      "category": "World",
+      "title": "Pope Leo Has Released an Encyclical About A.I. Why Is That Important?",
+      "link": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical-ai.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25int-pope-explainer-kmfp/25int-pope-explainer-kmfp-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/europe/pope-leo-encyclical-ai.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/middleeast/iran-deal-trump-pressure.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 15:05:11 +0000",
+      "content": "Trump’s Pressure Had Little Effect on Iran’s Terms for a Peace Deal. President Trump had sought to force Tehran to accept American demands for a peace deal with a mixture of threats and military operations.",
+      "category": "World",
+      "title": "Trump’s Pressure Had Little Effect on Iran’s Terms for a Peace Deal",
+      "link": "https://www.nytimes.com/2026/05/25/world/middleeast/iran-deal-trump-pressure.html",
+      "picture": "https://static01.nyt.com/images/2026/05/23/multimedia/trump-pressure-kjmp/trump-pressure-kjmp-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/middleeast/iran-deal-trump-pressure.html"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/weather/uk-heat-wave-may-weather-record.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 14:47:05 +0000",
+      "content": "UK Heat Wave Could Break May Temperature Record. Forecasters warned that temperatures could climb to the highest level ever recorded in the month of May, reaching 35 degrees Celsius (95 degrees Fahrenheit) in some areas of England.",
+      "category": "World",
+      "title": "UK Heat Wave Could Break May Temperature Record",
+      "link": "https://www.nytimes.com/2026/05/25/weather/uk-heat-wave-may-weather-record.html",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25wea-britainheatwave-kqfc/25wea-britainheatwave-kqfc-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/weather/uk-heat-wave-may-weather-record.html"
+    },
+    {
+      "id": "https://www.nytimes.com/live/2026/05/25/world/iran-war-trump/a-deal-with-the-us-would-be-preliminary-and-focused-on-ending-war-iranian-official-says",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 13:07:07 +0000",
+      "content": "A deal with the U.S. would be preliminary and focused on ending the war, an Iranian official says.. ",
+      "category": "World",
+      "title": "A deal with the U.S. would be preliminary and focused on ending the war, an Iranian official says.",
+      "link": "https://www.nytimes.com/live/2026/05/25/world/iran-war-trump/a-deal-with-the-us-would-be-preliminary-and-focused-on-ending-war-iranian-official-says",
+      "picture": "https://static01.nyt.com/images/2026/05/25/multimedia/25mideast-baghaei/25mideast-baghaei-mediumSquareAt3X.jpg",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/live/2026/05/25/world/iran-war-trump/a-deal-with-the-us-would-be-preliminary-and-focused-on-ending-war-iranian-official-says"
+    },
+    {
+      "id": "https://www.nytimes.com/live/2026/05/25/world/iran-war-trump/heres-the-latest",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 16:53:59 +0000",
+      "content": "Here’s the latest.. ",
+      "category": "World",
+      "title": "Here’s the latest.",
+      "link": "https://www.nytimes.com/live/2026/05/25/world/iran-war-trump/heres-the-latest",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/live/2026/05/25/world/iran-war-trump/heres-the-latest"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/05/25/world/africa/baobab-tree-dying-madagascar-africa.html",
+      "source": "NY Times World",
+      "timestamp": "Mon, 25 May 2026 09:04:16 +0000",
+      "content": "One of Madagascar’s Oldest Sacred Trees Is Slowly Dying. In a forest in Madagascar, the demise of a centuries-old baobab points to the fraying of a fragile ecosystem.",
+      "category": "World",
+      "title": "One of Madagascar’s Oldest Sacred Trees Is Slowly Dying",
+      "link": "https://www.nytimes.com/2026/05/25/world/africa/baobab-tree-dying-madagascar-africa.html",
+      "picture": "",
+      "hasFullContent": false,
+      "url": "https://www.nytimes.com/2026/05/25/world/africa/baobab-tree-dying-madagascar-africa.html"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/spread-of-ebola-in-drc-outpacing-response-efforts-warns-who",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 17:00:30 GMT",
+      "content": "Spread of Ebola in DRC ‘outpacing’ response efforts, warns WHO. &lt;p&gt;Director general of World Health Organization urges neighbouring countries to take immediate action&lt;/p&gt;&lt;p&gt;The World Health Organization has warned that the Ebola outbreak is outpacing response efforts and countries neighbouring the Democratic Republic of Congo (DRC) are at high risk from the disease.&lt;/p&gt;&lt;p&gt;“We are urgently scaling up operations, but at the moment the epidemic is outpacing us,” said the WHO’s director-general, Dr Tedros Adhanom Ghebreyesus, as he urged neighbouring countries to take immediate action.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/25/spread-of-ebola-in-drc-outpacing-response-efforts-warns-who\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Spread of Ebola in DRC ‘outpacing’ response efforts, warns WHO",
+      "link": "https://www.theguardian.com/world/2026/may/25/spread-of-ebola-in-drc-outpacing-response-efforts-warns-who",
+      "picture": "https://i.guim.co.uk/img/media/09ac020b7683265e2f3bb189ae92503b24d66346/94_0_2279_1824/master/2279.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=1c57b2fcae69f73abc41795c1c6b27d2",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/spread-of-ebola-in-drc-outpacing-response-efforts-warns-who"
+    },
+    {
+      "id": "https://www.theguardian.com/australia-news/2026/may/26/teals-eye-party-structure-to-fill-liberal-vacuum-and-counter-one-nation",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 15:00:30 GMT",
+      "content": "Teals eye party structure to fill Liberal vacuum and counter One Nation. &lt;p&gt;Changes to political funding and the need for crossbenchers to remain relevant are driving discussions but some independents are opposed&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;free app&lt;/a&gt; or &lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;daily news podcast&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It is a tag that has been unfairly – and incorrectly – attached to the band of teal MPs since their arrival en-masse in federal parliament in 2022, a slur deployed by their political opponents in an attempt to undermine their independence.&lt;/p&gt;&lt;p&gt;The “teal party”",
+      "category": "World",
+      "title": "Teals eye party structure to fill Liberal vacuum and counter One Nation",
+      "link": "https://www.theguardian.com/australia-news/2026/may/26/teals-eye-party-structure-to-fill-liberal-vacuum-and-counter-one-nation",
+      "picture": "https://i.guim.co.uk/img/media/b050980ebfc45cdf95b41350dd420032cce78826/619_0_6880_5504/master/6880.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=b5e866b70f9875bdedfc3d954a7f1912",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/australia-news/2026/may/26/teals-eye-party-structure-to-fill-liberal-vacuum-and-counter-one-nation"
+    },
+    {
+      "id": "https://www.theguardian.com/australia-news/2026/may/26/stolen-generation-survivors-national-plan-ntwnfb",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 14:01:27 GMT",
+      "content": "At four, her head was shaved and her clothes burned. Aunty Lorraine doesn’t want her trauma to be forgotten. &lt;p&gt;The now 88-year-old is urging Australian governments to throw their support behind a new national plan for Stolen Generations survivors as they enter their final years&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust.com/w4u7jx3\"&gt;free app&lt;/a&gt; or &lt;a href=\"https://www.theguardian.com/australia-news/series/full-story?CMP=cvau_sfl\"&gt;daily news podcast&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Aunty Lorraine Peeters only remembers the metal gates opening as she was driven away from her home, at Brewarrina mission in north-west New South Wales. She was taken, along with her brothers and sisters, at just four years old.&lt;/p&gt;&lt;p",
+      "category": "World",
+      "title": "At four, her head was shaved and her clothes burned. Aunty Lorraine doesn’t want her trauma to be forgotten",
+      "link": "https://www.theguardian.com/australia-news/2026/may/26/stolen-generation-survivors-national-plan-ntwnfb",
+      "picture": "https://i.guim.co.uk/img/media/b78bd27731baa5f73b1123a0f62695d550000251/252_0_3780_3024/master/3780.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=cfaa44ea81145dc9803eae1dc109c71b",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/australia-news/2026/may/26/stolen-generation-survivors-national-plan-ntwnfb"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/bhp-files-leak-mining-company-climate-action",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 10:30:25 GMT",
+      "content": "The BHP files: World’s biggest miner BHP backtracks on climate action with key projects put on ice, leaked documents reveal. &lt;p&gt;&lt;strong&gt;Exclusive:&lt;/strong&gt; Cache of internal documents leaked to the Guardian and the ABC’s Four Corners show multinational has war-gamed ways to massively delay decarbonisation&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/ng-interactive/2026/may/25/bhp-files-internal-memo-revealed\"&gt;Revealed: the internal BHP memo that slammed the brakes on world’s biggest miner’s climate push&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Read more from the &lt;a href=\"https://www.theguardian.com/world/series/the-bhp-files\"&gt;BHP files investigation here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.a",
+      "category": "World",
+      "title": "The BHP files: World’s biggest miner BHP backtracks on climate action with key projects put on ice, leaked documents reveal",
+      "link": "https://www.theguardian.com/world/2026/may/25/bhp-files-leak-mining-company-climate-action",
+      "picture": "https://i.guim.co.uk/img/media/549cebc88228d909b479bfb629235c8189ae3a96/0_0_6270_5017/master/6270.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=419592f6513fe63a0dc63cccf7303b39",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/bhp-files-leak-mining-company-climate-action"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/bhp-diesel-trucks-pilbara-australia-mining-climate-pollution",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 10:30:24 GMT",
+      "content": "BHP defies its own climate strategy to spend hundreds of millions on polluting diesel trucks in Pilbara. &lt;p&gt;&lt;strong&gt;Exclusive:&lt;/strong&gt; Mining giant says technology is not yet advanced enough to run a fully electrified fleet but experts say it is hooked on federal fuel tax credits&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/ng-interactive/2026/may/25/bhp-files-internal-memo-revealed\"&gt;Revealed: the internal BHP memo that slammed the brakes on world’s biggest miner’s climate push&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Read more from &lt;a href=\"https://www.theguardian.com/world/series/the-bhp-files\"&gt;the BHP files investigation here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a href=\"https://app.adjust",
+      "category": "World",
+      "title": "BHP defies its own climate strategy to spend hundreds of millions on polluting diesel trucks in Pilbara",
+      "link": "https://www.theguardian.com/world/2026/may/25/bhp-diesel-trucks-pilbara-australia-mining-climate-pollution",
+      "picture": "https://i.guim.co.uk/img/media/c0df1a6dd14088e6f20947658a9f48ed568d7a50/0_0_5000_4000/master/5000.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=82013fb8c9be35b989ca0c5aada872bb",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/bhp-diesel-trucks-pilbara-australia-mining-climate-pollution"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/bhp-mining-pilbara-iron-ore-plant-to-drastically-cut-emissions-scrapped",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 10:30:23 GMT",
+      "content": "BHP quietly scrapped plan to build Pilbara plant that would have drastically cut emissions. &lt;p&gt;&lt;strong&gt;Exclusive:&lt;/strong&gt; Jimblebar processing facility would have produced higher quality iron ore sought by steelmakers around the world – themselves under pressure to curb pollution&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/2026/may/25/bhp-files-leak-mining-company-climate-action\"&gt;World’s biggest miner BHP backtracks on climate action with key projects put on ice, leaked documents reveal&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Read more from &lt;a href=\"https://www.theguardian.com/world/series/the-bhp-files\"&gt;the BHP files investigation here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Get our &lt;a href=\"https://www.theguardian.com/email-newsletters?CMP=cvau_sfl\"&gt;breaking news email&lt;/a&gt;, &lt;a h",
+      "category": "World",
+      "title": "BHP quietly scrapped plan to build Pilbara plant that would have drastically cut emissions",
+      "link": "https://www.theguardian.com/world/2026/may/25/bhp-mining-pilbara-iron-ore-plant-to-drastically-cut-emissions-scrapped",
+      "picture": "https://i.guim.co.uk/img/media/aa82bcf0cf54411e004810b914336ebda8654930/0_0_5000_4000/master/5000.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=2a50f67b068b114eab50a4247dd29572",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/bhp-mining-pilbara-iron-ore-plant-to-drastically-cut-emissions-scrapped"
+    },
+    {
+      "id": "https://www.theguardian.com/uk-news/2026/may/25/uk-heat-may-temperature-record-weather",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 16:31:56 GMT",
+      "content": "UK records its hottest ever day in May as temperature hits 34.8C. &lt;p&gt;Scientists say record-breaking heat is a reminder of how climate crisis is affecting lives&lt;/p&gt;&lt;p&gt;The fierce heat sweeping across Europe over the bank holiday weekend has beaten the UK’s all-time temperature record for May, with scorching highs of close to 35C.&lt;/p&gt;&lt;p&gt;A temperature of 33.5C &lt;a href=\"https://x.com/metoffice?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E2058883175254839480%7Ctwgr%5Ed6a30805cf06494c67bb331d47c0dab49ad4c290%7Ctwcon%5Es1_&amp;amp;ref_url=https%3A%2F%2Fnews.sky.com%2Fstory%2Fweather-latest-temperatures-could-hit-30c-as-bank-holiday-weekend-begins-13546607\"&gt;was recorded at Heathrow&lt;/a&gt; airport on Monday lunchtime, according to provisional data from the Met Office, beating the previous May record that was set in 19",
+      "category": "World",
+      "title": "UK records its hottest ever day in May as temperature hits 34.8C",
+      "link": "https://www.theguardian.com/uk-news/2026/may/25/uk-heat-may-temperature-record-weather",
+      "picture": "https://i.guim.co.uk/img/media/fe22a729f5486227585e5af9a6b20b3a05f5b7b4/679_0_4592_3674/master/4592.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=ad95692fa311d2d04a226e2741c33d8e",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/uk-news/2026/may/25/uk-heat-may-temperature-record-weather"
+    },
+    {
+      "id": "https://www.theguardian.com/business/2026/may/25/oil-prices-fall-below-100-dollars-a-barrel-iran",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 16:05:41 GMT",
+      "content": "Oil prices fall below $100 a barrel on hopes of Iran peace deal. &lt;p&gt;Brent crude futures down 6% to lowest level in two weeks and stock markets rise&lt;/p&gt;&lt;p&gt;Oil prices fell below $100 a barrel on Monday and stock markets rose on hopes that the US and Iran are &lt;a href=\"https://www.theguardian.com/world/2026/may/24/iran-leader-and-security-council-still-need-to-approve-peace-deal-with-us\"&gt;inching closer to a peace deal&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Brent crude futures, the global oil benchmark, were down 6% to $97.43 a barrel, the lowest level in two weeks, with hopes that an agreement to end the near three-month US-Israeli war on Iran can be struck.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/business/2026/may/25/oil-prices-fall-below-100-dollars-a-barrel-iran\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Oil prices fall below $100 a barrel on hopes of Iran peace deal",
+      "link": "https://www.theguardian.com/business/2026/may/25/oil-prices-fall-below-100-dollars-a-barrel-iran",
+      "picture": "https://i.guim.co.uk/img/media/8f6482b2e98c5a232833cfe92228e0c1bf316462/230_0_2503_2003/master/2503.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=cf3be75c46fb5bed41cd07011abe4667",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/business/2026/may/25/oil-prices-fall-below-100-dollars-a-barrel-iran"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/far-right-elam-party-inspired-by-golden-dawn-makes-big-gains-in-cyprus-elections",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 15:50:23 GMT",
+      "content": "Far-right Elam party inspired by Golden Dawn makes gains in Cyprus election. &lt;p&gt;Strongly anti-Turkish party doubles its seats although mainstream parties did not see vote crumble as predicted&lt;/p&gt;&lt;p&gt;An anti-immigrant far-right party, inspired by Greece’s defunct neo-Nazi Golden Dawn, made the biggest gains in Sunday’s parliamentary election in Cyprus.&lt;/p&gt;&lt;p&gt;Elam, the Greek National People’s Front, which has pushed for the closure of checkpoints on the ethnically split island and is vociferously anti-Turkish, doubled its seats in the 56-member legislature after securing 10.9 % of the vote.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/25/far-right-elam-party-inspired-by-golden-dawn-makes-big-gains-in-cyprus-elections\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Far-right Elam party inspired by Golden Dawn makes gains in Cyprus election",
+      "link": "https://www.theguardian.com/world/2026/may/25/far-right-elam-party-inspired-by-golden-dawn-makes-big-gains-in-cyprus-elections",
+      "picture": "https://i.guim.co.uk/img/media/11171fe5775084c3dbda63bb33e8ce44bd99e0d1/491_0_4912_3930/master/4912.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=3ba316b2767f4b8817930eb9e3e51893",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/far-right-elam-party-inspired-by-golden-dawn-makes-big-gains-in-cyprus-elections"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/rare-rubens-notebook-sheet-goes-on-display-in-artists-home-city-of-antwerp",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 10:00:24 GMT",
+      "content": "Rare Rubens notebook sheet goes on display in artist’s home city of Antwerp. &lt;p&gt;Double-sided page featuring a sketch and text sheds new light on the baroque master and his time living in Rome&lt;/p&gt;&lt;p&gt;More than 400 years ago, the up and coming Flemish painter &lt;a href=\"https://www.theguardian.com/artanddesign/2015/jan/16/peter-paul-rubens-legacy-royal-academy-exhibition\"&gt;Peter Paul Rubens&lt;/a&gt; toured the streets of Rome, notebook in hand, sketching images from Renaissance works adorning the city’s churches and palazzos.&lt;/p&gt;&lt;p&gt;Now a rare sheet, thought to be from his Roman sketchbook, has gone on display in his home city of Antwerp, shedding new light on the baroque master.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/25/rare-rubens-notebook-sheet-goes-on-display-in-artists-home-city-of-antwerp\"&gt;Continue re",
+      "category": "World",
+      "title": "Rare Rubens notebook sheet goes on display in artist’s home city of Antwerp",
+      "link": "https://www.theguardian.com/world/2026/may/25/rare-rubens-notebook-sheet-goes-on-display-in-artists-home-city-of-antwerp",
+      "picture": "https://i.guim.co.uk/img/media/edb4d48a682591edb37ddfa01f99749ad9dce9a7/224_164_2306_1845/master/2306.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=4988dd326b8d2b2a0cef9527ca2cf4cd",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/rare-rubens-notebook-sheet-goes-on-display-in-artists-home-city-of-antwerp"
+    },
+    {
+      "id": "https://www.theguardian.com/world/live/2026/may/25/iran-war-news-middle-east-crisis-oil-price-us-tehran-peace-talks-deal-strait-hormuz",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 16:41:26 GMT",
+      "content": "Middle East crisis live: Trump suggests countries in region should sign Abraham accords recognising Israel under any deal. &lt;p&gt;Writing on social media, US president says countries should make settlement with Iran ‘a far more Historic Event’&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/2026/may/25/iran-denies-deal-us-imminent-israel-oman-strait-of-hormuz\"&gt;Iran denies deal with US is imminent, despite some progress&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Ebrahim Rezaei, the spokesperson of the Iranian parliament’s national security and foreign policy commission, has said that time is working against the US and warned that Iran does not respond well to threats.&lt;/p&gt;&lt;p&gt;&lt;a href=\"https://x.com/EbrahimRezaei14/status/2058789365589938281\"&gt;In a post on X&lt;/a&gt;, he wrote:&lt;/p&gt;&lt;p&gt;&lt;em&gt;During the military war, our tactic was an e",
+      "category": "World",
+      "title": "Middle East crisis live: Trump suggests countries in region should sign Abraham accords recognising Israel under any deal",
+      "link": "https://www.theguardian.com/world/live/2026/may/25/iran-war-news-middle-east-crisis-oil-price-us-tehran-peace-talks-deal-strait-hormuz",
+      "picture": "https://i.guim.co.uk/img/media/25cb795871d044bfacb73ab958097017c45dad49/1218_144_4334_3467/master/4334.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=a3d5b82862021edcafef65a997caae84",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/live/2026/may/25/iran-war-news-middle-east-crisis-oil-price-us-tehran-peace-talks-deal-strait-hormuz"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/iran-denies-deal-us-imminent-israel-oman-strait-of-hormuz",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 16:06:47 GMT",
+      "content": "Iran denies deal with US is imminent despite some progress. &lt;p&gt;Tehran says ‘contradictory statements’ from US and Israeli interference hindering negotiations&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/live/2026/may/25/iran-war-news-middle-east-crisis-oil-price-us-tehran-peace-talks-deal-strait-hormuz\"&gt;Middle East crisis – live updates&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Iran has poured cold water on suggestions that a deal with the US is imminent, pointing to the confusion in US positions and Israeli interference as key factors in why a complete agreement is proving difficult to secure.&lt;/p&gt;&lt;p&gt;Speaking at the weekly foreign ministry press briefing, Esmail Baghaei, the spokesperson for Iran’s negotiating team, also said future management of the strait of Hormuz was a matter f",
+      "category": "World",
+      "title": "Iran denies deal with US is imminent despite some progress",
+      "link": "https://www.theguardian.com/world/2026/may/25/iran-denies-deal-us-imminent-israel-oman-strait-of-hormuz",
+      "picture": "https://i.guim.co.uk/img/media/0f9645979cdbec716d1c407c113ab2665762a70c/5_86_4207_3366/master/4207.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=1adeea5195c2692f30eedea395d94975",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/iran-denies-deal-us-imminent-israel-oman-strait-of-hormuz"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/shock-iran-war-middle-east-rivals-trump-peace-deal",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 15:03:17 GMT",
+      "content": "Shock of Iran war unites Middle East rivals in pushing Trump towards peace. &lt;p&gt;Region adapting to diminished US power after Washington fails to land knockout blow on Tehran or safeguard allies&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a href=\"https://www.theguardian.com/world/live/2026/may/25/iran-war-news-middle-east-crisis-oil-price-us-tehran-peace-talks-deal-strait-hormuz\"&gt;Middle East crisis – live updates&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The shock of the Iran war and its fallout has driven rivals in the Middle East to get behind a peace deal, pushing the Trump administration to accept a tentative agreement &lt;a href=\"https://www.theguardian.com/world/2026/may/24/iran-leader-and-security-council-still-need-to-approve-peace-deal-with-us\"&gt;in the face of furious opposition&lt;/a&gt; from Israel and its supporters in Washington.&lt;/p&",
+      "category": "World",
+      "title": "Shock of Iran war unites Middle East rivals in pushing Trump towards peace",
+      "link": "https://www.theguardian.com/world/2026/may/25/shock-iran-war-middle-east-rivals-trump-peace-deal",
+      "picture": "https://i.guim.co.uk/img/media/8478f6ad7cfcf55310d1c1c74d07e8636c0777e8/0_0_3094_2476/master/3094.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=1889dd59a3a1e599d3bfad19d3d4c5f7",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/shock-iran-war-middle-east-rivals-trump-peace-deal"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/iran-regime-opponents-london-shah-pahlavi-mek",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 08:00:20 GMT",
+      "content": "Opposition divided: battle among Iranian regime’s opponents plays out on London streets. &lt;p&gt;Supporters of Reza Pahlavi, exiled son of the late shah, are clashing with those who oppose a return of monarchy&lt;/p&gt;&lt;p&gt;Wearing a bucket hat, a blue Adidas hoodie and khaki shorts, Tony Mohraz, also known as 021kid, chest-bumps a friend in front of a memorial wall in Golders Green, in north London.&lt;/p&gt;&lt;p&gt;Photographs can be seen behind him of those who were killed protesting against the Iranian regime. As a large lion and sun flag used in Iran before the Islamic revolution is waved overhead, Mohraz starts to rap.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/25/iran-regime-opponents-london-shah-pahlavi-mek\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Opposition divided: battle among Iranian regime’s opponents plays out on London streets",
+      "link": "https://www.theguardian.com/world/2026/may/25/iran-regime-opponents-london-shah-pahlavi-mek",
+      "picture": "https://i.guim.co.uk/img/media/4c8ae89ae5f01a19cfe3421c259a9931b056ef13/0_194_375_300/master/375.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=ee4be29001887af1ffac7eb2eed42bff",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/iran-regime-opponents-london-shah-pahlavi-mek"
+    },
+    {
+      "id": "https://www.theguardian.com/politics/2026/may/25/nigel-farage-russian-hack-claim-disclosure-5m-gift",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 15:33:35 GMT",
+      "content": "Nigel Farage’s Russian hack claim ‘without any merit’, former NCSC chief says. &lt;p&gt;Ciaran Martin says Reform UK leader’s allegation over Guardian report on £5m gift ‘entirely unsubstantiated’&lt;/p&gt;&lt;p&gt;Nigel Farage’s claim that a Russian hack was behind a Guardian report on the £5m gift he received from a crypto billionaire has been described as “without any merit” by a former head of the National Cyber Security Centre.&lt;/p&gt;&lt;p&gt;Ciaran Martin, founding chief executive of the agency, which is part of GCHQ, said Farage’s allegation, if true, would have major implications for UK policy towards Russia but that the Reform UK leader had yet to provide “a shred of evidence”.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/politics/2026/may/25/nigel-farage-russian-hack-claim-disclosure-5m-gift\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Nigel Farage’s Russian hack claim ‘without any merit’, former NCSC chief says",
+      "link": "https://www.theguardian.com/politics/2026/may/25/nigel-farage-russian-hack-claim-disclosure-5m-gift",
+      "picture": "https://i.guim.co.uk/img/media/7e5d144f12316c643723323b4b0bf853fd949dbb/457_0_4585_3668/master/4585.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=f2c1dba11892291c8682493a581a9cf3",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/politics/2026/may/25/nigel-farage-russian-hack-claim-disclosure-5m-gift"
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/may/25/france-highest-ever-may-temperatures-spain-heatwave",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 15:28:35 GMT",
+      "content": "Record May highs sweep across France as extreme heat hits western Europe. &lt;p&gt;Mercury in Spain also climbs to well above normal with weather event set to continue for several more days&lt;/p&gt;&lt;p&gt;More than 20 towns in France have recorded their highest ever May temperatures and the UK set a national heat record amid an extreme early-summer heat event that could see the mercury climb to 40C in parts of Spain by the end of the week.&lt;/p&gt;&lt;p&gt;The &lt;a href=\"https://www.theguardian.com/uk-news/2026/may/25/uk-heat-may-temperature-record-weather\"&gt;UK’s Met Office said&lt;/a&gt; the country’s all-time record for May was broken when a temperature of 33.5C was recorded at Heathrow near London, with highs of up to 35C expected later on Monday and on Tuesday.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/world/2026/may/25/france-highest-ever-may",
+      "category": "World",
+      "title": "Record May highs sweep across France as extreme heat hits western Europe",
+      "link": "https://www.theguardian.com/world/2026/may/25/france-highest-ever-may-temperatures-spain-heatwave",
+      "picture": "https://i.guim.co.uk/img/media/33289211e591b3be7900be2c9bfcfda345afb34b/236_0_5000_4000/master/5000.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=709628c37aab30d21c6c4dde5f9a2e00",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/world/2026/may/25/france-highest-ever-may-temperatures-spain-heatwave"
+    },
+    {
+      "id": "https://www.theguardian.com/politics/2026/may/25/elon-musk-retweet-andy-burnham-makerfield-byelection-reform",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 14:43:50 GMT",
+      "content": "Elon Musk retweet signals rightwing split that could help Andy Burnham in Makerfield. &lt;p&gt;Restore Britain, set up by the former Reform MP Rupert Lowe, appears to be taking some support from Nigel Farage&lt;/p&gt;&lt;p&gt;Andy Burnham is unlikely to be Elon Musk’s first pick to be prime minister of the UK. But an intervention by the US tech billionaire on behalf of a far-right offshoot of Reform UK is one of several signs that a divided right wing could deliver the Makerfield seat to the Manchester mayor.&lt;/p&gt;&lt;p&gt;On 18 June, Burnham will fight a byelection in Greater Manchester, and polls have him only slightly ahead of Reform’s candidate, Robert Kenyon, a plumber. But a far-right party set up by the former Reform MP Rupert Lowe looks as if it is taking some support from Reform.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/politics/2026/may/25/elon-musk-r",
+      "category": "World",
+      "title": "Elon Musk retweet signals rightwing split that could help Andy Burnham in Makerfield",
+      "link": "https://www.theguardian.com/politics/2026/may/25/elon-musk-retweet-andy-burnham-makerfield-byelection-reform",
+      "picture": "https://i.guim.co.uk/img/media/f5a353a42b2a556abe0fa000ab916c6ddfc2076b/417_0_4173_3338/master/4173.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=50a28f46c8b27000f44884e1148c96af",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/politics/2026/may/25/elon-musk-retweet-andy-burnham-makerfield-byelection-reform"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/25/texas-baby-rescue-car-floodwaters",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 16:46:04 GMT",
+      "content": "Texas officers rescue infant from car trapped in floodwaters. &lt;p&gt;Video shows officers and firefighters surrounding a white car partially submerged in fast-moving water&lt;/p&gt;&lt;p&gt;Authorities in Texas rescued an infant on Saturday after a vehicle became trapped in floodwaters in Beeville, south of San Antonio.&lt;/p&gt;&lt;p&gt;&lt;a href=\"https://www.facebook.com/reel/1032012616164389\"&gt;Video&lt;/a&gt; released on Sunday by the Beeville police department showed officers and firefighters surrounding a white car that was partially submerged in fast-moving water. As one first responder approached the car, a distressed man in the vehicle asked: “Can you get my kid?”&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/us-news/2026/may/25/texas-baby-rescue-car-floodwaters\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Texas officers rescue infant from car trapped in floodwaters",
+      "link": "https://www.theguardian.com/us-news/2026/may/25/texas-baby-rescue-car-floodwaters",
+      "picture": "https://i.guim.co.uk/img/media/b267c09608a9c11547a790a8b5b97bcbf93e5800/246_0_2440_1952/master/2440.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=3fe7502552bedf42c36ef8f514e308f3",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/25/texas-baby-rescue-car-floodwaters"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/25/wwii-soldiers-return-pennsylvania",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 15:09:08 GMT",
+      "content": "Remains of US soldier killed in WWII returned to Pennsylvania after 80 years. &lt;p&gt;John A Walko was identified through DNA and brought home to Pennsylvania 80 years after his WWII death&lt;/p&gt;&lt;p&gt;The remains of a US soldier killed during the &lt;a href=\"https://www.theguardian.com/world/secondworldwar\"&gt;second world war&lt;/a&gt; were returned to his Pennsylvania hometown more than 80 years after he died after DNA analysis identified him.&lt;/p&gt;&lt;p&gt;John A Walko, a US army Pfc who died on 20 October 1944 during the Battle of Aachen in Germany, was escorted from the Pittsburgh airport to Commodore, Pennsylvania by a veteran’s motorcycle group earlier this month, &lt;a href=\"https://www.cleveland.com/summit-county/2026/05/twinsburg-family-brings-wwii-soldier-home-after-8-decades.html\"&gt;according to Cleveland.com&lt;/a&gt;.&lt;/p&gt; &lt;a href=\"",
+      "category": "World",
+      "title": "Remains of US soldier killed in WWII returned to Pennsylvania after 80 years",
+      "link": "https://www.theguardian.com/us-news/2026/may/25/wwii-soldiers-return-pennsylvania",
+      "picture": "https://i.guim.co.uk/img/media/d963b2fdc197a8349921e963399a0200aeed431c/443_0_4285_3429/master/4285.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=a8a2d60d2f9ac41035e030cfb5b1815e",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/25/wwii-soldiers-return-pennsylvania"
+    },
+    {
+      "id": "https://www.theguardian.com/us-news/2026/may/25/chemical-tank-crack-california",
+      "source": "The Guardian",
+      "timestamp": "Mon, 25 May 2026 12:35:19 GMT",
+      "content": "Explosion threat at southern California chemical tank eliminated, firefighters say. &lt;p&gt;US officials credit overnight cooling and monitoring for stabilising tank after leak fears triggered mass evacuation&lt;/p&gt;&lt;p&gt;Firefighters contending with an overheating tank of hazardous chemicals in southern California said they had eliminated the threat of the tank exploding in an overnight operation, Orange County fire officials said on Monday.&lt;/p&gt;&lt;p&gt;The damaged chemical tank in southern &lt;a href=\"https://www.theguardian.com/us-news/california\"&gt;California&lt;/a&gt; had cracked over the weekend, which authorities were hopeful would relieve pressure and reduce the risk of an explosion.&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/us-news/2026/may/25/chemical-tank-crack-california\"&gt;Continue reading...&lt;/a&gt;",
+      "category": "World",
+      "title": "Explosion threat at southern California chemical tank eliminated, firefighters say",
+      "link": "https://www.theguardian.com/us-news/2026/may/25/chemical-tank-crack-california",
+      "picture": "https://i.guim.co.uk/img/media/1d02f1fed03445a0872cde6717825ed0667cc8ef/133_0_3933_3148/master/3933.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=2647b3148574824bdfc0efe95275fd77",
+      "hasFullContent": false,
+      "url": "https://www.theguardian.com/us-news/2026/may/25/chemical-tank-crack-california"
+    }
+  ],
+  "mapPoints": [],
+  "foreignRelations": [],
+  "watchFor": {
+    "sections": [
+      {
+        "title": "Economic Health & Market Risk",
+        "sentiment": "somewhat-negative",
+        "predictions": [
+          "The reliance on alternative payment rails will accelerate, forcing greater financial fragmentation outside established global banking systems.",
+          "Commodity stockpiling by major corporations will drive structural volatility in physical asset markets, outpacing traditional equity indices.",
+          "Consumer purchasing power contraction will lead to a lasting bifurcated economy characterized by extreme wealth concentration and persistent local hardship."
+        ]
+      },
+      {
+        "title": "Geopolitical Risks & Global Stability",
+        "sentiment": "extremely-negative",
+        "predictions": [
+          "The militarization of critical maritime passages will intensify, shifting focus from economic passage rights to verifiable joint cyber and defense patrols.",
+          "Regional power dynamics will solidify into highly defensive pacts focused on immediate resource security (water, energy, food).",
+          "Compounding environmental pressures, specifically El Nino impacts, will transform localized climate stress into explicit geopolitical flashpoints."
+        ]
+      },
+      {
+        "title": "Artificial Intelligence Integration",
+        "sentiment": "interesting",
+        "predictions": [
+          "Operational energy efficiency will become a mandatory regulatory requirement for AI data center deployment globally.",
+          "The primary investment shift in the AI sector will move from general model development to specialized infrastructure management and optimization algorithms.",
+          "Corporate service models must restructure around digitized fulfillment chains to manage power limitations and hardware dependency risk."
+        ]
+      },
+      {
+        "title": "Global Supply Chains & Commerce",
+        "sentiment": "neutral",
+        "predictions": [
+          "The supply chain paradigm will permanently shift from 'Just-In-Time' efficiency models to 'Just-In-Case' resilience stockpiling.",
+          "Increased nationalization of key resource processing nodes (e.g., rare earth minerals, pharmaceuticals) is expected as strategic assets.",
+          "Trade agreements will heavily incorporate mandates for localized manufacturing bases and diversified sourcing redundancy."
+        ]
+      },
+      {
+        "title": "Public Health & Biosecurity",
+        "sentiment": "somewhat-negative",
+        "predictions": [
+          "International public health responses will be hampered by conflicting political priorities, delaying unified global containment efforts.",
+          "The emergence of highly mobile, climate-sensitive disease vectors will increase the risk profile for previously stable regions.",
+          "Resource competition for specialized medical personnel and advanced diagnostic tools will intensify across diverse geographic areas."
+        ]
+      },
+      {
+        "title": "Technology Regulation & Media Markets",
+        "sentiment": "negative",
+        "predictions": [
+          "Multinational tech corporations must establish localized, legally distinct service structures to manage varied content moderation and privacy laws.",
+          "The shift of advertising revenue away from traditional media will accelerate the consolidation of digital platforms into few powerful local players.",
+          "Immediate corporate insolvency avoidance strategies for legacy industries will center on rapid divestiture of non-core physical assets."
+        ]
+      }
+    ]
+  },
+  "dailyMetrics": {},
+  "lastUpdated": "2026-05-25T17:14:59.288Z",
+  "mediaUrls": {},
+  "date": "2026-05-25",
+  "timestamp": "2026-05-25T17:19:48.749Z"
+}

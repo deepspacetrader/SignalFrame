@@ -1,0 +1,19 @@
+{
+  "provider": "lmstudio",
+  "model": "google/gemma-4-e4b",
+  "baseUrl": "http://127.0.0.1:1234",
+  "numCtx": 8192,
+  "numPredict": 16384,
+  "enableThinking": false,
+  "ollamaFlashAttention": true,
+  "ollamaKvCacheType": "q8_0",
+  "audioProvider": "tangoflux",
+  "autoUnloadAudioModel": true,
+  "autoUnloadImageModel": true,
+  "narrativeImageSize": 512,
+  "signalsImageSize": 256,
+  "narrativeAudioDuration": 5,
+  "signalsAudioDuration": 5,
+  "isGeneratingImage": false,
+  "imageProvider": "nvidia-flux"
+}

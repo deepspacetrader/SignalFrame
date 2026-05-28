@@ -318,9 +318,9 @@ export function MediaGenerationButtons({
   }, [isPlaying])
 
   return (
-    <div className={`flex flex-col gap-1 ${className}`}>
+    <div className={`flex flex-col gap-1 shrink-0 ${className}`}>
       {/* Top row: Image and Audio Gen buttons */}
-      <div className="flex items-center gap-1">
+      <div className="flex flex-wrap items-center gap-1">
         {/* Image Generation Button */}
         <div className="relative group">
           <button

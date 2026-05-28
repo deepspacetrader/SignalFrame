@@ -166,7 +166,7 @@ export function NarrativeSummary({ onAIRequired }: { onAIRequired: () => void })
                 onClick={() => setIsThinkingOpen(!isThinkingOpen)}
                 className="w-full flex items-center justify-between gap-3 text-left group"
               >
-                <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
                   <svg
                     width="14"
                     height="14"

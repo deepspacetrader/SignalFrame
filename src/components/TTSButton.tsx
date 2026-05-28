@@ -340,13 +340,13 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
   }
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-1.5 sm:gap-2 ${className}`}>
       {/* Voice Selector Dropdown */}
       <select
         value={selectedVoice || ''}
         onChange={(e) => setSelectedVoice(e.target.value || null)}
         disabled={isSpeaking}
-        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary rounded-md"
+        className="text-[0.6rem] uppercase tracking-widest font-bold px-1.5 sm:px-2 py-1 bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary rounded-md max-w-[80px] sm:max-w-none truncate"
         title="Select NVIDIA Magpie voice for text-to-speech"
       >
         {NVIDIA_VOICES.map((voiceOption: Voice) => (
@@ -361,8 +361,8 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
         value={selectedEmotion || ''}
         onChange={(e) => setSelectedEmotion(e.target.value || 'default')}
         disabled={isSpeaking}
-        className="text-[0.6rem] uppercase tracking-widest font-bold px-2 py-1 bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary rounded-md"
-        title="Select NVIDIA Magpie emotion for text-to-speech (uses SSML)"
+          className="text-[0.6rem] uppercase tracking-widest font-bold px-1.5 sm:px-2 py-1 bg-bg-card/80 border border-white/20 text-text-primary hover:bg-bg-card transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-accent-primary rounded-md max-w-[80px] sm:max-w-none truncate"
+          title="Select NVIDIA Magpie emotion for text-to-speech (uses SSML)"
       >
         {getAvailableEmotions().map((emotionOption: Voice) => (
           <option key={emotionOption.id || 'default'} value={emotionOption.id || ''}>
@@ -375,7 +375,7 @@ export function TTSButton({ text, className = '', voice = 'Magpie-Multilingual.E
       <button
         onClick={isSpeaking ? handleStop : handleSpeak}
         disabled={(!text.trim() && !hasSelection()) && !isSpeaking}
-        className={`text-[0.6rem] uppercase tracking-widest font-bold px-3 py-1.5 rounded transition-all flex items-center gap-2 ${
+          className={`text-[0.6rem] uppercase tracking-widest font-bold px-2 sm:px-3 py-1.5 rounded transition-all flex items-center gap-1 sm:gap-2 shrink-0 ${
           isSpeaking 
             ? 'bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30' 
             : hasSelection()

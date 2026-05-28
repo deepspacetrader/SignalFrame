@@ -15,10 +15,105 @@ app.use(cors({
     origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
     credentials: true
 }));
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: '50mb', strict: false }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const PORT = 3001;
+
+// In-memory storage for analysis data (persisted to file)
+const ANALYSIS_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(ANALYSIS_DIR)) {
+    fs.mkdirSync(ANALYSIS_DIR, { recursive: true });
+}
+
+// Helper functions for file-based storage
+function getAnalysisPath(date) {
+    return path.join(ANALYSIS_DIR, `analysis-${date}.json`);
+}
+
+function getGlobalPath(key) {
+    return path.join(ANALYSIS_DIR, `global-${key}.json`);
+}
+
+// API endpoints for analysis data
+app.get('/api/analysis/:date', (req, res) => {
+    const { date } = req.params;
+    const filePath = getAnalysisPath(date);
+    
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: 'Analysis not found for this date' });
+    }
+    
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        console.error('Error reading analysis file:', error);
+        res.status(500).json({ error: 'Failed to read analysis' });
+    }
+});
+
+app.post('/api/analysis/:date', (req, res) => {
+    const { date } = req.params;
+    const filePath = getAnalysisPath(date);
+    
+    try {
+        const data = req.body;
+        data.date = date;
+        data.timestamp = new Date().toISOString();
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        res.json({ success: true, date });
+    } catch (error) {
+        console.error('Error writing analysis file:', error);
+        res.status(500).json({ error: 'Failed to save analysis' });
+    }
+});
+
+app.get('/api/analysis/dates', (req, res) => {
+    try {
+        const files = fs.readdirSync(ANALYSIS_DIR);
+        const dates = files
+            .filter(f => f.startsWith('analysis-') && f.endsWith('.json'))
+            .map(f => f.replace('analysis-', '').replace('.json', ''))
+            .sort();
+        res.json(dates);
+    } catch (error) {
+        console.error('Error reading analysis dates:', error);
+        res.status(500).json({ error: 'Failed to get dates' });
+    }
+});
+
+// API endpoints for global data
+app.get('/api/global/:key', (req, res) => {
+    const { key } = req.params;
+    const filePath = getGlobalPath(key);
+    
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).json(null);
+    }
+    
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (error) {
+        console.error('Error reading global file:', error);
+        res.status(500).json({ error: 'Failed to read global data' });
+    }
+});
+
+app.post('/api/global/:key', (req, res) => {
+    const { key } = req.params;
+    const filePath = getGlobalPath(key);
+    
+    try {
+        const data = req.body;
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        res.json({ success: true, key });
+    } catch (error) {
+        console.error('Error writing global file:', error);
+        res.status(500).json({ error: 'Failed to save global data' });
+    }
+});
 
 // Noise patterns to filter out irrelevant RSS content
 const NOISE_PATTERNS = [
@@ -405,6 +500,32 @@ app.post('/api/tts/export', (req, res) => {
         }
         res.json({ success: true, message: 'Audio exported successfully', path: outputPath });
     });
+});
+
+app.post('/api/snapshot/:date', (req, res) => {
+    const { date } = req.params;
+    
+    // Path to public/data directory (sibling to server/)
+    const snapshotDir = path.join(__dirname, '..', 'public', 'data');
+    
+    try {
+        // Ensure directory exists
+        if (!fs.existsSync(snapshotDir)) {
+            fs.mkdirSync(snapshotDir, { recursive: true });
+        }
+        
+        const filePath = path.join(snapshotDir, `snapshot-${date}.json`);
+        const data = req.body;
+        data.date = date;
+        data.savedAt = new Date().toISOString();
+        
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        console.log(`[SignalFrame] ✅ Saved snapshot to: ${filePath}`);
+        res.json({ success: true, path: filePath });
+    } catch (error) {
+        console.error('[SignalFrame] Error saving snapshot:', error);
+        res.status(500).json({ error: 'Failed to save snapshot' });
+    }
 });
 
 app.listen(PORT, () => {
